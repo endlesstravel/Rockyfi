@@ -8,7 +8,7 @@ namespace FlexCs
         {
             int a = 111;
             change(ref a);
-            Console.WriteLine("Hello World!", a);
+            Console.WriteLine("Hello World!" + a);
         }
 
         static void change(ref int v)

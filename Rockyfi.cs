@@ -1,4 +1,7 @@
 
+#if true
+
+using System.Collections.Generic;
 
 namespace Rockyfi
 {
@@ -183,28 +186,24 @@ namespace Rockyfi
 
         class Layout
         {
-            readonly float[] Position = new float[4];
-            readonly float[] Dimensions = new float[2];
-            readonly float[] Margin = new float[6];
-            readonly float[] Border = new float[6];
-            readonly float[] Padding = new float[6];
-            Direction  Direction;
-
-            int computedFlexBasisGeneration;
-            float computedFlexBasis;
-            bool HadOverflow;
-
+            public readonly float[] Position = new float[4];
+            public readonly float[] Dimensions = new float[2];
+            public readonly float[] Margin = new float[6];
+            public readonly float[] Border = new float[6];
+            public readonly float[] Padding = new float[6];
+            public Direction  Direction;
+            public int computedFlexBasisGeneration;
+            public float computedFlexBasis;
+            public bool HadOverflow;
+            
             // Instead of recomputing the entire layout every single time, we
             // cache some information to break early when nothing changed
-            int generationCount;
-            Direction lastParentDirection;
-
-            int nextCachedMeasurementsIndex;
-            readonly CachedMeasurement[] cachedMeasurements = new CachedMeasurement[Constant.MaxCachedResultCount];
-
-            readonly float[] measuredDimensions = new float[2];
-
-            CachedMeasurement cachedLayout;
+            public int generationCount;
+            public Direction lastParentDirection;
+            public int nextCachedMeasurementsIndex;
+            public readonly CachedMeasurement[] cachedMeasurements = new CachedMeasurement[Constant.MaxCachedResultCount];
+            public readonly float[] measuredDimensions = new float[2];
+            public CachedMeasurement cachedLayout;
         }
 
         class Style
@@ -232,16 +231,66 @@ namespace Rockyfi
             public readonly Value[] MaxDimensions = new Value[2];
             // Yoga specific properties, not compatible with flexbox specification
             public float AspectRatio;
+
+
+            static public void Copy(Style dest, Style src)
+            {
+                dest.Direction = src.Direction;
+                dest.FlexDirection = src.FlexDirection;
+                dest.JustifyContent = src.JustifyContent;
+                dest.AlignContent = src.AlignContent;
+                dest.AlignItems = src.AlignItems;
+                dest.AlignSelf = src.AlignSelf;
+                dest.PositionType = src.PositionType;
+                dest.FlexWrap = src.FlexWrap;
+                dest.Overflow = src.Overflow;
+                dest.Display = src.Display;
+                dest.Flex = src.Flex;
+                dest.FlexGrow = src.FlexGrow;
+                dest.FlexShrink = src.FlexShrink;
+
+                for (int i = 0; i < src.Margin.Length; i++)
+                {
+                    dest.Margin[i] = src.Margin[i];
+                    dest.Position[i] = src.Position[i];
+                    dest.Padding[i] = src.Padding[i];
+                    dest.Border[i] = src.Border[i];
+                }
+
+                for (int i = 0; i < 2; i++)
+                {
+                    dest.Dimensions[i] = src.Dimensions[i];
+                    dest.MinDimensions[i] = src.MinDimensions[i];
+                    dest.MaxDimensions[i] = src.MaxDimensions[i];
+                }
+
+                dest.AspectRatio = src.AspectRatio;
+            }
         }
 
         class Config
         {
-            public bool[] experimentalFeatures = new bool[Constant.ExperimentalFeatureCount + 1];
+            readonly public bool[] experimentalFeatures = new bool[Constant.ExperimentalFeatureCount + 1];
             public bool UseWebDefaults;
             public bool UseLegacyStretchBehaviour;
             public float PointScaleFactor;
             public LoggerFunc Logger;
             public object Context;
+
+
+            public static void Copy(Config dest, Config src)
+            {
+                dest.UseWebDefaults = src.UseWebDefaults;
+                dest.UseLegacyStretchBehaviour = src.UseLegacyStretchBehaviour;
+                dest.PointScaleFactor = src.PointScaleFactor;
+                dest.Logger = src.Logger;
+                dest.Context = src.Context;
+
+                for (int i = 0; i < src.experimentalFeatures.Length; i++)
+                {
+                    dest.experimentalFeatures[i] = src.experimentalFeatures[i];
+                }
+            }
         }
 
         class Node
@@ -251,7 +300,7 @@ namespace Rockyfi
             public int lineIndex;
 
             public Node Parent;
-            public Node[] Children;
+            public readonly List<Node> Children = new List<Node>();
 
             public Node NextChild;
 
@@ -364,6 +413,8 @@ namespace Rockyfi
         readonly static Value ValueZero =  new Value(0, Unit.Point);
         readonly static Value ValueUndefined = new Value(float.NaN, Unit.Undefined);
 
+        readonly static Value ValueAuto = new Value(float.NaN, Unit.Auto);
+
 
         static bool feq(float a, float b)
         {
@@ -469,261 +520,273 @@ namespace Rockyfi
         }
 
         // // NewNode creates a new node
-        static Node NewNode(){
+        static Node NewNode()
+        {
             return NewNodeWithConfig(configDefaults);
         }
+
+        // static int Len(Node[] array)
+        // {
+        //     return array == null ? 0 : array.Length;
+        // }
 
         // // Reset resets a node
         static void Reset(ref Node node)
         {
-            assertWithNode(node, node.Children.Length == 0, "Cannot reset a node which still has children attached");
+            assertWithNode(node, node.Children.Count == 0, "Cannot reset a node which still has children attached");
             assertWithNode(node, node.Parent == null, "Cannot reset a node still attached to a parent");
-            node.Children = null;
+            node.Children.Clear();
 
             var config = node.Config;
-            *node = nodeDefaults
+            node = nodeDefaults;
             if(config.UseWebDefaults)
             {
-                node.Style.FlexDirection = FlexDirectionRow
-                node.Style.AlignContent = AlignStretch
+                node.Style.FlexDirection = FlexDirection.Row;
+                node.Style.AlignContent = Align.Stretch;
             }
-            node.Config = config
+            node.Config = config;
         }
 
-        // // ConfigGetDefault returns default config, only for C#
-        // static ConfigGetDefault() *Config {
-        //     return &configDefaults
-        // }
+        // ConfigGetDefault returns default config, only for C#
+        static Config ConfigGetDefault() {
+            return configDefaults;
+        }
 
-        // // NewConfig creates new config
-        // static NewConfig() *Config {
-        //     config := &Config{}
-        //     assertCond(config != nil, "Could not allocate memory for config")
+        // NewConfig creates new config
+        static Config NewConfig()
+        {
+            return new Config(configDefaults);
+        }
 
-        //     *config = configDefaults
-        //     return config
-        // }
+        // ConfigCopy copies a config
+        static void ConfigCopy(Config dest, Config src) 
+        {
+            Config.Copy(dest, src);
+        }
 
-        // // ConfigCopy copies a config
-        // static ConfigCopy(dest *Config, src *Config) {
-        //     *dest = *src
-        // }
+        static void nodeMarkDirtyInternal(Node node) 
+        {
+            if (!node.IsDirty)
+            {
+                node.IsDirty = true;
+                node.Layout.computedFlexBasis = float.NaN;
+                if(node.Parent != null) 
+                {
+                    nodeMarkDirtyInternal(node.Parent);
+                }
+            }
+        }
 
-        // static nodeMarkDirtyInternal(Node node) {
-        //     if !node.IsDirty {
-        //         node.IsDirty = true
-        //         node.Layout.computedFlexBasis = Undefined
-        //         if node.Parent != nil {
-        //             nodeMarkDirtyInternal(node.Parent)
-        //         }
-        //     }
-        // }
+        // SetMeasureFunc sets measure function
+        static void SetMeasureFunc(Node node, MeasureFunc measureFunc) 
+        {
+            if ( measureFunc == null )
+            {
+                node.Measure = null;
+                // TODO: t18095186 Move nodeType to opt-in function and mark appropriate places in Litho
+                node.NodeType = NodeType.Default;
+            } else {
+                assertWithNode(
+                    node,
+                    Len(node.Children) == 0,
+                    "Cannot set measure function: Nodes with measure functions cannot have children.");
+                node.Measure = measureFunc;
+                // TODO: t18095186 Move nodeType to opt-in function and mark appropriate places in Litho
+                node.NodeType = NodeType.Text;
+            }
+        }
 
-        // // SetMeasureFunc sets measure function
-        // static (Node node) SetMeasureFunc(measureFunc MeasureFunc) {
-        //     if measureFunc == nil {
-        //         node.Measure = nil
-        //         // TODO: t18095186 Move nodeType to opt-in function and mark appropriate places in Litho
-        //         node.NodeType = NodeTypeDefault
-        //     } else {
-        //         assertWithNode(
-        //             node,
-        //             len(node.Children) == 0,
-        //             "Cannot set measure function: Nodes with measure functions cannot have children.")
-        //         node.Measure = measureFunc
-        //         // TODO: t18095186 Move nodeType to opt-in function and mark appropriate places in Litho
-        //         node.NodeType = NodeTypeText
-        //     }
-        // }
+        // InsertChild inserts a child
+        static void InsertChild(Node node, Node child, int idx) 
+        {
+            assertWithNode(node, child.Parent == null, "Child already has a parent, it must be removed first.");
+            assertWithNode(node, node.Measure == null, "Cannot add child: Nodes with measure functions cannot have children.");
 
-        // // InsertChild inserts a child
-        // static (Node node) InsertChild(child *Node, idx int) {
-        //     assertWithNode(node, child.Parent == nil, "Child already has a parent, it must be removed first.")
-        //     assertWithNode(node, node.Measure == nil, "Cannot add child: Nodes with measure functions cannot have children.")
+            node.Children.Insert(idx, child);
+            child.Parent = node;
+            nodeMarkDirtyInternal(node);
+        }
 
-        //     a := node.Children
-        //     // https://github.com/golang/go/wiki/SliceTricks
-        //     a = append(a[:idx], append([]*Node{child}, a[idx:]...)...)
+        // RemoveChild removes child node
+        static void RemoveChild(Node node, Node child) 
+        {
+            if (node.Children.Remove(child))
+            {
+                child.Layout = nodeDefaults.Layout; // layout is no longer valid
+                child.Parent = null;
+                nodeMarkDirtyInternal(node);
+            }
+        }
 
-        //     node.Children = a
+        // GetChild returns a child at a given index
+        static Node GetChild(Node node, int idx)
+        {
+            return idx < node.Children.Count ? node.Children[idx] : null;
+        }
 
-        //     child.Parent = node
-        //     nodeMarkDirtyInternal(node)
-        // }
+        // MarkDirty marks node as dirty
+        static void MarkDirty(Node node) {
+            assertWithNode(node, node.Measure != null,
+                "Only leaf nodes with custom measure functions should manually mark themselves as dirty");
+            nodeMarkDirtyInternal(node);
+        }
 
-        // static (Node node) deleteChild(child *Node) *Node {
-        //     a := node.Children
-        //     n := len(a)
-        //     for i := 0; i < n; i++ {
-        //         if a[i] == child {
-        //             removed := a[i]
-        //             copy(a[i:], a[i+1:])
-        //             a[len(a)-1] = nil // or the zero value of T
-        //             a = a[:len(a)-1]
-        //             node.Children = a
-        //             return removed
-        //         }
-        //     }
-        //     return nil
-        // }
+        static bool styleEq(Style s1, Style s2) {
+            if( s1.Direction != s2.Direction ||
+                s1.FlexDirection != s2.FlexDirection ||
+                s1.JustifyContent != s2.JustifyContent ||
+                s1.AlignContent != s2.AlignContent ||
+                s1.AlignItems != s2.AlignItems ||
+                s1.AlignSelf != s2.AlignSelf ||
+                s1.PositionType != s2.PositionType ||
+                s1.FlexWrap != s2.FlexWrap ||
+                s1.Overflow != s2.Overflow ||
+                s1.Display != s2.Display ||
+                !feq(s1.Flex, s2.Flex) ||
+                !feq(s1.FlexGrow, s2.FlexGrow) ||
+                !feq(s1.FlexShrink, s2.FlexShrink) ||
+                !valueEq(s1.FlexBasis, s2.FlexBasis) ) {
+                return false;
+            }
+            for (int i = 0; i < Constant.EdgeCount; i++) {
+                if ( !valueEq(s1.Margin[i], s2.Margin[i]) ||
+                    !valueEq(s1.Position[i], s2.Position[i]) ||
+                    !valueEq(s1.Padding[i], s2.Padding[i]) ||
+                    !valueEq(s1.Border[i], s2.Border[i]) ) {
+                    return false;
+                }
+            }
+            for (int i = 0; i < 2; i++) {
+                if (!valueEq(s1.Dimensions[i], s2.Dimensions[i]) ||
+                    !valueEq(s1.MinDimensions[i], s2.MinDimensions[i]) ||
+                    !valueEq(s1.MaxDimensions[i], s2.MaxDimensions[i]) ) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-        // // RemoveChild removes child node
-        // static (Node node) RemoveChild(child *Node) {
-        //     if node.deleteChild(child) != nil {
-        //         child.Layout = nodeDefaults.Layout // layout is no longer valid
-        //         child.Parent = nil
-        //         nodeMarkDirtyInternal(node)
-        //     }
-        // }
+        // NodeCopyStyle copies style
+        static void NodeCopyStyle(Node dstNode, Node srcNode) 
+        {
+            if (!styleEq(dstNode.Style, srcNode.Style)) 
+            {
+                Style.Copy(dstNode.Style, srcNode.Style);
+                nodeMarkDirtyInternal(dstNode);
+            }
+        }
 
-        // // GetChild returns a child at a given index
-        // static (Node node) GetChild(idx int) *Node {
-        //     if idx < len(node.Children) {
-        //         return node.Children[idx]
-        //     }
-        //     return nil
-        // }
+        static float resolveFlexGrow(Node node)
+        {
+            // Root nodes flexGrow should always be 0
+            if (node.Parent == null) 
+            {
+                return 0;
+            }
+            if (!FloatIsUndefined(node.Style.FlexGrow))
+            {
+                return node.Style.FlexGrow;
+            }
+            if (!FloatIsUndefined(node.Style.Flex) && node.Style.Flex > 0) 
+            {
+                return node.Style.Flex;
+            }
+            return defaultFlexGrow;
+        }
 
-        // // MarkDirty marks node as dirty
-        // static (Node node) MarkDirty() {
-        //     assertWithNode(node, node.Measure != nil,
-        //         "Only leaf nodes with custom measure functions should manually mark themselves as dirty")
-        //     nodeMarkDirtyInternal(node)
-        // }
+        // StyleGetFlexGrow gets flex grow
+        static float StyleGetFlexGrow(Node node)
+        {
+            if (FloatIsUndefined(node.Style.FlexGrow))
+            {
+                return defaultFlexGrow;
+            }
+            return node.Style.FlexGrow;
+        }
 
-        // static styleEq(s1, s2 *Style) bool {
-        //     if s1.Direction != s2.Direction ||
-        //         s1.FlexDirection != s2.FlexDirection ||
-        //         s1.JustifyContent != s2.JustifyContent ||
-        //         s1.AlignContent != s2.AlignContent ||
-        //         s1.AlignItems != s2.AlignItems ||
-        //         s1.AlignSelf != s2.AlignSelf ||
-        //         s1.PositionType != s2.PositionType ||
-        //         s1.FlexWrap != s2.FlexWrap ||
-        //         s1.Overflow != s2.Overflow ||
-        //         s1.Display != s2.Display ||
-        //         !feq(s1.Flex, s2.Flex) ||
-        //         !feq(s1.FlexGrow, s2.FlexGrow) ||
-        //         !feq(s1.FlexShrink, s2.FlexShrink) ||
-        //         !valueEq(s1.FlexBasis, s2.FlexBasis) {
-        //         return false
-        //     }
-        //     for i := 0; i < EdgeCount; i++ {
-        //         if !valueEq(s1.Margin[i], s2.Margin[i]) ||
-        //             !valueEq(s1.Position[i], s2.Position[i]) ||
-        //             !valueEq(s1.Padding[i], s2.Padding[i]) ||
-        //             !valueEq(s1.Border[i], s2.Border[i]) {
-        //             return false
-        //         }
-        //     }
-        //     for i := 0; i < 2; i++ {
-        //         if !valueEq(s1.Dimensions[i], s2.Dimensions[i]) ||
-        //             !valueEq(s1.MinDimensions[i], s2.MinDimensions[i]) ||
-        //             !valueEq(s1.MaxDimensions[i], s2.MaxDimensions[i]) {
-        //             return false
-        //         }
-        //     }
-        //     return true
-        // }
+        // StyleGetFlexShrink gets flex shrink
+        static float StyleGetFlexShrink(Node node) 
+        {
+            if (FloatIsUndefined(node.Style.FlexShrink))
+            {
+                if (node.Config.UseWebDefaults) 
+                {
+                    return webDefaultFlexShrink;
+                }
+                return defaultFlexShrink;
+            }
+            return node.Style.FlexShrink;
+        }
 
-        // // NodeCopyStyle copies style
-        // static NodeCopyStyle(dstNode *Node, srcNode *Node) {
-        //     if !styleEq(&dstNode.Style, &srcNode.Style) {
-        //         dstNode.Style = srcNode.Style
-        //         nodeMarkDirtyInternal(dstNode)
-        //     }
-        // }
+        static float nodeResolveFlexShrink(Node node) 
+        {
+            // Root nodes flexShrink should always be 0
+            if (node.Parent == null) 
+            {
+                return 0;
+            }
+            if (!FloatIsUndefined(node.Style.FlexShrink)) 
+            {
+                return node.Style.FlexShrink;
+            }
+            if (!node.Config.UseWebDefaults && !FloatIsUndefined(node.Style.Flex) &&
+                node.Style.Flex < 0)
+            {
+                return -node.Style.Flex;
+            }
+            if (node.Config.UseWebDefaults) 
+            {
+                return webDefaultFlexShrink;
+            }
+            return defaultFlexShrink;
+        }
 
-        // static resolveFlexGrow(Node node) float32 {
-        //     // Root nodes flexGrow should always be 0
-        //     if node.Parent == nil {
-        //         return 0
-        //     }
-        //     if !FloatIsUndefined(node.Style.FlexGrow) {
-        //         return node.Style.FlexGrow
-        //     }
-        //     if !FloatIsUndefined(node.Style.Flex) && node.Style.Flex > 0 {
-        //         return node.Style.Flex
-        //     }
-        //     return defaultFlexGrow
-        // }
-
-        // // StyleGetFlexGrow gets flex grow
-        // static (Node node) StyleGetFlexGrow() float32 {
-        //     if FloatIsUndefined(node.Style.FlexGrow) {
-        //         return defaultFlexGrow
-        //     }
-        //     return node.Style.FlexGrow
-        // }
-
-        // // StyleGetFlexShrink gets flex shrink
-        // static (Node node) StyleGetFlexShrink() float32 {
-        //     if FloatIsUndefined(node.Style.FlexShrink) {
-        //         if node.Config.UseWebDefaults {
-        //             return webDefaultFlexShrink
-        //         }
-        //         return defaultFlexShrink
-        //     }
-        //     return node.Style.FlexShrink
-        // }
-
-        // static nodeResolveFlexShrink(Node node) float32 {
-        //     // Root nodes flexShrink should always be 0
-        //     if node.Parent == nil {
-        //         return 0
-        //     }
-        //     if !FloatIsUndefined(node.Style.FlexShrink) {
-        //         return node.Style.FlexShrink
-        //     }
-        //     if !node.Config.UseWebDefaults && !FloatIsUndefined(node.Style.Flex) &&
-        //         node.Style.Flex < 0 {
-        //         return -node.Style.Flex
-        //     }
-        //     if node.Config.UseWebDefaults {
-        //         return webDefaultFlexShrink
-        //     }
-        //     return defaultFlexShrink
-        // }
-
-        // static nodeResolveFlexBasisPtr(Node node) *Value {
-        //     style := &node.Style
-        //     if style.FlexBasis.Unit != UnitAuto && style.FlexBasis.Unit != UnitUndefined {
-        //         return &style.FlexBasis
-        //     }
-        //     if !FloatIsUndefined(style.Flex) && style.Flex > 0 {
-        //         if node.Config.UseWebDefaults {
-        //             return &ValueAuto
-        //         }
-        //         return &ValueZero
-        //     }
-        //     return &ValueAuto
-        // }
+        static Value nodeResolveFlexBasisPtr(Node node) 
+        {
+            var style = node.Style;
+            if (style.FlexBasis.unit != Unit.Auto && style.FlexBasis.unit != Unit.Undefined) {
+                return style.FlexBasis;
+            }
+            if (!FloatIsUndefined(style.Flex) && style.Flex > 0)
+            {
+                if (node.Config.UseWebDefaults)
+                {
+                    return ValueAuto;
+                }
+                return ValueZero;
+            }
+            return ValueAuto;
+        }
 
         // // see yoga_props.go
 
         // var (
         //     currentGenerationCount = 0
         // )
+        static int currentGenerationCount = 0;
 
-        // // FloatIsUndefined returns true if value is undefined
-        // static FloatIsUndefined(value float32) bool {
-        //     return IsNaN(value)
-        // }
+        // FloatIsUndefined returns true if value is undefined
+        static bool FloatIsUndefined(float value) 
+        {
+            return float.IsNaN(value);
+        }
 
-        // // ValueEqual returns true if values are equal
-        // static ValueEqual(a Value, b Value) bool {
-        //     if a.Unit != b.Unit {
-        //         return false
-        //     }
+        // ValueEqual returns true if values are equal
+        static bool ValueEqual(Value a, Value b) 
+        {
+            if (a.unit != b.unit) {
+                return false;
+            }
 
-        //     if a.Unit == UnitUndefined {
-        //         return true
-        //     }
+            if (a.unit == Unit.Undefined) {
+                return true;
+            }
 
-        //     return fabs(a.Value-b.Value) < 0.0001
-        // }
+            return System.Math.Abs(a.value - b.value) < 0.0001f;
+        }
 
-        // static resolveDimensions(Node node) {
+        // static void resolveDimensions(Node node) 
+        // {
         //     for dim := DimensionWidth; dim <= DimensionHeight; dim++ {
         //         if node.Style.MaxDimensions[dim].Unit != UnitUndefined &&
         //             ValueEqual(node.Style.MaxDimensions[dim], node.Style.MinDimensions[dim]) {
@@ -3262,3 +3325,4 @@ namespace Rockyfi
     }
 
 }
+#endif
