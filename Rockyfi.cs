@@ -40,9 +40,11 @@ namespace Rockyfi
 
         enum Direction
         {
-            Inherit,
+
+            Inherit = 0,
             LTR,
             RTL,
+            NeverUsed_1 = -1,
         }
 
         enum Display
@@ -107,11 +109,12 @@ namespace Rockyfi
             Fatal,
         }
 
-        enum MeasureMode
+        enum MeasureMode: int
         {
-            Undefined,
+            Undefined = 0,
             Exactly,
             AtMost,
+            NeverUsed_1 = -1,
         }
 
         enum NodeType
@@ -122,7 +125,7 @@ namespace Rockyfi
 
         enum Overflow
         {
-            Bisible,
+            Visible,
             Hidden,
             Scroll,
         }
@@ -177,60 +180,125 @@ namespace Rockyfi
         {
             float availableWidth;
             float availableHeight;
-            MeasureMode widthMeasureMode;
-            MeasureMode heightMeasureMode;
+            MeasureMode widthMeasureMode = MeasureMode.Undefined;
+            MeasureMode heightMeasureMode = MeasureMode.Undefined;
 
-            float computedWidth;
-            float computedHeight;
+            float computedWidth = -1;
+            float computedHeight = -1;
+
+            public void ResetToDefault()
+            {
+                this.availableHeight = 0;
+                this.availableWidth = 0;
+                this.widthMeasureMode = MeasureMode.Undefined;
+                this.heightMeasureMode = MeasureMode.Undefined;
+                this.computedWidth = -1;
+                this.computedHeight = -1;
+            }
         }
 
         class Layout
         {
             public readonly float[] Position = new float[4];
-            public readonly float[] Dimensions = new float[2];
+            public readonly float[] Dimensions = new float[2]{ float.NaN, float.NaN };
             public readonly float[] Margin = new float[6];
             public readonly float[] Border = new float[6];
             public readonly float[] Padding = new float[6];
             public Direction  Direction;
             public int computedFlexBasisGeneration;
-            public float computedFlexBasis;
-            public bool HadOverflow;
+            public float computedFlexBasis = float.NaN;
+            public bool HadOverflow = false;
             
             // Instead of recomputing the entire layout every single time, we
             // cache some information to break early when nothing changed
             public int generationCount;
-            public Direction lastParentDirection;
-            public int nextCachedMeasurementsIndex;
-            public readonly CachedMeasurement[] cachedMeasurements = new CachedMeasurement[Constant.MaxCachedResultCount];
-            public readonly float[] measuredDimensions = new float[2];
-            public CachedMeasurement cachedLayout;
+            public Direction lastParentDirection = Direction.NeverUsed_1;
+            public int nextCachedMeasurementsIndex = 0;
+            public readonly CachedMeasurement[] cachedMeasurements = new CachedMeasurement[Constant.MaxCachedResultCount]
+            {
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+                new CachedMeasurement(),
+            };
+            public readonly float[] measuredDimensions = new float[2]{ float.NaN, float.NaN };
+            readonly public CachedMeasurement cachedLayout = new CachedMeasurement();
+
+            public void ResetToDefault()
+            {
+                for (int i = 0; i < this.Position.Length; i++)
+                {
+                    this.Position[i] = 0;
+                }
+                for (int i = 0; i < Dimensions.Length; i++)
+                {
+                    this.Dimensions[i] = float.NaN;
+                }
+                for (int i = 0; i < 6; i++)
+                {
+                    this.Margin[i] = 0;
+                    this.Border[i] = 0;
+                    this.Padding[i] = 0;
+                }
+                this.Direction = Direction.Inherit;
+                this.computedFlexBasisGeneration = 0;
+                this.computedFlexBasis = float.NaN;
+                this.HadOverflow = false;
+                this.generationCount = 0;
+                this.lastParentDirection = Direction.NeverUsed_1;
+                this.nextCachedMeasurementsIndex = 0;
+
+                foreach (var cm in this.cachedMeasurements)
+                {
+                    cm.ResetToDefault();
+                }
+
+                for (int i = 0; i < measuredDimensions.Length; i++)
+                {
+                    this.measuredDimensions[i] = float.NaN;
+                }
+
+                cachedLayout.ResetToDefault();
+            }
         }
 
         class Style
         {
-            public Direction      Direction;
-            public FlexDirection  FlexDirection;
-            public Justify JustifyContent;
-            public Align AlignContent;
-            public Align AlignItems;
+            public Direction      Direction = Direction.Inherit;
+            public FlexDirection  FlexDirection = FlexDirection.Column;
+            public Justify JustifyContent = Justify.FlexStart;
+            public Align AlignContent = Align.FlexStart;
+            public Align AlignItems = Align.Stretch;
             public Align AlignSelf;
             public PositionType PositionType;
             public Wrap FlexWrap;
-            public Overflow Overflow;
-            public Display Display;
-            public float Flex;
-            public float FlexGrow;
-            public float FlexShrink;
-            public Value FlexBasis;
-            public readonly Value[] Margin = new Value[Constant.EdgeCount];
-            public readonly Value[] Position = new Value[Constant.EdgeCount];
-            public readonly Value[] Padding = new Value[Constant.EdgeCount];
-            public readonly Value[] Border = new Value[Constant.EdgeCount];
-            public readonly Value[] Dimensions = new Value[2];
-            public readonly Value[] MinDimensions = new Value[2];
-            public readonly Value[] MaxDimensions = new Value[2];
+            public Overflow Overflow = Overflow.Visible;
+            public Display Display = Display.Flex;
+            public float Flex = float.NaN;
+            public float FlexGrow = float.NaN;
+            public float FlexShrink = float.NaN;
+            public Value FlexBasis = autoValue;
+            public readonly Value[] Margin = defaultEdgeValuesUnit();
+            public readonly Value[] Position = defaultEdgeValuesUnit();
+            public readonly Value[] Padding = defaultEdgeValuesUnit();
+            public readonly Value[] Border = defaultEdgeValuesUnit();
+            public readonly Value[] Dimensions = new Value[2]{ autoValue, autoValue };
+            public readonly Value[] MinDimensions = new Value[2]{ undefinedValue, undefinedValue};
+            public readonly Value[] MaxDimensions = new Value[2]{ undefinedValue, undefinedValue};
             // Yoga specific properties, not compatible with flexbox specification
-            public float AspectRatio;
+            public float AspectRatio = float.NaN;
 
 
             static public void Copy(Style dest, Style src)
@@ -271,12 +339,11 @@ namespace Rockyfi
         class Config
         {
             readonly public bool[] experimentalFeatures = new bool[Constant.ExperimentalFeatureCount + 1];
-            public bool UseWebDefaults;
-            public bool UseLegacyStretchBehaviour;
-            public float PointScaleFactor;
-            public LoggerFunc Logger;
-            public object Context;
-
+            public bool UseWebDefaults = false;
+            public bool UseLegacyStretchBehaviour = false;
+            public float PointScaleFactor = 1;
+            public LoggerFunc Logger = DefaultLog;
+            public object Context = null;
 
             public static void Copy(Config dest, Config src)
             {
@@ -295,11 +362,11 @@ namespace Rockyfi
 
         class Node
         {
-            public Style     Style;
-            public Layout    Layout;
+            readonly public Style     Style = new Style();
+            readonly public Layout    Layout = new Layout();
             public int lineIndex;
 
-            public Node Parent;
+            public Node Parent = null;
             public readonly List<Node> Children = new List<Node>();
 
             public Node NextChild;
@@ -310,11 +377,11 @@ namespace Rockyfi
             public Config Config;
             public object Context;
 
-            public bool IsDirty;
-            public bool hasNewLayout;
-            public NodeType NodeType;
+            public bool IsDirty = false;
+            public bool hasNewLayout = true;
+            public NodeType NodeType = NodeType.Default;
 
-            public readonly Value[] resolvedDimensions = new Value[2];
+            public readonly Value[] resolvedDimensions = new Value[2]{ ValueUndefined, ValueUndefined };
         }
 
         // MeasureFunc describes function for measuring
@@ -329,92 +396,43 @@ namespace Rockyfi
         // Logger defines logging function
         delegate int LoggerFunc(Config config, Node node, LogLevel level, string format, params object[] args);
 
-
         readonly static Value undefinedValue = new Value(float.NaN, Unit.Undefined);
         readonly static Value autoValue = new Value(float.NaN, Unit.Auto);
 
-        readonly static Value[] defaultEdgeValuesUnit = new Value[Constant.EdgeCount]{
-            undefinedValue,
-            undefinedValue,
-            undefinedValue,
-            undefinedValue,
-            undefinedValue,
-            undefinedValue,
-            undefinedValue,
-            undefinedValue,
-            undefinedValue,
-        };
+        static Value[] defaultEdgeValuesUnit(){
+            return new Value[Constant.EdgeCount]{
+                undefinedValue,
+                undefinedValue,
+                undefinedValue,
+                undefinedValue,
+                undefinedValue,
+                undefinedValue,
+                undefinedValue,
+                undefinedValue,
+                undefinedValue,
+            };
+        } 
 
-        readonly static float[] defaultDimensionValues = new float[2]{
-            float.NaN,
-            float.NaN,
-        };
-
-        readonly static float[] defaultDimensionValuesUnit = new float[2]{
-            float.NaN,
-            float.NaN,
-        };
-
-        readonly static float[] defaultDimensionValuesAutoUnit = new float[2]{
-            float.NaN,
-            float.NaN,
-        };
-
-            
         const float defaultFlexGrow = 0;
         const float defaultFlexShrink = 0;
         const float webDefaultFlexShrink = 1;
 
+        static Node nodeDefaults()
+        {
+            var node = new Node();
+            return node;
 
-        // Node nodeDefaults = new Node {
-        //     Parent =            null,
-        //     Children =          null,
-        //     hasNewLayout =       true,
-        //     IsDirty =            false,
-        //     NodeType =           NodeTypeDefault,
-        //     resolvedDimensions: [2]*Value{&ValueUndefined, &ValueUndefined},
-        //     Style: Style{
-        //         Flex:           Undefined,
-        //         FlexGrow:       Undefined,
-        //         FlexShrink:     Undefined,
-        //         FlexBasis:      autoValue,
-        //         JustifyContent: JustifyFlexStart,
-        //         AlignItems:     AlignStretch,
-        //         AlignContent:   Align.FlexStart,
-        //         Direction:      Direction.Inherit,
-        //         FlexDirection:  FlexDirection.Column,
-        //         Overflow:       OverflowVisible,
-        //         Display:        DisplayFlex,
-        //         Dimensions:     defaultDimensionValuesAutoUnit,
-        //         MinDimensions:  defaultDimensionValuesUnit,
-        //         MaxDimensions:  defaultDimensionValuesUnit,
-        //         Position:       defaultEdgeValuesUnit,
-        //         Margin:         defaultEdgeValuesUnit,
-        //         Padding:        defaultEdgeValuesUnit,
-        //         Border:         defaultEdgeValuesUnit,
-        //         AspectRatio:    Undefined,
-        //     },
-        //     Layout = new Layout{
-        //         Dimensions:                  defaultDimensionValues,
-        //         lastParentDirection:         Direction(-1),
-        //         nextCachedMeasurementsIndex: 0,
-        //         computedFlexBasis:           Undefined,
-        //         HadOverflow:                 false,
-        //         measuredDimensions = defaultDimensionValues,
-        //         CachedMeasurement cachedLayout = new CachedMeasurement{
-        //             widthMeasureMode = MeasureMode(-1),
-        //             heightMeasureMode: MeasureMode(-1),
-        //             computedWidth = -1,
-        //             computedHeight = -1,
-        //         },
-        //     },
-        // };
+        }
 
         readonly static Value ValueZero =  new Value(0, Unit.Point);
         readonly static Value ValueUndefined = new Value(float.NaN, Unit.Undefined);
 
         readonly static Value ValueAuto = new Value(float.NaN, Unit.Auto);
 
+        static Config configDefaults()
+        {
+            return new Config();
+        }
 
         static bool feq(float a, float b)
         {
@@ -508,7 +526,7 @@ namespace Rockyfi
         // // NewNodeWithConfig creates new node with config
         static Node NewNodeWithConfig(Config config)
         {
-            var node = nodeDefaults;
+            var node = nodeDefaults();
 
             if( config.UseWebDefaults)
             {
@@ -522,7 +540,7 @@ namespace Rockyfi
         // // NewNode creates a new node
         static Node NewNode()
         {
-            return NewNodeWithConfig(configDefaults);
+            return NewNodeWithConfig(configDefaults());
         }
 
         // static int Len(Node[] array)
@@ -538,7 +556,7 @@ namespace Rockyfi
             node.Children.Clear();
 
             var config = node.Config;
-            node = nodeDefaults;
+            node = nodeDefaults();
             if(config.UseWebDefaults)
             {
                 node.Style.FlexDirection = FlexDirection.Row;
@@ -549,13 +567,13 @@ namespace Rockyfi
 
         // ConfigGetDefault returns default config, only for C#
         static Config ConfigGetDefault() {
-            return configDefaults;
+            return configDefaults();
         }
 
         // NewConfig creates new config
         static Config NewConfig()
         {
-            return new Config(configDefaults);
+            return configDefaults();
         }
 
         // ConfigCopy copies a config
@@ -588,7 +606,7 @@ namespace Rockyfi
             } else {
                 assertWithNode(
                     node,
-                    Len(node.Children) == 0,
+                    node.Children.Count == 0,
                     "Cannot set measure function: Nodes with measure functions cannot have children.");
                 node.Measure = measureFunc;
                 // TODO: t18095186 Move nodeType to opt-in function and mark appropriate places in Litho
@@ -612,7 +630,7 @@ namespace Rockyfi
         {
             if (node.Children.Remove(child))
             {
-                child.Layout = nodeDefaults.Layout; // layout is no longer valid
+                child.Layout.ResetToDefault(); // layout is no longer valid
                 child.Parent = null;
                 nodeMarkDirtyInternal(node);
             }
@@ -1250,12 +1268,12 @@ namespace Rockyfi
         //         // set the cross
         //         // axis to be measured exactly with the available inner width
         //         if !isMainAxisRow && !FloatIsUndefined(width) && !isRowStyleDimDefined &&
-        //             widthMode == MeasureModeExactly && nodeAlignItem(node, child) == AlignStretch {
+        //             widthMode == MeasureModeExactly && nodeAlignItem(node, child) == Align.Stretch {
         //             childWidth = width
         //             childWidthMeasureMode = MeasureModeExactly
         //         }
         //         if isMainAxisRow && !FloatIsUndefined(height) && !isColumnStyleDimDefined &&
-        //             heightMode == MeasureModeExactly && nodeAlignItem(node, child) == AlignStretch {
+        //             heightMode == MeasureModeExactly && nodeAlignItem(node, child) == Align.Stretch {
         //             childHeight = height
         //             childHeightMeasureMode = MeasureModeExactly
         //         }
@@ -2187,7 +2205,7 @@ namespace Rockyfi
         //                     !nodeIsStyleDimDefined(currentRelativeChild, crossAxis, availableInnerCrossDim) &&
         //                     measureModeCrossDim == MeasureModeExactly &&
         //                     !(isNodeFlexWrap && flexBasisOverflows) &&
-        //                     nodeAlignItem(node, currentRelativeChild) == AlignStretch {
+        //                     nodeAlignItem(node, currentRelativeChild) == Align.Stretch {
         //                     childCrossSize = availableInnerCrossDim
         //                     childCrossMeasureMode = MeasureModeExactly
         //                 } else if !nodeIsStyleDimDefined(currentRelativeChild,
@@ -2246,7 +2264,7 @@ namespace Rockyfi
         //                     &childCrossSize)
 
         //                 requiresStretchLayout := !nodeIsStyleDimDefined(currentRelativeChild, crossAxis, availableInnerCrossDim) &&
-        //                     nodeAlignItem(node, currentRelativeChild) == AlignStretch
+        //                     nodeAlignItem(node, currentRelativeChild) == Align.Stretch
 
         //                 childWidth := childCrossSize
         //                 if isMainAxisRow {
@@ -2345,7 +2363,7 @@ namespace Rockyfi
         //                 // Space on the edges is half of the space between elements
         //                 betweenMainDim = remainingFreeSpace / float(itemsOnLine)
         //                 leadingMainDim = betweenMainDim / 2
-        //             case JustifyFlexStart:
+        //             case Justify.FlexStart:
         //             }
         //         }
 
@@ -2469,7 +2487,7 @@ namespace Rockyfi
         //                     // time, this time
         //                     // forcing the cross-axis size to be the computed cross size for the
         //                     // current line.
-        //                     if alignItem == AlignStretch &&
+        //                     if alignItem == Align.Stretch &&
         //                         marginLeadingValue(child, crossAxis).Unit != UnitAuto &&
         //                         marginTrailingValue(child, crossAxis).Unit != UnitAuto {
         //                         // If the child defines a definite size for its cross axis, there's
@@ -2579,7 +2597,7 @@ namespace Rockyfi
         //             currentLead += remainingAlignContentDim
         //         case AlignCenter:
         //             currentLead += remainingAlignContentDim / 2
-        //         case AlignStretch:
+        //         case Align.Stretch:
         //             if availableInnerCrossDim > totalLineCrossDim {
         //                 crossDimLead = remainingAlignContentDim / float(lineCount)
         //             }
@@ -2661,7 +2679,7 @@ namespace Rockyfi
         //                                 childHeight := child.Layout.measuredDimensions[dim[crossAxis]]
         //                                 child.Layout.Position[pos[crossAxis]] = currentLead + (lineHeight-childHeight)/2
         //                             }
-        //                         case AlignStretch:
+        //                         case Align.Stretch:
         //                             {
         //                                 child.Layout.Position[pos[crossAxis]] =
         //                                     currentLead + nodeLeadingMargin(child, crossAxis, availableInnerWidth)
