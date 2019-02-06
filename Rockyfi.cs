@@ -1025,38 +1025,38 @@ namespace Rockyfi
             return !isNotDefined;
         }
 
-        // static nodeIsLayoutDimDefined(Node node, FlexDirection axis) bool {
-        //     value := node.Layout.measuredDimensions[dim[axis]]
-        //     return !FloatIsUndefined(value) && value >= 0
+        // static bool nodeIsLayoutDimDefined(Node node, FlexDirection axis) {
+        //     var value = node.Layout.measuredDimensions[dim[(int)axis]];
+        //     return (!FloatIsUndefined(value) && value >= 0);
         // }
 
-        // static nodeIsLeadingPosDefined(Node node, FlexDirection axis) bool {
+        // static bool nodeIsLeadingPosDefined(Node node, FlexDirection axis) {
         //     return (flexDirectionIsRow(axis) &&
         //         computedEdgeValue(node.Style.Position[:], Edge.Start, &ValueUndefined).Unit !=
-        //             UnitUndefined) ||
+        //             Unit.Undefined) ||
         //         computedEdgeValue(node.Style.Position[:], leading[axis], &ValueUndefined).Unit !=
-        //             UnitUndefined
+        //             Unit.Undefined
         // }
 
         // static nodeIsTrailingPosDefined(Node node, FlexDirection axis) bool {
         //     return (flexDirectionIsRow(axis) &&
         //         computedEdgeValue(node.Style.Position[:], Edge.End, &ValueUndefined).Unit !=
-        //             UnitUndefined) ||
+        //             Unit.Undefined) ||
         //         computedEdgeValue(node.Style.Position[:], trailing[axis], &ValueUndefined).Unit !=
-        //             UnitUndefined
+        //             Unit.Undefined
         // }
 
         // static nodeLeadingPosition(Node node, FlexDirection axis, axisSize float) float {
         //     if flexDirectionIsRow(axis) {
         //         leadingPosition := computedEdgeValue(node.Style.Position[:], Edge.Start, &ValueUndefined)
-        //         if leadingPosition.Unit != UnitUndefined {
+        //         if leadingPosition.Unit != Unit.Undefined {
         //             return resolveValue(leadingPosition, axisSize)
         //         }
         //     }
 
         //     leadingPosition := computedEdgeValue(node.Style.Position[:], leading[axis], &ValueUndefined)
 
-        //     if leadingPosition.Unit == UnitUndefined {
+        //     if leadingPosition.Unit == Unit.Undefined {
         //         return 0
         //     }
         //     return resolveValue(leadingPosition, axisSize)
@@ -1065,24 +1065,24 @@ namespace Rockyfi
         // static nodeTrailingPosition(Node node, FlexDirection axis, axisSize float) float {
         //     if flexDirectionIsRow(axis) {
         //         trailingPosition := computedEdgeValue(node.Style.Position[:], Edge.End, &ValueUndefined)
-        //         if trailingPosition.Unit != UnitUndefined {
+        //         if trailingPosition.Unit != Unit.Undefined {
         //             return resolveValue(trailingPosition, axisSize)
         //         }
         //     }
 
         //     trailingPosition := computedEdgeValue(node.Style.Position[:], trailing[axis], &ValueUndefined)
 
-        //     if trailingPosition.Unit == UnitUndefined {
+        //     if trailingPosition.Unit == Unit.Undefined {
         //         return 0
         //     }
         //     return resolveValue(trailingPosition, axisSize)
         // }
 
         // static nodeBoundAxisWithinMinAndMax(Node node, FlexDirection axis, value float, axisSize float) float {
-        //     min := Undefined
-        //     max := Undefined
+        //     var min = Undefined;
+        //     var max = Undefined;
 
-        //     if flexDirectionIsColumn(axis) {
+        //     if (flexDirectionIsColumn(axis)) {
         //         min = resolveValue(&node.Style.MinDimensions[Dimension.Height], axisSize)
         //         max = resolveValue(&node.Style.MaxDimensions[Dimension.Height], axisSize)
         //     } else if flexDirectionIsRow(axis) {
@@ -1104,14 +1104,14 @@ namespace Rockyfi
         // }
 
         // static marginLeadingValue(Node node, FlexDirection axis) *Value {
-        //     if flexDirectionIsRow(axis) && node.Style.Margin[(int)Edge.Start].Unit != UnitUndefined {
+        //     if flexDirectionIsRow(axis) && node.Style.Margin[(int)Edge.Start].Unit != Unit.Undefined {
         //         return &node.Style.Margin[(int)Edge.Start]
         //     }
         //     return &node.Style.Margin[leading[axis]]
         // }
 
         // static marginTrailingValue(Node node, FlexDirection axis) *Value {
-        //     if flexDirectionIsRow(axis) && node.Style.Margin[(int)Edge.End].Unit != UnitUndefined {
+        //     if flexDirectionIsRow(axis) && node.Style.Margin[(int)Edge.End].Unit != Unit.Undefined {
         //         return &node.Style.Margin[(int)Edge.End]
         //     }
         //     return &node.Style.Margin[trailing[axis]]
@@ -2323,7 +2323,7 @@ namespace Rockyfi
         //         // raint by the min size defined for the main axis.
 
         //         if measureModeMainDim == MeasureModeAtMost && remainingFreeSpace > 0 {
-        //             if node.Style.MinDimensions[dim[mainAxis]].Unit != UnitUndefined &&
+        //             if node.Style.MinDimensions[dim[mainAxis]].Unit != Unit.Undefined &&
         //                 resolveValue(&node.Style.MinDimensions[dim[mainAxis]], mainAxisParentSize) >= 0 {
         //                 remainingFreeSpace =
         //                     System.Math.Max(0,
