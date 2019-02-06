@@ -1032,29 +1032,29 @@ namespace Rockyfi
 
         // static bool nodeIsLeadingPosDefined(Node node, FlexDirection axis) {
         //     return (flexDirectionIsRow(axis) &&
-        //         computedEdgeValue(node.Style.Position[:], Edge.Start, &ValueUndefined).Unit !=
+        //         computedEdgeValue(node.Style.Position, Edge.Start, &ValueUndefined).Unit !=
         //             Unit.Undefined) ||
-        //         computedEdgeValue(node.Style.Position[:], leading[axis], &ValueUndefined).Unit !=
+        //         computedEdgeValue(node.Style.Position, leading[axis], &ValueUndefined).Unit !=
         //             Unit.Undefined
         // }
 
-        // static nodeIsTrailingPosDefined(Node node, FlexDirection axis) bool {
+        // static bool nodeIsTrailingPosDefined(Node node, FlexDirection axis) {
         //     return (flexDirectionIsRow(axis) &&
-        //         computedEdgeValue(node.Style.Position[:], Edge.End, &ValueUndefined).Unit !=
+        //         computedEdgeValue(node.Style.Position, Edge.End, &ValueUndefined).Unit !=
         //             Unit.Undefined) ||
-        //         computedEdgeValue(node.Style.Position[:], trailing[axis], &ValueUndefined).Unit !=
+        //         computedEdgeValue(node.Style.Position, trailing[axis], &ValueUndefined).Unit !=
         //             Unit.Undefined
         // }
 
-        // static nodeLeadingPosition(Node node, FlexDirection axis, axisSize float) float {
+        // static float nodeLeadingPosition(Node node, FlexDirection axis, axisSize float) {
         //     if (flexDirectionIsRow(axis) ) {
-        //         leadingPosition := computedEdgeValue(node.Style.Position[:], Edge.Start, &ValueUndefined)
+        //         leadingPosition := computedEdgeValue(node.Style.Position, Edge.Start, &ValueUndefined)
         //         if (leadingPosition.Unit != Unit.Undefined ) {
         //             return resolveValue(leadingPosition, axisSize)
         //         }
         //     }
 
-        //     leadingPosition := computedEdgeValue(node.Style.Position[:], leading[axis], &ValueUndefined)
+        //     leadingPosition := computedEdgeValue(node.Style.Position, leading[axis], &ValueUndefined)
 
         //     if (leadingPosition.Unit == Unit.Undefined ) {
         //         return 0
@@ -1062,15 +1062,15 @@ namespace Rockyfi
         //     return resolveValue(leadingPosition, axisSize)
         // }
 
-        // static nodeTrailingPosition(Node node, FlexDirection axis, axisSize float) float {
+        // static float nodeTrailingPosition(Node node, FlexDirection axis, axisSize float) {
         //     if (flexDirectionIsRow(axis) ) {
-        //         trailingPosition := computedEdgeValue(node.Style.Position[:], Edge.End, &ValueUndefined)
+        //         trailingPosition := computedEdgeValue(node.Style.Position, Edge.End, &ValueUndefined)
         //         if (trailingPosition.Unit != Unit.Undefined ) {
         //             return resolveValue(trailingPosition, axisSize)
         //         }
         //     }
 
-        //     trailingPosition := computedEdgeValue(node.Style.Position[:], trailing[axis], &ValueUndefined)
+        //     trailingPosition := computedEdgeValue(node.Style.Position, trailing[axis], &ValueUndefined)
 
         //     if (trailingPosition.Unit == Unit.Undefined ) {
         //         return 0
@@ -1078,7 +1078,7 @@ namespace Rockyfi
         //     return resolveValue(trailingPosition, axisSize)
         // }
 
-        // static nodeBoundAxisWithinMinAndMax(Node node, FlexDirection axis, value float, axisSize float) float {
+        // static float nodeBoundAxisWithinMinAndMax(Node node, FlexDirection axis, value float, axisSize float) {
         //     var min = Undefined;
         //     var max = Undefined;
 
@@ -1120,7 +1120,7 @@ namespace Rockyfi
 
         // // nodeBoundAxis is like nodeBoundAxisWithinMinAndMax but also ensures that
         // // the value doesn't go below the padding and border amount.
-        // static nodeBoundAxis(Node node, FlexDirection axis, value float, axisSize float, float widthSize) float {
+        // static float nodeBoundAxis(Node node, FlexDirection axis, value float, axisSize float, float widthSize) {
         //     return System.Math.Max(nodeBoundAxisWithinMinAndMax(node, axis, value, axisSize),
         //         nodePaddingAndBorderForAxis(node, axis, widthSize))
         // }
@@ -1133,7 +1133,7 @@ namespace Rockyfi
 
         // // If both left and right are defined, then use left. Otherwise return
         // // +left or -right depending on which is defined.
-        // static nodeRelativePosition(Node node, FlexDirection axis, axisSize float) float {
+        // static float nodeRelativePosition(Node node, FlexDirection axis, axisSize float) {
         //     if (nodeIsLeadingPosDefined(node, axis) ) {
         //         return nodeLeadingPosition(node, axis, axisSize)
         //     }
@@ -2868,22 +2868,22 @@ namespace Rockyfi
         //     return measureModeNames[mode]
         // }
 
-        // static measureModeSizeIsExactAndMatchesOldMeasuredSize(sizeMode MeasureMode, size float, lastComputedSize float) bool {
+        // static bool measureModeSizeIsExactAndMatchesOldMeasuredSize(sizeMode MeasureMode, size float, lastComputedSize float) {
         //     return sizeMode == MeasureModeExactly && FloatsEqual(size, lastComputedSize)
         // }
 
-        // static measureModeOldSizeIsUnspecifiedAndStillFits(sizeMode MeasureMode, size float, lastSizeMode MeasureMode, lastComputedSize float) bool {
+        // static bool measureModeOldSizeIsUnspecifiedAndStillFits(sizeMode MeasureMode, size float, lastSizeMode MeasureMode, lastComputedSize float) {
         //     return sizeMode == MeasureModeAtMost && lastSizeMode == MeasureModeUndefined &&
         //         (size >= lastComputedSize || FloatsEqual(size, lastComputedSize))
         // }
 
-        // static measureModeNewMeasureSizeIsStricterAndStillValid(sizeMode MeasureMode, size float, lastSizeMode MeasureMode, lastSize float, lastComputedSize float) bool {
+        // static bool measureModeNewMeasureSizeIsStricterAndStillValid(sizeMode MeasureMode, size float, lastSizeMode MeasureMode, lastSize float, lastComputedSize float) {
         //     return lastSizeMode == MeasureModeAtMost && sizeMode == MeasureModeAtMost &&
         //         lastSize > size && (lastComputedSize <= size || FloatsEqual(size, lastComputedSize))
         // }
 
         // // roundValueToPixelGrid rounds value to pixel grid
-        // static roundValueToPixelGrid(value float, pointScaleFactor float, forceCeil bool, forceFloor bool) float {
+        // static float roundValueToPixelGrid(value float, pointScaleFactor float, forceCeil bool, forceFloor bool) {
         //     scaledValue := value * pointScaleFactor
         //     fractial := fmodf(scaledValue, 1.0)
         //     if (FloatsEqual(fractial, 0) ) {
@@ -2908,7 +2908,7 @@ namespace Rockyfi
         // }
 
         // // nodeCanUseCachedMeasurement returns true if can use cached measurement
-        // static nodeCanUseCachedMeasurement(widthMode MeasureMode, width float, heightMode MeasureMode, height float, lastWidthMode MeasureMode, lastWidth float, lastHeightMode MeasureMode, lastHeight float, lastComputedWidth float, lastComputedHeight float, marginRow float, marginColumn float, config *Config) bool {
+        // static bool nodeCanUseCachedMeasurement(widthMode MeasureMode, width float, heightMode MeasureMode, height float, lastWidthMode MeasureMode, lastWidth float, lastHeightMode MeasureMode, lastHeight float, lastComputedWidth float, lastComputedHeight float, marginRow float, marginColumn float, config *Config) {
         //     if (lastComputedHeight < 0 || lastComputedWidth < 0 ) {
         //         return false
         //     }
@@ -3290,7 +3290,7 @@ namespace Rockyfi
         // }
 
         // // IsExperimentalFeatureEnabled returns if experimental feature is enabled
-        // static (config *Config) IsExperimentalFeatureEnabled(feature ExperimentalFeature) bool {
+        // static bool (config *Config) IsExperimentalFeatureEnabled(feature ExperimentalFeature) {
         //     return config.experimentalFeatures[feature]
         // }
 
