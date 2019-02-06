@@ -358,6 +358,16 @@ namespace Rockyfi
                     dest.experimentalFeatures[i] = src.experimentalFeatures[i];
                 }
             }
+
+            // SetExperimentalFeatureEnabled enables experimental feature
+            public void SetExperimentalFeatureEnabled(ExperimentalFeature feature, bool enabled) {
+                this.experimentalFeatures[(int)feature] = enabled;
+            }
+
+            // IsExperimentalFeatureEnabled returns if experimental feature is enabled
+            public bool IsExperimentalFeatureEnabled(ExperimentalFeature feature) {
+                return this.experimentalFeatures[(int)feature];
+            }
         }
 
         class Node
@@ -1165,170 +1175,170 @@ namespace Rockyfi
             }
         }
 
-        // static nodeSetPosition(Node node, Direction direction, mainSize float, crossSize float, float parentWidth) {
-        //     /* Root nodes should be always layouted as LTR, so we don't return negative values. */
-        //     directionRespectingRoot := DirectionLTR
-        //     if (node.Parent != null ) {
-        //         directionRespectingRoot = direction
-        //     }
+        static void nodeSetPosition(Node node, Direction direction, float mainSize, float crossSize, float parentWidth) {
+            /* Root nodes should be always layouted as LTR, so we don't return negative values. */
+            var directionRespectingRoot = Direction.LTR;
+            if (node.Parent != null ) {
+                directionRespectingRoot = direction;
+            }
 
-        //     mainAxis := resolveFlexDirection(node.Style.FlexDirection, directionRespectingRoot)
-        //     crossAxis := flexDirectionCross(mainAxis, directionRespectingRoot)
+            var mainAxis = resolveFlexDirection(node.Style.FlexDirection, directionRespectingRoot);
+            var crossAxis = flexDirectionCross(mainAxis, directionRespectingRoot);
 
-        //     relativePositionMain := nodeRelativePosition(node, mainAxis, mainSize)
-        //     relativePositionCross := nodeRelativePosition(node, crossAxis, crossSize)
+            var relativePositionMain = nodeRelativePosition(node, mainAxis, mainSize);
+            var relativePositionCross = nodeRelativePosition(node, crossAxis, crossSize);
 
-        //     pos := &node.Layout.Position
-        //     pos[leading[mainAxis]] = nodeLeadingMargin(node, mainAxis, parentWidth) + relativePositionMain
-        //     pos[trailing[mainAxis]] = nodeTrailingMargin(node, mainAxis, parentWidth) + relativePositionMain
-        //     pos[leading[crossAxis]] = nodeLeadingMargin(node, crossAxis, parentWidth) + relativePositionCross
-        //     pos[trailing[crossAxis]] = nodeTrailingMargin(node, crossAxis, parentWidth) + relativePositionCross
-        // }
+            var pos = node.Layout.Position;
+            pos[(int)leading[(int)mainAxis]] = nodeLeadingMargin(node, mainAxis, parentWidth) + relativePositionMain;
+            pos[(int)trailing[(int)mainAxis]] = nodeTrailingMargin(node, mainAxis, parentWidth) + relativePositionMain;
+            pos[(int)leading[(int)crossAxis]] = nodeLeadingMargin(node, crossAxis, parentWidth) + relativePositionCross;
+            pos[(int)trailing[(int)crossAxis]] = nodeTrailingMargin(node, crossAxis, parentWidth) + relativePositionCross;
+        }
 
-        // static nodeComputeFlexBasisForChild(Node node,
-        //     Node child,
-        //     width float,
-        //     widthMode MeasureMode,
-        //     height float,
-        //     float parentWidth,
-        //     parentHeight float,
-        //     heightMode MeasureMode,
-        //     Direction direction,
-        //     config *Config) {
-        //     mainAxis := resolveFlexDirection(node.Style.FlexDirection, direction)
-        //     isMainAxisRow := flexDirectionIsRow(mainAxis)
-        //     mainAxisSize := height
-        //     mainAxisParentSize := parentHeight
-        //     if (isMainAxisRow ) {
-        //         mainAxisSize = width
-        //         mainAxisParentSize = parentWidth
-        //     }
+        static void nodeComputeFlexBasisForChild(Node node,
+            Node child,
+            float width,
+            MeasureMode widthMode,
+            float height,
+            float parentWidth,
+            float parentHeight,
+            MeasureMode heightMode,
+            Direction direction,
+            Config config) {
+            var mainAxis = resolveFlexDirection(node.Style.FlexDirection, direction);
+            var isMainAxisRow = flexDirectionIsRow(mainAxis);
+            var mainAxisSize = height;
+            var mainAxisParentSize = parentHeight;
+            if (isMainAxisRow ) {
+                mainAxisSize = width;
+                mainAxisParentSize = parentWidth;
+            }
 
-        //     var childWidth float
-        //     var childHeight float
-        //     var childWidthMeasureMode MeasureMode
-        //     var childHeightMeasureMode MeasureMode
+            float childWidth;
+            float childHeight;
+            MeasureMode childWidthMeasureMode;
+            MeasureMode childHeightMeasureMode;
 
-        //     resolvedFlexBasis := resolveValue(nodeResolveFlexBasisPtr(child), mainAxisParentSize)
-        //     isRowStyleDimDefined := nodeIsStyleDimDefined(child, FlexDirection.Row, parentWidth)
-        //     isColumnStyleDimDefined := nodeIsStyleDimDefined(child, FlexDirection.Column, parentHeight)
+            var resolvedFlexBasis = resolveValue(nodeResolveFlexBasisPtr(child), mainAxisParentSize);
+            var isRowStyleDimDefined = nodeIsStyleDimDefined(child, FlexDirection.Row, parentWidth);
+            var isColumnStyleDimDefined = nodeIsStyleDimDefined(child, FlexDirection.Column, parentHeight);
 
-        //     if (!FloatIsUndefined(resolvedFlexBasis) && !FloatIsUndefined(mainAxisSize) ) {
-        //         if FloatIsUndefined(child.Layout.computedFlexBasis) ||
-        //             (child.Config.IsExperimentalFeatureEnabled(ExperimentalFeatureWebFlexBasis) &&
-        //                 child.Layout.computedFlexBasisGeneration != currentGenerationCount) {
-        //             child.Layout.computedFlexBasis =
-        //                 System.Math.Max(resolvedFlexBasis, nodePaddingAndBorderForAxis(child, mainAxis, parentWidth))
-        //         }
-        //     } else if (isMainAxisRow && isRowStyleDimDefined ) {
-        //         // The width is definite, so use that as the flex basis.
-        //         child.Layout.computedFlexBasis =
-        //             System.Math.Max(resolveValue(child.resolvedDimensions[Dimension.Width], parentWidth),
-        //                 nodePaddingAndBorderForAxis(child, FlexDirection.Row, parentWidth))
-        //     } else if (!isMainAxisRow && isColumnStyleDimDefined ) {
-        //         // The height is definite, so use that as the flex basis.
-        //         child.Layout.computedFlexBasis =
-        //             System.Math.Max(resolveValue(child.resolvedDimensions[Dimension.Height], parentHeight),
-        //                 nodePaddingAndBorderForAxis(child, FlexDirection.Column, parentWidth))
-        //     } else {
-        //         // Compute the flex basis and hypothetical main size (i.e. the clamped
-        //         // flex basis).
-        //         childWidth = Undefined
-        //         childHeight = Undefined
-        //         childWidthMeasureMode = MeasureMode.Undefined
-        //         childHeightMeasureMode = MeasureMode.Undefined
+            if (!FloatIsUndefined(resolvedFlexBasis) && !FloatIsUndefined(mainAxisSize) ) {
+                if (FloatIsUndefined(child.Layout.computedFlexBasis) ||
+                    (child.Config.IsExperimentalFeatureEnabled(ExperimentalFeature.WebFlexBasis) &&
+                        child.Layout.computedFlexBasisGeneration != currentGenerationCount)) {
+                    child.Layout.computedFlexBasis =
+                        System.Math.Max(resolvedFlexBasis, nodePaddingAndBorderForAxis(child, mainAxis, parentWidth));
+                }
+            } else if (isMainAxisRow && isRowStyleDimDefined ) {
+                // The width is definite, so use that as the flex basis.
+                child.Layout.computedFlexBasis =
+                    System.Math.Max(resolveValue(child.resolvedDimensions[(int)Dimension.Width], parentWidth),
+                        nodePaddingAndBorderForAxis(child, FlexDirection.Row, parentWidth));
+            } else if (!isMainAxisRow && isColumnStyleDimDefined ) {
+                // The height is definite, so use that as the flex basis.
+                child.Layout.computedFlexBasis =
+                    System.Math.Max(resolveValue(child.resolvedDimensions[(int)Dimension.Height], parentHeight),
+                        nodePaddingAndBorderForAxis(child, FlexDirection.Column, parentWidth));
+            } else {
+                // Compute the flex basis and hypothetical main size (i.e. the clamped
+                // flex basis).
+                childWidth = float.NaN;
+                childHeight = float.NaN;
+                childWidthMeasureMode = MeasureMode.Undefined;
+                childHeightMeasureMode = MeasureMode.Undefined;
 
-        //         marginRow := nodeMarginForAxis(child, FlexDirection.Row, parentWidth)
-        //         marginColumn := nodeMarginForAxis(child, FlexDirection.Column, parentWidth)
+                var marginRow = nodeMarginForAxis(child, FlexDirection.Row, parentWidth);
+                var marginColumn = nodeMarginForAxis(child, FlexDirection.Column, parentWidth);
 
-        //         if (isRowStyleDimDefined ) {
-        //             childWidth =
-        //                 resolveValue(child.resolvedDimensions[Dimension.Width], parentWidth) + marginRow
-        //             childWidthMeasureMode = MeasureMode.Exactly
-        //         }
-        //         if (isColumnStyleDimDefined ) {
-        //             childHeight =
-        //                 resolveValue(child.resolvedDimensions[Dimension.Height], parentHeight) + marginColumn
-        //             childHeightMeasureMode = MeasureMode.Exactly
-        //         }
+                if (isRowStyleDimDefined ) {
+                    childWidth =
+                        resolveValue(child.resolvedDimensions[(int)Dimension.Width], parentWidth) + marginRow;
+                    childWidthMeasureMode = MeasureMode.Exactly;
+                }
+                if (isColumnStyleDimDefined ) {
+                    childHeight =
+                        resolveValue(child.resolvedDimensions[(int)Dimension.Height], parentHeight) + marginColumn;
+                    childHeightMeasureMode = MeasureMode.Exactly;
+                }
 
-        //         // The W3C spec doesn't say anything about the 'overflow' property,
-        //         // but all major browsers appear to implement the following logic.
-        //         if (!isMainAxisRow && node.Style.Overflow == OverflowScroll) ||
-        //             node.Style.Overflow != OverflowScroll {
-        //             if (FloatIsUndefined(childWidth) && !FloatIsUndefined(width) ) {
-        //                 childWidth = width
-        //                 childWidthMeasureMode = MeasureMode.AtMost
-        //             }
-        //         }
+                // The W3C spec doesn't say anything about the 'overflow' property,
+                // but all major browsers appear to implement the following logic.
+                if ((!isMainAxisRow && node.Style.Overflow == Overflow.Scroll) ||
+                    node.Style.Overflow != Overflow.Scroll) {
+                    if (FloatIsUndefined(childWidth) && !FloatIsUndefined(width) ) {
+                        childWidth = width;
+                        childWidthMeasureMode = MeasureMode.AtMost;
+                    }
+                }
 
-        //         if (isMainAxisRow && node.Style.Overflow == OverflowScroll) ||
-        //             node.Style.Overflow != OverflowScroll {
-        //             if (FloatIsUndefined(childHeight) && !FloatIsUndefined(height) ) {
-        //                 childHeight = height
-        //                 childHeightMeasureMode = MeasureMode.AtMost
-        //             }
-        //         }
+                if ((isMainAxisRow && node.Style.Overflow == Overflow.Scroll) ||
+                    node.Style.Overflow != Overflow.Scroll) {
+                    if (FloatIsUndefined(childHeight) && !FloatIsUndefined(height) ) {
+                        childHeight = height;
+                        childHeightMeasureMode = MeasureMode.AtMost;
+                    }
+                }
 
-        //         // If child has no defined size in the cross axis and is set to stretch,
-        //         // set the cross
-        //         // axis to be measured exactly with the available inner width
-        //         if !isMainAxisRow && !FloatIsUndefined(width) && !isRowStyleDimDefined &&
-        //             widthMode == MeasureMode.Exactly && nodeAlignItem(node, child) == Align.Stretch {
-        //             childWidth = width
-        //             childWidthMeasureMode = MeasureMode.Exactly
-        //         }
-        //         if isMainAxisRow && !FloatIsUndefined(height) && !isColumnStyleDimDefined &&
-        //             heightMode == MeasureMode.Exactly && nodeAlignItem(node, child) == Align.Stretch {
-        //             childHeight = height
-        //             childHeightMeasureMode = MeasureMode.Exactly
-        //         }
+                // If child has no defined size in the cross axis and is set to stretch,
+                // set the cross
+                // axis to be measured exactly with the available inner width
+                if (!isMainAxisRow && !FloatIsUndefined(width) && !isRowStyleDimDefined &&
+                    widthMode == MeasureMode.Exactly && nodeAlignItem(node, child) == Align.Stretch) {
+                    childWidth = width;
+                    childWidthMeasureMode = MeasureMode.Exactly;
+                }
+                if (isMainAxisRow && !FloatIsUndefined(height) && !isColumnStyleDimDefined &&
+                    heightMode == MeasureMode.Exactly && nodeAlignItem(node, child) == Align.Stretch) {
+                    childHeight = height;
+                    childHeightMeasureMode = MeasureMode.Exactly;
+                }
 
-        //         if (!FloatIsUndefined(child.Style.AspectRatio) ) {
-        //             if (!isMainAxisRow && childWidthMeasureMode == MeasureMode.Exactly ) {
-        //                 child.Layout.computedFlexBasis =
-        //                     System.Math.Max((childWidth-marginRow)/child.Style.AspectRatio,
-        //                         nodePaddingAndBorderForAxis(child, FlexDirection.Column, parentWidth))
-        //                 return
-        //             } else if (isMainAxisRow && childHeightMeasureMode == MeasureMode.Exactly ) {
-        //                 child.Layout.computedFlexBasis =
-        //                     System.Math.Max((childHeight-marginColumn)*child.Style.AspectRatio,
-        //                         nodePaddingAndBorderForAxis(child, FlexDirection.Row, parentWidth))
-        //                 return
-        //             }
-        //         }
+                if (!FloatIsUndefined(child.Style.AspectRatio) ) {
+                    if (!isMainAxisRow && childWidthMeasureMode == MeasureMode.Exactly ) {
+                        child.Layout.computedFlexBasis =
+                            System.Math.Max((childWidth-marginRow)/child.Style.AspectRatio,
+                                nodePaddingAndBorderForAxis(child, FlexDirection.Column, parentWidth));
+                        return;
+                    } else if (isMainAxisRow && childHeightMeasureMode == MeasureMode.Exactly ) {
+                        child.Layout.computedFlexBasis =
+                            System.Math.Max((childHeight-marginColumn)*child.Style.AspectRatio,
+                                nodePaddingAndBorderForAxis(child, FlexDirection.Row, parentWidth));
+                        return;
+                    }
+                }
 
-        //         constrainMaxSizeForMode(
-        //             child, FlexDirection.Row, parentWidth, parentWidth, &childWidthMeasureMode, &childWidth)
-        //         constrainMaxSizeForMode(child,
-        //             FlexDirection.Column,
-        //             parentHeight,
-        //             parentWidth,
-        //             &childHeightMeasureMode,
-        //             &childHeight)
+                constrainMaxSizeForMode(
+                    child, FlexDirection.Row, parentWidth, parentWidth, ref childWidthMeasureMode, ref childWidth);
+                constrainMaxSizeForMode(child,
+                    FlexDirection.Column,
+                    parentHeight,
+                    parentWidth,
+                    ref childHeightMeasureMode,
+                    ref childHeight);
 
-        //         // Measure the child
-        //         layoutNodeInternal(child,
-        //             childWidth,
-        //             childHeight,
-        //             direction,
-        //             childWidthMeasureMode,
-        //             childHeightMeasureMode,
-        //             parentWidth,
-        //             parentHeight,
-        //             false,
-        //             "measure",
-        //             config)
+                // Measure the child
+                layoutNodeInternal(child,
+                    childWidth,
+                    childHeight,
+                    direction,
+                    childWidthMeasureMode,
+                    childHeightMeasureMode,
+                    parentWidth,
+                    parentHeight,
+                    false,
+                    "measure",
+                    config);
 
-        //         child.Layout.computedFlexBasis =
-        //             System.Math.Max(child.Layout.measuredDimensions[dim[mainAxis]],
-        //                 nodePaddingAndBorderForAxis(child, mainAxis, parentWidth))
-        //     }
+                child.Layout.computedFlexBasis =
+                    System.Math.Max(child.Layout.measuredDimensions[(int)dim[(int)mainAxis]],
+                        nodePaddingAndBorderForAxis(child, mainAxis, parentWidth));
+            }
 
-        //     child.Layout.computedFlexBasisGeneration = currentGenerationCount
-        // }
+            child.Layout.computedFlexBasisGeneration = currentGenerationCount;
+        }
 
-        // static nodeAbsoluteLayoutChild(Node node, Node child, width float, widthMode MeasureMode, height float, Direction direction, config *Config) {
+        // static nodeAbsoluteLayoutChild(Node node, Node child, float width, MeasureMode widthMode, float height, Direction direction, config *Config) {
         //     mainAxis := resolveFlexDirection(node.Style.FlexDirection, direction)
         //     crossAxis := flexDirectionCross(mainAxis, direction)
         //     isMainAxisRow := flexDirectionIsRow(mainAxis)
@@ -1488,7 +1498,7 @@ namespace Rockyfi
         // }
 
         // // nodeWithMeasureFuncSetMeasuredDimensions sets measure dimensions for node with measure func
-        // static nodeWithMeasureFuncSetMeasuredDimensions(Node node, availableWidth float, availableHeight float, widthMeasureMode MeasureMode, heightMeasureMode MeasureMode, float parentWidth, parentHeight float) {
+        // static nodeWithMeasureFuncSetMeasuredDimensions(Node node, availableWidth float, availableHeight float, widthMeasureMode MeasureMode, heightMeasureMode MeasureMode, float parentWidth, float parentHeight) {
         //     assertWithNode(node, node.Measure != null, "Expected node to have custom measure function")
 
         //     paddingAndBorderAxisRow := nodePaddingAndBorderForAxis(node, FlexDirection.Row, availableWidth)
@@ -1538,7 +1548,7 @@ namespace Rockyfi
         // // nodeEmptyContainerSetMeasuredDimensions sets measure dimensions for empty container
         // // For nodes with no children, use the available values if they were provided,
         // // or the minimum size as indicated by the padding and border sizes.
-        // static nodeEmptyContainerSetMeasuredDimensions(Node node, availableWidth float, availableHeight float, widthMeasureMode MeasureMode, heightMeasureMode MeasureMode, float parentWidth, parentHeight float) {
+        // static nodeEmptyContainerSetMeasuredDimensions(Node node, availableWidth float, availableHeight float, widthMeasureMode MeasureMode, heightMeasureMode MeasureMode, float parentWidth, float parentHeight) {
         //     paddingAndBorderAxisRow := nodePaddingAndBorderForAxis(node, FlexDirection.Row, parentWidth)
         //     paddingAndBorderAxisColumn := nodePaddingAndBorderForAxis(node, FlexDirection.Column, parentWidth)
         //     marginAxisRow := nodeMarginForAxis(node, FlexDirection.Row, parentWidth)
@@ -1563,7 +1573,7 @@ namespace Rockyfi
         //     widthMeasureMode MeasureMode,
         //     heightMeasureMode MeasureMode,
         //     float parentWidth,
-        //     parentHeight float) bool {
+        //     float parentHeight) bool {
         //     if (widthMeasureMode == MeasureMode.AtMost && availableWidth <= 0) ||
         //         (heightMeasureMode == MeasureMode.AtMost && availableHeight <= 0) ||
         //         (widthMeasureMode == MeasureMode.Exactly && heightMeasureMode == MeasureMode.Exactly) {
@@ -1698,7 +1708,7 @@ namespace Rockyfi
         // //    in that dimension.
         // static nodelayoutImpl(Node node, availableWidth float, availableHeight float,
         //     parentDirection Direction, widthMeasureMode MeasureMode,
-        //     heightMeasureMode MeasureMode, float parentWidth, parentHeight float,
+        //     heightMeasureMode MeasureMode, float parentWidth, float parentHeight,
         //     performLayout bool, config *Config) {
         //     // assertWithNode(node, YGFloatIsUndefined(availableWidth) ? widthMeasureMode == YGMeasureModeUndefined : true, "availableWidth is indefinite so widthMeasureMode must be YGMeasureModeUndefined");
         //     //assertWithNode(node, YGFloatIsUndefined(availableHeight) ? heightMeasureMode == YGMeasureModeUndefined : true, "availableHeight is indefinite so heightMeasureMode must be YGMeasureModeUndefined");
@@ -1843,7 +1853,7 @@ namespace Rockyfi
         //         }
         //     }
 
-        //     var totalOuterFlexBasis float
+        //     float totalOuterFlexBasis;
 
         //     // STEP 3: DETERMINE FLEX BASIS FOR EACH ITEM
         //     for i := 0; i < childCount; i++ {
@@ -1919,10 +1929,10 @@ namespace Rockyfi
         //     lineCount := 0
 
         //     // Accumulated cross dimensions of all lines so far.
-        //     var totalLineCrossDim float
+        //     float totalLineCrossDim;
 
         //     // Max main dimension of all the lines.
-        //     var maxLineMainDim float
+        //     float maxLineMainDim;
 
         //     for endOfLineIndex < childCount {
         //         // Number of items on the currently line. May be different than the
@@ -1935,11 +1945,11 @@ namespace Rockyfi
         //         // of all the children on the current line. This will be used in order to
         //         // either set the dimensions of the node if none already exist or to compute
         //         // the remaining space left for the flexible children.
-        //         var sizeConsumedOnCurrentLine float
-        //         var sizeConsumedOnCurrentLineIncludingMinConstraint float
+        //         float sizeConsumedOnCurrentLine;
+        //         float sizeConsumedOnCurrentLineIncludingMinConstraint;
 
-        //         var totalFlexGrowFactors float
-        //         var totalFlexShrinkScaledFactors float
+        //         float totalFlexGrowFactors;
+        //         float totalFlexShrinkScaledFactors;
 
         //         // Maintain a linked list of the child nodes that can shrink and/or grow.
         //         var firstRelativeChild *Node
@@ -2013,8 +2023,8 @@ namespace Rockyfi
         //         // In order to position the elements in the main axis, we have two
         //         // controls. The space between the beginning and the first element
         //         // and the space between each two elements.
-        //         var leadingMainDim float
-        //         var betweenMainDim float
+        //         float leadingMainDim;
+        //         float betweenMainDim;
 
         //         // STEP 5: RESOLVING FLEXIBLE LENGTHS ON MAIN AXIS
         //         // Calculate the remaining available space that needs to be allocated.
@@ -2038,7 +2048,7 @@ namespace Rockyfi
         //             }
         //         }
 
-        //         var remainingFreeSpace float
+        //         float remainingFreeSpace;
         //         if (!FloatIsUndefined(availableInnerMainDim) ) {
         //             remainingFreeSpace = availableInnerMainDim - sizeConsumedOnCurrentLine
         //         } else if (sizeConsumedOnCurrentLine < 0 ) {
@@ -2050,14 +2060,14 @@ namespace Rockyfi
         //         }
 
         //         originalRemainingFreeSpace := remainingFreeSpace
-        //         var deltaFreeSpace float
+        //         float deltaFreeSpace;
 
         //         if (!canSkipFlex ) {
-        //             var childFlexBasis float
-        //             var flexShrinkScaledFactor float
-        //             var flexGrowFactor float
-        //             var baseMainSize float
-        //             var boundMainSize float
+        //             float childFlexBasis;
+        //             float flexShrinkScaledFactor;
+        //             float flexGrowFactor;
+        //             float baseMainSize;
+        //             float boundMainSize;
 
         //             // Do two passes over the flex items to figure out how to distribute the
         //             // remaining space.
@@ -2082,8 +2092,8 @@ namespace Rockyfi
         //             // concerns because we know exactly how many passes it'll do.
 
         //             // First pass: detect the flex items whose min/max raints trigger
-        //             var deltaFlexShrinkScaledFactors float
-        //             var deltaFlexGrowFactors float
+        //             float deltaFlexShrinkScaledFactors;
+        //             float deltaFlexGrowFactors;
         //             currentRelativeChild = firstRelativeChild
         //             for currentRelativeChild != null {
         //                 childFlexBasis =
@@ -2166,7 +2176,7 @@ namespace Rockyfi
         //                     flexShrinkScaledFactor = -nodeResolveFlexShrink(currentRelativeChild) * childFlexBasis
         //                     // Is this child able to shrink?
         //                     if (flexShrinkScaledFactor != 0 ) {
-        //                         var childSize float
+        //                         float childSize;
 
         //                         if (totalFlexShrinkScaledFactors == 0 ) {
         //                             childSize = childFlexBasis + flexShrinkScaledFactor
@@ -2202,9 +2212,9 @@ namespace Rockyfi
         //                 marginMain := nodeMarginForAxis(currentRelativeChild, mainAxis, availableInnerWidth)
         //                 marginCross := nodeMarginForAxis(currentRelativeChild, crossAxis, availableInnerWidth)
 
-        //                 var childCrossSize float
+        //                 float childCrossSize;
         //                 childMainSize := updatedMainSize + marginMain
-        //                 var childCrossMeasureMode MeasureMode
+        //                 MeasureMode childCrossMeasureMode;
         //                 childMainMeasureMode := MeasureMode.Exactly
 
         //                 if !FloatIsUndefined(availableInnerCrossDim) &&
@@ -2374,7 +2384,7 @@ namespace Rockyfi
         //         }
 
         //         mainDim := leadingPaddingAndBorderMain + leadingMainDim
-        //         var crossDim float
+        //         float crossDim;
 
         //         for i := startOfLineIndex; i < endOfLineIndex; i++ {
         //             child := node.Children[i]
@@ -2595,7 +2605,7 @@ namespace Rockyfi
         //         !FloatIsUndefined(availableInnerCrossDim) {
         //         remainingAlignContentDim := availableInnerCrossDim - totalLineCrossDim
 
-        //         var crossDimLead float
+        //         float crossDimLead;
         //         currentLead := leadingPaddingAndBorderCross
 
         //         switch node.Style.AlignContent {
@@ -2631,9 +2641,9 @@ namespace Rockyfi
 //         //             (var ii i)nt
 // ;
 //         //             // compute the line's height and find the endInde.x
-//  ;       //             var lineHeight float
-//         //             var maxAscentForCurrentLine float;
-//         //             var maxDescentForCurrentLine float
+//  ;       //             float lineHeight;
+//         //             float maxAscentForCurrentLine;
+//         //             float maxDescentForCurrentLine;
         //             for ii = startIndex; ii < childCount; ii++ {
         //                 child := node.Children[ii]
         //                 if (child.Style.Display == DisplayNone ) {
@@ -2750,13 +2760,13 @@ namespace Rockyfi
         //     // If the user didn't specify a width or height for the node, set the
         //     // dimensions based on the children.
         //     if measureModeMainDim == MeasureMode.Undefined ||
-        //         (node.Style.Overflow != OverflowScroll && measureModeMainDim == MeasureMode.AtMost) {
+        //         (node.Style.Overflow != Overflow.Scroll && measureModeMainDim == MeasureMode.AtMost) {
         //         // Clamp the size to the min/max size, if specified, and make sure it
         //         // doesn't go below the padding and border amount.
         //         node.Layout.measuredDimensions[dim[mainAxis]] =
         //             nodeBoundAxis(node, mainAxis, maxLineMainDim, mainAxisParentSize, parentWidth)
         //     } else if measureModeMainDim == MeasureMode.AtMost &&
-        //         node.Style.Overflow == OverflowScroll {
+        //         node.Style.Overflow == Overflow.Scroll {
         //         node.Layout.measuredDimensions[dim[mainAxis]] = System.Math.Max(
         //             fminf(availableInnerMainDim+paddingAndBorderAxisMain,
         //                 nodeBoundAxisWithinMinAndMax(node, mainAxis, maxLineMainDim, mainAxisParentSize)),
@@ -2764,7 +2774,7 @@ namespace Rockyfi
         //     }
 
         //     if measureModeCrossDim == MeasureMode.Undefined ||
-        //         (node.Style.Overflow != OverflowScroll && measureModeCrossDim == MeasureMode.AtMost) {
+        //         (node.Style.Overflow != Overflow.Scroll && measureModeCrossDim == MeasureMode.AtMost) {
         //         // Clamp the size to the min/max size, if specified, and make sure it
         //         // doesn't go below the padding and border amount.
         //         node.Layout.measuredDimensions[dim[crossAxis]] =
@@ -2774,7 +2784,7 @@ namespace Rockyfi
         //                 crossAxisParentSize,
         //                 parentWidth)
         //     } else if measureModeCrossDim == MeasureMode.AtMost &&
-        //         node.Style.Overflow == OverflowScroll {
+        //         node.Style.Overflow == Overflow.Scroll {
         //         node.Layout.measuredDimensions[dim[crossAxis]] =
         //             System.Math.Max(fminf(availableInnerCrossDim+paddingAndBorderAxisCross,
         //                 nodeBoundAxisWithinMinAndMax(node,
@@ -2904,7 +2914,7 @@ namespace Rockyfi
         //         scaledValue = scaledValue - fractial
         //     } else {
         //         // Finally we just round the value
-        //         var f float
+        //         float f;
         //         if (fractial >= 0.5 ) {
         //             f = 1.0
         //         }
@@ -2914,7 +2924,7 @@ namespace Rockyfi
         // }
 
         // // nodeCanUseCachedMeasurement returns true if can use cached measurement
-        // static bool nodeCanUseCachedMeasurement(widthMode MeasureMode, width float, heightMode MeasureMode, height float, lastWidthMode MeasureMode, lastWidth float, lastHeightMode MeasureMode, lastHeight float, lastComputedWidth float, lastComputedHeight float, marginRow float, marginColumn float, config *Config) {
+        // static bool nodeCanUseCachedMeasurement(MeasureMode widthMode, float width, MeasureMode heightMode, float height, lastWidthMode MeasureMode, lastWidth float, lastHeightMode MeasureMode, lastHeight float, lastComputedWidth float, lastComputedHeight float, marginRow float, marginColumn float, config *Config) {
         //     if (lastComputedHeight < 0 || lastComputedWidth < 0 ) {
         //         return false
         //     }
@@ -2967,7 +2977,7 @@ namespace Rockyfi
         // //  Return parameter is true if layout was performed, false if skipped
         // static layoutNodeInternal(Node node, availableWidth float, availableHeight float,
         //     parentDirection Direction, widthMeasureMode MeasureMode,
-        //     heightMeasureMode MeasureMode, float parentWidth, parentHeight float,
+        //     heightMeasureMode MeasureMode, float parentWidth, float parentHeight,
         //     performLayout bool, reason string, config *Config) bool {
         //     layout := &node.Layout
 
@@ -3246,7 +3256,7 @@ namespace Rockyfi
         //     }
         //     return width, widthMeasureMode
         // }
-        // static calcStartHeight(Node node, parentWidth, parentHeight float) (float, MeasureMode) {
+        // static calcStartHeight(Node node, parentWidth, float parentHeight) (float, MeasureMode) {
         //     if (nodeIsStyleDimDefined(node, FlexDirection.Column, parentHeight) ) {
         //         height := resolveValue(node.resolvedDimensions[dim[FlexDirection.Column]], parentHeight)
         //         margin := nodeMarginForAxis(node, FlexDirection.Column, parentWidth)
@@ -3265,7 +3275,7 @@ namespace Rockyfi
         // }
 
         // // CalculateLayout calculates layout
-        // static CalculateLayout(Node node, float parentWidth, parentHeight float, parentDirection Direction) {
+        // static CalculateLayout(Node node, float parentWidth, float parentHeight, parentDirection Direction) {
         //     // Increment the generation count. This will force the recursive routine to
         //     // visit
         //     // all dirty nodes at least once. Subsequent visits will be skipped if the
@@ -3290,15 +3300,6 @@ namespace Rockyfi
         //     }
         // }
 
-        // // SetExperimentalFeatureEnabled enables experimental feature
-        // static (config *Config) SetExperimentalFeatureEnabled(feature ExperimentalFeature, enabled bool) {
-        //     config.experimentalFeatures[feature] = enabled
-        // }
-
-        // // IsExperimentalFeatureEnabled returns if experimental feature is enabled
-        // static bool (config *Config) IsExperimentalFeatureEnabled(feature ExperimentalFeature) {
-        //     return config.experimentalFeatures[feature]
-        // }
 
         // static log(Node node, level LogLevel, format string, args ...interface{}) {
         //     fmt.Printf(format, args...)
