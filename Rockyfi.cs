@@ -1729,59 +1729,59 @@ namespace Rockyfi
         //     //assertWithNode(node, YGFloatIsUndefined(availableHeight) ? heightMeasureMode == YGMeasureModeUndefined : true, "availableHeight is indefinite so heightMeasureMode must be YGMeasureModeUndefined");
 
         //     // Set the resolved resolution in the node's layout.
-        //     direction := nodeResolveDirection(node, parentDirection)
-        //     node.Layout.Direction = direction
+        //     direction := nodeResolveDirection(node, parentDirection);
+        //     node.Layout.Direction = direction;
 
-        //     flexRowDirection := resolveFlexDirection(FlexDirection.Row, direction)
-        //     flexColumnDirection := resolveFlexDirection(FlexDirection.Column, direction)
+        //     flexRowDirection := resolveFlexDirection(FlexDirection.Row, direction);
+        //     flexColumnDirection := resolveFlexDirection(FlexDirection.Column, direction);
 
-        //     node.Layout.Margin[(int)Edge.Start] = nodeLeadingMargin(node, flexRowDirection, parentWidth)
-        //     node.Layout.Margin[(int)Edge.End] = nodeTrailingMargin(node, flexRowDirection, parentWidth)
-        //     node.Layout.Margin[Edge.Top] = nodeLeadingMargin(node, flexColumnDirection, parentWidth)
-        //     node.Layout.Margin[Edge.Bottom] = nodeTrailingMargin(node, flexColumnDirection, parentWidth)
+        //     node.Layout.Margin[(int)Edge.Start] = nodeLeadingMargin(node, flexRowDirection, parentWidth);
+        //     node.Layout.Margin[(int)Edge.End] = nodeTrailingMargin(node, flexRowDirection, parentWidth);
+        //     node.Layout.Margin[(int)Edge.Top] = nodeLeadingMargin(node, flexColumnDirection, parentWidth);
+        //     node.Layout.Margin[(int)Edge.Bottom] = nodeTrailingMargin(node, flexColumnDirection, parentWidth);
 
-        //     node.Layout.Border[(int)Edge.Start] = nodeLeadingBorder(node, flexRowDirection)
-        //     node.Layout.Border[(int)Edge.End] = nodeTrailingBorder(node, flexRowDirection)
-        //     node.Layout.Border[Edge.Top] = nodeLeadingBorder(node, flexColumnDirection)
-        //     node.Layout.Border[Edge.Bottom] = nodeTrailingBorder(node, flexColumnDirection)
+        //     node.Layout.Border[(int)Edge.Start] = nodeLeadingBorder(node, flexRowDirection);
+        //     node.Layout.Border[(int)Edge.End] = nodeTrailingBorder(node, flexRowDirection);
+        //     node.Layout.Border[(int)Edge.Top] = nodeLeadingBorder(node, flexColumnDirection);
+        //     node.Layout.Border[(int)Edge.Bottom] = nodeTrailingBorder(node, flexColumnDirection);
 
-        //     node.Layout.Padding[(int)Edge.Start] = nodeLeadingPadding(node, flexRowDirection, parentWidth)
-        //     node.Layout.Padding[(int)Edge.End] = nodeTrailingPadding(node, flexRowDirection, parentWidth)
-        //     node.Layout.Padding[Edge.Top] = nodeLeadingPadding(node, flexColumnDirection, parentWidth)
-        //     node.Layout.Padding[Edge.Bottom] = nodeTrailingPadding(node, flexColumnDirection, parentWidth)
+        //     node.Layout.Padding[(int)Edge.Start] = nodeLeadingPadding(node, flexRowDirection, parentWidth);
+        //     node.Layout.Padding[(int)Edge.End] = nodeTrailingPadding(node, flexRowDirection, parentWidth);
+        //     node.Layout.Padding[(int)Edge.Top] = nodeLeadingPadding(node, flexColumnDirection, parentWidth);
+        //     node.Layout.Padding[(int)Edge.Bottom] = nodeTrailingPadding(node, flexColumnDirection, parentWidth);
 
         //     if (node.Measure != null ) {
-        //         nodeWithMeasureFuncSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight)
-        //         return
+        //         nodeWithMeasureFuncSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight);
+        //         return;
         //     }
 
         //     childCount := len(node.Children)
         //     if (childCount == 0 ) {
-        //         nodeEmptyContainerSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight)
-        //         return
+        //         nodeEmptyContainerSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight);
+        //         return;
         //     }
 
         //     // If we're not being asked to perform a full layout we can skip the algorithm if we already know
         //     // the size
         //     if (!performLayout && nodeFixedSizeSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight) ) {
-        //         return
+        //         return;
         //     }
 
         //     // Reset layout flags, as they could have changed.
-        //     node.Layout.HadOverflow = false
+        //     node.Layout.HadOverflow = false;
 
         //     // STEP 1: CALCULATE VALUES FOR REMAINDER OF ALGORITHM
-        //     mainAxis := resolveFlexDirection(node.Style.FlexDirection, direction)
-        //     crossAxis := flexDirectionCross(mainAxis, direction)
-        //     isMainAxisRow := flexDirectionIsRow(mainAxis)
-        //     justifyContent := node.Style.JustifyContent
-        //     isNodeFlexWrap := node.Style.FlexWrap != WrapNoWrap
+        //     mainAxis := resolveFlexDirection(node.Style.FlexDirection, direction);
+        //     crossAxis := flexDirectionCross(mainAxis, direction);
+        //     isMainAxisRow := flexDirectionIsRow(mainAxis);
+        //     justifyContent := node.Style.JustifyContent;
+        //     isNodeFlexWrap := node.Style.FlexWrap != WrapNoWrap;
 
-        //     mainAxisParentSize := parentHeight
-        //     crossAxisParentSize := parentWidth
+        //     mainAxisParentSize := parentHeight;
+        //     crossAxisParentSize := parentWidth;
         //     if (isMainAxisRow ) {
-        //         mainAxisParentSize = parentWidth
-        //         crossAxisParentSize = parentHeight
+        //         mainAxisParentSize = parentWidth;
+        //         crossAxisParentSize = parentHeight;
         //     }
 
         //     var firstAbsoluteChild *Node
@@ -1860,7 +1860,7 @@ namespace Rockyfi
         //                 if (nodeIsFlex(child) ) {
         //                     // There is already a flexible child, abort.
         //                     singleFlexChild = null
-        //                     break
+        //                     break;
         //                 }
         //             } else if (resolveFlexGrow(child) > 0 && nodeResolveFlexShrink(child) > 0 ) {
         //                 singleFlexChild = child
@@ -1877,7 +1877,7 @@ namespace Rockyfi
         //             zeroOutLayoutRecursivly(child)
         //             child.hasNewLayout = true
         //             child.IsDirty = false
-        //             continue
+        //             continue;
         //         }
         //         resolveDimensions(child)
         //         if (performLayout ) {
@@ -1975,7 +1975,7 @@ namespace Rockyfi
         //             child := node.Children[i]
         //             if (child.Style.Display == DisplayNone ) {
         //                 endOfLineIndex++
-        //                 continue
+        //                 continue;
         //             }
         //             child.lineIndex = lineCount
 
@@ -1992,7 +1992,7 @@ namespace Rockyfi
         //                     childMarginMainAxis >
         //                     availableInnerMainDim &&
         //                     isNodeFlexWrap && itemsOnLine > 0 {
-        //                     break
+        //                     break;
         //                 }
 
         //                 sizeConsumedOnCurrentLineIncludingMinConstraint +=
@@ -2404,7 +2404,7 @@ namespace Rockyfi
         //         for i := startOfLineIndex; i < endOfLineIndex; i++ {
         //             child := node.Children[i]
         //             if (child.Style.Display == DisplayNone ) {
-        //                 continue
+        //                 continue;
         //             }
         //             if child.Style.PositionType == PositionType.Absolute &&
         //                 nodeIsLeadingPosDefined(child, mainAxis) {
@@ -2489,7 +2489,7 @@ namespace Rockyfi
         //             for i := startOfLineIndex; i < endOfLineIndex; i++ {
         //                 child := node.Children[i]
         //                 if (child.Style.Display == DisplayNone ) {
-        //                     continue
+        //                     continue;
         //                 }
         //                 if (child.Style.PositionType == PositionType.Absolute ) {
         //                     // If the child is absolutely positioned and has a
@@ -2662,11 +2662,11 @@ namespace Rockyfi
         //             for ii = startIndex; ii < childCount; ii++ {
         //                 child := node.Children[ii]
         //                 if (child.Style.Display == DisplayNone ) {
-        //                     continue
+        //                     continue;
         //                 }
         //                 if (child.Style.PositionType == PositionType.Relative ) {
         //                     if (child.lineIndex != i ) {
-        //                         break
+        //                         break;
         //                     }
         //                     if (nodeIsLayoutDimDefined(child, crossAxis) ) {
         //                         lineHeight = System.Math.Max(lineHeight,
@@ -2689,7 +2689,7 @@ namespace Rockyfi
         //                 for ii = startIndex; ii < endIndex; ii++ {
         //                     child := node.Children[ii]
         //                     if (child.Style.Display == DisplayNone ) {
-        //                         continue
+        //                         continue;
         //                     }
         //                     if (child.Style.PositionType == PositionType.Relative ) {
         //                         switch nodeAlignItem(node, child) {
@@ -2826,7 +2826,7 @@ namespace Rockyfi
         //         for currentAbsoluteChild = firstAbsoluteChild; currentAbsoluteChild != null; currentAbsoluteChild = currentAbsoluteChild.NextChild {
         //             mode := measureModeCrossDim
         //             if (isMainAxisRow ) {
-        //                 mode = measureModeMainDim
+        //                 mode = measureModeMainDim;
         //             }
 
         //             nodeAbsoluteLayoutChild(node,
@@ -2835,7 +2835,7 @@ namespace Rockyfi
         //                 mode,
         //                 availableInnerHeight,
         //                 direction,
-        //                 config)
+        //                 config);
         //         }
 
         //         // STEP 11: SETTING TRAILING POSITIONS FOR CHILDREN
@@ -2844,17 +2844,16 @@ namespace Rockyfi
 
         //         // Set trailing position if necessary.
         //         if (needsMainTrailingPos || needsCrossTrailingPos ) {
-        //             for i := 0; i < childCount; i++ {
-        //                 child := node.Children[i]
+        //             foreach (var child in node.Children) {
         //                 if (child.Style.Display == DisplayNone ) {
-        //                     continue
+        //                     continue;
         //                 }
         //                 if (needsMainTrailingPos ) {
-        //                     nodeSetChildTrailingPosition(node, child, mainAxis)
+        //                     nodeSetChildTrailingPosition(node, child, mainAxis);
         //                 }
 
         //                 if (needsCrossTrailingPos ) {
-        //                     nodeSetChildTrailingPosition(node, child, crossAxis)
+        //                     nodeSetChildTrailingPosition(node, child, crossAxis);
         //                 }
         //             }
         //         }
