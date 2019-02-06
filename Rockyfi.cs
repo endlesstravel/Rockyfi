@@ -1811,63 +1811,63 @@ namespace Rockyfi
             var marginAxisRow = nodeMarginForAxis(node, FlexDirection.Row, parentWidth);
             var marginAxisColumn = nodeMarginForAxis(node, FlexDirection.Column, parentWidth);
 
-        //     // STEP 2: DETERMINE AVAILABLE SIZE IN MAIN AND CROSS DIRECTIONS
-        //     minInnerWidth := resolveValue(&node.Style.MinDimensions[Dimension.Width], parentWidth) - marginAxisRow -
-        //         paddingAndBorderAxisRow
-        //     maxInnerWidth := resolveValue(&node.Style.MaxDimensions[Dimension.Width], parentWidth) - marginAxisRow -
-        //         paddingAndBorderAxisRow
-        //     minInnerHeight := resolveValue(&node.Style.MinDimensions[Dimension.Height], parentHeight) -
-        //         marginAxisColumn - paddingAndBorderAxisColumn
-        //     maxInnerHeight := resolveValue(&node.Style.MaxDimensions[Dimension.Height], parentHeight) -
-        //         marginAxisColumn - paddingAndBorderAxisColumn
+            // STEP 2: DETERMINE AVAILABLE SIZE IN MAIN AND CROSS DIRECTIONS
+            var minInnerWidth = resolveValue(node.Style.MinDimensions[(int)Dimension.Width], parentWidth) - marginAxisRow -
+                paddingAndBorderAxisRow;
+            var maxInnerWidth = resolveValue(node.Style.MaxDimensions[(int)Dimension.Width], parentWidth) - marginAxisRow -
+                paddingAndBorderAxisRow;
+            var minInnerHeight = resolveValue(node.Style.MinDimensions[(int)Dimension.Height], parentHeight) -
+                marginAxisColumn - paddingAndBorderAxisColumn;
+            var maxInnerHeight = resolveValue(node.Style.MaxDimensions[(int)Dimension.Height], parentHeight) -
+                marginAxisColumn - paddingAndBorderAxisColumn;
 
-        //     minInnerMainDim := minInnerHeight
-        //     maxInnerMainDim := maxInnerHeight
-        //     if (isMainAxisRow ) {
-        //         minInnerMainDim = minInnerWidth
-        //         maxInnerMainDim = maxInnerWidth
-        //     }
+            var minInnerMainDim = minInnerHeight;
+            var maxInnerMainDim = maxInnerHeight;
+            if (isMainAxisRow ) {
+                minInnerMainDim = minInnerWidth;
+                maxInnerMainDim = maxInnerWidth;
+            }
 
-        //     // Max dimension overrides predefined dimension value; Min dimension in turn overrides both of the
-        //     // above
-        //     availableInnerWidth := availableWidth - marginAxisRow - paddingAndBorderAxisRow
-        //     if (!FloatIsUndefined(availableInnerWidth) ) {
-        //         // We want to make sure our available width does not violate min and max raints
-        //         availableInnerWidth = System.Math.Max(fminf(availableInnerWidth, maxInnerWidth), minInnerWidth)
-        //     }
+            // Max dimension overrides predefined dimension value; Min dimension in turn overrides both of the
+            // above
+            var availableInnerWidth = availableWidth - marginAxisRow - paddingAndBorderAxisRow;
+            if (!FloatIsUndefined(availableInnerWidth) ) {
+                // We want to make sure our available width does not violate min and max raints
+                availableInnerWidth = System.Math.Max(System.Math.Min(availableInnerWidth, maxInnerWidth), minInnerWidth);
+            }
 
-        //     availableInnerHeight := availableHeight - marginAxisColumn - paddingAndBorderAxisColumn
-        //     if (!FloatIsUndefined(availableInnerHeight) ) {
-        //         // We want to make sure our available height does not violate min and max raints
-        //         availableInnerHeight = System.Math.Max(fminf(availableInnerHeight, maxInnerHeight), minInnerHeight)
-        //     }
+            var availableInnerHeight = availableHeight - marginAxisColumn - paddingAndBorderAxisColumn;
+            if (!FloatIsUndefined(availableInnerHeight) ) {
+                // We want to make sure our available height does not violate min and max raints
+                availableInnerHeight = System.Math.Max(System.Math.Min(availableInnerHeight, maxInnerHeight), minInnerHeight);
+            }
 
-        //     availableInnerMainDim := availableInnerHeight
-        //     availableInnerCrossDim := availableInnerWidth
-        //     if (isMainAxisRow ) {
-        //         availableInnerMainDim = availableInnerWidth
-        //         availableInnerCrossDim = availableInnerHeight
-        //     }
+            var availableInnerMainDim = availableInnerHeight;
+            var availableInnerCrossDim = availableInnerWidth;
+            if (isMainAxisRow ) {
+                availableInnerMainDim = availableInnerWidth;
+                availableInnerCrossDim = availableInnerHeight;
+            }
 
-        //     // If there is only one child with flexGrow + flexShrink it means we can set the
-        //     // computedFlexBasis to 0 instead of measuring and shrinking / flexing the child to exactly
-        //     // match the remaining space
-        //     var singleFlexChild *Node
-        //     if (measureModeMainDim == MeasureMode.Exactly ) {
-        //         foreach (var child in node.Children) {
-        //             if (singleFlexChild != null ) {
-        //                 if (nodeIsFlex(child) ) {
-        //                     // There is already a flexible child, abort.
-        //                     singleFlexChild = null
-        //                     break;
-        //                 }
-        //             } else if (resolveFlexGrow(child) > 0 && nodeResolveFlexShrink(child) > 0 ) {
-        //                 singleFlexChild = child
-        //             }
-        //         }
-        //     }
+            // If there is only one child with flexGrow + flexShrink it means we can set the
+            // computedFlexBasis to 0 instead of measuring and shrinking / flexing the child to exactly
+            // match the remaining space
+            Node singleFlexChild = null;
+            if (measureModeMainDim == MeasureMode.Exactly ) {
+                foreach (var child in node.Children) {
+                    if (singleFlexChild != null ) {
+                        if (nodeIsFlex(child) ) {
+                            // There is already a flexible child, abort.
+                            singleFlexChild = null;
+                            break;
+                        }
+                    } else if (resolveFlexGrow(child) > 0 && nodeResolveFlexShrink(child) > 0 ) {
+                        singleFlexChild = child;
+                    }
+                }
+            }
 
-        //     float totalOuterFlexBasis;
+            float totalOuterFlexBasis;
 
         //     // STEP 3: DETERMINE FLEX BASIS FOR EACH ITEM
         //     foreach (var child in node.Children) {
