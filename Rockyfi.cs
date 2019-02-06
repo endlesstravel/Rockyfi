@@ -1025,38 +1025,38 @@ namespace Rockyfi
             return !isNotDefined;
         }
 
-        // static bool nodeIsLayoutDimDefined(Node node, FlexDirection axis) {
-        //     var value = node.Layout.measuredDimensions[dim[(int)axis]];
-        //     return (!FloatIsUndefined(value) && value >= 0);
-        // }
+        static bool nodeIsLayoutDimDefined(Node node, FlexDirection axis) {
+            var value = node.Layout.measuredDimensions[(int)dim[(int)axis]];
+            return (!FloatIsUndefined(value) && value >= 0);
+        }
 
-        // static bool nodeIsLeadingPosDefined(Node node, FlexDirection axis) {
-        //     return (flexDirectionIsRow(axis) &&
-        //         computedEdgeValue(node.Style.Position, Edge.Start, &ValueUndefined).Unit !=
-        //             Unit.Undefined) ||
-        //         computedEdgeValue(node.Style.Position, leading[axis], &ValueUndefined).Unit !=
-        //             Unit.Undefined
-        // }
+        static bool nodeIsLeadingPosDefined(Node node, FlexDirection axis) {
+            return (flexDirectionIsRow(axis) &&
+                computedEdgeValue(node.Style.Position, Edge.Start, ValueUndefined).unit !=
+                    Unit.Undefined) ||
+                computedEdgeValue(node.Style.Position, leading[axis], ValueUndefined).unit !=
+                    Unit.Undefined;
+        }
 
         // static bool nodeIsTrailingPosDefined(Node node, FlexDirection axis) {
         //     return (flexDirectionIsRow(axis) &&
-        //         computedEdgeValue(node.Style.Position, Edge.End, &ValueUndefined).Unit !=
+        //         computedEdgeValue(node.Style.Position, Edge.End, ValueUndefined).unit !=
         //             Unit.Undefined) ||
-        //         computedEdgeValue(node.Style.Position, trailing[axis], &ValueUndefined).Unit !=
+        //         computedEdgeValue(node.Style.Position, trailing[axis], ValueUndefined).unit !=
         //             Unit.Undefined
         // }
 
         // static float nodeLeadingPosition(Node node, FlexDirection axis, axisSize float) {
         //     if (flexDirectionIsRow(axis) ) {
-        //         leadingPosition := computedEdgeValue(node.Style.Position, Edge.Start, &ValueUndefined)
-        //         if (leadingPosition.Unit != Unit.Undefined ) {
+        //         leadingPosition := computedEdgeValue(node.Style.Position, Edge.Start, ValueUndefined)
+        //         if (leadingPosition.unit != Unit.Undefined ) {
         //             return resolveValue(leadingPosition, axisSize)
         //         }
         //     }
 
-        //     leadingPosition := computedEdgeValue(node.Style.Position, leading[axis], &ValueUndefined)
+        //     leadingPosition := computedEdgeValue(node.Style.Position, leading[axis], ValueUndefined)
 
-        //     if (leadingPosition.Unit == Unit.Undefined ) {
+        //     if (leadingPosition.unit == Unit.Undefined ) {
         //         return 0
         //     }
         //     return resolveValue(leadingPosition, axisSize)
@@ -1064,15 +1064,15 @@ namespace Rockyfi
 
         // static float nodeTrailingPosition(Node node, FlexDirection axis, axisSize float) {
         //     if (flexDirectionIsRow(axis) ) {
-        //         trailingPosition := computedEdgeValue(node.Style.Position, Edge.End, &ValueUndefined)
-        //         if (trailingPosition.Unit != Unit.Undefined ) {
+        //         trailingPosition := computedEdgeValue(node.Style.Position, Edge.End, ValueUndefined)
+        //         if (trailingPosition.unit != Unit.Undefined ) {
         //             return resolveValue(trailingPosition, axisSize)
         //         }
         //     }
 
-        //     trailingPosition := computedEdgeValue(node.Style.Position, trailing[axis], &ValueUndefined)
+        //     trailingPosition := computedEdgeValue(node.Style.Position, trailing[axis], ValueUndefined)
 
-        //     if (trailingPosition.Unit == Unit.Undefined ) {
+        //     if (trailingPosition.unit == Unit.Undefined ) {
         //         return 0
         //     }
         //     return resolveValue(trailingPosition, axisSize)
@@ -1104,14 +1104,14 @@ namespace Rockyfi
         // }
 
         // static marginLeadingValue(Node node, FlexDirection axis) *Value {
-        //     if (flexDirectionIsRow(axis) && node.Style.Margin[(int)Edge.Start].Unit != Unit.Undefined ) {
+        //     if (flexDirectionIsRow(axis) && node.Style.Margin[(int)Edge.Start].unit != Unit.Undefined ) {
         //         return &node.Style.Margin[(int)Edge.Start]
         //     }
         //     return &node.Style.Margin[leading[axis]]
         // }
 
         // static marginTrailingValue(Node node, FlexDirection axis) *Value {
-        //     if (flexDirectionIsRow(axis) && node.Style.Margin[(int)Edge.End].Unit != Unit.Undefined ) {
+        //     if (flexDirectionIsRow(axis) && node.Style.Margin[(int)Edge.End].unit != Unit.Undefined ) {
         //         return &node.Style.Margin[(int)Edge.End]
         //     }
         //     return &node.Style.Margin[trailing[axis]]
@@ -2220,7 +2220,7 @@ namespace Rockyfi
         //                     childCrossSize = resolveValue(currentRelativeChild.resolvedDimensions[dim[crossAxis]],
         //                         availableInnerCrossDim) +
         //                         marginCross
-        //                     isLoosePercentageMeasurement := currentRelativeChild.resolvedDimensions[dim[crossAxis]].Unit == UnitPercent &&
+        //                     isLoosePercentageMeasurement := currentRelativeChild.resolvedDimensions[dim[crossAxis]].unit == UnitPercent &&
         //                         measureModeCrossDim != MeasureModeExactly
         //                     childCrossMeasureMode = MeasureModeExactly
         //                     if (FloatIsUndefined(childCrossSize) || isLoosePercentageMeasurement ) {
@@ -2323,7 +2323,7 @@ namespace Rockyfi
         //         // raint by the min size defined for the main axis.
 
         //         if (measureModeMainDim == MeasureModeAtMost && remainingFreeSpace > 0 ) {
-        //             if node.Style.MinDimensions[dim[mainAxis]].Unit != Unit.Undefined &&
+        //             if node.Style.MinDimensions[dim[mainAxis]].unit != Unit.Undefined &&
         //                 resolveValue(&node.Style.MinDimensions[dim[mainAxis]], mainAxisParentSize) >= 0 {
         //                 remainingFreeSpace =
         //                     System.Math.Max(0,
@@ -2338,10 +2338,10 @@ namespace Rockyfi
         //         for i := startOfLineIndex; i < endOfLineIndex; i++ {
         //             child := node.Children[i]
         //             if (child.Style.PositionType == PositionType.Relative ) {
-        //                 if (marginLeadingValue(child, mainAxis).Unit == UnitAuto ) {
+        //                 if (marginLeadingValue(child, mainAxis).unit == UnitAuto ) {
         //                     numberOfAutoMarginsOnCurrentLine++
         //                 }
-        //                 if (marginTrailingValue(child, mainAxis).Unit == UnitAuto ) {
+        //                 if (marginTrailingValue(child, mainAxis).unit == UnitAuto ) {
         //                     numberOfAutoMarginsOnCurrentLine++
         //                 }
         //             }
@@ -2391,7 +2391,7 @@ namespace Rockyfi
         //                 // We need to do that only for relative elements. Absolute elements
         //                 // do not take part in that phase.
         //                 if (child.Style.PositionType == PositionType.Relative ) {
-        //                     if (marginLeadingValue(child, mainAxis).Unit == UnitAuto ) {
+        //                     if (marginLeadingValue(child, mainAxis).unit == UnitAuto ) {
         //                         mainDim += remainingFreeSpace / float(numberOfAutoMarginsOnCurrentLine)
         //                     }
 
@@ -2399,7 +2399,7 @@ namespace Rockyfi
         //                         child.Layout.Position[pos[mainAxis]] += mainDim
         //                     }
 
-        //                     if (marginTrailingValue(child, mainAxis).Unit == UnitAuto ) {
+        //                     if (marginTrailingValue(child, mainAxis).unit == UnitAuto ) {
         //                         mainDim += remainingFreeSpace / float(numberOfAutoMarginsOnCurrentLine)
         //                     }
 
@@ -2488,8 +2488,8 @@ namespace Rockyfi
         //                     // forcing the cross-axis size to be the computed cross size for the
         //                     // current line.
         //                     if alignItem == Align.Stretch &&
-        //                         marginLeadingValue(child, crossAxis).Unit != UnitAuto &&
-        //                         marginTrailingValue(child, crossAxis).Unit != UnitAuto {
+        //                         marginLeadingValue(child, crossAxis).unit != UnitAuto &&
+        //                         marginTrailingValue(child, crossAxis).unit != UnitAuto {
         //                         // If the child defines a definite size for its cross axis, there's
         //                         // no need to stretch.
         //                         if (!nodeIsStyleDimDefined(child, crossAxis, availableInnerCrossDim) ) {
@@ -2555,12 +2555,12 @@ namespace Rockyfi
         //                     } else {
         //                         remainingCrossDim := containerCrossAxis - nodeDimWithMargin(child, crossAxis, availableInnerWidth)
 
-        //                         if marginLeadingValue(child, crossAxis).Unit == UnitAuto &&
-        //                             marginTrailingValue(child, crossAxis).Unit == UnitAuto {
+        //                         if marginLeadingValue(child, crossAxis).unit == UnitAuto &&
+        //                             marginTrailingValue(child, crossAxis).unit == UnitAuto {
         //                             leadingCrossDim += System.Math.Max(0, remainingCrossDim/2)
-        //                         } else if (marginTrailingValue(child, crossAxis).Unit == UnitAuto ) {
+        //                         } else if (marginTrailingValue(child, crossAxis).unit == UnitAuto ) {
         //                             // No-Op
-        //                         } else if (marginLeadingValue(child, crossAxis).Unit == UnitAuto ) {
+        //                         } else if (marginLeadingValue(child, crossAxis).unit == UnitAuto ) {
         //                             leadingCrossDim += System.Math.Max(0, remainingCrossDim)
         //                         } else if (alignItem == Align.FlexStart ) {
         //                             // No-Op
