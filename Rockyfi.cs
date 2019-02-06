@@ -2781,60 +2781,59 @@ namespace Rockyfi
                 }
             }
 
-        //     //   STEP 9: COMPUTING FINAL DIMENSIONS
-        //     node.Layout.measuredDimensions[Dimension.Width] = nodeBoundAxis(
-        //         node, FlexDirection.Row, availableWidth-marginAxisRow, parentWidth, parentWidth);
-        //     node.Layout.measuredDimensions[Dimension.Height] = nodeBoundAxis(
-        //         node, FlexDirection.Column, availableHeight-marginAxisColumn, parentHeight, parentWidth)
+            //   STEP 9: COMPUTING FINAL DIMENSIONS
+            node.Layout.measuredDimensions[(int)Dimension.Width] = nodeBoundAxis(
+                node, FlexDirection.Row, availableWidth-marginAxisRow, parentWidth, parentWidth);
+            node.Layout.measuredDimensions[(int)Dimension.Height] = nodeBoundAxis(
+                node, FlexDirection.Column, availableHeight-marginAxisColumn, parentHeight, parentWidth);
 
-        //     // If the user didn't specify a width or height for the node, set the
-        //     // dimensions based on the children.
-        //     if measureModeMainDim == MeasureMode.Undefined ||
-        //         (node.Style.Overflow != Overflow.Scroll && measureModeMainDim == MeasureMode.AtMost) {
-        //         // Clamp the size to the min/max size, if specified, and make sure it
-        //         // doesn't go below the padding and border amount.
-        //         node.Layout.measuredDimensions[dim[mainAxis]] =
-        //             nodeBoundAxis(node, mainAxis, maxLineMainDim, mainAxisParentSize, parentWidth)
-        //     } else if measureModeMainDim == MeasureMode.AtMost &&
-        //         node.Style.Overflow == Overflow.Scroll {
-        //         node.Layout.measuredDimensions[dim[mainAxis]] = System.Math.Max(
-        //             System.Math.Min(availableInnerMainDim+paddingAndBorderAxisMain,
-        //                 nodeBoundAxisWithinMinAndMax(node, mainAxis, maxLineMainDim, mainAxisParentSize)),
-        //             paddingAndBorderAxisMain)
-        //     }
+            // If the user didn't specify a width or height for the node, set the
+            // dimensions based on the children.
+            if (measureModeMainDim == MeasureMode.Undefined ||
+                (node.Style.Overflow != Overflow.Scroll && measureModeMainDim == MeasureMode.AtMost)) {
+                // Clamp the size to the min/max size, if specified, and make sure it
+                // doesn't go below the padding and border amount.
+                node.Layout.measuredDimensions[(int)dim[(int)mainAxis]] =
+                    nodeBoundAxis(node, mainAxis, maxLineMainDim, mainAxisParentSize, parentWidth);
+            } else if (measureModeMainDim == MeasureMode.AtMost &&
+                node.Style.Overflow == Overflow.Scroll) {
+                node.Layout.measuredDimensions[(int)dim[(int)mainAxis]] = System.Math.Max(
+                    System.Math.Min(availableInnerMainDim+paddingAndBorderAxisMain,
+                        nodeBoundAxisWithinMinAndMax(node, mainAxis, maxLineMainDim, mainAxisParentSize)),
+                    paddingAndBorderAxisMain);
+            }
 
-        //     if measureModeCrossDim == MeasureMode.Undefined ||
-        //         (node.Style.Overflow != Overflow.Scroll && measureModeCrossDim == MeasureMode.AtMost) {
-        //         // Clamp the size to the min/max size, if specified, and make sure it
-        //         // doesn't go below the padding and border amount.
-        //         node.Layout.measuredDimensions[dim[crossAxis]] =
-        //             nodeBoundAxis(node,
-        //                 crossAxis,
-        //                 totalLineCrossDim+paddingAndBorderAxisCross,
-        //                 crossAxisParentSize,
-        //                 parentWidth)
-        //     } else if measureModeCrossDim == MeasureMode.AtMost &&
-        //         node.Style.Overflow == Overflow.Scroll {
-        //         node.Layout.measuredDimensions[dim[crossAxis]] =
-        //             System.Math.Max(System.Math.Min(availableInnerCrossDim+paddingAndBorderAxisCross,
-        //                 nodeBoundAxisWithinMinAndMax(node,
-        //                     crossAxis,
-        //                     totalLineCrossDim+paddingAndBorderAxisCross,
-        //                     crossAxisParentSize)),
-        //                 paddingAndBorderAxisCross)
-        //     }
+            if (measureModeCrossDim == MeasureMode.Undefined ||
+                (node.Style.Overflow != Overflow.Scroll && measureModeCrossDim == MeasureMode.AtMost)) {
+                // Clamp the size to the min/max size, if specified, and make sure it
+                // doesn't go below the padding and border amount.
+                node.Layout.measuredDimensions[(int)dim[(int)crossAxis]] =
+                    nodeBoundAxis(node,
+                        crossAxis,
+                        totalLineCrossDim+paddingAndBorderAxisCross,
+                        crossAxisParentSize,
+                        parentWidth);
+            } else if (measureModeCrossDim == MeasureMode.AtMost &&
+                node.Style.Overflow == Overflow.Scroll) {
+                node.Layout.measuredDimensions[(int)dim[(int)crossAxis]] =
+                    System.Math.Max(System.Math.Min(availableInnerCrossDim+paddingAndBorderAxisCross,
+                        nodeBoundAxisWithinMinAndMax(node,
+                            crossAxis,
+                            totalLineCrossDim+paddingAndBorderAxisCross,
+                            crossAxisParentSize)),
+                        paddingAndBorderAxisCross);
+            }
 
-        //     // As we only wrapped in normal direction yet, we need to reverse the positions on wrap-reverse.
-        //     if (performLayout && node.Style.FlexWrap == Wrap.WrapReverse ) {
-        //         for i := 0; i < childCount; i++ {
-        //             child := node.GetChild(i)
-        //             if (child.Style.PositionType == PositionType.Relative ) {
-        //                 child.Layout.Position[pos[crossAxis]] = node.Layout.measuredDimensions[dim[crossAxis]] -
-        //                     child.Layout.Position[pos[crossAxis]] -
-        //                     child.Layout.measuredDimensions[dim[crossAxis]]
-        //             }
-        //         }
-        //     }
+            // As we only wrapped in normal direction yet, we need to reverse the positions on wrap-reverse.
+            if (performLayout && node.Style.FlexWrap == Wrap.WrapReverse ) {
+                foreach (var child in node.Children){
+                    if (child.Style.PositionType == PositionType.Relative ) {
+                        child.Layout.Position[(int)pos[(int)crossAxis]] = node.Layout.measuredDimensions[(int)dim[(int)crossAxis]] -
+                            child.Layout.Position[(int)pos[(int)crossAxis]] -
+                            child.Layout.measuredDimensions[(int)dim[(int)crossAxis]];
+                    }
+                }
+            }
 
         //     if (performLayout ) {
         //         // STEP 10: SIZING AND POSITIONING ABSOLUTE CHILDREN
