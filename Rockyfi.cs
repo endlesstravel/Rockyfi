@@ -178,13 +178,12 @@ namespace Rockyfi
 
         class CachedMeasurement
         {
-            float availableWidth;
-            float availableHeight;
-            MeasureMode widthMeasureMode = MeasureMode.Undefined;
-            MeasureMode heightMeasureMode = MeasureMode.Undefined;
-
-            float computedWidth = -1;
-            float computedHeight = -1;
+            public float availableWidth;
+            public float availableHeight;
+            public MeasureMode widthMeasureMode = MeasureMode.Undefined;
+            public MeasureMode heightMeasureMode = MeasureMode.Undefined;
+            public float computedWidth = -1;
+            public float computedHeight = -1;
 
             public void ResetToDefault()
             {
@@ -1512,7 +1511,7 @@ namespace Rockyfi
         }
 
         // // nodeWithMeasureFuncSetMeasuredDimensions sets measure dimensions for node with measure func
-        // static nodeWithMeasureFuncSetMeasuredDimensions(Node node, availableWidth float, availableHeight float, widthMeasureMode MeasureMode, heightMeasureMode MeasureMode, float parentWidth, float parentHeight) {
+        // static nodeWithMeasureFuncSetMeasuredDimensions(Node node, float availableWidth, float availableHeight, MeasureMode widthMeasureMode, MeasureMode heightMeasureMode, float parentWidth, float parentHeight) {
         //     assertWithNode(node, node.Measure != null, "Expected node to have custom measure function")
 
         //     paddingAndBorderAxisRow := nodePaddingAndBorderForAxis(node, FlexDirection.Row, availableWidth)
@@ -1559,82 +1558,80 @@ namespace Rockyfi
         //     }
         // }
 
-        // // nodeEmptyContainerSetMeasuredDimensions sets measure dimensions for empty container
-        // // For nodes with no children, use the available values if they were provided,
-        // // or the minimum size as indicated by the padding and border sizes.
-        // static nodeEmptyContainerSetMeasuredDimensions(Node node, availableWidth float, availableHeight float, widthMeasureMode MeasureMode, heightMeasureMode MeasureMode, float parentWidth, float parentHeight) {
-        //     paddingAndBorderAxisRow := nodePaddingAndBorderForAxis(node, FlexDirection.Row, parentWidth)
-        //     paddingAndBorderAxisColumn := nodePaddingAndBorderForAxis(node, FlexDirection.Column, parentWidth)
-        //     marginAxisRow := nodeMarginForAxis(node, FlexDirection.Row, parentWidth)
-        //     marginAxisColumn := nodeMarginForAxis(node, FlexDirection.Column, parentWidth)
+        // nodeEmptyContainerSetMeasuredDimensions sets measure dimensions for empty container
+        // For nodes with no children, use the available values if they were provided,
+        // or the minimum size as indicated by the padding and border sizes.
+        static void nodeEmptyContainerSetMeasuredDimensions(Node node, float availableWidth, float availableHeight, MeasureMode widthMeasureMode, MeasureMode heightMeasureMode, float parentWidth, float parentHeight) {
+            var paddingAndBorderAxisRow = nodePaddingAndBorderForAxis(node, FlexDirection.Row, parentWidth);
+            var paddingAndBorderAxisColumn = nodePaddingAndBorderForAxis(node, FlexDirection.Column, parentWidth);
+            var marginAxisRow = nodeMarginForAxis(node, FlexDirection.Row, parentWidth);
+            var marginAxisColumn = nodeMarginForAxis(node, FlexDirection.Column, parentWidth);
 
-        //     width := availableWidth - marginAxisRow
-        //     if (widthMeasureMode == MeasureMode.Undefined || widthMeasureMode == MeasureMode.AtMost ) {
-        //         width = paddingAndBorderAxisRow
-        //     }
-        //     node.Layout.measuredDimensions[Dimension.Width] = nodeBoundAxis(node, FlexDirection.Row, width, parentWidth, parentWidth)
+            var width = availableWidth - marginAxisRow;
+            if (widthMeasureMode == MeasureMode.Undefined || widthMeasureMode == MeasureMode.AtMost ) {
+                width = paddingAndBorderAxisRow;
+            }
+            node.Layout.measuredDimensions[(int)Dimension.Width] = nodeBoundAxis(node, FlexDirection.Row, width, parentWidth, parentWidth);
 
-        //     height := availableHeight - marginAxisColumn
-        //     if (heightMeasureMode == MeasureMode.Undefined || heightMeasureMode == MeasureMode.AtMost ) {
-        //         height = paddingAndBorderAxisColumn
-        //     }
-        //     node.Layout.measuredDimensions[Dimension.Height] = nodeBoundAxis(node, FlexDirection.Column, height, parentHeight, parentWidth)
-        // }
+            var height = availableHeight - marginAxisColumn;
+            if (heightMeasureMode == MeasureMode.Undefined || heightMeasureMode == MeasureMode.AtMost ) {
+                height = paddingAndBorderAxisColumn;
+            }
+            node.Layout.measuredDimensions[(int)Dimension.Height] = nodeBoundAxis(node, FlexDirection.Column, height, parentHeight, parentWidth);
+        }
 
-        // static nodeFixedSizeSetMeasuredDimensions(Node node,
-        //     availableWidth float,
-        //     availableHeight float,
-        //     widthMeasureMode MeasureMode,
-        //     heightMeasureMode MeasureMode,
-        //     float parentWidth,
-        //     float parentHeight) bool {
-        //     if (widthMeasureMode == MeasureMode.AtMost && availableWidth <= 0) ||
-        //         (heightMeasureMode == MeasureMode.AtMost && availableHeight <= 0) ||
-        //         (widthMeasureMode == MeasureMode.Exactly && heightMeasureMode == MeasureMode.Exactly) {
-        //         marginAxisColumn := nodeMarginForAxis(node, FlexDirection.Column, parentWidth)
-        //         marginAxisRow := nodeMarginForAxis(node, FlexDirection.Row, parentWidth)
+        static bool nodeFixedSizeSetMeasuredDimensions(Node node,
+            float availableWidth,
+            float availableHeight,
+            MeasureMode widthMeasureMode,
+            MeasureMode heightMeasureMode,
+            float parentWidth,
+            float parentHeight) {
+            if ((widthMeasureMode == MeasureMode.AtMost && availableWidth <= 0) ||
+                (heightMeasureMode == MeasureMode.AtMost && availableHeight <= 0) ||
+                (widthMeasureMode == MeasureMode.Exactly && heightMeasureMode == MeasureMode.Exactly)) {
+                var marginAxisColumn = nodeMarginForAxis(node, FlexDirection.Column, parentWidth);
+                var marginAxisRow = nodeMarginForAxis(node, FlexDirection.Row, parentWidth);
 
-        //         width := availableWidth - marginAxisRow
-        //         if (FloatIsUndefined(availableWidth) || (widthMeasureMode == MeasureMode.AtMost && availableWidth < 0) ) {
-        //             width = 0
-        //         }
-        //         node.Layout.measuredDimensions[Dimension.Width] =
-        //             nodeBoundAxis(node, FlexDirection.Row, width, parentWidth, parentWidth)
+                var width = availableWidth - marginAxisRow;
+                if (FloatIsUndefined(availableWidth) || (widthMeasureMode == MeasureMode.AtMost && availableWidth < 0) ) {
+                    width = 0;
+                }
+                node.Layout.measuredDimensions[(int)Dimension.Width] =
+                    nodeBoundAxis(node, FlexDirection.Row, width, parentWidth, parentWidth);
 
-        //         height := availableHeight - marginAxisColumn
-        //         if (FloatIsUndefined(availableHeight) || (heightMeasureMode == MeasureMode.AtMost && availableHeight < 0) ) {
-        //             height = 0
-        //         }
-        //         node.Layout.measuredDimensions[Dimension.Height] =
-        //             nodeBoundAxis(node, FlexDirection.Column, height, parentHeight, parentWidth)
+                var height = availableHeight - marginAxisColumn;
+                if (FloatIsUndefined(availableHeight) || (heightMeasureMode == MeasureMode.AtMost && availableHeight < 0) ) {
+                    height = 0;
+                }
+                node.Layout.measuredDimensions[(int)Dimension.Height] =
+                    nodeBoundAxis(node, FlexDirection.Column, height, parentHeight, parentWidth);
 
-        //         return true
-        //     }
+                return true;
+            }
 
-        //     return false
-        // }
+            return false;
+        }
 
-        // // zeroOutLayoutRecursivly zeros out layout recursively
-        // static zeroOutLayoutRecursivly(Node node) {
-        //     node.Layout.Dimensions[Dimension.Height] = 0
-        //     node.Layout.Dimensions[Dimension.Width] = 0
-        //     node.Layout.Position[Edge.Top] = 0
-        //     node.Layout.Position[Edge.Bottom] = 0
-        //     node.Layout.Position[Edge.Left] = 0
-        //     node.Layout.Position[Edge.Right] = 0
-        //     node.Layout.cachedLayout.availableHeight = 0
-        //     node.Layout.cachedLayout.availableWidth = 0
-        //     node.Layout.cachedLayout.heightMeasureMode = MeasureMode.Exactly
-        //     node.Layout.cachedLayout.widthMeasureMode = MeasureMode.Exactly
-        //     node.Layout.cachedLayout.computedWidth = 0
-        //     node.Layout.cachedLayout.computedHeight = 0
-        //     node.hasNewLayout = true
-        //     childCount := len(node.Children)
-        //     for i := 0; i < childCount; i++ {
-        //         child := node.Children[i]
-        //         zeroOutLayoutRecursivly(child)
-        //     }
-        // }
+        // zeroOutLayoutRecursivly zeros out layout recursively
+        static void zeroOutLayoutRecursivly(Node node) {
+            node.Layout.Dimensions[(int)Dimension.Height] = 0;
+            node.Layout.Dimensions[(int)Dimension.Width] = 0;
+            node.Layout.Position[(int)Edge.Top] = 0;
+            node.Layout.Position[(int)Edge.Bottom] = 0;
+            node.Layout.Position[(int)Edge.Left] = 0;
+            node.Layout.Position[(int)Edge.Right] = 0;
+            node.Layout.cachedLayout.availableHeight = 0;
+            node.Layout.cachedLayout.availableWidth = 0;
+            node.Layout.cachedLayout.heightMeasureMode = MeasureMode.Exactly;
+            node.Layout.cachedLayout.widthMeasureMode = MeasureMode.Exactly;
+            node.Layout.cachedLayout.computedWidth = 0;
+            node.Layout.cachedLayout.computedHeight = 0;
+            node.hasNewLayout = true;
+            foreach (var child in node.Children) {
+                zeroOutLayoutRecursivly(child);
+            }
+        }
 
         // // This is the main routine that implements a subset of the flexbox layout
         // // algorithm
@@ -1720,9 +1717,9 @@ namespace Rockyfi
         // //    an available size of
         // //    undefined then it must also pass a measure mode of YGMeasureModeUndefined
         // //    in that dimension.
-        // static nodelayoutImpl(Node node, availableWidth float, availableHeight float,
-        //     parentDirection Direction, widthMeasureMode MeasureMode,
-        //     heightMeasureMode MeasureMode, float parentWidth, float parentHeight,
+        // static nodelayoutImpl(Node node, float availableWidth, float availableHeight,
+        //     parentDirection Direction, MeasureMode widthMeasureMode,
+        //     MeasureMode heightMeasureMode, float parentWidth, float parentHeight,
         //     performLayout bool, Config config) {
         //     // assertWithNode(node, YGFloatIsUndefined(availableWidth) ? widthMeasureMode == YGMeasureModeUndefined : true, "availableWidth is indefinite so widthMeasureMode must be YGMeasureModeUndefined");
         //     //assertWithNode(node, YGFloatIsUndefined(availableHeight) ? heightMeasureMode == YGMeasureModeUndefined : true, "availableHeight is indefinite so heightMeasureMode must be YGMeasureModeUndefined");
@@ -2989,9 +2986,9 @@ namespace Rockyfi
         // // Parameters:
         // //  Input parameters are the same as YGNodelayoutImpl (see above)
         // //  Return parameter is true if layout was performed, false if skipped
-        // static layoutNodeInternal(Node node, availableWidth float, availableHeight float,
-        //     parentDirection Direction, widthMeasureMode MeasureMode,
-        //     heightMeasureMode MeasureMode, float parentWidth, float parentHeight,
+        // static layoutNodeInternal(Node node, float availableWidth, float availableHeight,
+        //     parentDirection Direction, MeasureMode widthMeasureMode,
+        //     MeasureMode heightMeasureMode, float parentWidth, float parentHeight,
         //     performLayout bool, reason string, Config config) bool {
         //     layout := &node.Layout
 
