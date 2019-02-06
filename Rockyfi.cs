@@ -2835,43 +2835,43 @@ namespace Rockyfi
                 }
             }
 
-        //     if (performLayout ) {
-        //         // STEP 10: SIZING AND POSITIONING ABSOLUTE CHILDREN
-        //         for currentAbsoluteChild = firstAbsoluteChild; currentAbsoluteChild != null; currentAbsoluteChild = currentAbsoluteChild.NextChild {
-        //             mode := measureModeCrossDim
-        //             if (isMainAxisRow ) {
-        //                 mode = measureModeMainDim;
-        //             }
+            if (performLayout ) {
+                // STEP 10: SIZING AND POSITIONING ABSOLUTE CHILDREN
+                for (currentAbsoluteChild = firstAbsoluteChild; currentAbsoluteChild != null; currentAbsoluteChild = currentAbsoluteChild.NextChild) {
+                    var mode = measureModeCrossDim;
+                    if (isMainAxisRow ) {
+                        mode = measureModeMainDim;
+                    }
 
-        //             nodeAbsoluteLayoutChild(node,
-        //                 currentAbsoluteChild,
-        //                 availableInnerWidth,
-        //                 mode,
-        //                 availableInnerHeight,
-        //                 direction,
-        //                 config);
-        //         }
+                    nodeAbsoluteLayoutChild(node,
+                        currentAbsoluteChild,
+                        availableInnerWidth,
+                        mode,
+                        availableInnerHeight,
+                        direction,
+                        config);
+                }
 
-        //         // STEP 11: SETTING TRAILING POSITIONS FOR CHILDREN
-        //         needsMainTrailingPos := mainAxis == FlexDirection.RowReverse || mainAxis == FlexDirectionColumnReverse
-        //         needsCrossTrailingPos := crossAxis == FlexDirection.RowReverse || crossAxis == FlexDirectionColumnReverse
+                // STEP 11: SETTING TRAILING POSITIONS FOR CHILDREN
+                var needsMainTrailingPos = mainAxis == FlexDirection.RowReverse || mainAxis == FlexDirection.ColumnReverse;
+                var needsCrossTrailingPos = crossAxis == FlexDirection.RowReverse || crossAxis == FlexDirection.ColumnReverse;
 
-        //         // Set trailing position if necessary.
-        //         if (needsMainTrailingPos || needsCrossTrailingPos ) {
-        //             foreach (var child in node.Children) {
-        //                 if (child.Style.Display == Display.None ) {
-        //                     continue;
-        //                 }
-        //                 if (needsMainTrailingPos ) {
-        //                     nodeSetChildTrailingPosition(node, child, mainAxis);
-        //                 }
+                // Set trailing position if necessary.
+                if (needsMainTrailingPos || needsCrossTrailingPos ) {
+                    foreach (var child in node.Children) {
+                        if (child.Style.Display == Display.None ) {
+                            continue;
+                        }
+                        if (needsMainTrailingPos ) {
+                            nodeSetChildTrailingPosition(node, child, mainAxis);
+                        }
 
-        //                 if (needsCrossTrailingPos ) {
-        //                     nodeSetChildTrailingPosition(node, child, crossAxis);
-        //                 }
-        //             }
-        //         }
-        //     }
+                        if (needsCrossTrailingPos ) {
+                            nodeSetChildTrailingPosition(node, child, crossAxis);
+                        }
+                    }
+                }
+            }
         }
 
         const string spacerStr = "";
