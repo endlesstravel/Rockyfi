@@ -2486,135 +2486,135 @@ namespace Rockyfi
                     parentWidth) -
                     paddingAndBorderAxisCross;
 
-        //         // STEP 7: CROSS-AXIS ALIGNMENT
-        //         // We can skip child alignment if we're just measuring the container.
-        //         if (performLayout ) {
-        //             for i := startOfLineIndex; i < endOfLineIndex; i++ {
-        //                 child := node.Children[i]
-        //                 if (child.Style.Display == DisplayNone ) {
-        //                     continue;
-        //                 }
-        //                 if (child.Style.PositionType == PositionType.Absolute ) {
-        //                     // If the child is absolutely positioned and has a
-        //                     // top/left/bottom/right
-        //                     // set, override all the previously computed positions to set it
-        //                     // correctly.
-        //                     if (nodeIsLeadingPosDefined(child, crossAxis) ) {
-        //                         child.Layout.Position[pos[crossAxis]] =
-        //                             nodeLeadingPosition(child, crossAxis, availableInnerCrossDim) +
-        //                                 nodeLeadingBorder(node, crossAxis) +
-        //                                 nodeLeadingMargin(child, crossAxis, availableInnerWidth)
-        //                     } else {
-        //                         child.Layout.Position[pos[crossAxis]] =
-        //                             nodeLeadingBorder(node, crossAxis) +
-        //                                 nodeLeadingMargin(child, crossAxis, availableInnerWidth)
-        //                     }
-        //                 } else {
-        //                     leadingCrossDim := leadingPaddingAndBorderCross
+                // STEP 7: CROSS-AXIS ALIGNMENT
+                // We can skip child alignment if we're just measuring the container.
+                if (performLayout ) {
+                    for(int i = startOfLineIndex; i < endOfLineIndex; i++) {
+                        var child = node.Children[i];
+                        if (child.Style.Display == Display.None ) {
+                            continue;
+                        }
+                        if (child.Style.PositionType == PositionType.Absolute ) {
+                            // If the child is absolutely positioned and has a
+                            // top/left/bottom/right
+                            // set, override all the previously computed positions to set it
+                            // correctly.
+                            if (nodeIsLeadingPosDefined(child, crossAxis) ) {
+                                child.Layout.Position[(int)pos[(int)crossAxis]] =
+                                    nodeLeadingPosition(child, crossAxis, availableInnerCrossDim) +
+                                        nodeLeadingBorder(node, crossAxis) +
+                                        nodeLeadingMargin(child, crossAxis, availableInnerWidth);
+                            } else {
+                                child.Layout.Position[(int)pos[(int)crossAxis]] =
+                                    nodeLeadingBorder(node, crossAxis) +
+                                        nodeLeadingMargin(child, crossAxis, availableInnerWidth);
+                            }
+                        } else {
+                            float leadingCrossDim = leadingPaddingAndBorderCross;
 
-        //                     // For a relative children, we're either using alignItems (parent) or
-        //                     // alignSelf (child) in order to determine the position in the cross
-        //                     // axis
-        //                     alignItem := nodeAlignItem(node, child)
+                            // For a relative children, we're either using alignItems (parent) or
+                            // alignSelf (child) in order to determine the position in the cross
+                            // axis
+                            var alignItem = nodeAlignItem(node, child);
 
-        //                     // If the child uses align stretch, we need to lay it out one more
-        //                     // time, this time
-        //                     // forcing the cross-axis size to be the computed cross size for the
-        //                     // current line.
-        //                     if alignItem == Align.Stretch &&
-        //                         marginLeadingValue(child, crossAxis).unit != UnitAuto &&
-        //                         marginTrailingValue(child, crossAxis).unit != UnitAuto {
-        //                         // If the child defines a definite size for its cross axis, there's
-        //                         // no need to stretch.
-        //                         if (!nodeIsStyleDimDefined(child, crossAxis, availableInnerCrossDim) ) {
-        //                             childMainSize := child.Layout.measuredDimensions[dim[mainAxis]]
-        //                             childCrossSize := crossDim
-        //                             if (!FloatIsUndefined(child.Style.AspectRatio) ) {
-        //                                 childCrossSize = nodeMarginForAxis(child, crossAxis, availableInnerWidth)
-        //                                 if (isMainAxisRow ) {
-        //                                     childCrossSize += childMainSize / child.Style.AspectRatio
-        //                                 } else {
-        //                                     childCrossSize += childMainSize * child.Style.AspectRatio
-        //                                 }
-        //                             }
+                            // If the child uses align stretch, we need to lay it out one more
+                            // time, this time
+                            // forcing the cross-axis size to be the computed cross size for the
+                            // current line.
+                            if (alignItem == Align.Stretch &&
+                                marginLeadingValue(child, crossAxis).unit != Unit.Auto &&
+                                marginTrailingValue(child, crossAxis).unit != Unit.Auto) {
+                                // If the child defines a definite size for its cross axis, there's
+                                // no need to stretch.
+                                if (!nodeIsStyleDimDefined(child, crossAxis, availableInnerCrossDim) ) {
+                                    float childMainSize = child.Layout.measuredDimensions[(int)dim[(int)mainAxis]];
+                                    float childCrossSize = crossDim;
+                                    if (!FloatIsUndefined(child.Style.AspectRatio) ) {
+                                        childCrossSize = nodeMarginForAxis(child, crossAxis, availableInnerWidth);
+                                        if (isMainAxisRow ) {
+                                            childCrossSize += childMainSize / child.Style.AspectRatio;
+                                        } else {
+                                            childCrossSize += childMainSize * child.Style.AspectRatio;
+                                        }
+                                    }
 
-        //                             childMainSize += nodeMarginForAxis(child, mainAxis, availableInnerWidth)
+                                    childMainSize += nodeMarginForAxis(child, mainAxis, availableInnerWidth);
 
-        //                             childMainMeasureMode := MeasureMode.Exactly
-        //                             childCrossMeasureMode := MeasureMode.Exactly
-        //                             constrainMaxSizeForMode(child,
-        //                                 mainAxis,
-        //                                 availableInnerMainDim,
-        //                                 availableInnerWidth,
-        //                                 &childMainMeasureMode,
-        //                                 &childMainSize)
-        //                             constrainMaxSizeForMode(child,
-        //                                 crossAxis,
-        //                                 availableInnerCrossDim,
-        //                                 availableInnerWidth,
-        //                                 &childCrossMeasureMode,
-        //                                 &childCrossSize)
+                                    var childMainMeasureMode = MeasureMode.Exactly;
+                                    var childCrossMeasureMode = MeasureMode.Exactly;
+                                    constrainMaxSizeForMode(child,
+                                        mainAxis,
+                                        availableInnerMainDim,
+                                        availableInnerWidth,
+                                        ref childMainMeasureMode,
+                                        ref childMainSize);
+                                    constrainMaxSizeForMode(child,
+                                        crossAxis,
+                                        availableInnerCrossDim,
+                                        availableInnerWidth,
+                                        ref childCrossMeasureMode,
+                                        ref childCrossSize);
 
-        //                             childWidth := childCrossSize
-        //                             if (isMainAxisRow ) {
-        //                                 childWidth = childMainSize
-        //                             }
-        //                             childHeight := childCrossSize
-        //                             if (!isMainAxisRow ) {
-        //                                 childHeight = childMainSize
-        //                             }
+                                    float childWidth = childCrossSize;
+                                    if (isMainAxisRow ) {
+                                        childWidth = childMainSize;
+                                    }
+                                    float childHeight = childCrossSize;
+                                    if (!isMainAxisRow ) {
+                                        childHeight = childMainSize;
+                                    }
 
-        //                             childWidthMeasureMode := MeasureMode.Exactly
-        //                             if (FloatIsUndefined(childWidth) ) {
-        //                                 childWidthMeasureMode = MeasureMode.Undefined
-        //                             }
+                                    var childWidthMeasureMode = MeasureMode.Exactly;
+                                    if (FloatIsUndefined(childWidth) ) {
+                                        childWidthMeasureMode = MeasureMode.Undefined;
+                                    }
 
-        //                             childHeightMeasureMode := MeasureMode.Exactly
-        //                             if (FloatIsUndefined(childHeight) ) {
-        //                                 childHeightMeasureMode = MeasureMode.Undefined
-        //                             }
+                                    var childHeightMeasureMode = MeasureMode.Exactly;
+                                    if (FloatIsUndefined(childHeight) ) {
+                                        childHeightMeasureMode = MeasureMode.Undefined;
+                                    }
 
-        //                             layoutNodeInternal(child,
-        //                                 childWidth,
-        //                                 childHeight,
-        //                                 direction,
-        //                                 childWidthMeasureMode,
-        //                                 childHeightMeasureMode,
-        //                                 availableInnerWidth,
-        //                                 availableInnerHeight,
-        //                                 true,
-        //                                 "stretch",
-        //                                 config)
-        //                         }
-        //                     } else {
-        //                         remainingCrossDim := containerCrossAxis - nodeDimWithMargin(child, crossAxis, availableInnerWidth)
+                                    layoutNodeInternal(child,
+                                        childWidth,
+                                        childHeight,
+                                        direction,
+                                        childWidthMeasureMode,
+                                        childHeightMeasureMode,
+                                        availableInnerWidth,
+                                        availableInnerHeight,
+                                        true,
+                                        "stretch",
+                                        config);
+                                }
+                            } else {
+                                float remainingCrossDim = containerCrossAxis - nodeDimWithMargin(child, crossAxis, availableInnerWidth);
 
-        //                         if marginLeadingValue(child, crossAxis).unit == UnitAuto &&
-        //                             marginTrailingValue(child, crossAxis).unit == UnitAuto {
-        //                             leadingCrossDim += System.Math.Max(0, remainingCrossDim/2)
-        //                         } else if (marginTrailingValue(child, crossAxis).unit == UnitAuto ) {
-        //                             // No-Op
-        //                         } else if (marginLeadingValue(child, crossAxis).unit == UnitAuto ) {
-        //                             leadingCrossDim += System.Math.Max(0, remainingCrossDim)
-        //                         } else if (alignItem == Align.FlexStart ) {
-        //                             // No-Op
-        //                         } else if (alignItem == Align.Center ) {
-        //                             leadingCrossDim += remainingCrossDim / 2
-        //                         } else {
-        //                             leadingCrossDim += remainingCrossDim
-        //                         }
-        //                     }
-        //                     // And we apply the position
-        //                     child.Layout.Position[pos[crossAxis]] += totalLineCrossDim + leadingCrossDim
-        //                 }
-        //             }
-        //         }
+                                if (marginLeadingValue(child, crossAxis).unit == Unit.Auto &&
+                                    marginTrailingValue(child, crossAxis).unit == Unit.Auto) {
+                                    leadingCrossDim += System.Math.Max(0, remainingCrossDim/2);
+                                } else if (marginTrailingValue(child, crossAxis).unit == Unit.Auto ) {
+                                    // No-Op
+                                } else if (marginLeadingValue(child, crossAxis).unit == Unit.Auto ) {
+                                    leadingCrossDim += System.Math.Max(0, remainingCrossDim);
+                                } else if (alignItem == Align.FlexStart ) {
+                                    // No-Op
+                                } else if (alignItem == Align.Center ) {
+                                    leadingCrossDim += remainingCrossDim / 2;
+                                } else {
+                                    leadingCrossDim += remainingCrossDim;
+                                }
+                            }
+                            // And we apply the position
+                            child.Layout.Position[(int)pos[(int)crossAxis]] += totalLineCrossDim + leadingCrossDim;
+                        }
+                    }
+                }
 
-        //         totalLineCrossDim += crossDim
-        //         maxLineMainDim = System.Math.Max(maxLineMainDim, mainDim)
+                totalLineCrossDim += crossDim;
+                maxLineMainDim = System.Math.Max(maxLineMainDim, mainDim);
 
-        //         lineCount++
-        //         startOfLineIndex = endOfLineIndex
+                lineCount++;
+                startOfLineIndex = endOfLineIndex;
 
             }
 
