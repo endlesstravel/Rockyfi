@@ -2863,18 +2863,13 @@ namespace Rockyfi
 
         const string spacerStr = "";
 
-        // // spacer returns spacer string
-        // static spacer(level int) string {
-        //     n := len(spacerStr)
-        //     if (level > n ) {
-        //         level = n
-        //     }
-        //     return spacerStr[:level]
-        // }
-
-        // var (
-        //     
-        // )
+        // spacer returns spacer string
+        static string spacer(int level) {
+            if (level > spacerStr.Length ) {
+                level = spacerStr.Length;
+            }
+            return spacerStr.Substring(0, level);
+        }
 
         // measureModeName returns name of measure mode
         static string measureModeName(MeasureMode mode, bool performLayout) {
@@ -2974,218 +2969,241 @@ namespace Rockyfi
             return widthIsCompatible && heightIsCompatible;
         }
 
-        // var (
-        // )
-
         static int gDepth        = 0;
         const bool gPrintTree    = false;
         const bool gPrintChanges = false;
         const bool gPrintSkips   = false;
 
-        // // layoutNodeInternal is a wrapper around the YGNodelayoutImpl function. It determines
-        // // whether the layout request is redundant and can be skipped.
-        // //
-        // // Parameters:
-        // //  Input parameters are the same as YGNodelayoutImpl (see above)
-        // //  Return parameter is true if layout was performed, false if skipped
-        // static layoutNodeInternal(Node node, float availableWidth, float availableHeight,
-        //     parentDirection Direction, MeasureMode widthMeasureMode,
-        //     MeasureMode heightMeasureMode, float parentWidth, float parentHeight,
-        //     bool performLayout, reason string, Config config) bool {
-        //     layout := &node.Layout
+        // layoutNodeInternal is a wrapper around the YGNodelayoutImpl function. It determines
+        // whether the layout request is redundant and can be skipped.
+        //
+        // Parameters:
+        //  Input parameters are the same as YGNodelayoutImpl (see above)
+        //  Return parameter is true if layout was performed, false if skipped
+        static bool layoutNodeInternal(Node node, float availableWidth, float availableHeight,
+            Direction parentDirection, MeasureMode widthMeasureMode,
+            MeasureMode heightMeasureMode, float parentWidth, float parentHeight,
+            bool performLayout, string reason, Config config) {
+            var layout = node.Layout;
 
-        //     gDepth++
+            gDepth++;
 
-        //     needToVisitNode :=
-        //         (node.IsDirty && layout.generationCount != currentGenerationCount) ||
-        //             layout.lastParentDirection != parentDirection
+            var needToVisitNode =
+                (node.IsDirty && layout.generationCount != currentGenerationCount) ||
+                    layout.lastParentDirection != parentDirection;
 
-        //     if (needToVisitNode ) {
-        //         // Invalidate the cached results.
-        //         layout.nextCachedMeasurementsIndex = 0
-        //         layout.cachedLayout.widthMeasureMode = MeasureMode(-1)
-        //         layout.cachedLayout.heightMeasureMode = MeasureMode(-1)
-        //         layout.cachedLayout.computedWidth = -1
-        //         layout.cachedLayout.computedHeight = -1
-        //     }
+            if (needToVisitNode ) {
+                // Invalidate the cached results.
+                layout.nextCachedMeasurementsIndex = 0;
+                layout.cachedLayout.widthMeasureMode = MeasureMode.NeverUsed_1;
+                layout.cachedLayout.heightMeasureMode = MeasureMode.NeverUsed_1;
+                layout.cachedLayout.computedWidth = -1;
+                layout.cachedLayout.computedHeight = -1;
+            }
 
-        //     var cachedResults *CachedMeasurement
+            CachedMeasurement cachedResults = null;
 
-        //     // Determine whether the results are already cached. We maintain a separate
-        //     // cache for layouts and measurements. A layout operation modifies the
-        //     // positions
-        //     // and dimensions for nodes in the subtree. The algorithm assumes that each
-        //     // node
-        //     // gets layed out a maximum of one time per tree layout, but multiple
-        //     // measurements
-        //     // may be required to resolve all of the flex dimensions.
-        //     // We handle nodes with measure functions specially here because they are the
-        //     // most
-        //     // expensive to measure, so it's worth avoiding redundant measurements if at
-        //     // all possible.
-        //     if (node.Measure != null ) {
-        //         marginAxisRow := nodeMarginForAxis(node, FlexDirection.Row, parentWidth)
-        //         marginAxisColumn := nodeMarginForAxis(node, FlexDirection.Column, parentWidth)
+            // Determine whether the results are already cached. We maintain a separate
+            // cache for layouts and measurements. A layout operation modifies the
+            // positions
+            // and dimensions for nodes in the subtree. The algorithm assumes that each
+            // node
+            // gets layed out a maximum of one time per tree layout, but multiple
+            // measurements
+            // may be required to resolve all of the flex dimensions.
+            // We handle nodes with measure functions specially here because they are the
+            // most
+            // expensive to measure, so it's worth avoiding redundant measurements if at
+            // all possible.
+            if (node.Measure != null ) {
+                var marginAxisRow = nodeMarginForAxis(node, FlexDirection.Row, parentWidth);
+                var marginAxisColumn = nodeMarginForAxis(node, FlexDirection.Column, parentWidth);
 
-        //         // First, try to use the layout cache.
-        //         if nodeCanUseCachedMeasurement(widthMeasureMode,
-        //             availableWidth,
-        //             heightMeasureMode,
-        //             availableHeight,
-        //             layout.cachedLayout.widthMeasureMode,
-        //             layout.cachedLayout.availableWidth,
-        //             layout.cachedLayout.heightMeasureMode,
-        //             layout.cachedLayout.availableHeight,
-        //             layout.cachedLayout.computedWidth,
-        //             layout.cachedLayout.computedHeight,
-        //             marginAxisRow,
-        //             marginAxisColumn,
-        //             config) {
-        //             cachedResults = &layout.cachedLayout
-        //         } else {
-        //             // Try to use the measurement cache.
-        //             for i := 0; i < layout.nextCachedMeasurementsIndex; i++ {
-        //                 if nodeCanUseCachedMeasurement(widthMeasureMode,
-        //                     availableWidth,
-        //                     heightMeasureMode,
-        //                     availableHeight,
-        //                     layout.cachedMeasurements[i].widthMeasureMode,
-        //                     layout.cachedMeasurements[i].availableWidth,
-        //                     layout.cachedMeasurements[i].heightMeasureMode,
-        //                     layout.cachedMeasurements[i].availableHeight,
-        //                     layout.cachedMeasurements[i].computedWidth,
-        //                     layout.cachedMeasurements[i].computedHeight,
-        //                     marginAxisRow,
-        //                     marginAxisColumn,
-        //                     config) {
-        //                     cachedResults = &layout.cachedMeasurements[i]
-        //                     break
-        //                 }
-        //             }
-        //         }
-        //     } else if (performLayout ) {
-        //         if FloatsEqual(layout.cachedLayout.availableWidth, availableWidth) &&
-        //             FloatsEqual(layout.cachedLayout.availableHeight, availableHeight) &&
-        //             layout.cachedLayout.widthMeasureMode == widthMeasureMode &&
-        //             layout.cachedLayout.heightMeasureMode == heightMeasureMode {
-        //             cachedResults = &layout.cachedLayout
-        //         }
-        //     } else {
-        //         for i := 0; i < layout.nextCachedMeasurementsIndex; i++ {
-        //             if FloatsEqual(layout.cachedMeasurements[i].availableWidth, availableWidth) &&
-        //                 FloatsEqual(layout.cachedMeasurements[i].availableHeight, availableHeight) &&
-        //                 layout.cachedMeasurements[i].widthMeasureMode == widthMeasureMode &&
-        //                 layout.cachedMeasurements[i].heightMeasureMode == heightMeasureMode {
-        //                 cachedResults = &layout.cachedMeasurements[i]
-        //                 break
-        //             }
-        //         }
-        //     }
+                // First, try to use the layout cache.
+                if (nodeCanUseCachedMeasurement(widthMeasureMode,
+                    availableWidth,
+                    heightMeasureMode,
+                    availableHeight,
+                    layout.cachedLayout.widthMeasureMode,
+                    layout.cachedLayout.availableWidth,
+                    layout.cachedLayout.heightMeasureMode,
+                    layout.cachedLayout.availableHeight,
+                    layout.cachedLayout.computedWidth,
+                    layout.cachedLayout.computedHeight,
+                    marginAxisRow,
+                    marginAxisColumn,
+                    config)) {
+                    cachedResults = layout.cachedLayout;
+                } else {
+                    // Try to use the measurement cache.
+                    for (int i = 0; i < layout.nextCachedMeasurementsIndex; i++) {
+                        if (nodeCanUseCachedMeasurement(widthMeasureMode,
+                            availableWidth,
+                            heightMeasureMode,
+                            availableHeight,
+                            layout.cachedMeasurements[i].widthMeasureMode,
+                            layout.cachedMeasurements[i].availableWidth,
+                            layout.cachedMeasurements[i].heightMeasureMode,
+                            layout.cachedMeasurements[i].availableHeight,
+                            layout.cachedMeasurements[i].computedWidth,
+                            layout.cachedMeasurements[i].computedHeight,
+                            marginAxisRow,
+                            marginAxisColumn,
+                            config)) {
+                            cachedResults = layout.cachedMeasurements[i];
+                            break;
+                        }
+                    }
+                }
+            } else if (performLayout ) {
+                if (FloatsEqual(layout.cachedLayout.availableWidth, availableWidth) &&
+                    FloatsEqual(layout.cachedLayout.availableHeight, availableHeight) &&
+                    layout.cachedLayout.widthMeasureMode == widthMeasureMode &&
+                    layout.cachedLayout.heightMeasureMode == heightMeasureMode) {
+                    cachedResults = layout.cachedLayout;
+                }
+            } else {
+                for(int i = 0; i < layout.nextCachedMeasurementsIndex; i++) {
+                    if (FloatsEqual(layout.cachedMeasurements[i].availableWidth, availableWidth) &&
+                        FloatsEqual(layout.cachedMeasurements[i].availableHeight, availableHeight) &&
+                        layout.cachedMeasurements[i].widthMeasureMode == widthMeasureMode &&
+                        layout.cachedMeasurements[i].heightMeasureMode == heightMeasureMode) {
+                        cachedResults = layout.cachedMeasurements[i];
+                        break;
+                    }
+                }
+            }
 
-        //     if (!needToVisitNode && cachedResults != null ) {
-        //         layout.measuredDimensions[Dimension.Width] = cachedResults.computedWidth
-        //         layout.measuredDimensions[Dimension.Height] = cachedResults.computedHeight
+            if (!needToVisitNode && cachedResults != null ) {
+                layout.measuredDimensions[(int)Dimension.Width] = cachedResults.computedWidth;
+                layout.measuredDimensions[(int)Dimension.Height] = cachedResults.computedHeight;
 
-        //         if (gPrintChanges && gPrintSkips ) {
-        //             fmt.Printf("%s%d.{[skipped] ", spacer(gDepth), gDepth)
-        //             if (node.Print != null ) {
-        //                 node.Print(node)
-        //             }
-        //             fmt.Printf("wm: %s, hm: %s, aw: %f ah: %f => d: (%f, %f) %s\n",
-        //                 measureModeName(widthMeasureMode, performLayout),
-        //                 measureModeName(heightMeasureMode, performLayout),
-        //                 availableWidth,
-        //                 availableHeight,
-        //                 cachedResults.computedWidth,
-        //                 cachedResults.computedHeight,
-        //                 reason);
-        //         }
-        //     } else {
-        //         if (gPrintChanges ) {
-        //             s := "";
-        //             if (needToVisitNode ) {
-        //                 s = "*";
-        //             }
-        //             fmt.Printf("%s%d.{%s", spacer(gDepth), gDepth, s)
-        //             if (node.Print != null ) {
-        //                 node.Print(node);
-        //             }
-        //             fmt.Printf("wm: %s, hm: %s, aw: %f ah: %f %s\n",
-        //                 measureModeName(widthMeasureMode, performLayout),
-        //                 measureModeName(heightMeasureMode, performLayout),
-        //                 availableWidth,
-        //                 availableHeight,
-        //                 reason);
-        //         }
+                if (gPrintChanges && gPrintSkips ) {
+                    // fmt.Printf("%s%d.{[skipped] ", spacer(gDepth), gDepth);
+                    System.Console.WriteLine($"{spacer(gDepth)}{gDepth}.{{[skipped]");
+                    if (node.Print != null ) {
+                        node.Print(node);
+                    }
+                    // fmt.Printf("wm: %s, hm: %s, aw: %f ah: %f => d: (%f, %f) %s\n",
+                    //     measureModeName(widthMeasureMode, performLayout),
+                    //     measureModeName(heightMeasureMode, performLayout),
+                    //     availableWidth,
+                    //     availableHeight,
+                    //     cachedResults.computedWidth,
+                    //     cachedResults.computedHeight,
+                    //     reason);
+                    System.Console.WriteLine("wm: {0}, hm: {1}, aw: {2} ah: {3} => d: ({4}, {5}) {6}\n",
+                        measureModeName(widthMeasureMode, performLayout),
+                        measureModeName(heightMeasureMode, performLayout),
+                        availableWidth,
+                        availableHeight,
+                        cachedResults.computedWidth,
+                        cachedResults.computedHeight,
+                        reason
+                    );
+                }
+            } else {
+                if (gPrintChanges ) {
+                    string s = "";
+                    if (needToVisitNode ) {
+                        s = "*";
+                    }
+                    // fmt.Printf("%s%d.{%s", spacer(gDepth), gDepth, s);
+                    System.Console.WriteLine($"{spacer(gDepth)}{gDepth}.{{{s}");
+                    if (node.Print != null ) {
+                        node.Print(node);
+                    }
+                    // fmt.Printf("wm: %s, hm: %s, aw: %f ah: %f %s\n",
+                    //     measureModeName(widthMeasureMode, performLayout),
+                    //     measureModeName(heightMeasureMode, performLayout),
+                    //     availableWidth,
+                    //     availableHeight,
+                    //     reason);
+                    System.Console.WriteLine("wm: {0}, hm: {1}, aw: {2} ah: {3} {4}\n",
+                        measureModeName(widthMeasureMode, performLayout),
+                        measureModeName(heightMeasureMode, performLayout),
+                        availableWidth,
+                        availableHeight,
+                        reason
+                    );
+                }
 
-        //         nodelayoutImpl(node,
-        //             availableWidth,
-        //             availableHeight,
-        //             parentDirection,
-        //             widthMeasureMode,
-        //             heightMeasureMode,
-        //             parentWidth,
-        //             parentHeight,
-        //             performLayout,
-        //             config);
+                nodelayoutImpl(node,
+                    availableWidth,
+                    availableHeight,
+                    parentDirection,
+                    widthMeasureMode,
+                    heightMeasureMode,
+                    parentWidth,
+                    parentHeight,
+                    performLayout,
+                    config);
 
-        //         if (gPrintChanges ) {
-        //             s := "";
-        //             if (needToVisitNode ) {
-        //                 s = "*";
-        //             }
-        //             fmt.Printf("%s%d.}%s", spacer(gDepth), gDepth, s);
-        //             if (node.Print != null ) {
-        //                 node.Print(node);
-        //             }
-        //             fmt.Printf("wm: %s, hm: %s, d: (%f, %f) %s\n",
-        //                 measureModeName(widthMeasureMode, performLayout),
-        //                 measureModeName(heightMeasureMode, performLayout),
-        //                 layout.measuredDimensions[Dimension.Width],
-        //                 layout.measuredDimensions[Dimension.Height],
-        //                 reason);
-        //         }
+                if (gPrintChanges ) {
+                    string s = "";
+                    if (needToVisitNode ) {
+                        s = "*";
+                    }
+                    // fmt.Printf("%s%d.}%s", spacer(gDepth), gDepth, s);
+                    System.Console.WriteLine($"{spacer(gDepth)}{gDepth}.}}{s}");
+                    if (node.Print != null ) {
+                        node.Print(node);
+                    }
+                    // fmt.Printf("wm: %s, hm: %s, d: (%f, %f) %s\n",
+                    //     measureModeName(widthMeasureMode, performLayout),
+                    //     measureModeName(heightMeasureMode, performLayout),
+                    //     layout.measuredDimensions[Dimension.Width],
+                    //     layout.measuredDimensions[Dimension.Height],
+                    //     reason);
+                    System.Console.WriteLine("wm: {0}, hm: {1}, d: ({2}, {3}) {4}\n",
+                        measureModeName(widthMeasureMode, performLayout),
+                        measureModeName(heightMeasureMode, performLayout),
+                        layout.measuredDimensions[(int)Dimension.Width],
+                        layout.measuredDimensions[(int)Dimension.Height],
+                        reason
+                    );
+                }
 
-        //         layout.lastParentDirection = parentDirection;
+                layout.lastParentDirection = parentDirection;
 
-        //         if (cachedResults == null ) {
-        //             if (layout.nextCachedMeasurementsIndex == maxCachedResultCount ) {
-        //                 if (gPrintChanges ) {
-        //                     fmt.Printf("Out of cache entries!\n");
-        //                 }
-        //                 layout.nextCachedMeasurementsIndex = 0;
-        //             }
+                if (cachedResults == null ) {
+                    if (layout.nextCachedMeasurementsIndex == Constant.MaxCachedResultCount ) {
+                        if (gPrintChanges ) {
+                            System.Console.WriteLine("Out of cache entries!\n");
+                        }
+                        layout.nextCachedMeasurementsIndex = 0;
+                    }
 
-        //             var newCacheEntry *CachedMeasurement;
-        //             if (performLayout ) {
-        //                 // Use the single layout cache entry.
-        //                 newCacheEntry = &layout.cachedLayout;
-        //             } else {
-        //                 // Allocate a new measurement cache entry.
-        //                 newCacheEntry = &layout.cachedMeasurements[layout.nextCachedMeasurementsIndex];
-        //                 layout.nextCachedMeasurementsIndex++;
-        //             }
+                    CachedMeasurement newCacheEntry = null;
+                    if (performLayout ) {
+                        // Use the single layout cache entry.
+                        newCacheEntry = layout.cachedLayout;
+                    } else {
+                        // Allocate a new measurement cache entry.
+                        newCacheEntry = layout.cachedMeasurements[layout.nextCachedMeasurementsIndex];
+                        layout.nextCachedMeasurementsIndex++;
+                    }
 
-        //             newCacheEntry.availableWidth = availableWidth;
-        //             newCacheEntry.availableHeight = availableHeight;
-        //             newCacheEntry.widthMeasureMode = widthMeasureMode;
-        //             newCacheEntry.heightMeasureMode = heightMeasureMode;
-        //             newCacheEntry.computedWidth = layout.measuredDimensions[Dimension.Width];
-        //             newCacheEntry.computedHeight = layout.measuredDimensions[Dimension.Height];
-        //         }
-        //     }
+                    newCacheEntry.availableWidth = availableWidth;
+                    newCacheEntry.availableHeight = availableHeight;
+                    newCacheEntry.widthMeasureMode = widthMeasureMode;
+                    newCacheEntry.heightMeasureMode = heightMeasureMode;
+                    newCacheEntry.computedWidth = layout.measuredDimensions[(int)Dimension.Width];
+                    newCacheEntry.computedHeight = layout.measuredDimensions[(int)Dimension.Height];
+                }
+            }
 
-        //     if (performLayout ) {
-        //         node.Layout.Dimensions[Dimension.Width] = node.Layout.measuredDimensions[Dimension.Width];
-        //         node.Layout.Dimensions[Dimension.Height] = node.Layout.measuredDimensions[Dimension.Height];
-        //         node.hasNewLayout = true;
-        //         node.IsDirty = false;
-        //     }
+            if (performLayout ) {
+                node.Layout.Dimensions[(int)Dimension.Width] = node.Layout.measuredDimensions[(int)Dimension.Width];
+                node.Layout.Dimensions[(int)Dimension.Height] = node.Layout.measuredDimensions[(int)Dimension.Height];
+                node.hasNewLayout = true;
+                node.IsDirty = false;
+            }
 
-        //     gDepth--
-        //     layout.generationCount = currentGenerationCount;
-        //     return needToVisitNode || cachedResults == null;
-        // }
+            gDepth--;
+            layout.generationCount = currentGenerationCount;
+            return needToVisitNode || cachedResults == null;
+        }
 
         static void roundToPixelGrid(Node node, float pointScaleFactor, float absoluteLeft, float absoluteTop) {
             if (pointScaleFactor == 0.0 ) {
