@@ -2339,147 +2339,152 @@ namespace Rockyfi
                     node.Layout.HadOverflow = true;
                 }
 
-        //         // STEP 6: MAIN-AXIS JUSTIFICATION & CROSS-AXIS SIZE DETERMINATION
+                // STEP 6: MAIN-AXIS JUSTIFICATION & CROSS-AXIS SIZE DETERMINATION
 
-        //         // At this point, all the children have their dimensions set in the main
-        //         // axis.
-        //         // Their dimensions are also set in the cross axis with the exception of
-        //         // items
-        //         // that are aligned "stretch". We need to compute these stretch values and
-        //         // set the final positions.
+                // At this point, all the children have their dimensions set in the main
+                // axis.
+                // Their dimensions are also set in the cross axis with the exception of
+                // items
+                // that are aligned "stretch". We need to compute these stretch values and
+                // set the final positions.
 
-        //         // If we are using "at most" rules in the main axis. Calculate the remaining space when
-        //         // raint by the min size defined for the main axis.
+                // If we are using "at most" rules in the main axis. Calculate the remaining space when
+                // raint by the min size defined for the main axis.
 
-        //         if (measureModeMainDim == MeasureMode.AtMost && remainingFreeSpace > 0 ) {
-        //             if node.Style.MinDimensions[dim[mainAxis]].unit != Unit.Undefined &&
-        //                 resolveValue(&node.Style.MinDimensions[dim[mainAxis]], mainAxisParentSize) >= 0 {
-        //                 remainingFreeSpace =
-        //                     System.Math.Max(0,
-        //                         resolveValue(&node.Style.MinDimensions[dim[mainAxis]], mainAxisParentSize)-
-        //                             (availableInnerMainDim-remainingFreeSpace))
-        //             } else {
-        //                 remainingFreeSpace = 0
-        //             }
-        //         }
+                if (measureModeMainDim == MeasureMode.AtMost && remainingFreeSpace > 0 ) {
+                    if (node.Style.MinDimensions[(int)dim[(int)mainAxis]].unit != Unit.Undefined &&
+                        resolveValue(node.Style.MinDimensions[(int)dim[(int)mainAxis]], mainAxisParentSize) >= 0) {
+                        remainingFreeSpace =
+                            System.Math.Max(0,
+                                resolveValue(node.Style.MinDimensions[(int)dim[(int)mainAxis]], mainAxisParentSize)-
+                                    (availableInnerMainDim-remainingFreeSpace));
+                    } else {
+                        remainingFreeSpace = 0;
+                    }
+                }
 
-        //         numberOfAutoMarginsOnCurrentLine := 0
-        //         for i := startOfLineIndex; i < endOfLineIndex; i++ {
-        //             child := node.Children[i]
-        //             if (child.Style.PositionType == PositionType.Relative ) {
-        //                 if (marginLeadingValue(child, mainAxis).unit == UnitAuto ) {
-        //                     numberOfAutoMarginsOnCurrentLine++
-        //                 }
-        //                 if (marginTrailingValue(child, mainAxis).unit == UnitAuto ) {
-        //                     numberOfAutoMarginsOnCurrentLine++
-        //                 }
-        //             }
-        //         }
+                int numberOfAutoMarginsOnCurrentLine = 0;
+                for(int i = startOfLineIndex; i < endOfLineIndex; i++) {
+                    var child = node.Children[i];
+                    if (child.Style.PositionType == PositionType.Relative ) {
+                        if (marginLeadingValue(child, mainAxis).unit == Unit.Auto ) {
+                            numberOfAutoMarginsOnCurrentLine++;
+                        }
+                        if (marginTrailingValue(child, mainAxis).unit == Unit.Auto ) {
+                            numberOfAutoMarginsOnCurrentLine++;
+                        }
+                    }
+                }
 
-        //         if (numberOfAutoMarginsOnCurrentLine == 0 ) {
-        //             switch justifyContent {
-        //             case Justify.Center:
-        //                 leadingMainDim = remainingFreeSpace / 2
-        //             case Justify.FlexEnd:
-        //                 leadingMainDim = remainingFreeSpace
-        //             case JustifySpaceBetween:
-        //                 if (itemsOnLine > 1 ) {
-        //                     betweenMainDim = System.Math.Max(remainingFreeSpace, 0) / float(itemsOnLine-1)
-        //                 } else {
-        //                     betweenMainDim = 0
-        //                 }
-        //             case JustifySpaceAround:
-        //                 // Space on the edges is half of the space between elements
-        //                 betweenMainDim = remainingFreeSpace / float(itemsOnLine)
-        //                 leadingMainDim = betweenMainDim / 2
-        //             case Justify.FlexStart:
-        //             }
-        //         }
+                if (numberOfAutoMarginsOnCurrentLine == 0 ) {
+                    switch (justifyContent) {
+                    case Justify.Center:
+                        leadingMainDim = remainingFreeSpace / 2;
+                        break;
+                    case Justify.FlexEnd:
+                        leadingMainDim = remainingFreeSpace;
+                        break;
+                    case Justify.SpaceBetween:
+                        if (itemsOnLine > 1 ) {
+                            betweenMainDim = System.Math.Max(remainingFreeSpace, 0) / (float)(itemsOnLine-1);
+                        } else {
+                            betweenMainDim = 0;
+                        }
+                        break;
+                    case Justify.SpaceAround:
+                        // Space on the edges is half of the space between elements
+                        betweenMainDim = remainingFreeSpace / (float)(itemsOnLine);
+                        leadingMainDim = betweenMainDim / 2;
+                        break;
+                    case Justify.FlexStart:
+                        break;
+                    }
+                }
 
-        //         mainDim := leadingPaddingAndBorderMain + leadingMainDim
-        //         float crossDim;
+                float mainDim = leadingPaddingAndBorderMain + leadingMainDim;
+                float crossDim = 0;
 
-        //         for i := startOfLineIndex; i < endOfLineIndex; i++ {
-        //             child := node.Children[i]
-        //             if (child.Style.Display == DisplayNone ) {
-        //                 continue;
-        //             }
-        //             if child.Style.PositionType == PositionType.Absolute &&
-        //                 nodeIsLeadingPosDefined(child, mainAxis) {
-        //                 if (performLayout ) {
-        //                     // In case the child is position absolute and has left/top being
-        //                     // defined, we override the position to whatever the user said
-        //                     // (and margin/border).
-        //                     child.Layout.Position[pos[mainAxis]] =
-        //                         nodeLeadingPosition(child, mainAxis, availableInnerMainDim) +
-        //                             nodeLeadingBorder(node, mainAxis) +
-        //                             nodeLeadingMargin(child, mainAxis, availableInnerWidth)
-        //                 }
-        //             } else {
-        //                 // Now that we placed the element, we need to update the variables.
-        //                 // We need to do that only for relative elements. Absolute elements
-        //                 // do not take part in that phase.
-        //                 if (child.Style.PositionType == PositionType.Relative ) {
-        //                     if (marginLeadingValue(child, mainAxis).unit == UnitAuto ) {
-        //                         mainDim += remainingFreeSpace / float(numberOfAutoMarginsOnCurrentLine)
-        //                     }
+                for(int i = startOfLineIndex; i < endOfLineIndex; i++) {
+                    var child = node.Children[i];
+                    if (child.Style.Display == Display.None ) {
+                        continue;
+                    }
+                    if (child.Style.PositionType == PositionType.Absolute &&
+                        nodeIsLeadingPosDefined(child, mainAxis)) {
+                        if (performLayout ) {
+                            // In case the child is position absolute and has left/top being
+                            // defined, we override the position to whatever the user said
+                            // (and margin/border).
+                            child.Layout.Position[(int)pos[(int)mainAxis]] =
+                                nodeLeadingPosition(child, mainAxis, availableInnerMainDim) +
+                                    nodeLeadingBorder(node, mainAxis) +
+                                    nodeLeadingMargin(child, mainAxis, availableInnerWidth);
+                        }
+                    } else {
+                        // Now that we placed the element, we need to update the variables.
+                        // We need to do that only for relative elements. Absolute elements
+                        // do not take part in that phase.
+                        if (child.Style.PositionType == PositionType.Relative ) {
+                            if (marginLeadingValue(child, mainAxis).unit == Unit.Auto ) {
+                                mainDim += remainingFreeSpace / (float)(numberOfAutoMarginsOnCurrentLine);
+                            }
 
-        //                     if (performLayout ) {
-        //                         child.Layout.Position[pos[mainAxis]] += mainDim
-        //                     }
+                            if (performLayout ) {
+                                child.Layout.Position[(int)pos[(int)mainAxis]] += mainDim;
+                            }
 
-        //                     if (marginTrailingValue(child, mainAxis).unit == UnitAuto ) {
-        //                         mainDim += remainingFreeSpace / float(numberOfAutoMarginsOnCurrentLine)
-        //                     }
+                            if (marginTrailingValue(child, mainAxis).unit == Unit.Auto ) {
+                                mainDim += remainingFreeSpace / (float)(numberOfAutoMarginsOnCurrentLine);
+                            }
 
-        //                     if (canSkipFlex ) {
-        //                         // If we skipped the flex step, then we can't rely on the
-        //                         // measuredDims because
-        //                         // they weren't computed. This means we can't call YGNodeDimWithMargin.
-        //                         mainDim += betweenMainDim + nodeMarginForAxis(child, mainAxis, availableInnerWidth) +
-        //                             child.Layout.computedFlexBasis
-        //                         crossDim = availableInnerCrossDim
-        //                     } else {
-        //                         // The main dimension is the sum of all the elements dimension plus the spacing.
-        //                         mainDim += betweenMainDim + nodeDimWithMargin(child, mainAxis, availableInnerWidth)
+                            if (canSkipFlex ) {
+                                // If we skipped the flex step, then we can't rely on the
+                                // measuredDims because
+                                // they weren't computed. This means we can't call YGNodeDimWithMargin.
+                                mainDim += betweenMainDim + nodeMarginForAxis(child, mainAxis, availableInnerWidth) +
+                                    child.Layout.computedFlexBasis;
+                                crossDim = availableInnerCrossDim;
+                            } else {
+                                // The main dimension is the sum of all the elements dimension plus the spacing.
+                                mainDim += betweenMainDim + nodeDimWithMargin(child, mainAxis, availableInnerWidth);
 
-        //                         // The cross dimension is the max of the elements dimension since
-        //                         // there can only be one element in that cross dimension.
-        //                         crossDim = System.Math.Max(crossDim, nodeDimWithMargin(child, crossAxis, availableInnerWidth))
-        //                     }
-        //                 } else if (performLayout ) {
-        //                     child.Layout.Position[pos[mainAxis]] +=
-        //                         nodeLeadingBorder(node, mainAxis) + leadingMainDim
-        //                 }
-        //             }
-        //         }
+                                // The cross dimension is the max of the elements dimension since
+                                // there can only be one element in that cross dimension.
+                                crossDim = System.Math.Max(crossDim, nodeDimWithMargin(child, crossAxis, availableInnerWidth));
+                            }
+                        } else if (performLayout ) {
+                            child.Layout.Position[(int)pos[(int)mainAxis]] +=
+                                nodeLeadingBorder(node, mainAxis) + leadingMainDim;
+                        }
+                    }
+                }
 
-        //         mainDim += trailingPaddingAndBorderMain
+                mainDim += trailingPaddingAndBorderMain;
 
-        //         containerCrossAxis := availableInnerCrossDim
-        //         if measureModeCrossDim == MeasureMode.Undefined ||
-        //             measureModeCrossDim == MeasureMode.AtMost {
-        //             // Compute the cross axis from the max cross dimension of the children.
-        //             containerCrossAxis = nodeBoundAxis(node,
-        //                 crossAxis,
-        //                 crossDim+paddingAndBorderAxisCross,
-        //                 crossAxisParentSize,
-        //                 parentWidth) -
-        //                 paddingAndBorderAxisCross
-        //         }
+                float containerCrossAxis = availableInnerCrossDim;
+                if (measureModeCrossDim == MeasureMode.Undefined ||
+                    measureModeCrossDim == MeasureMode.AtMost) {
+                    // Compute the cross axis from the max cross dimension of the children.
+                    containerCrossAxis = nodeBoundAxis(node,
+                        crossAxis,
+                        crossDim+paddingAndBorderAxisCross,
+                        crossAxisParentSize,
+                        parentWidth) -
+                        paddingAndBorderAxisCross;
+                }
 
-        //         // If there's no flex wrap, the cross dimension is defined by the container.
-        //         if (!isNodeFlexWrap && measureModeCrossDim == MeasureMode.Exactly ) {
-        //             crossDim = availableInnerCrossDim
-        //         }
+                // If there's no flex wrap, the cross dimension is defined by the container.
+                if (!isNodeFlexWrap && measureModeCrossDim == MeasureMode.Exactly ) {
+                    crossDim = availableInnerCrossDim;
+                }
 
-        //         // Clamp to the min/max size specified on the container.
-        //         crossDim = nodeBoundAxis(node,
-        //             crossAxis,
-        //             crossDim+paddingAndBorderAxisCross,
-        //             crossAxisParentSize,
-        //             parentWidth) -
-        //             paddingAndBorderAxisCross
+                // Clamp to the min/max size specified on the container.
+                crossDim = nodeBoundAxis(node,
+                    crossAxis,
+                    crossDim+paddingAndBorderAxisCross,
+                    crossAxisParentSize,
+                    parentWidth) -
+                    paddingAndBorderAxisCross;
 
         //         // STEP 7: CROSS-AXIS ALIGNMENT
         //         // We can skip child alignment if we're just measuring the container.
