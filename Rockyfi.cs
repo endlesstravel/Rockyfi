@@ -160,8 +160,8 @@ namespace Rockyfi
 
         struct Size
         {
-            float Width;
-            float Height;
+            public float Width;
+            public float Height;
         }
 
         struct Value
@@ -1510,53 +1510,53 @@ namespace Rockyfi
             }
         }
 
-        // // nodeWithMeasureFuncSetMeasuredDimensions sets measure dimensions for node with measure func
-        // static nodeWithMeasureFuncSetMeasuredDimensions(Node node, float availableWidth, float availableHeight, MeasureMode widthMeasureMode, MeasureMode heightMeasureMode, float parentWidth, float parentHeight) {
-        //     assertWithNode(node, node.Measure != null, "Expected node to have custom measure function")
+        // nodeWithMeasureFuncSetMeasuredDimensions sets measure dimensions for node with measure func
+        static void nodeWithMeasureFuncSetMeasuredDimensions(Node node, float availableWidth, float availableHeight, MeasureMode widthMeasureMode, MeasureMode heightMeasureMode, float parentWidth, float parentHeight) {
+            assertWithNode(node, node.Measure != null, "Expected node to have custom measure function");
 
-        //     paddingAndBorderAxisRow := nodePaddingAndBorderForAxis(node, FlexDirection.Row, availableWidth)
-        //     paddingAndBorderAxisColumn := nodePaddingAndBorderForAxis(node, FlexDirection.Column, availableWidth)
-        //     marginAxisRow := nodeMarginForAxis(node, FlexDirection.Row, availableWidth)
-        //     marginAxisColumn := nodeMarginForAxis(node, FlexDirection.Column, availableWidth)
+            var paddingAndBorderAxisRow = nodePaddingAndBorderForAxis(node, FlexDirection.Row, availableWidth);
+            var paddingAndBorderAxisColumn = nodePaddingAndBorderForAxis(node, FlexDirection.Column, availableWidth);
+            var marginAxisRow = nodeMarginForAxis(node, FlexDirection.Row, availableWidth);
+            var marginAxisColumn = nodeMarginForAxis(node, FlexDirection.Column, availableWidth);
 
-        //     // We want to make sure we don't call measure with negative size
-        //     innerWidth := System.Math.Max(0, availableWidth-marginAxisRow-paddingAndBorderAxisRow)
-        //     if (FloatIsUndefined(availableWidth) ) {
-        //         innerWidth = availableWidth
-        //     }
-        //     innerHeight := System.Math.Max(0, availableHeight-marginAxisColumn-paddingAndBorderAxisColumn)
-        //     if (FloatIsUndefined(availableHeight) ) {
-        //         innerHeight = availableHeight
-        //     }
+            // We want to make sure we don't call measure with negative size
+            var innerWidth = System.Math.Max(0, availableWidth-marginAxisRow-paddingAndBorderAxisRow);
+            if (FloatIsUndefined(availableWidth) ) {
+                innerWidth = availableWidth;
+            }
+            var innerHeight = System.Math.Max(0, availableHeight-marginAxisColumn-paddingAndBorderAxisColumn);
+            if (FloatIsUndefined(availableHeight) ) {
+                innerHeight = availableHeight;
+            }
 
-        //     if (widthMeasureMode == MeasureMode.Exactly && heightMeasureMode == MeasureMode.Exactly ) {
-        //         // Don't bother sizing the text if both dimensions are already defined.
-        //         node.Layout.measuredDimensions[Dimension.Width] = nodeBoundAxis(
-        //             node, FlexDirection.Row, availableWidth-marginAxisRow, parentWidth, parentWidth)
-        //         node.Layout.measuredDimensions[Dimension.Height] = nodeBoundAxis(
-        //             node, FlexDirection.Column, availableHeight-marginAxisColumn, parentHeight, parentWidth)
-        //     } else {
-        //         // Measure the text under the current raints.
-        //         measuredSize := node.Measure(node, innerWidth, widthMeasureMode, innerHeight, heightMeasureMode)
+            if (widthMeasureMode == MeasureMode.Exactly && heightMeasureMode == MeasureMode.Exactly ) {
+                // Don't bother sizing the text if both dimensions are already defined.
+                node.Layout.measuredDimensions[(int)Dimension.Width] = nodeBoundAxis(
+                    node, FlexDirection.Row, availableWidth-marginAxisRow, parentWidth, parentWidth);
+                node.Layout.measuredDimensions[(int)Dimension.Height] = nodeBoundAxis(
+                    node, FlexDirection.Column, availableHeight-marginAxisColumn, parentHeight, parentWidth);
+            } else {
+                // Measure the text under the current raints.
+                var measuredSize = node.Measure(node, innerWidth, widthMeasureMode, innerHeight, heightMeasureMode);
 
-        //         width := availableWidth - marginAxisRow
-        //         if widthMeasureMode == MeasureMode.Undefined ||
-        //             widthMeasureMode == MeasureMode.AtMost {
-        //             width = measuredSize.Width + paddingAndBorderAxisRow
+                var width = availableWidth - marginAxisRow;
+                if (widthMeasureMode == MeasureMode.Undefined ||
+                    widthMeasureMode == MeasureMode.AtMost) {
+                    width = measuredSize.Width + paddingAndBorderAxisRow;
 
-        //         }
+                }
 
-        //         node.Layout.measuredDimensions[Dimension.Width] = nodeBoundAxis(node, FlexDirection.Row, width, availableWidth, availableWidth)
+                node.Layout.measuredDimensions[(int)Dimension.Width] = nodeBoundAxis(node, FlexDirection.Row, width, availableWidth, availableWidth);
 
-        //         height := availableHeight - marginAxisColumn
-        //         if heightMeasureMode == MeasureMode.Undefined ||
-        //             heightMeasureMode == MeasureMode.AtMost {
-        //             height = measuredSize.Height + paddingAndBorderAxisColumn
-        //         }
+                var height = availableHeight - marginAxisColumn;
+                if (heightMeasureMode == MeasureMode.Undefined ||
+                    heightMeasureMode == MeasureMode.AtMost) {
+                    height = measuredSize.Height + paddingAndBorderAxisColumn;
+                }
 
-        //         node.Layout.measuredDimensions[Dimension.Height] = nodeBoundAxis(node, FlexDirection.Column, height, availableHeight, availableWidth)
-        //     }
-        // }
+                node.Layout.measuredDimensions[(int)Dimension.Height] = nodeBoundAxis(node, FlexDirection.Column, height, availableHeight, availableWidth);
+            }
+        }
 
         // nodeEmptyContainerSetMeasuredDimensions sets measure dimensions for empty container
         // For nodes with no children, use the available values if they were provided,
