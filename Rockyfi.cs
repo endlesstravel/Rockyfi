@@ -1034,74 +1034,78 @@ namespace Rockyfi
             return (flexDirectionIsRow(axis) &&
                 computedEdgeValue(node.Style.Position, Edge.Start, ValueUndefined).unit !=
                     Unit.Undefined) ||
-                computedEdgeValue(node.Style.Position, leading[axis], ValueUndefined).unit !=
+                computedEdgeValue(node.Style.Position, leading[(int)axis], ValueUndefined).unit !=
                     Unit.Undefined;
         }
 
-        // static bool nodeIsTrailingPosDefined(Node node, FlexDirection axis) {
-        //     return (flexDirectionIsRow(axis) &&
-        //         computedEdgeValue(node.Style.Position, Edge.End, ValueUndefined).unit !=
-        //             Unit.Undefined) ||
-        //         computedEdgeValue(node.Style.Position, trailing[axis], ValueUndefined).unit !=
-        //             Unit.Undefined
-        // }
+        static bool nodeIsTrailingPosDefined(Node node, FlexDirection axis) {
+            return (flexDirectionIsRow(axis) &&
+                computedEdgeValue(node.Style.Position, Edge.End, ValueUndefined).unit !=
+                    Unit.Undefined) ||
+                computedEdgeValue(node.Style.Position, trailing[(int)axis], ValueUndefined).unit !=
+                    Unit.Undefined;
+        }
 
-        // static float nodeLeadingPosition(Node node, FlexDirection axis, axisSize float) {
-        //     if (flexDirectionIsRow(axis) ) {
-        //         leadingPosition := computedEdgeValue(node.Style.Position, Edge.Start, ValueUndefined)
-        //         if (leadingPosition.unit != Unit.Undefined ) {
-        //             return resolveValue(leadingPosition, axisSize)
-        //         }
-        //     }
+        static float nodeLeadingPosition(Node node, FlexDirection axis, float axisSize) {
+            if (flexDirectionIsRow(axis) ) {
+                var leadingPosition = computedEdgeValue(node.Style.Position, Edge.Start, ValueUndefined);
+                if (leadingPosition.unit != Unit.Undefined ) {
+                    return resolveValue(leadingPosition, axisSize);
+                }
+            }
 
-        //     leadingPosition := computedEdgeValue(node.Style.Position, leading[axis], ValueUndefined)
+            {
+                var leadingPosition = computedEdgeValue(node.Style.Position, leading[(int)axis], ValueUndefined);
 
-        //     if (leadingPosition.unit == Unit.Undefined ) {
-        //         return 0
-        //     }
-        //     return resolveValue(leadingPosition, axisSize)
-        // }
+                if (leadingPosition.unit == Unit.Undefined ) {
+                    return 0;
+                }
+                return resolveValue(leadingPosition, axisSize);
+            }
+        }
 
-        // static float nodeTrailingPosition(Node node, FlexDirection axis, axisSize float) {
-        //     if (flexDirectionIsRow(axis) ) {
-        //         trailingPosition := computedEdgeValue(node.Style.Position, Edge.End, ValueUndefined)
-        //         if (trailingPosition.unit != Unit.Undefined ) {
-        //             return resolveValue(trailingPosition, axisSize)
-        //         }
-        //     }
+        static float nodeTrailingPosition(Node node, FlexDirection axis, float axisSize) {
+            if (flexDirectionIsRow(axis) ) {
+                var trailingPosition = computedEdgeValue(node.Style.Position, Edge.End, ValueUndefined);
+                if (trailingPosition.unit != Unit.Undefined ) {
+                    return resolveValue(trailingPosition, axisSize);
+                }
+            }
 
-        //     trailingPosition := computedEdgeValue(node.Style.Position, trailing[axis], ValueUndefined)
+            {
+                var trailingPosition = computedEdgeValue(node.Style.Position, trailing[(int)axis], ValueUndefined);
 
-        //     if (trailingPosition.unit == Unit.Undefined ) {
-        //         return 0
-        //     }
-        //     return resolveValue(trailingPosition, axisSize)
-        // }
+                if (trailingPosition.unit == Unit.Undefined ) {
+                    return 0;
+                }
+                return resolveValue(trailingPosition, axisSize);
+            }
+        }
 
-        // static float nodeBoundAxisWithinMinAndMax(Node node, FlexDirection axis, value float, axisSize float) {
-        //     var min = Undefined;
-        //     var max = Undefined;
+        static float nodeBoundAxisWithinMinAndMax(Node node, FlexDirection axis, float value, float axisSize) {
+            var min = float.NaN;
+            var max = float.NaN;
 
-        //     if (flexDirectionIsColumn(axis)) {
-        //         min = resolveValue(&node.Style.MinDimensions[Dimension.Height], axisSize)
-        //         max = resolveValue(&node.Style.MaxDimensions[Dimension.Height], axisSize)
-        //     } else if (flexDirectionIsRow(axis) ) {
-        //         min = resolveValue(&node.Style.MinDimensions[Dimension.Width], axisSize)
-        //         max = resolveValue(&node.Style.MaxDimensions[Dimension.Width], axisSize)
-        //     }
+            if (flexDirectionIsColumn(axis)) {
+                min = resolveValue(node.Style.MinDimensions[(int)Dimension.Height], axisSize);
+                max = resolveValue(node.Style.MaxDimensions[(int)Dimension.Height], axisSize);
+            } else if (flexDirectionIsRow(axis) ) {
+                min = resolveValue(node.Style.MinDimensions[(int)Dimension.Width], axisSize);
+                max = resolveValue(node.Style.MaxDimensions[(int)Dimension.Width], axisSize);
+            }
 
-        //     boundValue := value
+            var boundValue = value;
 
-        //     if (!FloatIsUndefined(max) && max >= 0 && boundValue > max ) {
-        //         boundValue = max
-        //     }
+            if (!FloatIsUndefined(max) && max >= 0 && boundValue > max ) {
+                boundValue = max;
+            }
 
-        //     if (!FloatIsUndefined(min) && min >= 0 && boundValue < min ) {
-        //         boundValue = min
-        //     }
+            if (!FloatIsUndefined(min) && min >= 0 && boundValue < min ) {
+                boundValue = min;
+            }
 
-        //     return boundValue
-        // }
+            return boundValue;
+        }
 
         // static marginLeadingValue(Node node, FlexDirection axis) *Value {
         //     if (flexDirectionIsRow(axis) && node.Style.Margin[(int)Edge.Start].unit != Unit.Undefined ) {
@@ -1120,7 +1124,7 @@ namespace Rockyfi
 
         // // nodeBoundAxis is like nodeBoundAxisWithinMinAndMax but also ensures that
         // // the value doesn't go below the padding and border amount.
-        // static float nodeBoundAxis(Node node, FlexDirection axis, value float, axisSize float, float widthSize) {
+        // static float nodeBoundAxis(Node node, FlexDirection axis, float value, float axisSize, float widthSize) {
         //     return System.Math.Max(nodeBoundAxisWithinMinAndMax(node, axis, value, axisSize),
         //         nodePaddingAndBorderForAxis(node, axis, widthSize))
         // }
@@ -1133,7 +1137,7 @@ namespace Rockyfi
 
         // // If both left and right are defined, then use left. Otherwise return
         // // +left or -right depending on which is defined.
-        // static float nodeRelativePosition(Node node, FlexDirection axis, axisSize float) {
+        // static float nodeRelativePosition(Node node, FlexDirection axis, float axisSize) {
         //     if (nodeIsLeadingPosDefined(node, axis) ) {
         //         return nodeLeadingPosition(node, axis, axisSize)
         //     }
@@ -2883,7 +2887,7 @@ namespace Rockyfi
         // }
 
         // // roundValueToPixelGrid rounds value to pixel grid
-        // static float roundValueToPixelGrid(value float, pointScaleFactor float, forceCeil bool, forceFloor bool) {
+        // static float roundValueToPixelGrid(float value, pointScaleFactor float, forceCeil bool, forceFloor bool) {
         //     scaledValue := value * pointScaleFactor
         //     fractial := fmodf(scaledValue, 1.0)
         //     if (FloatsEqual(fractial, 0) ) {
