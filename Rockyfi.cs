@@ -2861,13 +2861,6 @@ namespace Rockyfi
         //     }
         // }
 
-        // var (
-        //     gDepth        = 0
-        //     gPrintTree    = false
-        //     gPrintChanges = false
-        //     gPrintSkips   = false
-        // )
-
         const string spacerStr = "";
 
         // // spacer returns spacer string
@@ -2913,7 +2906,7 @@ namespace Rockyfi
         // roundValueToPixelGrid rounds value to pixel grid
         static float roundValueToPixelGrid(float value, float pointScaleFactor, bool forceCeil, bool forceFloor) {
             var scaledValue = value * pointScaleFactor;
-            var fractial = (scaledValue % 1f);
+            var fractial = fmodf(scaledValue, 1f);
             if (FloatsEqual(fractial, 0) ) {
                 // First we check if the value is already rounded
                 scaledValue = scaledValue - fractial;
@@ -2980,6 +2973,14 @@ namespace Rockyfi
 
             return widthIsCompatible && heightIsCompatible;
         }
+
+        // var (
+        // )
+
+        static int gDepth        = 0;
+        const bool gPrintTree    = false;
+        const bool gPrintChanges = false;
+        const bool gPrintSkips   = false;
 
         // // layoutNodeInternal is a wrapper around the YGNodelayoutImpl function. It determines
         // // whether the layout request is redundant and can be skipped.
