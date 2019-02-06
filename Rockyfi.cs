@@ -1867,70 +1867,70 @@ namespace Rockyfi
                 }
             }
 
-            float totalOuterFlexBasis;
+            float totalOuterFlexBasis = 0;
 
-        //     // STEP 3: DETERMINE FLEX BASIS FOR EACH ITEM
-        //     foreach (var child in node.Children) {
-        //         if (child.Style.Display == DisplayNone ) {
-        //             zeroOutLayoutRecursivly(child)
-        //             child.hasNewLayout = true
-        //             child.IsDirty = false
-        //             continue;
-        //         }
-        //         resolveDimensions(child)
-        //         if (performLayout ) {
-        //             // Set the initial position (relative to the parent).
-        //             childDirection := nodeResolveDirection(child, direction)
-        //             nodeSetPosition(child,
-        //                 childDirection,
-        //                 availableInnerMainDim,
-        //                 availableInnerCrossDim,
-        //                 availableInnerWidth)
-        //         }
+            // STEP 3: DETERMINE FLEX BASIS FOR EACH ITEM
+            foreach (var child in node.Children) {
+                if (child.Style.Display == Display.None ) {
+                    zeroOutLayoutRecursivly(child);
+                    child.hasNewLayout = true;
+                    child.IsDirty = false;
+                    continue;
+                }
+                resolveDimensions(child);
+                if (performLayout ) {
+                    // Set the initial position (relative to the parent).
+                    var childDirection = nodeResolveDirection(child, direction);
+                    nodeSetPosition(child,
+                        childDirection,
+                        availableInnerMainDim,
+                        availableInnerCrossDim,
+                        availableInnerWidth);
+                }
 
-        //         // Absolute-positioned children don't participate in flex layout. Add them
-        //         // to a list that we can process later.
-        //         if (child.Style.PositionType == PositionType.Absolute ) {
-        //             // Store a private linked list of absolutely positioned children
-        //             // so that we can efficiently traverse them later.
-        //             if (firstAbsoluteChild == null ) {
-        //                 firstAbsoluteChild = child
-        //             }
-        //             if (currentAbsoluteChild != null ) {
-        //                 currentAbsoluteChild.NextChild = child
-        //             }
-        //             currentAbsoluteChild = child
-        //             child.NextChild = null
-        //         } else {
-        //             if (child == singleFlexChild ) {
-        //                 child.Layout.computedFlexBasisGeneration = currentGenerationCount
-        //                 child.Layout.computedFlexBasis = 0
-        //             } else {
-        //                 nodeComputeFlexBasisForChild(node,
-        //                     child,
-        //                     availableInnerWidth,
-        //                     widthMeasureMode,
-        //                     availableInnerHeight,
-        //                     availableInnerWidth,
-        //                     availableInnerHeight,
-        //                     heightMeasureMode,
-        //                     direction,
-        //                     config)
-        //             }
-        //         }
+                // Absolute-positioned children don't participate in flex layout. Add them
+                // to a list that we can process later.
+                if (child.Style.PositionType == PositionType.Absolute ) {
+                    // Store a private linked list of absolutely positioned children
+                    // so that we can efficiently traverse them later.
+                    if (firstAbsoluteChild == null ) {
+                        firstAbsoluteChild = child;
+                    }
+                    if (currentAbsoluteChild != null ) {
+                        currentAbsoluteChild.NextChild = child;
+                    }
+                    currentAbsoluteChild = child;
+                    child.NextChild = null;
+                } else {
+                    if (child == singleFlexChild ) {
+                        child.Layout.computedFlexBasisGeneration = currentGenerationCount;
+                        child.Layout.computedFlexBasis = 0;
+                    } else {
+                        nodeComputeFlexBasisForChild(node,
+                            child,
+                            availableInnerWidth,
+                            widthMeasureMode,
+                            availableInnerHeight,
+                            availableInnerWidth,
+                            availableInnerHeight,
+                            heightMeasureMode,
+                            direction,
+                            config);
+                    };
+                }
 
-        //         totalOuterFlexBasis +=
-        //             child.Layout.computedFlexBasis + nodeMarginForAxis(child, mainAxis, availableInnerWidth)
+                totalOuterFlexBasis +=
+                    child.Layout.computedFlexBasis + nodeMarginForAxis(child, mainAxis, availableInnerWidth);
 
-        //     }
+            }
 
-        //     flexBasisOverflows := totalOuterFlexBasis > availableInnerMainDim
-        //     if (measureModeMainDim == MeasureMode.Undefined ) {
-        //         flexBasisOverflows = false
-        //     }
-        //     if (isNodeFlexWrap && flexBasisOverflows && measureModeMainDim == MeasureMode.AtMost ) {
-        //         measureModeMainDim = MeasureMode.Exactly
-        //     }
+            var flexBasisOverflows = totalOuterFlexBasis > availableInnerMainDim;
+            if (measureModeMainDim == MeasureMode.Undefined ) {
+                flexBasisOverflows = false;
+            }
+            if (isNodeFlexWrap && flexBasisOverflows && measureModeMainDim == MeasureMode.AtMost ) {
+                measureModeMainDim = MeasureMode.Exactly;
+            }
 
         //     // STEP 4: COLLECT FLEX ITEMS INTO FLEX LINES
 
