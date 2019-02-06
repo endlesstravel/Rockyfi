@@ -1932,112 +1932,112 @@ namespace Rockyfi
                 measureModeMainDim = MeasureMode.Exactly;
             }
 
-        //     // STEP 4: COLLECT FLEX ITEMS INTO FLEX LINES
+            // STEP 4: COLLECT FLEX ITEMS INTO FLEX LINES
 
-        //     // Indexes of children that represent the first and last items in the line.
-        //     startOfLineIndex := 0
-        //     endOfLineIndex := 0
+            // Indexes of children that represent the first and last items in the line.
+            int startOfLineIndex = 0;
+            int endOfLineIndex = 0;
 
-        //     // Number of lines.
-        //     lineCount := 0
+            // Number of lines.
+            int lineCount = 0;
 
-        //     // Accumulated cross dimensions of all lines so far.
-        //     float totalLineCrossDim;
+            // Accumulated cross dimensions of all lines so far.
+            float totalLineCrossDim = 0;
 
-        //     // Max main dimension of all the lines.
-        //     float maxLineMainDim;
+            // Max main dimension of all the lines.
+            float maxLineMainDim = 0;
 
-        //     for endOfLineIndex < childCount {
-        //         // Number of items on the currently line. May be different than the
-        //         // difference
-        //         // between start and end indicates because we skip over absolute-positioned
-        //         // items.
-        //         itemsOnLine := 0
+            while (endOfLineIndex < childCount) {
+                // Number of items on the currently line. May be different than the
+                // difference
+                // between start and end indicates because we skip over absolute-positioned
+                // items.
+                int itemsOnLine = 0;
 
-        //         // sizeConsumedOnCurrentLine is accumulation of the dimensions and margin
-        //         // of all the children on the current line. This will be used in order to
-        //         // either set the dimensions of the node if none already exist or to compute
-        //         // the remaining space left for the flexible children.
-        //         float sizeConsumedOnCurrentLine;
-        //         float sizeConsumedOnCurrentLineIncludingMinConstraint;
+                // sizeConsumedOnCurrentLine is accumulation of the dimensions and margin
+                // of all the children on the current line. This will be used in order to
+                // either set the dimensions of the node if none already exist or to compute
+                // the remaining space left for the flexible children.
+                float sizeConsumedOnCurrentLine = 0;
+                float sizeConsumedOnCurrentLineIncludingMinConstraint = 0;
 
-        //         float totalFlexGrowFactors;
-        //         float totalFlexShrinkScaledFactors;
+                float totalFlexGrowFactors = 0;
+                float totalFlexShrinkScaledFactors = 0;
 
-        //         // Maintain a linked list of the child nodes that can shrink and/or grow.
-        //         var firstRelativeChild *Node
-        //         var currentRelativeChild *Node
+                // Maintain a linked list of the child nodes that can shrink and/or grow.
+                Node firstRelativeChild = null;
+                Node currentRelativeChild = null;
 
-        //         // Add items to the current line until it's full or we run out of items.
-        //         for i := startOfLineIndex; i < childCount; i++ {
-        //             child := node.Children[i]
-        //             if (child.Style.Display == DisplayNone ) {
-        //                 endOfLineIndex++
-        //                 continue;
-        //             }
-        //             child.lineIndex = lineCount
+                // Add items to the current line until it's full or we run out of items.
+                for (int i = startOfLineIndex; i < childCount; i++) {
+                    var child = node.Children[i];
+                    if (child.Style.Display == Display.None ) {
+                        endOfLineIndex++;
+                        continue;
+                    }
+                    child.lineIndex = lineCount;
 
-        //             if (child.Style.PositionType != PositionType.Absolute ) {
-        //                 childMarginMainAxis := nodeMarginForAxis(child, mainAxis, availableInnerWidth)
-        //                 flexBasisWithMaxConstraints := fminf(resolveValue(&child.Style.MaxDimensions[dim[mainAxis]], mainAxisParentSize), child.Layout.computedFlexBasis)
-        //                 flexBasisWithMinAndMaxConstraints := System.Math.Max(resolveValue(&child.Style.MinDimensions[dim[mainAxis]], mainAxisParentSize), flexBasisWithMaxConstraints)
+                    if (child.Style.PositionType != PositionType.Absolute ) {
+                        var childMarginMainAxis = nodeMarginForAxis(child, mainAxis, availableInnerWidth);
+                        var flexBasisWithMaxConstraints = System.Math.Min(resolveValue(child.Style.MaxDimensions[(int)dim[(int)mainAxis]], mainAxisParentSize), child.Layout.computedFlexBasis);
+                        var flexBasisWithMinAndMaxConstraints = System.Math.Max(resolveValue(child.Style.MinDimensions[(int)dim[(int)mainAxis]], mainAxisParentSize), flexBasisWithMaxConstraints);
 
-        //                 // If this is a multi-line flow and this item pushes us over the
-        //                 // available size, we've
-        //                 // hit the end of the current line. Break out of the loop and lay out
-        //                 // the current line.
-        //                 if sizeConsumedOnCurrentLineIncludingMinConstraint+flexBasisWithMinAndMaxConstraints+
-        //                     childMarginMainAxis >
-        //                     availableInnerMainDim &&
-        //                     isNodeFlexWrap && itemsOnLine > 0 {
-        //                     break;
-        //                 }
+                        // If this is a multi-line flow and this item pushes us over the
+                        // available size, we've
+                        // hit the end of the current line. Break out of the loop and lay out
+                        // the current line.
+                        if (sizeConsumedOnCurrentLineIncludingMinConstraint+flexBasisWithMinAndMaxConstraints+
+                            childMarginMainAxis >
+                            availableInnerMainDim &&
+                            isNodeFlexWrap && itemsOnLine > 0) {
+                            break;
+                        }
 
-        //                 sizeConsumedOnCurrentLineIncludingMinConstraint +=
-        //                     flexBasisWithMinAndMaxConstraints + childMarginMainAxis
-        //                 sizeConsumedOnCurrentLine += flexBasisWithMinAndMaxConstraints + childMarginMainAxis
-        //                 itemsOnLine++
+                        sizeConsumedOnCurrentLineIncludingMinConstraint +=
+                            flexBasisWithMinAndMaxConstraints + childMarginMainAxis;
+                        sizeConsumedOnCurrentLine += flexBasisWithMinAndMaxConstraints + childMarginMainAxis;
+                        itemsOnLine++;
 
-        //                 if (nodeIsFlex(child) ) {
-        //                     totalFlexGrowFactors += resolveFlexGrow(child)
+                        if (nodeIsFlex(child) ) {
+                            totalFlexGrowFactors += resolveFlexGrow(child);
 
-        //                     // Unlike the grow factor, the shrink factor is scaled relative to the child dimension.
-        //                     totalFlexShrinkScaledFactors +=
-        //                         -nodeResolveFlexShrink(child) * child.Layout.computedFlexBasis
-        //                 }
+                            // Unlike the grow factor, the shrink factor is scaled relative to the child dimension.
+                            totalFlexShrinkScaledFactors +=
+                                -nodeResolveFlexShrink(child) * child.Layout.computedFlexBasis;
+                        }
 
-        //                 // Store a private linked list of children that need to be layed out.
-        //                 if (firstRelativeChild == null ) {
-        //                     firstRelativeChild = child
-        //                 }
-        //                 if (currentRelativeChild != null ) {
-        //                     currentRelativeChild.NextChild = child
-        //                 }
-        //                 currentRelativeChild = child
-        //                 child.NextChild = null
-        //             }
-        //             endOfLineIndex++
-        //         }
+                        // Store a private linked list of children that need to be layed out.
+                        if (firstRelativeChild == null ) {
+                            firstRelativeChild = child;
+                        }
+                        if (currentRelativeChild != null ) {
+                            currentRelativeChild.NextChild = child;
+                        }
+                        currentRelativeChild = child;
+                        child.NextChild = null;
+                    }
+                    endOfLineIndex++;
+                }
 
-        //         // The total flex factor needs to be floored to 1.
-        //         if (totalFlexGrowFactors > 0 && totalFlexGrowFactors < 1 ) {
-        //             totalFlexGrowFactors = 1
-        //         }
+                // The total flex factor needs to be floored to 1.
+                if (totalFlexGrowFactors > 0 && totalFlexGrowFactors < 1 ) {
+                    totalFlexGrowFactors = 1;
+                }
 
-        //         // The total flex shrink factor needs to be floored to 1.
-        //         if (totalFlexShrinkScaledFactors > 0 && totalFlexShrinkScaledFactors < 1 ) {
-        //             totalFlexShrinkScaledFactors = 1
-        //         }
+                // The total flex shrink factor needs to be floored to 1.
+                if (totalFlexShrinkScaledFactors > 0 && totalFlexShrinkScaledFactors < 1 ) {
+                    totalFlexShrinkScaledFactors = 1;
+                }
 
-        //         // If we don't need to measure the cross axis, we can skip the entire flex
-        //         // step.
-        //         canSkipFlex := !performLayout && measureModeCrossDim == MeasureMode.Exactly
+                // If we don't need to measure the cross axis, we can skip the entire flex
+                // step.
+                var canSkipFlex = !performLayout && measureModeCrossDim == MeasureMode.Exactly;
 
-        //         // In order to position the elements in the main axis, we have two
-        //         // controls. The space between the beginning and the first element
-        //         // and the space between each two elements.
-        //         float leadingMainDim;
-        //         float betweenMainDim;
+                // In order to position the elements in the main axis, we have two
+                // controls. The space between the beginning and the first element
+                // and the space between each two elements.
+                float leadingMainDim = 0;
+                float betweenMainDim = 0;
 
         //         // STEP 5: RESOLVING FLEXIBLE LENGTHS ON MAIN AXIS
         //         // Calculate the remaining available space that needs to be allocated.
@@ -2611,7 +2611,7 @@ namespace Rockyfi
         //         lineCount++
         //         startOfLineIndex = endOfLineIndex
 
-        //     }
+            }
 
         //     // STEP 8: MULTI-LINE CONTENT ALIGNMENT
         //     if performLayout && (lineCount > 1 || isBaselineLayout(node)) &&
