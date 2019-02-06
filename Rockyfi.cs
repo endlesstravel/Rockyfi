@@ -2039,305 +2039,305 @@ namespace Rockyfi
                 float leadingMainDim = 0;
                 float betweenMainDim = 0;
 
-        //         // STEP 5: RESOLVING FLEXIBLE LENGTHS ON MAIN AXIS
-        //         // Calculate the remaining available space that needs to be allocated.
-        //         // If the main dimension size isn't known, it is computed based on
-        //         // the line length, so there's no more space left to distribute.
+                // STEP 5: RESOLVING FLEXIBLE LENGTHS ON MAIN AXIS
+                // Calculate the remaining available space that needs to be allocated.
+                // If the main dimension size isn't known, it is computed based on
+                // the line length, so there's no more space left to distribute.
 
-        //         // If we don't measure with exact main dimension we want to ensure we don't violate min and max
-        //         if (measureModeMainDim != MeasureMode.Exactly ) {
-        //             if (!FloatIsUndefined(minInnerMainDim) && sizeConsumedOnCurrentLine < minInnerMainDim ) {
-        //                 availableInnerMainDim = minInnerMainDim
-        //             } else if !FloatIsUndefined(maxInnerMainDim) &&
-        //                 sizeConsumedOnCurrentLine > maxInnerMainDim {
-        //                 availableInnerMainDim = maxInnerMainDim
-        //             } else {
-        //                 if !node.Config.UseLegacyStretchBehaviour &&
-        //                     (totalFlexGrowFactors == 0 || resolveFlexGrow(node) == 0) {
-        //                     // If we don't have any children to flex or we can't flex the node itself,
-        //                     // space we've used is all space we need. Root node also should be shrunk to minimum
-        //                     availableInnerMainDim = sizeConsumedOnCurrentLine
-        //                 }
-        //             }
-        //         }
+                // If we don't measure with exact main dimension we want to ensure we don't violate min and max
+                if (measureModeMainDim != MeasureMode.Exactly ) {
+                    if (!FloatIsUndefined(minInnerMainDim) && sizeConsumedOnCurrentLine < minInnerMainDim ) {
+                        availableInnerMainDim = minInnerMainDim;
+                    } else if (!FloatIsUndefined(maxInnerMainDim) &&
+                        sizeConsumedOnCurrentLine > maxInnerMainDim) {
+                        availableInnerMainDim = maxInnerMainDim;
+                    } else {
+                        if (!node.Config.UseLegacyStretchBehaviour &&
+                            (totalFlexGrowFactors == 0 || resolveFlexGrow(node) == 0)) {
+                            // If we don't have any children to flex or we can't flex the node itself,
+                            // space we've used is all space we need. Root node also should be shrunk to minimum
+                            availableInnerMainDim = sizeConsumedOnCurrentLine;
+                        }
+                    }
+                }
 
-        //         float remainingFreeSpace;
-        //         if (!FloatIsUndefined(availableInnerMainDim) ) {
-        //             remainingFreeSpace = availableInnerMainDim - sizeConsumedOnCurrentLine
-        //         } else if (sizeConsumedOnCurrentLine < 0 ) {
-        //             // availableInnerMainDim is indefinite which means the node is being sized based on its
-        //             // content.
-        //             // sizeConsumedOnCurrentLine is negative which means the node will allocate 0 points for
-        //             // its content. Consequently, remainingFreeSpace is 0 - sizeConsumedOnCurrentLine.
-        //             remainingFreeSpace = -sizeConsumedOnCurrentLine
-        //         }
+                float remainingFreeSpace = 0;
+                if (!FloatIsUndefined(availableInnerMainDim) ) {
+                    remainingFreeSpace = availableInnerMainDim - sizeConsumedOnCurrentLine;
+                } else if (sizeConsumedOnCurrentLine < 0 ) {
+                    // availableInnerMainDim is indefinite which means the node is being sized based on its
+                    // content.
+                    // sizeConsumedOnCurrentLine is negative which means the node will allocate 0 points for
+                    // its content. Consequently, remainingFreeSpace is 0 - sizeConsumedOnCurrentLine.
+                    remainingFreeSpace = -sizeConsumedOnCurrentLine;
+                }
 
-        //         originalRemainingFreeSpace := remainingFreeSpace
-        //         float deltaFreeSpace;
+                float originalRemainingFreeSpace = remainingFreeSpace;
+                float deltaFreeSpace = 0;
 
-        //         if (!canSkipFlex ) {
-        //             float childFlexBasis;
-        //             float flexShrinkScaledFactor;
-        //             float flexGrowFactor;
-        //             float baseMainSize;
-        //             float boundMainSize;
+                if (!canSkipFlex ) {
+                    float childFlexBasis;
+                    float flexShrinkScaledFactor;
+                    float flexGrowFactor;
+                    float baseMainSize;
+                    float boundMainSize;
 
-        //             // Do two passes over the flex items to figure out how to distribute the
-        //             // remaining space.
-        //             // The first pass finds the items whose min/max raints trigger,
-        //             // freezes them at those
-        //             // sizes, and excludes those sizes from the remaining space. The second
-        //             // pass sets the size
-        //             // of each flexible item. It distributes the remaining space amongst the
-        //             // items whose min/max
-        //             // raints didn't trigger in pass 1. For the other items, it sets
-        //             // their sizes by forcing
-        //             // their min/max raints to trigger again.
-        //             //
-        //             // This two pass approach for resolving min/max raints deviates from
-        //             // the spec. The
-        //             // spec (https://www.w3.org/TR/YG-flexbox-1/#resolve-flexible-lengths)
-        //             // describes a process
-        //             // that needs to be repeated a variable number of times. The algorithm
-        //             // implemented here
-        //             // won't handle all cases but it was simpler to implement and it mitigates
-        //             // performance
-        //             // concerns because we know exactly how many passes it'll do.
+                    // Do two passes over the flex items to figure out how to distribute the
+                    // remaining space.
+                    // The first pass finds the items whose min/max raints trigger,
+                    // freezes them at those
+                    // sizes, and excludes those sizes from the remaining space. The second
+                    // pass sets the size
+                    // of each flexible item. It distributes the remaining space amongst the
+                    // items whose min/max
+                    // raints didn't trigger in pass 1. For the other items, it sets
+                    // their sizes by forcing
+                    // their min/max raints to trigger again.
+                    //
+                    // This two pass approach for resolving min/max raints deviates from
+                    // the spec. The
+                    // spec (https://www.w3.org/TR/YG-flexbox-1/#resolve-flexible-lengths)
+                    // describes a process
+                    // that needs to be repeated a variable number of times. The algorithm
+                    // implemented here
+                    // won't handle all cases but it was simpler to implement and it mitigates
+                    // performance
+                    // concerns because we know exactly how many passes it'll do.
 
-        //             // First pass: detect the flex items whose min/max raints trigger
-        //             float deltaFlexShrinkScaledFactors;
-        //             float deltaFlexGrowFactors;
-        //             currentRelativeChild = firstRelativeChild
-        //             for currentRelativeChild != null {
-        //                 childFlexBasis =
-        //                     fminf(resolveValue(&currentRelativeChild.Style.MaxDimensions[dim[mainAxis]],
-        //                         mainAxisParentSize),
-        //                         System.Math.Max(resolveValue(&currentRelativeChild.Style.MinDimensions[dim[mainAxis]],
-        //                             mainAxisParentSize),
-        //                             currentRelativeChild.Layout.computedFlexBasis))
+                    // First pass: detect the flex items whose min/max raints trigger
+                    float deltaFlexShrinkScaledFactors = 0;
+                    float deltaFlexGrowFactors = 0;
+                    currentRelativeChild = firstRelativeChild;
+                    while (currentRelativeChild != null) {
+                        childFlexBasis =
+                            System.Math.Min(resolveValue(currentRelativeChild.Style.MaxDimensions[(int)dim[(int)mainAxis]],
+                                mainAxisParentSize),
+                                System.Math.Max(resolveValue(currentRelativeChild.Style.MinDimensions[(int)dim[(int)mainAxis]],
+                                    mainAxisParentSize),
+                                    currentRelativeChild.Layout.computedFlexBasis));
 
-        //                 if (remainingFreeSpace < 0 ) {
-        //                     flexShrinkScaledFactor = -nodeResolveFlexShrink(currentRelativeChild) * childFlexBasis
+                        if (remainingFreeSpace < 0 ) {
+                            flexShrinkScaledFactor = -nodeResolveFlexShrink(currentRelativeChild) * childFlexBasis;
 
-        //                     // Is this child able to shrink?
-        //                     if (flexShrinkScaledFactor != 0 ) {
-        //                         baseMainSize =
-        //                             childFlexBasis +
-        //                                 remainingFreeSpace/totalFlexShrinkScaledFactors*flexShrinkScaledFactor
-        //                         boundMainSize = nodeBoundAxis(currentRelativeChild,
-        //                             mainAxis,
-        //                             baseMainSize,
-        //                             availableInnerMainDim,
-        //                             availableInnerWidth)
-        //                         if (baseMainSize != boundMainSize ) {
-        //                             // By excluding this item's size and flex factor from remaining,
-        //                             // this item's
-        //                             // min/max raints should also trigger in the second pass
-        //                             // resulting in the
-        //                             // item's size calculation being identical in the first and second
-        //                             // passes.
-        //                             deltaFreeSpace -= boundMainSize - childFlexBasis
-        //                             deltaFlexShrinkScaledFactors -= flexShrinkScaledFactor
-        //                         }
-        //                     }
-        //                 } else if (remainingFreeSpace > 0 ) {
-        //                     flexGrowFactor = resolveFlexGrow(currentRelativeChild)
+                            // Is this child able to shrink?
+                            if (flexShrinkScaledFactor != 0 ) {
+                                baseMainSize =
+                                    childFlexBasis +
+                                        remainingFreeSpace/totalFlexShrinkScaledFactors*flexShrinkScaledFactor;
+                                boundMainSize = nodeBoundAxis(currentRelativeChild,
+                                    mainAxis,
+                                    baseMainSize,
+                                    availableInnerMainDim,
+                                    availableInnerWidth);
+                                if (baseMainSize != boundMainSize ) {
+                                    // By excluding this item's size and flex factor from remaining,
+                                    // this item's
+                                    // min/max raints should also trigger in the second pass
+                                    // resulting in the
+                                    // item's size calculation being identical in the first and second
+                                    // passes.
+                                    deltaFreeSpace -= boundMainSize - childFlexBasis;
+                                    deltaFlexShrinkScaledFactors -= flexShrinkScaledFactor;
+                                }
+                            }
+                        } else if (remainingFreeSpace > 0 ) {
+                            flexGrowFactor = resolveFlexGrow(currentRelativeChild);
 
-        //                     // Is this child able to grow?
-        //                     if (flexGrowFactor != 0 ) {
-        //                         baseMainSize =
-        //                             childFlexBasis + remainingFreeSpace/totalFlexGrowFactors*flexGrowFactor
-        //                         boundMainSize = nodeBoundAxis(currentRelativeChild,
-        //                             mainAxis,
-        //                             baseMainSize,
-        //                             availableInnerMainDim,
-        //                             availableInnerWidth)
+                            // Is this child able to grow?
+                            if (flexGrowFactor != 0 ) {
+                                baseMainSize =
+                                    childFlexBasis + remainingFreeSpace/totalFlexGrowFactors*flexGrowFactor;
+                                boundMainSize = nodeBoundAxis(currentRelativeChild,
+                                    mainAxis,
+                                    baseMainSize,
+                                    availableInnerMainDim,
+                                    availableInnerWidth);
 
-        //                         if (baseMainSize != boundMainSize ) {
-        //                             // By excluding this item's size and flex factor from remaining,
-        //                             // this item's
-        //                             // min/max raints should also trigger in the second pass
-        //                             // resulting in the
-        //                             // item's size calculation being identical in the first and second
-        //                             // passes.
-        //                             deltaFreeSpace -= boundMainSize - childFlexBasis
-        //                             deltaFlexGrowFactors -= flexGrowFactor
-        //                         }
-        //                     }
-        //                 }
+                                if (baseMainSize != boundMainSize ) {
+                                    // By excluding this item's size and flex factor from remaining,
+                                    // this item's
+                                    // min/max raints should also trigger in the second pass
+                                    // resulting in the
+                                    // item's size calculation being identical in the first and second
+                                    // passes.
+                                    deltaFreeSpace -= boundMainSize - childFlexBasis;
+                                    deltaFlexGrowFactors -= flexGrowFactor;
+                                }
+                            }
+                        }
 
-        //                 currentRelativeChild = currentRelativeChild.NextChild
-        //             }
+                        currentRelativeChild = currentRelativeChild.NextChild;
+                    }
 
-        //             totalFlexShrinkScaledFactors += deltaFlexShrinkScaledFactors
-        //             totalFlexGrowFactors += deltaFlexGrowFactors
-        //             remainingFreeSpace += deltaFreeSpace
+                    totalFlexShrinkScaledFactors += deltaFlexShrinkScaledFactors;
+                    totalFlexGrowFactors += deltaFlexGrowFactors;
+                    remainingFreeSpace += deltaFreeSpace;
 
-        //             // Second pass: resolve the sizes of the flexible items
-        //             deltaFreeSpace = 0
-        //             currentRelativeChild = firstRelativeChild
-        //             for currentRelativeChild != null {
-        //                 childFlexBasis =
-        //                     fminf(resolveValue(&currentRelativeChild.Style.MaxDimensions[dim[mainAxis]],
-        //                         mainAxisParentSize),
-        //                         System.Math.Max(resolveValue(&currentRelativeChild.Style.MinDimensions[dim[mainAxis]],
-        //                             mainAxisParentSize),
-        //                             currentRelativeChild.Layout.computedFlexBasis))
-        //                 updatedMainSize := childFlexBasis
+                    // Second pass: resolve the sizes of the flexible items
+                    deltaFreeSpace = 0;
+                    currentRelativeChild = firstRelativeChild;
+                    while (currentRelativeChild != null) {
+                        childFlexBasis =
+                            System.Math.Min(resolveValue(currentRelativeChild.Style.MaxDimensions[(int)dim[(int)mainAxis]],
+                                mainAxisParentSize),
+                                System.Math.Max(resolveValue(currentRelativeChild.Style.MinDimensions[(int)dim[(int)mainAxis]],
+                                    mainAxisParentSize),
+                                    currentRelativeChild.Layout.computedFlexBasis));
+                        float updatedMainSize = childFlexBasis;
 
-        //                 if (remainingFreeSpace < 0 ) {
-        //                     flexShrinkScaledFactor = -nodeResolveFlexShrink(currentRelativeChild) * childFlexBasis
-        //                     // Is this child able to shrink?
-        //                     if (flexShrinkScaledFactor != 0 ) {
-        //                         float childSize;
+                        if (remainingFreeSpace < 0 ) {
+                            flexShrinkScaledFactor = -nodeResolveFlexShrink(currentRelativeChild) * childFlexBasis;
+                            // Is this child able to shrink?
+                            if (flexShrinkScaledFactor != 0 ) {
+                                float childSize = 0;
 
-        //                         if (totalFlexShrinkScaledFactors == 0 ) {
-        //                             childSize = childFlexBasis + flexShrinkScaledFactor
-        //                         } else {
-        //                             childSize =
-        //                                 childFlexBasis +
-        //                                     (remainingFreeSpace/totalFlexShrinkScaledFactors)*flexShrinkScaledFactor
-        //                         }
+                                if (totalFlexShrinkScaledFactors == 0 ) {
+                                    childSize = childFlexBasis + flexShrinkScaledFactor;
+                                } else {
+                                    childSize =
+                                        childFlexBasis +
+                                            (remainingFreeSpace/totalFlexShrinkScaledFactors)*flexShrinkScaledFactor;
+                                }
 
-        //                         updatedMainSize = nodeBoundAxis(currentRelativeChild,
-        //                             mainAxis,
-        //                             childSize,
-        //                             availableInnerMainDim,
-        //                             availableInnerWidth)
-        //                     }
-        //                 } else if (remainingFreeSpace > 0 ) {
-        //                     flexGrowFactor = resolveFlexGrow(currentRelativeChild)
+                                updatedMainSize = nodeBoundAxis(currentRelativeChild,
+                                    mainAxis,
+                                    childSize,
+                                    availableInnerMainDim,
+                                    availableInnerWidth);
+                            }
+                        } else if (remainingFreeSpace > 0 ) {
+                            flexGrowFactor = resolveFlexGrow(currentRelativeChild);
 
-        //                     // Is this child able to grow?
-        //                     if (flexGrowFactor != 0 ) {
-        //                         updatedMainSize =
-        //                             nodeBoundAxis(currentRelativeChild,
-        //                                 mainAxis,
-        //                                 childFlexBasis+
-        //                                     remainingFreeSpace/totalFlexGrowFactors*flexGrowFactor,
-        //                                 availableInnerMainDim,
-        //                                 availableInnerWidth)
-        //                     }
-        //                 }
+                            // Is this child able to grow?
+                            if (flexGrowFactor != 0 ) {
+                                updatedMainSize =
+                                    nodeBoundAxis(currentRelativeChild,
+                                        mainAxis,
+                                        childFlexBasis+
+                                            remainingFreeSpace/totalFlexGrowFactors*flexGrowFactor,
+                                        availableInnerMainDim,
+                                        availableInnerWidth);
+                            }
+                        }
 
-        //                 deltaFreeSpace -= updatedMainSize - childFlexBasis
+                        deltaFreeSpace -= updatedMainSize - childFlexBasis;
 
-        //                 marginMain := nodeMarginForAxis(currentRelativeChild, mainAxis, availableInnerWidth)
-        //                 marginCross := nodeMarginForAxis(currentRelativeChild, crossAxis, availableInnerWidth)
+                        var marginMain = nodeMarginForAxis(currentRelativeChild, mainAxis, availableInnerWidth);
+                        var marginCross = nodeMarginForAxis(currentRelativeChild, crossAxis, availableInnerWidth);
 
-        //                 float childCrossSize;
-        //                 childMainSize := updatedMainSize + marginMain
-        //                 MeasureMode childCrossMeasureMode;
-        //                 childMainMeasureMode := MeasureMode.Exactly
+                        float childCrossSize = 0; 
+                        float childMainSize = updatedMainSize + marginMain;
+                        MeasureMode childCrossMeasureMode = MeasureMode.Undefined; // TODO : no init vaule ?
+                        var childMainMeasureMode = MeasureMode.Exactly;
 
-        //                 if !FloatIsUndefined(availableInnerCrossDim) &&
-        //                     !nodeIsStyleDimDefined(currentRelativeChild, crossAxis, availableInnerCrossDim) &&
-        //                     measureModeCrossDim == MeasureMode.Exactly &&
-        //                     !(isNodeFlexWrap && flexBasisOverflows) &&
-        //                     nodeAlignItem(node, currentRelativeChild) == Align.Stretch {
-        //                     childCrossSize = availableInnerCrossDim
-        //                     childCrossMeasureMode = MeasureMode.Exactly
-        //                 } else if !nodeIsStyleDimDefined(currentRelativeChild,
-        //                     crossAxis,
-        //                     availableInnerCrossDim) {
-        //                     childCrossSize = availableInnerCrossDim
-        //                     childCrossMeasureMode = MeasureMode.AtMost
-        //                     if (FloatIsUndefined(childCrossSize) ) {
-        //                         childCrossMeasureMode = MeasureMode.Undefined
-        //                     }
-        //                 } else {
-        //                     childCrossSize = resolveValue(currentRelativeChild.resolvedDimensions[dim[crossAxis]],
-        //                         availableInnerCrossDim) +
-        //                         marginCross
-        //                     isLoosePercentageMeasurement := currentRelativeChild.resolvedDimensions[dim[crossAxis]].unit == UnitPercent &&
-        //                         measureModeCrossDim != MeasureMode.Exactly
-        //                     childCrossMeasureMode = MeasureMode.Exactly
-        //                     if (FloatIsUndefined(childCrossSize) || isLoosePercentageMeasurement ) {
-        //                         childCrossMeasureMode = MeasureMode.Undefined
-        //                     }
-        //                 }
+                        if (!FloatIsUndefined(availableInnerCrossDim) &&
+                            !nodeIsStyleDimDefined(currentRelativeChild, crossAxis, availableInnerCrossDim) &&
+                            measureModeCrossDim == MeasureMode.Exactly &&
+                            !(isNodeFlexWrap && flexBasisOverflows) &&
+                            nodeAlignItem(node, currentRelativeChild) == Align.Stretch) {
+                            childCrossSize = availableInnerCrossDim;
+                            childCrossMeasureMode = MeasureMode.Exactly;
+                        } else if (!nodeIsStyleDimDefined(currentRelativeChild,
+                            crossAxis,
+                            availableInnerCrossDim)) {
+                            childCrossSize = availableInnerCrossDim;
+                            childCrossMeasureMode = MeasureMode.AtMost;
+                            if (FloatIsUndefined(childCrossSize) ) {
+                                childCrossMeasureMode = MeasureMode.Undefined;
+                            }
+                        } else {
+                            childCrossSize = resolveValue(currentRelativeChild.resolvedDimensions[(int)dim[(int)crossAxis]],
+                                availableInnerCrossDim) +
+                                marginCross;
+                            var isLoosePercentageMeasurement = currentRelativeChild.resolvedDimensions[(int)dim[(int)crossAxis]].unit == Unit.Percent &&
+                                measureModeCrossDim != MeasureMode.Exactly;
+                            childCrossMeasureMode = MeasureMode.Exactly;
+                            if (FloatIsUndefined(childCrossSize) || isLoosePercentageMeasurement ) {
+                                childCrossMeasureMode = MeasureMode.Undefined;
+                            }
+                        }
 
-        //                 if (!FloatIsUndefined(currentRelativeChild.Style.AspectRatio) ) {
-        //                     v := (childMainSize - marginMain) * currentRelativeChild.Style.AspectRatio
-        //                     if (isMainAxisRow ) {
-        //                         v = (childMainSize - marginMain) / currentRelativeChild.Style.AspectRatio
-        //                     }
-        //                     childCrossSize = System.Math.Max(v, nodePaddingAndBorderForAxis(currentRelativeChild, crossAxis, availableInnerWidth))
-        //                     childCrossMeasureMode = MeasureMode.Exactly
+                        if (!FloatIsUndefined(currentRelativeChild.Style.AspectRatio) ) {
+                            float v = (childMainSize - marginMain) * currentRelativeChild.Style.AspectRatio;
+                            if (isMainAxisRow ) {
+                                v = (childMainSize - marginMain) / currentRelativeChild.Style.AspectRatio;
+                            }
+                            childCrossSize = System.Math.Max(v, nodePaddingAndBorderForAxis(currentRelativeChild, crossAxis, availableInnerWidth));
+                            childCrossMeasureMode = MeasureMode.Exactly;
 
-        //                     // Parent size raint should have higher priority than flex
-        //                     if (nodeIsFlex(currentRelativeChild) ) {
-        //                         childCrossSize = fminf(childCrossSize-marginCross, availableInnerCrossDim)
-        //                         childMainSize = marginMain
-        //                         if (isMainAxisRow ) {
-        //                             childMainSize += childCrossSize * currentRelativeChild.Style.AspectRatio
-        //                         } else {
-        //                             childMainSize += childCrossSize / currentRelativeChild.Style.AspectRatio
-        //                         }
-        //                     }
+                            // Parent size raint should have higher priority than flex
+                            if (nodeIsFlex(currentRelativeChild) ) {
+                                childCrossSize = System.Math.Min(childCrossSize-marginCross, availableInnerCrossDim);
+                                childMainSize = marginMain;
+                                if (isMainAxisRow ) {
+                                    childMainSize += childCrossSize * currentRelativeChild.Style.AspectRatio;
+                                } else {
+                                    childMainSize += childCrossSize / currentRelativeChild.Style.AspectRatio;
+                                }
+                            }
 
-        //                     childCrossSize += marginCross
-        //                 }
+                            childCrossSize += marginCross;
+                        }
 
-        //                 constrainMaxSizeForMode(currentRelativeChild,
-        //                     mainAxis,
-        //                     availableInnerMainDim,
-        //                     availableInnerWidth,
-        //                     &childMainMeasureMode,
-        //                     &childMainSize)
-        //                 constrainMaxSizeForMode(currentRelativeChild,
-        //                     crossAxis,
-        //                     availableInnerCrossDim,
-        //                     availableInnerWidth,
-        //                     &childCrossMeasureMode,
-        //                     &childCrossSize)
+                        constrainMaxSizeForMode(currentRelativeChild,
+                            mainAxis,
+                            availableInnerMainDim,
+                            availableInnerWidth,
+                            ref childMainMeasureMode,
+                            ref childMainSize);
+                        constrainMaxSizeForMode(currentRelativeChild,
+                            crossAxis,
+                            availableInnerCrossDim,
+                            availableInnerWidth,
+                            ref childCrossMeasureMode,
+                            ref childCrossSize);
 
-        //                 requiresStretchLayout := !nodeIsStyleDimDefined(currentRelativeChild, crossAxis, availableInnerCrossDim) &&
-        //                     nodeAlignItem(node, currentRelativeChild) == Align.Stretch
+                        var requiresStretchLayout = !nodeIsStyleDimDefined(currentRelativeChild, crossAxis, availableInnerCrossDim) &&
+                            nodeAlignItem(node, currentRelativeChild) == Align.Stretch;
 
-        //                 childWidth := childCrossSize
-        //                 if (isMainAxisRow ) {
-        //                     childWidth = childMainSize
-        //                 }
-        //                 childHeight := childCrossSize
-        //                 if (!isMainAxisRow ) {
-        //                     childHeight = childMainSize
-        //                 }
+                        float childWidth = childCrossSize;
+                        if (isMainAxisRow ) {
+                            childWidth = childMainSize;
+                        }
+                        float childHeight = childCrossSize;
+                        if (!isMainAxisRow ) {
+                            childHeight = childMainSize;
+                        }
 
-        //                 childWidthMeasureMode := childCrossMeasureMode
-        //                 if (isMainAxisRow ) {
-        //                     childWidthMeasureMode = childMainMeasureMode
-        //                 }
-        //                 childHeightMeasureMode := childCrossMeasureMode
-        //                 if (!isMainAxisRow ) {
-        //                     childHeightMeasureMode = childMainMeasureMode
-        //                 }
+                        var childWidthMeasureMode = childCrossMeasureMode;
+                        if (isMainAxisRow ) {
+                            childWidthMeasureMode = childMainMeasureMode;
+                        }
+                        var childHeightMeasureMode = childCrossMeasureMode;
+                        if (!isMainAxisRow ) {
+                            childHeightMeasureMode = childMainMeasureMode;
+                        }
 
-        //                 // Recursively call the layout algorithm for this child with the updated
-        //                 // main size.
-        //                 layoutNodeInternal(currentRelativeChild,
-        //                     childWidth,
-        //                     childHeight,
-        //                     direction,
-        //                     childWidthMeasureMode,
-        //                     childHeightMeasureMode,
-        //                     availableInnerWidth,
-        //                     availableInnerHeight,
-        //                     performLayout && !requiresStretchLayout,
-        //                     "flex",
-        //                     config)
-        //                 if (currentRelativeChild.Layout.HadOverflow ) {
-        //                     node.Layout.HadOverflow = true
-        //                 }
+                        // Recursively call the layout algorithm for this child with the updated
+                        // main size.
+                        layoutNodeInternal(currentRelativeChild,
+                            childWidth,
+                            childHeight,
+                            direction,
+                            childWidthMeasureMode,
+                            childHeightMeasureMode,
+                            availableInnerWidth,
+                            availableInnerHeight,
+                            performLayout && !requiresStretchLayout,
+                            "flex",
+                            config);
+                        if (currentRelativeChild.Layout.HadOverflow ) {
+                            node.Layout.HadOverflow = true;
+                        }
 
-        //                 currentRelativeChild = currentRelativeChild.NextChild
-        //             }
-        //         }
+                        currentRelativeChild = currentRelativeChild.NextChild;
+                    }
+                }
 
-        //         remainingFreeSpace = originalRemainingFreeSpace + deltaFreeSpace
-        //         if (remainingFreeSpace < 0 ) {
-        //             node.Layout.HadOverflow = true
-        //         }
+                remainingFreeSpace = originalRemainingFreeSpace + deltaFreeSpace;
+                if (remainingFreeSpace < 0 ) {
+                    node.Layout.HadOverflow = true;
+                }
 
         //         // STEP 6: MAIN-AXIS JUSTIFICATION & CROSS-AXIS SIZE DETERMINATION
 
@@ -2781,7 +2781,7 @@ namespace Rockyfi
         //     } else if measureModeMainDim == MeasureMode.AtMost &&
         //         node.Style.Overflow == Overflow.Scroll {
         //         node.Layout.measuredDimensions[dim[mainAxis]] = System.Math.Max(
-        //             fminf(availableInnerMainDim+paddingAndBorderAxisMain,
+        //             System.Math.Min(availableInnerMainDim+paddingAndBorderAxisMain,
         //                 nodeBoundAxisWithinMinAndMax(node, mainAxis, maxLineMainDim, mainAxisParentSize)),
         //             paddingAndBorderAxisMain)
         //     }
@@ -2799,7 +2799,7 @@ namespace Rockyfi
         //     } else if measureModeCrossDim == MeasureMode.AtMost &&
         //         node.Style.Overflow == Overflow.Scroll {
         //         node.Layout.measuredDimensions[dim[crossAxis]] =
-        //             System.Math.Max(fminf(availableInnerCrossDim+paddingAndBorderAxisCross,
+        //             System.Math.Max(System.Math.Min(availableInnerCrossDim+paddingAndBorderAxisCross,
         //                 nodeBoundAxisWithinMinAndMax(node,
         //                     crossAxis,
         //                     totalLineCrossDim+paddingAndBorderAxisCross,
