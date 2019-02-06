@@ -1637,179 +1637,179 @@ namespace Rockyfi
             }
         }
 
-        // // This is the main routine that implements a subset of the flexbox layout
-        // // algorithm
-        // // described in the W3C YG documentation: https://www.w3.org/TR/YG3-flexbox/.
-        // //
-        // // Limitations of this algorithm, compared to the full standard:
-        // //  * Display property is always assumed to be 'flex' except for Text nodes,
-        // //  which
-        // //    are assumed to be 'inline-flex'.
-        // //  * The 'zIndex' property (or any form of z ordering) is not supported. Nodes
-        // //  are
-        // //    stacked in document order.
-        // //  * The 'order' property is not supported. The order of flex items is always
-        // //  defined
-        // //    by document order.
-        // //  * The 'visibility' property is always assumed to be 'visible'. Values of
-        // //  'collapse'
-        // //    and 'hidden' are not supported.
-        // //  * There is no support for forced breaks.
-        // //  * It does not support vertical inline directions (top-to-bottom or
-        // //  bottom-to-top text).
-        // //
-        // // Deviations from standard:
-        // //  * Section 4.5 of the spec indicates that all flex items have a default
-        // //  minimum
-        // //    main size. For text blocks, for example, this is the width of the widest
-        // //    word.
-        // //    Calculating the minimum width is expensive, so we forego it and assume a
-        // //    default
-        // //    minimum main size of 0.
-        // //  * Min/Max sizes in the main axis are not honored when resolving flexible
-        // //  lengths.
-        // //  * The spec indicates that the default value for 'flexDirection' is 'row',
-        // //  but
-        // //    the algorithm below assumes a default of 'column'.
-        // //
-        // // Input parameters:
-        // //    - node: current node to be sized and layed out
-        // //    - availableWidth & availableHeight: available size to be used for sizing
-        // //    the node
-        // //      or Undefined if the size is not available; interpretation depends on
-        // //      layout
-        // //      flags
-        // //    - parentDirection: the inline (text) direction within the parent
-        // //    (left-to-right or
-        // //      right-to-left)
-        // //    - widthMeasureMode: indicates the sizing rules for the width (see below
-        // //    for explanation)
-        // //    - heightMeasureMode: indicates the sizing rules for the height (see below
-        // //    for explanation)
-        // //    - performLayout: specifies whether the caller is interested in just the
-        // //    dimensions
-        // //      of the node or it requires the entire node and its subtree to be layed
-        // //      out
-        // //      (with final positions)
-        // //
-        // // Details:
-        // //    This routine is called recursively to lay out subtrees of flexbox
-        // //    elements. It uses the
-        // //    information in node.style, which is treated as a read-only input. It is
-        // //    responsible for
-        // //    setting the layout.direction and layout.measuredDimensions fields for the
-        // //    input node as well
-        // //    as the layout.position and layout.lineIndex fields for its child nodes.
-        // //    The
-        // //    layout.measuredDimensions field includes any border or padding for the
-        // //    node but does
-        // //    not include margins.
-        // //
-        // //    The spec describes four different layout modes: "fill available", "max
-        // //    content", "min
-        // //    content",
-        // //    and "fit content". Of these, we don't use "min content" because we don't
-        // //    support default
-        // //    minimum main sizes (see above for details). Each of our measure modes maps
-        // //    to a layout mode
-        // //    from the spec (https://www.w3.org/TR/YG3-sizing/#terms):
-        // //      - YGMeasureModeUndefined: max content
-        // //      - YGMeasureModeExactly: fill available
-        // //      - YGMeasureModeAtMost: fit content
-        // //
-        // //    When calling nodelayoutImpl and YGLayoutNodeInternal, if the caller passes
-        // //    an available size of
-        // //    undefined then it must also pass a measure mode of YGMeasureModeUndefined
-        // //    in that dimension.
-        // static nodelayoutImpl(Node node, float availableWidth, float availableHeight,
-        //     parentDirection Direction, MeasureMode widthMeasureMode,
-        //     MeasureMode heightMeasureMode, float parentWidth, float parentHeight,
-        //     bool performLayout, Config config) {
-        //     // assertWithNode(node, YGFloatIsUndefined(availableWidth) ? widthMeasureMode == YGMeasureModeUndefined : true, "availableWidth is indefinite so widthMeasureMode must be YGMeasureModeUndefined");
-        //     //assertWithNode(node, YGFloatIsUndefined(availableHeight) ? heightMeasureMode == YGMeasureModeUndefined : true, "availableHeight is indefinite so heightMeasureMode must be YGMeasureModeUndefined");
+        // This is the main routine that implements a subset of the flexbox layout
+        // algorithm
+        // described in the W3C YG documentation: https://www.w3.org/TR/YG3-flexbox/.
+        //
+        // Limitations of this algorithm, compared to the full standard:
+        //  * Display property is always assumed to be 'flex' except for Text nodes,
+        //  which
+        //    are assumed to be 'inline-flex'.
+        //  * The 'zIndex' property (or any form of z ordering) is not supported. Nodes
+        //  are
+        //    stacked in document order.
+        //  * The 'order' property is not supported. The order of flex items is always
+        //  defined
+        //    by document order.
+        //  * The 'visibility' property is always assumed to be 'visible'. Values of
+        //  'collapse'
+        //    and 'hidden' are not supported.
+        //  * There is no support for forced breaks.
+        //  * It does not support vertical inline directions (top-to-bottom or
+        //  bottom-to-top text).
+        //
+        // Deviations from standard:
+        //  * Section 4.5 of the spec indicates that all flex items have a default
+        //  minimum
+        //    main size. For text blocks, for example, this is the width of the widest
+        //    word.
+        //    Calculating the minimum width is expensive, so we forego it and assume a
+        //    default
+        //    minimum main size of 0.
+        //  * Min/Max sizes in the main axis are not honored when resolving flexible
+        //  lengths.
+        //  * The spec indicates that the default value for 'flexDirection' is 'row',
+        //  but
+        //    the algorithm below assumes a default of 'column'.
+        //
+        // Input parameters:
+        //    - node: current node to be sized and layed out
+        //    - availableWidth & availableHeight: available size to be used for sizing
+        //    the node
+        //      or Undefined if the size is not available; interpretation depends on
+        //      layout
+        //      flags
+        //    - parentDirection: the inline (text) direction within the parent
+        //    (left-to-right or
+        //      right-to-left)
+        //    - widthMeasureMode: indicates the sizing rules for the width (see below
+        //    for explanation)
+        //    - heightMeasureMode: indicates the sizing rules for the height (see below
+        //    for explanation)
+        //    - performLayout: specifies whether the caller is interested in just the
+        //    dimensions
+        //      of the node or it requires the entire node and its subtree to be layed
+        //      out
+        //      (with final positions)
+        //
+        // Details:
+        //    This routine is called recursively to lay out subtrees of flexbox
+        //    elements. It uses the
+        //    information in node.style, which is treated as a read-only input. It is
+        //    responsible for
+        //    setting the layout.direction and layout.measuredDimensions fields for the
+        //    input node as well
+        //    as the layout.position and layout.lineIndex fields for its child nodes.
+        //    The
+        //    layout.measuredDimensions field includes any border or padding for the
+        //    node but does
+        //    not include margins.
+        //
+        //    The spec describes four different layout modes: "fill available", "max
+        //    content", "min
+        //    content",
+        //    and "fit content". Of these, we don't use "min content" because we don't
+        //    support default
+        //    minimum main sizes (see above for details). Each of our measure modes maps
+        //    to a layout mode
+        //    from the spec (https://www.w3.org/TR/YG3-sizing/#terms):
+        //      - YGMeasureModeUndefined: max content
+        //      - YGMeasureModeExactly: fill available
+        //      - YGMeasureModeAtMost: fit content
+        //
+        //    When calling nodelayoutImpl and YGLayoutNodeInternal, if the caller passes
+        //    an available size of
+        //    undefined then it must also pass a measure mode of YGMeasureModeUndefined
+        //    in that dimension.
+        static void nodelayoutImpl(Node node, float availableWidth, float availableHeight,
+            Direction parentDirection, MeasureMode widthMeasureMode,
+            MeasureMode heightMeasureMode, float parentWidth, float parentHeight,
+            bool performLayout, Config config) {
+            // assertWithNode(node, YGFloatIsUndefined(availableWidth) ? widthMeasureMode == YGMeasureModeUndefined : true, "availableWidth is indefinite so widthMeasureMode must be YGMeasureModeUndefined");
+            //assertWithNode(node, YGFloatIsUndefined(availableHeight) ? heightMeasureMode == YGMeasureModeUndefined : true, "availableHeight is indefinite so heightMeasureMode must be YGMeasureModeUndefined");
 
-        //     // Set the resolved resolution in the node's layout.
-        //     direction := nodeResolveDirection(node, parentDirection);
-        //     node.Layout.Direction = direction;
+            // Set the resolved resolution in the node's layout.
+            var direction = nodeResolveDirection(node, parentDirection);
+            node.Layout.Direction = direction;
 
-        //     flexRowDirection := resolveFlexDirection(FlexDirection.Row, direction);
-        //     flexColumnDirection := resolveFlexDirection(FlexDirection.Column, direction);
+            var flexRowDirection = resolveFlexDirection(FlexDirection.Row, direction);
+            var flexColumnDirection = resolveFlexDirection(FlexDirection.Column, direction);
 
-        //     node.Layout.Margin[(int)Edge.Start] = nodeLeadingMargin(node, flexRowDirection, parentWidth);
-        //     node.Layout.Margin[(int)Edge.End] = nodeTrailingMargin(node, flexRowDirection, parentWidth);
-        //     node.Layout.Margin[(int)Edge.Top] = nodeLeadingMargin(node, flexColumnDirection, parentWidth);
-        //     node.Layout.Margin[(int)Edge.Bottom] = nodeTrailingMargin(node, flexColumnDirection, parentWidth);
+            node.Layout.Margin[(int)Edge.Start] = nodeLeadingMargin(node, flexRowDirection, parentWidth);
+            node.Layout.Margin[(int)Edge.End] = nodeTrailingMargin(node, flexRowDirection, parentWidth);
+            node.Layout.Margin[(int)Edge.Top] = nodeLeadingMargin(node, flexColumnDirection, parentWidth);
+            node.Layout.Margin[(int)Edge.Bottom] = nodeTrailingMargin(node, flexColumnDirection, parentWidth);
 
-        //     node.Layout.Border[(int)Edge.Start] = nodeLeadingBorder(node, flexRowDirection);
-        //     node.Layout.Border[(int)Edge.End] = nodeTrailingBorder(node, flexRowDirection);
-        //     node.Layout.Border[(int)Edge.Top] = nodeLeadingBorder(node, flexColumnDirection);
-        //     node.Layout.Border[(int)Edge.Bottom] = nodeTrailingBorder(node, flexColumnDirection);
+            node.Layout.Border[(int)Edge.Start] = nodeLeadingBorder(node, flexRowDirection);
+            node.Layout.Border[(int)Edge.End] = nodeTrailingBorder(node, flexRowDirection);
+            node.Layout.Border[(int)Edge.Top] = nodeLeadingBorder(node, flexColumnDirection);
+            node.Layout.Border[(int)Edge.Bottom] = nodeTrailingBorder(node, flexColumnDirection);
 
-        //     node.Layout.Padding[(int)Edge.Start] = nodeLeadingPadding(node, flexRowDirection, parentWidth);
-        //     node.Layout.Padding[(int)Edge.End] = nodeTrailingPadding(node, flexRowDirection, parentWidth);
-        //     node.Layout.Padding[(int)Edge.Top] = nodeLeadingPadding(node, flexColumnDirection, parentWidth);
-        //     node.Layout.Padding[(int)Edge.Bottom] = nodeTrailingPadding(node, flexColumnDirection, parentWidth);
+            node.Layout.Padding[(int)Edge.Start] = nodeLeadingPadding(node, flexRowDirection, parentWidth);
+            node.Layout.Padding[(int)Edge.End] = nodeTrailingPadding(node, flexRowDirection, parentWidth);
+            node.Layout.Padding[(int)Edge.Top] = nodeLeadingPadding(node, flexColumnDirection, parentWidth);
+            node.Layout.Padding[(int)Edge.Bottom] = nodeTrailingPadding(node, flexColumnDirection, parentWidth);
 
-        //     if (node.Measure != null ) {
-        //         nodeWithMeasureFuncSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight);
-        //         return;
-        //     }
+            if (node.Measure != null ) {
+                nodeWithMeasureFuncSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight);
+                return;
+            }
 
-        //     childCount := len(node.Children)
-        //     if (childCount == 0 ) {
-        //         nodeEmptyContainerSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight);
-        //         return;
-        //     }
+            var childCount = node.Children.Count;
+            if (childCount == 0 ) {
+                nodeEmptyContainerSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight);
+                return;
+            }
 
-        //     // If we're not being asked to perform a full layout we can skip the algorithm if we already know
-        //     // the size
-        //     if (!performLayout && nodeFixedSizeSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight) ) {
-        //         return;
-        //     }
+            // If we're not being asked to perform a full layout we can skip the algorithm if we already know
+            // the size
+            if (!performLayout && nodeFixedSizeSetMeasuredDimensions(node, availableWidth, availableHeight, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight) ) {
+                return;
+            }
 
-        //     // Reset layout flags, as they could have changed.
-        //     node.Layout.HadOverflow = false;
+            // Reset layout flags, as they could have changed.
+            node.Layout.HadOverflow = false;
 
-        //     // STEP 1: CALCULATE VALUES FOR REMAINDER OF ALGORITHM
-        //     mainAxis := resolveFlexDirection(node.Style.FlexDirection, direction);
-        //     crossAxis := flexDirectionCross(mainAxis, direction);
-        //     isMainAxisRow := flexDirectionIsRow(mainAxis);
-        //     justifyContent := node.Style.JustifyContent;
-        //     isNodeFlexWrap := node.Style.FlexWrap != WrapNoWrap;
+            // STEP 1: CALCULATE VALUES FOR REMAINDER OF ALGORITHM
+            var mainAxis = resolveFlexDirection(node.Style.FlexDirection, direction);
+            var crossAxis = flexDirectionCross(mainAxis, direction);
+            var isMainAxisRow = flexDirectionIsRow(mainAxis);
+            var justifyContent = node.Style.JustifyContent;
+            var isNodeFlexWrap = node.Style.FlexWrap != Wrap.NoWrap;
 
-        //     mainAxisParentSize := parentHeight;
-        //     crossAxisParentSize := parentWidth;
-        //     if (isMainAxisRow ) {
-        //         mainAxisParentSize = parentWidth;
-        //         crossAxisParentSize = parentHeight;
-        //     }
+            var mainAxisParentSize = parentHeight;
+            var crossAxisParentSize = parentWidth;
+            if (isMainAxisRow ) {
+                mainAxisParentSize = parentWidth;
+                crossAxisParentSize = parentHeight;
+            }
 
-        //     var firstAbsoluteChild *Node
-        //     var currentAbsoluteChild *Node
+            Node firstAbsoluteChild = null;
+            Node currentAbsoluteChild = null;
 
-        //     leadingPaddingAndBorderMain := nodeLeadingPaddingAndBorder(node, mainAxis, parentWidth)
-        //     trailingPaddingAndBorderMain := nodeTrailingPaddingAndBorder(node, mainAxis, parentWidth)
-        //     leadingPaddingAndBorderCross := nodeLeadingPaddingAndBorder(node, crossAxis, parentWidth)
-        //     paddingAndBorderAxisMain := nodePaddingAndBorderForAxis(node, mainAxis, parentWidth)
-        //     paddingAndBorderAxisCross := nodePaddingAndBorderForAxis(node, crossAxis, parentWidth)
+            var leadingPaddingAndBorderMain = nodeLeadingPaddingAndBorder(node, mainAxis, parentWidth);
+            var trailingPaddingAndBorderMain = nodeTrailingPaddingAndBorder(node, mainAxis, parentWidth);
+            var leadingPaddingAndBorderCross = nodeLeadingPaddingAndBorder(node, crossAxis, parentWidth);
+            var paddingAndBorderAxisMain = nodePaddingAndBorderForAxis(node, mainAxis, parentWidth);
+            var paddingAndBorderAxisCross = nodePaddingAndBorderForAxis(node, crossAxis, parentWidth);
 
-        //     measureModeMainDim := heightMeasureMode
-        //     measureModeCrossDim := widthMeasureMode
+            var measureModeMainDim = heightMeasureMode;
+            var measureModeCrossDim = widthMeasureMode;
 
-        //     if (isMainAxisRow ) {
-        //         measureModeMainDim = widthMeasureMode
-        //         measureModeCrossDim = heightMeasureMode
-        //     }
+            if (isMainAxisRow ) {
+                measureModeMainDim = widthMeasureMode;
+                measureModeCrossDim = heightMeasureMode;
+            }
 
-        //     paddingAndBorderAxisRow := paddingAndBorderAxisCross
-        //     paddingAndBorderAxisColumn := paddingAndBorderAxisMain
-        //     if (isMainAxisRow ) {
-        //         paddingAndBorderAxisRow = paddingAndBorderAxisMain
-        //         paddingAndBorderAxisColumn = paddingAndBorderAxisCross
-        //     }
+            var paddingAndBorderAxisRow = paddingAndBorderAxisCross;
+            var paddingAndBorderAxisColumn = paddingAndBorderAxisMain;
+            if (isMainAxisRow ) {
+                paddingAndBorderAxisRow = paddingAndBorderAxisMain;
+                paddingAndBorderAxisColumn = paddingAndBorderAxisCross;
+            }
 
-        //     marginAxisRow := nodeMarginForAxis(node, FlexDirection.Row, parentWidth)
-        //     marginAxisColumn := nodeMarginForAxis(node, FlexDirection.Column, parentWidth)
+            var marginAxisRow = nodeMarginForAxis(node, FlexDirection.Row, parentWidth);
+            var marginAxisColumn = nodeMarginForAxis(node, FlexDirection.Column, parentWidth);
 
         //     // STEP 2: DETERMINE AVAILABLE SIZE IN MAIN AND CROSS DIRECTIONS
         //     minInnerWidth := resolveValue(&node.Style.MinDimensions[Dimension.Width], parentWidth) - marginAxisRow -
@@ -1854,8 +1854,7 @@ namespace Rockyfi
         //     // match the remaining space
         //     var singleFlexChild *Node
         //     if (measureModeMainDim == MeasureMode.Exactly ) {
-        //         for i := 0; i < childCount; i++ {
-        //             child := node.GetChild(i)
+        //         foreach (var child in node.Children) {
         //             if (singleFlexChild != null ) {
         //                 if (nodeIsFlex(child) ) {
         //                     // There is already a flexible child, abort.
@@ -1871,8 +1870,7 @@ namespace Rockyfi
         //     float totalOuterFlexBasis;
 
         //     // STEP 3: DETERMINE FLEX BASIS FOR EACH ITEM
-        //     for i := 0; i < childCount; i++ {
-        //         child := node.Children[i]
+        //     foreach (var child in node.Children) {
         //         if (child.Style.Display == DisplayNone ) {
         //             zeroOutLayoutRecursivly(child)
         //             child.hasNewLayout = true
@@ -2650,15 +2648,15 @@ namespace Rockyfi
         //         case Align.Baseline:.
         //         }
 
-//         //         endIndex := 0
-//         //         for i := 0; i < lineCount++  ; {
-//         //             startIndex (:= endInd)ex
-//         //             (var ii i)nt
-// ;
-//         //             // compute the line's height and find the endInde.x
-//  ;       //             float lineHeight;
-//         //             float maxAscentForCurrentLine;
-//         //             float maxDescentForCurrentLine;
+        //         endIndex := 0
+        //         for i := 0; i < lineCount++  ; {
+        //             startIndex (:= endInd)ex
+        //             (var ii i)nt
+        // 
+        //         // compute the line's height and find the endInde.x
+        //         float lineHeight;
+        //         float maxAscentForCurrentLine;
+        //         float maxDescentForCurrentLine;
         //             for ii = startIndex; ii < childCount; ii++ {
         //                 child := node.Children[ii]
         //                 if (child.Style.Display == DisplayNone ) {
@@ -2858,7 +2856,7 @@ namespace Rockyfi
         //             }
         //         }
         //     }
-        // }
+        }
 
         const string spacerStr = "";
 
