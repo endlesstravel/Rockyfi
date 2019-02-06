@@ -2618,161 +2618,173 @@ namespace Rockyfi
 
             }
 
-        //     // STEP 8: MULTI-LINE CONTENT ALIGNMENT
-        //     if performLayout && (lineCount > 1 || isBaselineLayout(node)) &&
-        //         !FloatIsUndefined(availableInnerCrossDim) {
-        //         remainingAlignContentDim := availableInnerCrossDim - totalLineCrossDim
+            // STEP 8: MULTI-LINE CONTENT ALIGNMENT
+            if (performLayout && (lineCount > 1 || isBaselineLayout(node)) &&
+                !FloatIsUndefined(availableInnerCrossDim)) {
+                float remainingAlignContentDim = availableInnerCrossDim - totalLineCrossDim;
 
-        //         float crossDimLead;
-        //         currentLead := leadingPaddingAndBorderCross
+                float crossDimLead = 0;
+                float currentLead = leadingPaddingAndBorderCross;
 
-        //         switch node.Style.AlignContent {
-        //         case Align.FlexEnd:
-        //             currentLead += remainingAlignContentDim
-        //         case Align.Center:
-        //             currentLead += remainingAlignContentDim / 2
-        //         case Align.Stretch:
-        //             if (availableInnerCrossDim > totalLineCrossDim ) {
-        //                 crossDimLead = remainingAlignContentDim / float(lineCount)
-        //             }
-        //         case AlignSpaceAround:
-        //             if (availableInnerCrossDim > totalLineCrossDim ) {
-        //                 currentLead += remainingAlignContentDim / float(2*lineCount)
-        //                 if (lineCount > 1 ) {
-        //                     crossDimLead = remainingAlignContentDim / float(lineCount)
-        //                 }
-        //             } else {
-        //                 currentLead += remainingAlignContentDim / 2
-        //             }
-        //         case AlignSpaceBetween:
-        //             if (availableInnerCrossDim > totalLineCrossDim && lineCount > 1 ) {
-        //                 crossDimLead = remainingAlignContentDim / float(lineCount-1)
-        //             }
-        //         case Align.Auto:
-        //         case Align.FlexStart:
-        //         case Align.Baseline:.
-        //         }
+                switch (node.Style.AlignContent) {
+                case Align.FlexEnd:
+                    currentLead += remainingAlignContentDim;
+                    break;
+                case Align.Center:
+                    currentLead += remainingAlignContentDim / 2;
+                    break;
+                case Align.Stretch:
+                    if (availableInnerCrossDim > totalLineCrossDim ) {
+                        crossDimLead = remainingAlignContentDim / (float)(lineCount);
+                    }
+                    break;
+                case Align.SpaceAround:
+                    if (availableInnerCrossDim > totalLineCrossDim ) {
+                        currentLead += remainingAlignContentDim / (float)(2*lineCount);
+                        if (lineCount > 1 ) {
+                            crossDimLead = remainingAlignContentDim / (float)(lineCount);
+                        }
+                    } else {
+                        currentLead += remainingAlignContentDim / 2;
+                    }
+                    break;
+                case Align.SpaceBetween:
+                    if (availableInnerCrossDim > totalLineCrossDim && lineCount > 1 ) {
+                        crossDimLead = remainingAlignContentDim / (float)(lineCount-1);
+                    }
+                    break;
+                case Align.Auto:
+                case Align.FlexStart:
+                case Align.Baseline:
+                    break;
+                }
 
-        //         endIndex := 0
-        //         for i := 0; i < lineCount++  ; {
-        //             startIndex (:= endInd)ex
-        //             (var ii i)nt
-        // 
-        //         // compute the line's height and find the endInde.x
-        //         float lineHeight;
-        //         float maxAscentForCurrentLine;
-        //         float maxDescentForCurrentLine;
-        //             for ii = startIndex; ii < childCount; ii++ {
-        //                 child := node.Children[ii]
-        //                 if (child.Style.Display == DisplayNone ) {
-        //                     continue;
-        //                 }
-        //                 if (child.Style.PositionType == PositionType.Relative ) {
-        //                     if (child.lineIndex != i ) {
-        //                         break;
-        //                     }
-        //                     if (nodeIsLayoutDimDefined(child, crossAxis) ) {
-        //                         lineHeight = System.Math.Max(lineHeight,
-        //                             child.Layout.measuredDimensions[dim[crossAxis]]+
-        //                                 nodeMarginForAxis(child, crossAxis, availableInnerWidth))
-        //                     }
-        //                     if (nodeAlignItem(node, child) == Align.Baseline ) {
-        //                         ascent := Baseline(child) + nodeLeadingMargin(child, FlexDirection.Column, availableInnerWidth)
-        //                         descent := child.Layout.measuredDimensions[Dimension.Height] + nodeMarginForAxis(child, FlexDirection.Column, availableInnerWidth) - ascent
-        //                         maxAscentForCurrentLine = System.Math.Max(maxAscentForCurrentLine, ascent)
-        //                         maxDescentForCurrentLine = System.Math.Max(maxDescentForCurrentLine, descent)
-        //                         lineHeight = System.Math.Max(lineHeight, maxAscentForCurrentLine+maxDescentForCurrentLine)
-        //                     }
-        //                 }
-        //             }
-        //             endIndex = ii
-        //             lineHeight += crossDimLead
+                int endIndex = 0;
+                for (int i = 0; i < lineCount++; i++) {
+                    int startIndex = endIndex;
+                    int ii = 0;
+        
+                    // compute the line's height and find the endInde.x
+                    float lineHeight = 0;
+                    float maxAscentForCurrentLine = 0;
+                    float maxDescentForCurrentLine = 0;
+                    for (ii = startIndex; ii < childCount; ii++) {
+                        var child = node.Children[ii];
+                        if (child.Style.Display == Display.None ) {
+                            continue;
+                        }
+                        if (child.Style.PositionType == PositionType.Relative ) {
+                            if (child.lineIndex != i ) {
+                                break;
+                            }
+                            if (nodeIsLayoutDimDefined(child, crossAxis) ) {
+                                lineHeight = System.Math.Max(lineHeight,
+                                    child.Layout.measuredDimensions[(int)dim[(int)crossAxis]]+
+                                        nodeMarginForAxis(child, crossAxis, availableInnerWidth));
+                            }
+                            if (nodeAlignItem(node, child) == Align.Baseline ) {
+                                float ascent = Baseline(child) + nodeLeadingMargin(child, FlexDirection.Column, availableInnerWidth);
+                                float descent = child.Layout.measuredDimensions[(int)Dimension.Height] + nodeMarginForAxis(child, FlexDirection.Column, availableInnerWidth) - ascent;
+                                maxAscentForCurrentLine = System.Math.Max(maxAscentForCurrentLine, ascent);
+                                maxDescentForCurrentLine = System.Math.Max(maxDescentForCurrentLine, descent);
+                                lineHeight = System.Math.Max(lineHeight, maxAscentForCurrentLine+maxDescentForCurrentLine);
+                            }
+                        }
+                    }
+                    endIndex = ii;
+                    lineHeight += crossDimLead;
 
-        //             if (performLayout ) {
-        //                 for ii = startIndex; ii < endIndex; ii++ {
-        //                     child := node.Children[ii]
-        //                     if (child.Style.Display == DisplayNone ) {
-        //                         continue;
-        //                     }
-        //                     if (child.Style.PositionType == PositionType.Relative ) {
-        //                         switch nodeAlignItem(node, child) {
-        //                         case Align.FlexStart:
-        //                             {
-        //                                 child.Layout.Position[pos[crossAxis]] =
-        //                                     currentLead + nodeLeadingMargin(child, crossAxis, availableInnerWidth)
-        //                             }
-        //                         case Align.FlexEnd:
-        //                             {
-        //                                 child.Layout.Position[pos[crossAxis]] =
-        //                                     currentLead + lineHeight -
-        //                                         nodeTrailingMargin(child, crossAxis, availableInnerWidth) -
-        //                                         child.Layout.measuredDimensions[dim[crossAxis]]
-        //                             }
-        //                         case Align.Center:
-        //                             {
-        //                                 childHeight := child.Layout.measuredDimensions[dim[crossAxis]]
-        //                                 child.Layout.Position[pos[crossAxis]] = currentLead + (lineHeight-childHeight)/2
-        //                             }
-        //                         case Align.Stretch:
-        //                             {
-        //                                 child.Layout.Position[pos[crossAxis]] =
-        //                                     currentLead + nodeLeadingMargin(child, crossAxis, availableInnerWidth)
+                    if (performLayout ) {
+                        for (ii = startIndex; ii < endIndex; ii++) {
+                            var child = node.Children[ii];
+                            if (child.Style.Display == Display.None ) {
+                                continue;
+                            }
+                            if (child.Style.PositionType == PositionType.Relative ) {
+                                switch (nodeAlignItem(node, child)) {
+                                case Align.FlexStart:
+                                    {
+                                        child.Layout.Position[(int)pos[(int)crossAxis]] =
+                                            currentLead + nodeLeadingMargin(child, crossAxis, availableInnerWidth);
+                                    }
+                                    break;
+                                case Align.FlexEnd:
+                                    {
+                                        child.Layout.Position[(int)pos[(int)crossAxis]] =
+                                            currentLead + lineHeight -
+                                                nodeTrailingMargin(child, crossAxis, availableInnerWidth) -
+                                                child.Layout.measuredDimensions[(int)dim[(int)crossAxis]];
+                                    }
+                                    break;
+                                case Align.Center:
+                                    {
+                                        float childHeight = child.Layout.measuredDimensions[(int)dim[(int)crossAxis]];
+                                        child.Layout.Position[(int)pos[(int)crossAxis]] = currentLead + (lineHeight-childHeight)/2;
+                                    }
+                                    break;
+                                case Align.Stretch:
+                                    {
+                                        child.Layout.Position[(int)pos[(int)crossAxis]] =
+                                            currentLead + nodeLeadingMargin(child, crossAxis, availableInnerWidth);
 
-        //                                 // Remeasure child with the line height as it as been only measured with the
-        //                                 // parents height yet.
-        //                                 if (!nodeIsStyleDimDefined(child, crossAxis, availableInnerCrossDim) ) {
-        //                                     childWidth := lineHeight
-        //                                     if (isMainAxisRow ) {
-        //                                         childWidth = child.Layout.measuredDimensions[Dimension.Width] +
-        //                                             nodeMarginForAxis(child, mainAxis, availableInnerWidth)
-        //                                     }
+                                        // Remeasure child with the line height as it as been only measured with the
+                                        // parents height yet.
+                                        if (!nodeIsStyleDimDefined(child, crossAxis, availableInnerCrossDim) ) {
+                                            float childWidth = lineHeight;
+                                            if (isMainAxisRow ) {
+                                                childWidth = child.Layout.measuredDimensions[(int)Dimension.Width] +
+                                                    nodeMarginForAxis(child, mainAxis, availableInnerWidth);
+                                            }
 
-        //                                     childHeight := lineHeight
-        //                                     if (!isMainAxisRow ) {
-        //                                         childHeight = child.Layout.measuredDimensions[Dimension.Height] +
-        //                                             nodeMarginForAxis(child, crossAxis, availableInnerWidth)
-        //                                     }
+                                            float childHeight = lineHeight;
+                                            if (!isMainAxisRow ) {
+                                                childHeight = child.Layout.measuredDimensions[(int)Dimension.Height] +
+                                                    nodeMarginForAxis(child, crossAxis, availableInnerWidth);
+                                            }
 
-        //                                     if !(FloatsEqual(childWidth,
-        //                                         child.Layout.measuredDimensions[Dimension.Width]) &&
-        //                                         FloatsEqual(childHeight,
-        //                                             child.Layout.measuredDimensions[Dimension.Height])) {
-        //                                         layoutNodeInternal(child,
-        //                                             childWidth,
-        //                                             childHeight,
-        //                                             direction,
-        //                                             MeasureMode.Exactly,
-        //                                             MeasureMode.Exactly,
-        //                                             availableInnerWidth,
-        //                                             availableInnerHeight,
-        //                                             true,
-        //                                             "multiline-stretch",
-        //                                             config)
-        //                                     }
-        //                                 }
-        //                             }
-        //                         case Align.Baseline:
-        //                             {
-        //                                 child.Layout.Position[Edge.Top] =
-        //                                     currentLead + maxAscentForCurrentLine - Baseline(child) +
-        //                                         nodeLeadingPosition(child, FlexDirection.Column, availableInnerCrossDim)
-        //                             }
-        //                         case Align.Auto:
-        //                         case AlignSpaceBetween:
-        //                         case AlignSpaceAround:.
-        //                         }
-        //                     }
-        //                 }
-        //             }
+                                            if (!(FloatsEqual(childWidth,
+                                                child.Layout.measuredDimensions[(int)Dimension.Width]) &&
+                                                FloatsEqual(childHeight,
+                                                    child.Layout.measuredDimensions[(int)Dimension.Height]))) {
+                                                layoutNodeInternal(child,
+                                                    childWidth,
+                                                    childHeight,
+                                                    direction,
+                                                    MeasureMode.Exactly,
+                                                    MeasureMode.Exactly,
+                                                    availableInnerWidth,
+                                                    availableInnerHeight,
+                                                    true,
+                                                    "multiline-stretch",
+                                                    config);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case Align.Baseline:
+                                    {
+                                        child.Layout.Position[(int)Edge.Top] =
+                                            currentLead + maxAscentForCurrentLine - Baseline(child) +
+                                                nodeLeadingPosition(child, FlexDirection.Column, availableInnerCrossDim);
+                                    }
+                                    break;
+                                case Align.Auto:
+                                case Align.SpaceBetween:
+                                case Align.SpaceAround:
+                                    break;
+                                }
+                            }
+                        }
+                    }
 
-        // currentLead  (//            += lineHeig)ht
-        // //         (}
-        // //    ) };
+                    currentLead += lineHeight;
+                }
+            }
 
-        // //     .// ;STEP 9: COMPUTING FINAL DIMENSIONS
-        // //     node.Layout.measuredDimensions[Dimension.Width] = nodeBoundAxis(
-        // //         node, FlexDirection.Row, availableWidth-marginAxisRow, parentWidth, parentWidth);
-        // //     node.Layout.measuredDimensions[Dimension.Height] = nodeBoundAxis(
+        //     //   STEP 9: COMPUTING FINAL DIMENSIONS
+        //     node.Layout.measuredDimensions[Dimension.Width] = nodeBoundAxis(
+        //         node, FlexDirection.Row, availableWidth-marginAxisRow, parentWidth, parentWidth);
+        //     node.Layout.measuredDimensions[Dimension.Height] = nodeBoundAxis(
         //         node, FlexDirection.Column, availableHeight-marginAxisColumn, parentHeight, parentWidth)
 
         //     // If the user didn't specify a width or height for the node, set the
@@ -2848,7 +2860,7 @@ namespace Rockyfi
         //         // Set trailing position if necessary.
         //         if (needsMainTrailingPos || needsCrossTrailingPos ) {
         //             foreach (var child in node.Children) {
-        //                 if (child.Style.Display == DisplayNone ) {
+        //                 if (child.Style.Display == Display.None ) {
         //                     continue;
         //                 }
         //                 if (needsMainTrailingPos ) {
