@@ -18,6 +18,10 @@ namespace Rockyfi
             /// layouts should not require more than 16 entries to fit within the cache.
             /// </summary>
             public const int MaxCachedResultCount = 16;
+
+            public const int measureModeCount = 3;
+            public static readonly string[] measureModeNames = {"UNDEFINED", "EXACTLY", "AT_MOST"};
+            public static readonly string[] layoutModeNames  = {"LAY_UNDEFINED", "LAY_EXACTLY", "LAY_AT_MOST"};
         }
 
         enum Align
@@ -1720,7 +1724,7 @@ namespace Rockyfi
         // static nodelayoutImpl(Node node, float availableWidth, float availableHeight,
         //     parentDirection Direction, MeasureMode widthMeasureMode,
         //     MeasureMode heightMeasureMode, float parentWidth, float parentHeight,
-        //     performLayout bool, Config config) {
+        //     bool performLayout, Config config) {
         //     // assertWithNode(node, YGFloatIsUndefined(availableWidth) ? widthMeasureMode == YGMeasureModeUndefined : true, "availableWidth is indefinite so widthMeasureMode must be YGMeasureModeUndefined");
         //     //assertWithNode(node, YGFloatIsUndefined(availableHeight) ? heightMeasureMode == YGMeasureModeUndefined : true, "availableHeight is indefinite so heightMeasureMode must be YGMeasureModeUndefined");
 
@@ -2864,9 +2868,7 @@ namespace Rockyfi
         //     gPrintSkips   = false
         // )
 
-        // const (
-        //     spacerStr = "                                                            "
-        // )
+        const string spacerStr = "";
 
         // // spacer returns spacer string
         // static spacer(level int) string {
@@ -2878,107 +2880,106 @@ namespace Rockyfi
         // }
 
         // var (
-        //     measureModeNames = [measureModeCount]string{"UNDEFINED", "EXACTLY", "AT_MOST"}
-        //     layoutModeNames  = [measureModeCount]string{"LAY_UNDEFINED", "LAY_EXACTLY", "LAY_AT_MOST"}
+        //     
         // )
 
-        // // measureModeName returns name of measure mode
-        // static measureModeName(mode MeasureMode, performLayout bool) string {
+        // measureModeName returns name of measure mode
+        static string measureModeName(MeasureMode mode, bool performLayout) {
 
-        //     if (mode >= measureModeCount ) {
-        //         return ""
-        //     }
+            if ((int)mode >= Constant.measureModeCount ) {
+                return "";
+            }
 
-        //     if (performLayout ) {
-        //         return layoutModeNames[mode]
-        //     }
-        //     return measureModeNames[mode]
-        // }
+            if (performLayout ) {
+                return Constant.layoutModeNames[(int)mode];
+            }
+            return Constant.measureModeNames[(int)mode];
+        }
 
-        // static bool measureModeSizeIsExactAndMatchesOldMeasuredSize(sizeMode MeasureMode, size float, lastComputedSize float) {
-        //     return sizeMode == MeasureMode.Exactly && FloatsEqual(size, lastComputedSize)
-        // }
+        static bool measureModeSizeIsExactAndMatchesOldMeasuredSize(MeasureMode sizeMode, float size, float lastComputedSize) {
+            return sizeMode == MeasureMode.Exactly && FloatsEqual(size, lastComputedSize);
+        }
 
-        // static bool measureModeOldSizeIsUnspecifiedAndStillFits(sizeMode MeasureMode, size float, lastSizeMode MeasureMode, lastComputedSize float) {
-        //     return sizeMode == MeasureMode.AtMost && lastSizeMode == MeasureMode.Undefined &&
-        //         (size >= lastComputedSize || FloatsEqual(size, lastComputedSize))
-        // }
+        static bool measureModeOldSizeIsUnspecifiedAndStillFits(MeasureMode sizeMode, float size, MeasureMode lastSizeMode, float lastComputedSize) {
+            return sizeMode == MeasureMode.AtMost && lastSizeMode == MeasureMode.Undefined &&
+                (size >= lastComputedSize || FloatsEqual(size, lastComputedSize));
+        }
 
-        // static bool measureModeNewMeasureSizeIsStricterAndStillValid(sizeMode MeasureMode, size float, lastSizeMode MeasureMode, lastSize float, lastComputedSize float) {
-        //     return lastSizeMode == MeasureMode.AtMost && sizeMode == MeasureMode.AtMost &&
-        //         lastSize > size && (lastComputedSize <= size || FloatsEqual(size, lastComputedSize))
-        // }
+        static bool measureModeNewMeasureSizeIsStricterAndStillValid(MeasureMode sizeMode, float size, MeasureMode lastSizeMode, float lastSize, float lastComputedSize) {
+            return lastSizeMode == MeasureMode.AtMost && sizeMode == MeasureMode.AtMost &&
+                lastSize > size && (lastComputedSize <= size || FloatsEqual(size, lastComputedSize));
+        }
 
-        // // roundValueToPixelGrid rounds value to pixel grid
-        // static float roundValueToPixelGrid(float value, pointScaleFactor float, forceCeil bool, forceFloor bool) {
-        //     scaledValue := value * pointScaleFactor
-        //     fractial := fmodf(scaledValue, 1.0)
-        //     if (FloatsEqual(fractial, 0) ) {
-        //         // First we check if the value is already rounded
-        //         scaledValue = scaledValue - fractial
-        //     } else if (FloatsEqual(fractial, 1.0) ) {
-        //         scaledValue = scaledValue - fractial + 1.0
-        //     } else if (forceCeil ) {
-        //         // Next we check if we need to use forced rounding
-        //         scaledValue = scaledValue - fractial + 1.0
-        //     } else if (forceFloor ) {
-        //         scaledValue = scaledValue - fractial
-        //     } else {
-        //         // Finally we just round the value
-        //         float f;
-        //         if (fractial >= 0.5 ) {
-        //             f = 1.0
-        //         }
-        //         scaledValue = scaledValue - fractial + f
-        //     }
-        //     return scaledValue / pointScaleFactor
-        // }
+        // roundValueToPixelGrid rounds value to pixel grid
+        static float roundValueToPixelGrid(float value, float pointScaleFactor, bool forceCeil, bool forceFloor) {
+            var scaledValue = value * pointScaleFactor;
+            var fractial = (scaledValue % 1f);
+            if (FloatsEqual(fractial, 0) ) {
+                // First we check if the value is already rounded
+                scaledValue = scaledValue - fractial;
+            } else if (FloatsEqual(fractial, 1) ) {
+                scaledValue = scaledValue - fractial + 1;
+            } else if (forceCeil ) {
+                // Next we check if we need to use forced rounding
+                scaledValue = scaledValue - fractial + 1;
+            } else if (forceFloor ) {
+                scaledValue = scaledValue - fractial;
+            } else {
+                // Finally we just round the value
+                float f = 0;
+                if (fractial >= 0.5f ) {
+                    f = 1.0f;
+                }
+                scaledValue = scaledValue - fractial + f;
+            }
+            return scaledValue / pointScaleFactor;
+        }
 
-        // // nodeCanUseCachedMeasurement returns true if can use cached measurement
-        // static bool nodeCanUseCachedMeasurement(MeasureMode widthMode, float width, MeasureMode heightMode, float height, lastWidthMode MeasureMode, lastWidth float, lastHeightMode MeasureMode, lastHeight float, lastComputedWidth float, lastComputedHeight float, marginRow float, marginColumn float, Config config) {
-        //     if (lastComputedHeight < 0 || lastComputedWidth < 0 ) {
-        //         return false
-        //     }
-        //     useRoundedComparison := config != null && config.PointScaleFactor != 0
-        //     effectiveWidth := width
-        //     effectiveHeight := height
-        //     effectiveLastWidth := lastWidth
-        //     effectiveLastHeight := lastHeight
+        // nodeCanUseCachedMeasurement returns true if can use cached measurement
+        static bool nodeCanUseCachedMeasurement(MeasureMode widthMode, float width, MeasureMode heightMode, float height, MeasureMode lastWidthMode, float lastWidth, MeasureMode lastHeightMode, float lastHeight, float lastComputedWidth, float lastComputedHeight, float marginRow, float marginColumn, Config config) {
+            if (lastComputedHeight < 0 || lastComputedWidth < 0 ) {
+                return false;
+            }
+            var useRoundedComparison = config != null && config.PointScaleFactor != 0;
+            var effectiveWidth = width;
+            var effectiveHeight = height;
+            var effectiveLastWidth = lastWidth;
+            var effectiveLastHeight = lastHeight;
 
-        //     if (useRoundedComparison ) {
-        //         effectiveWidth = roundValueToPixelGrid(width, config.PointScaleFactor, false, false)
-        //         effectiveHeight = roundValueToPixelGrid(height, config.PointScaleFactor, false, false)
-        //         effectiveLastWidth = roundValueToPixelGrid(lastWidth, config.PointScaleFactor, false, false)
-        //         effectiveLastHeight = roundValueToPixelGrid(lastHeight, config.PointScaleFactor, false, false)
-        //     }
+            if (useRoundedComparison ) {
+                effectiveWidth = roundValueToPixelGrid(width, config.PointScaleFactor, false, false);
+                effectiveHeight = roundValueToPixelGrid(height, config.PointScaleFactor, false, false);
+                effectiveLastWidth = roundValueToPixelGrid(lastWidth, config.PointScaleFactor, false, false);
+                effectiveLastHeight = roundValueToPixelGrid(lastHeight, config.PointScaleFactor, false, false);
+            }
 
-        //     hasSameWidthSpec := lastWidthMode == widthMode && FloatsEqual(effectiveLastWidth, effectiveWidth)
-        //     hasSameHeightSpec := lastHeightMode == heightMode && FloatsEqual(effectiveLastHeight, effectiveHeight)
+            var hasSameWidthSpec = lastWidthMode == widthMode && FloatsEqual(effectiveLastWidth, effectiveWidth);
+            var hasSameHeightSpec = lastHeightMode == heightMode && FloatsEqual(effectiveLastHeight, effectiveHeight);
 
-        //     widthIsCompatible :=
-        //         hasSameWidthSpec || measureModeSizeIsExactAndMatchesOldMeasuredSize(widthMode,
-        //             width-marginRow,
-        //             lastComputedWidth) ||
-        //             measureModeOldSizeIsUnspecifiedAndStillFits(widthMode,
-        //                 width-marginRow,
-        //                 lastWidthMode,
-        //                 lastComputedWidth) ||
-        //             measureModeNewMeasureSizeIsStricterAndStillValid(
-        //                 widthMode, width-marginRow, lastWidthMode, lastWidth, lastComputedWidth)
+            var widthIsCompatible =
+                hasSameWidthSpec || measureModeSizeIsExactAndMatchesOldMeasuredSize(widthMode,
+                    width-marginRow,
+                    lastComputedWidth) ||
+                    measureModeOldSizeIsUnspecifiedAndStillFits(widthMode,
+                        width-marginRow,
+                        lastWidthMode,
+                        lastComputedWidth) ||
+                    measureModeNewMeasureSizeIsStricterAndStillValid(
+                        widthMode, width-marginRow, lastWidthMode, lastWidth, lastComputedWidth);
 
-        //     heightIsCompatible :=
-        //         hasSameHeightSpec || measureModeSizeIsExactAndMatchesOldMeasuredSize(heightMode,
-        //             height-marginColumn,
-        //             lastComputedHeight) ||
-        //             measureModeOldSizeIsUnspecifiedAndStillFits(heightMode,
-        //                 height-marginColumn,
-        //                 lastHeightMode,
-        //                 lastComputedHeight) ||
-        //             measureModeNewMeasureSizeIsStricterAndStillValid(
-        //                 heightMode, height-marginColumn, lastHeightMode, lastHeight, lastComputedHeight)
+            var heightIsCompatible =
+                hasSameHeightSpec || measureModeSizeIsExactAndMatchesOldMeasuredSize(heightMode,
+                    height-marginColumn,
+                    lastComputedHeight) ||
+                    measureModeOldSizeIsUnspecifiedAndStillFits(heightMode,
+                        height-marginColumn,
+                        lastHeightMode,
+                        lastComputedHeight) ||
+                    measureModeNewMeasureSizeIsStricterAndStillValid(
+                        heightMode, height-marginColumn, lastHeightMode, lastHeight, lastComputedHeight);
 
-        //     return widthIsCompatible && heightIsCompatible
-        // }
+            return widthIsCompatible && heightIsCompatible;
+        }
 
         // // layoutNodeInternal is a wrapper around the YGNodelayoutImpl function. It determines
         // // whether the layout request is redundant and can be skipped.
@@ -2989,7 +2990,7 @@ namespace Rockyfi
         // static layoutNodeInternal(Node node, float availableWidth, float availableHeight,
         //     parentDirection Direction, MeasureMode widthMeasureMode,
         //     MeasureMode heightMeasureMode, float parentWidth, float parentHeight,
-        //     performLayout bool, reason string, Config config) bool {
+        //     bool performLayout, reason string, Config config) bool {
         //     layout := &node.Layout
 
         //     gDepth++
@@ -3185,56 +3186,56 @@ namespace Rockyfi
         //     return needToVisitNode || cachedResults == null;
         // }
 
-        // static roundToPixelGrid(Node node, pointScaleFactor float, absoluteLeft float, absoluteTop float) {
-        //     if (pointScaleFactor == 0.0 ) {
-        //         return
-        //     }
+        static void roundToPixelGrid(Node node, float pointScaleFactor, float absoluteLeft, float absoluteTop) {
+            if (pointScaleFactor == 0.0 ) {
+                return;
+            }
 
-        //     nodeLeft := node.Layout.Position[Edge.Left]
-        //     nodeTop := node.Layout.Position[Edge.Top]
+            var nodeLeft = node.Layout.Position[(int)Edge.Left];
+            var nodeTop = node.Layout.Position[(int)Edge.Top];
 
-        //     nodeWidth := node.Layout.Dimensions[Dimension.Width]
-        //     nodeHeight := node.Layout.Dimensions[Dimension.Height]
+            var nodeWidth = node.Layout.Dimensions[(int)Dimension.Width];
+            var nodeHeight = node.Layout.Dimensions[(int)Dimension.Height];
 
-        //     absoluteNodeLeft := absoluteLeft + nodeLeft
-        //     absoluteNodeTop := absoluteTop + nodeTop
+            var absoluteNodeLeft = absoluteLeft + nodeLeft;
+            var absoluteNodeTop = absoluteTop + nodeTop;
 
-        //     absoluteNodeRight := absoluteNodeLeft + nodeWidth
-        //     absoluteNodeBottom := absoluteNodeTop + nodeHeight
+            var absoluteNodeRight = absoluteNodeLeft + nodeWidth;
+            var absoluteNodeBottom = absoluteNodeTop + nodeHeight;
 
-        //     // If a node has a custom measure function we never want to round down its size as this could
-        //     // lead to unwanted text truncation.
-        //     textRounding := node.NodeType == NodeTypeText
+            // If a node has a custom measure function we never want to round down its size as this could
+            // lead to unwanted text truncation.
+            var textRounding = node.NodeType == NodeType.Text;
 
-        //     node.Layout.Position[Edge.Left] = roundValueToPixelGrid(nodeLeft, pointScaleFactor, false, textRounding)
-        //     node.Layout.Position[Edge.Top] = roundValueToPixelGrid(nodeTop, pointScaleFactor, false, textRounding)
+            node.Layout.Position[(int)Edge.Left] = roundValueToPixelGrid(nodeLeft, pointScaleFactor, false, textRounding);
+            node.Layout.Position[(int)Edge.Top] = roundValueToPixelGrid(nodeTop, pointScaleFactor, false, textRounding);
 
-        //     // We multiply dimension by scale factor and if the result is close to the whole number, we don't have any fraction
-        //     // To verify if the result is close to whole number we want to check both floor and ceil numbers
-        //     hasFractionalWidth := !FloatsEqual(fmodf(nodeWidth*pointScaleFactor, 1), 0) &&
-        //         !FloatsEqual(fmodf(nodeWidth*pointScaleFactor, 1), 1)
-        //     hasFractionalHeight := !FloatsEqual(fmodf(nodeHeight*pointScaleFactor, 1), 0) &&
-        //         !FloatsEqual(fmodf(nodeHeight*pointScaleFactor, 1), 1)
+            // We multiply dimension by scale factor and if the result is close to the whole number, we don't have any fraction
+            // To verify if the result is close to whole number we want to check both floor and ceil numbers
+            var hasFractionalWidth = !FloatsEqual(fmodf(nodeWidth*pointScaleFactor, 1), 0) &&
+                !FloatsEqual(fmodf(nodeWidth*pointScaleFactor, 1), 1);
+            var hasFractionalHeight = !FloatsEqual(fmodf(nodeHeight*pointScaleFactor, 1), 0) &&
+                !FloatsEqual(fmodf(nodeHeight*pointScaleFactor, 1), 1);
 
-        //     node.Layout.Dimensions[Dimension.Width] =
-        //         roundValueToPixelGrid(
-        //             absoluteNodeRight,
-        //             pointScaleFactor,
-        //             (textRounding && hasFractionalWidth),
-        //             (textRounding && !hasFractionalWidth)) -
-        //             roundValueToPixelGrid(absoluteNodeLeft, pointScaleFactor, false, textRounding)
-        //     node.Layout.Dimensions[Dimension.Height] =
-        //         roundValueToPixelGrid(
-        //             absoluteNodeBottom,
-        //             pointScaleFactor,
-        //             (textRounding && hasFractionalHeight),
-        //             (textRounding && !hasFractionalHeight)) -
-        //             roundValueToPixelGrid(absoluteNodeTop, pointScaleFactor, false, textRounding)
+            node.Layout.Dimensions[(int)Dimension.Width] =
+                roundValueToPixelGrid(
+                    absoluteNodeRight,
+                    pointScaleFactor,
+                    (textRounding && hasFractionalWidth),
+                    (textRounding && !hasFractionalWidth)) -
+                    roundValueToPixelGrid(absoluteNodeLeft, pointScaleFactor, false, textRounding);
+            node.Layout.Dimensions[(int)Dimension.Height] =
+                roundValueToPixelGrid(
+                    absoluteNodeBottom,
+                    pointScaleFactor,
+                    (textRounding && hasFractionalHeight),
+                    (textRounding && !hasFractionalHeight)) -
+                    roundValueToPixelGrid(absoluteNodeTop, pointScaleFactor, false, textRounding);
 
-        //     for _, child := range node.Children {
-        //         roundToPixelGrid(child, pointScaleFactor, absoluteNodeLeft, absoluteNodeTop)
-        //     }
-        // }
+            foreach (var child in node.Children) {
+                roundToPixelGrid(child, pointScaleFactor, absoluteNodeLeft, absoluteNodeTop);
+            }
+        }
 
         // static calcStartWidth(Node node, float parentWidth) (float, MeasureMode) {
         //     if (nodeIsStyleDimDefined(node, FlexDirection.Row, parentWidth) ) {
@@ -3299,9 +3300,9 @@ namespace Rockyfi
         // }
 
 
-        // static log(Node node, level LogLevel, format string, args ...interface{}) {
-        //     fmt.Printf(format, args...)
-        // }
+        static void log(Node node, LogLevel level, string format, params object[] args) {
+            System.Console.WriteLine(format, args);
+        }
 
         static void assertCond(bool cond, string format, params object[] args)
         {
@@ -3321,6 +3322,11 @@ namespace Rockyfi
             {
                 throw new System.Exception(message);
             }
+        }
+
+        static float fmodf(float a, float b)
+        {
+            return a % b;
         }
 
     }
