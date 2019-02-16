@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Rockyfi
 {
-    class Rockyfi
+    partial class Rockyfi
     {
         class Constant
         {
