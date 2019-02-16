@@ -9,19 +9,19 @@ namespace Rockyfi
     {
         class Constant
         {
-            public const int EdgeCount = 9;
-            public const int ExperimentalFeatureCount = 1;
-            public const int MeasureModeCount = 3;
+            internal const int EdgeCount = 9;
+            internal const int ExperimentalFeatureCount = 1;
+            internal const int MeasureModeCount = 3;
 
             /// <summary>
             /// This value was chosen based on empiracle data. Even the most complicated
             /// layouts should not require more than 16 entries to fit within the cache.
             /// </summary>
-            public const int MaxCachedResultCount = 16;
+            internal const int MaxCachedResultCount = 16;
 
-            public const int measureModeCount = 3;
-            public static readonly string[] measureModeNames = {"UNDEFINED", "EXACTLY", "AT_MOST"};
-            public static readonly string[] layoutModeNames  = {"LAY_UNDEFINED", "LAY_EXACTLY", "LAY_AT_MOST"};
+            internal const int measureModeCount = 3;
+            internal static readonly string[] measureModeNames = {"UNDEFINED", "EXACTLY", "AT_MOST"};
+            internal static readonly string[] layoutModeNames  = {"LAY_UNDEFINED", "LAY_EXACTLY", "LAY_AT_MOST"};
         }
 
         enum Align
@@ -164,16 +164,16 @@ namespace Rockyfi
 
         struct Size
         {
-            public float Width;
-            public float Height;
+            internal float Width;
+            internal float Height;
         }
 
         struct Value
         {
-            public float value;
-            public Unit unit;
+            internal float value;
+            internal Unit unit;
 
-            public Value(float v, Unit u)
+            internal Value(float v, Unit u)
             {
                 this.value = v;
                 this.unit = u;
@@ -182,14 +182,14 @@ namespace Rockyfi
 
         class CachedMeasurement
         {
-            public float availableWidth;
-            public float availableHeight;
-            public MeasureMode widthMeasureMode = MeasureMode.Undefined;
-            public MeasureMode heightMeasureMode = MeasureMode.Undefined;
-            public float computedWidth = -1;
-            public float computedHeight = -1;
+            internal float availableWidth;
+            internal float availableHeight;
+            internal MeasureMode widthMeasureMode = MeasureMode.Undefined;
+            internal MeasureMode heightMeasureMode = MeasureMode.Undefined;
+            internal float computedWidth = -1;
+            internal float computedHeight = -1;
 
-            public void ResetToDefault()
+            internal void ResetToDefault()
             {
                 this.availableHeight = 0;
                 this.availableWidth = 0;
@@ -202,22 +202,22 @@ namespace Rockyfi
 
         class Layout
         {
-            public readonly float[] Position = new float[4];
-            public readonly float[] Dimensions = new float[2]{ float.NaN, float.NaN };
-            public readonly float[] Margin = new float[6];
-            public readonly float[] Border = new float[6];
-            public readonly float[] Padding = new float[6];
-            public Direction  Direction;
-            public int computedFlexBasisGeneration;
-            public float computedFlexBasis = float.NaN;
-            public bool HadOverflow = false;
-            
+            internal readonly float[] Position = new float[4];
+            internal readonly float[] Dimensions = new float[2]{ float.NaN, float.NaN };
+            internal readonly float[] Margin = new float[6];
+            internal readonly float[] Border = new float[6];
+            internal readonly float[] Padding = new float[6];
+            internal Direction  Direction;
+            internal int computedFlexBasisGeneration;
+            internal float computedFlexBasis = float.NaN;
+            internal bool HadOverflow = false;
+
             // Instead of recomputing the entire layout every single time, we
             // cache some information to break early when nothing changed
-            public int generationCount;
-            public Direction lastParentDirection = Direction.NeverUsed_1;
-            public int nextCachedMeasurementsIndex = 0;
-            public readonly CachedMeasurement[] cachedMeasurements = new CachedMeasurement[Constant.MaxCachedResultCount]
+            internal int generationCount;
+            internal Direction lastParentDirection = Direction.NeverUsed_1;
+            internal int nextCachedMeasurementsIndex = 0;
+            internal readonly CachedMeasurement[] cachedMeasurements = new CachedMeasurement[Constant.MaxCachedResultCount]
             {
                 new CachedMeasurement(),
                 new CachedMeasurement(),
@@ -236,10 +236,10 @@ namespace Rockyfi
                 new CachedMeasurement(),
                 new CachedMeasurement(),
             };
-            public readonly float[] measuredDimensions = new float[2]{ float.NaN, float.NaN };
-            readonly public CachedMeasurement cachedLayout = new CachedMeasurement();
+            internal readonly float[] measuredDimensions = new float[2]{ float.NaN, float.NaN };
+            readonly internal CachedMeasurement cachedLayout = new CachedMeasurement();
 
-            public void ResetToDefault()
+            internal void ResetToDefault()
             {
                 for (int i = 0; i < this.Position.Length; i++)
                 {
@@ -279,32 +279,32 @@ namespace Rockyfi
 
         class Style
         {
-            public Direction      Direction = Direction.Inherit;
-            public FlexDirection  FlexDirection = FlexDirection.Column;
-            public Justify JustifyContent = Justify.FlexStart;
-            public Align AlignContent = Align.FlexStart;
-            public Align AlignItems = Align.Stretch;
-            public Align AlignSelf;
-            public PositionType PositionType;
-            public Wrap FlexWrap;
-            public Overflow Overflow = Overflow.Visible;
-            public Display Display = Display.Flex;
-            public float Flex = float.NaN;
-            public float FlexGrow = float.NaN;
-            public float FlexShrink = float.NaN;
-            public Value FlexBasis = autoValue;
-            public readonly Value[] Margin = defaultEdgeValuesUnit();
-            public readonly Value[] Position = defaultEdgeValuesUnit();
-            public readonly Value[] Padding = defaultEdgeValuesUnit();
-            public readonly Value[] Border = defaultEdgeValuesUnit();
-            public readonly Value[] Dimensions = new Value[2]{ autoValue, autoValue };
-            public readonly Value[] MinDimensions = new Value[2]{ undefinedValue, undefinedValue};
-            public readonly Value[] MaxDimensions = new Value[2]{ undefinedValue, undefinedValue};
+            internal Direction      Direction = Direction.Inherit;
+            internal FlexDirection  FlexDirection = FlexDirection.Column;
+            internal Justify JustifyContent = Justify.FlexStart;
+            internal Align AlignContent = Align.FlexStart;
+            internal Align AlignItems = Align.Stretch;
+            internal Align AlignSelf;
+            internal PositionType PositionType;
+            internal Wrap FlexWrap;
+            internal Overflow Overflow = Overflow.Visible;
+            internal Display Display = Display.Flex;
+            internal float Flex = float.NaN;
+            internal float FlexGrow = float.NaN;
+            internal float FlexShrink = float.NaN;
+            internal Value FlexBasis = autoValue;
+            internal readonly Value[] Margin = defaultEdgeValuesUnit();
+            internal readonly Value[] Position = defaultEdgeValuesUnit();
+            internal readonly Value[] Padding = defaultEdgeValuesUnit();
+            internal readonly Value[] Border = defaultEdgeValuesUnit();
+            internal readonly Value[] Dimensions = new Value[2]{ autoValue, autoValue };
+            internal readonly Value[] MinDimensions = new Value[2]{ undefinedValue, undefinedValue};
+            internal readonly Value[] MaxDimensions = new Value[2]{ undefinedValue, undefinedValue};
             // Yoga specific properties, not compatible with flexbox specification
-            public float AspectRatio = float.NaN;
+            internal float AspectRatio = float.NaN;
 
 
-            static public void Copy(Style dest, Style src)
+            static internal void Copy(Style dest, Style src)
             {
                 dest.Direction = src.Direction;
                 dest.FlexDirection = src.FlexDirection;
@@ -341,14 +341,14 @@ namespace Rockyfi
 
         class Config
         {
-            readonly public bool[] experimentalFeatures = new bool[Constant.ExperimentalFeatureCount + 1];
-            public bool UseWebDefaults = false;
-            public bool UseLegacyStretchBehaviour = false;
-            public float PointScaleFactor = 1;
-            public LoggerFunc Logger = DefaultLog;
-            public object Context = null;
+            readonly internal bool[] experimentalFeatures = new bool[Constant.ExperimentalFeatureCount + 1];
+            internal bool UseWebDefaults = false;
+            internal bool UseLegacyStretchBehaviour = false;
+            internal float PointScaleFactor = 1;
+            internal LoggerFunc Logger = DefaultLog;
+            internal object Context = null;
 
-            public static void Copy(Config dest, Config src)
+            internal static void Copy(Config dest, Config src)
             {
                 dest.UseWebDefaults = src.UseWebDefaults;
                 dest.UseLegacyStretchBehaviour = src.UseLegacyStretchBehaviour;
@@ -363,18 +363,18 @@ namespace Rockyfi
             }
 
             // SetExperimentalFeatureEnabled enables experimental feature
-            public void SetExperimentalFeatureEnabled(ExperimentalFeature feature, bool enabled) {
+            internal void SetExperimentalFeatureEnabled(ExperimentalFeature feature, bool enabled) {
                 this.experimentalFeatures[(int)feature] = enabled;
             }
 
             // IsExperimentalFeatureEnabled returns if experimental feature is enabled
-            public bool IsExperimentalFeatureEnabled(ExperimentalFeature feature) {
+            internal bool IsExperimentalFeatureEnabled(ExperimentalFeature feature) {
                 return this.experimentalFeatures[(int)feature];
             }
 
 
             // SetPointScaleFactor sets scale factor
-            public void SetPointScaleFactor(float pixelsInPoint) {
+            internal void SetPointScaleFactor(float pixelsInPoint) {
                 assertWithConfig(this, pixelsInPoint >= 0, "Scale factor should not be less than zero");
 
                 // We store points for Pixel as we will use it for rounding
@@ -387,28 +387,28 @@ namespace Rockyfi
             }
         }
 
-        class Node
+        partial class Node
         {
-            readonly public Style     Style = new Style();
-            readonly public Layout    Layout = new Layout();
-            public int lineIndex;
+            readonly internal Style     Style = new Style();
+            readonly internal Layout    Layout = new Layout();
+            internal int lineIndex;
 
-            public Node Parent = null;
-            public readonly List<Node> Children = new List<Node>();
+            internal Node Parent = null;
+            internal readonly List<Node> Children = new List<Node>();
 
-            public Node NextChild;
+            internal Node NextChild;
 
-            public MeasureFunc Measure;
-            public BaselineFunc Baseline;
-            public PrintFunc Print;
-            public Config Config;
-            public object Context;
+            internal MeasureFunc Measure;
+            internal BaselineFunc Baseline;
+            internal PrintFunc Print;
+            internal Config Config;
+            internal object Context;
 
-            public bool IsDirty = false;
-            public bool hasNewLayout = true;
-            public NodeType NodeType = NodeType.Default;
+            internal bool IsDirty = false;
+            internal bool hasNewLayout = true;
+            internal NodeType NodeType = NodeType.Default;
 
-            public readonly Value[] resolvedDimensions = new Value[2]{ ValueUndefined, ValueUndefined };
+            internal readonly Value[] resolvedDimensions = new Value[2]{ ValueUndefined, ValueUndefined };
         }
 
         // MeasureFunc describes function for measuring
@@ -438,7 +438,7 @@ namespace Rockyfi
                 undefinedValue,
                 undefinedValue,
             };
-        } 
+        }
 
         const float defaultFlexGrow = 0;
         const float defaultFlexShrink = 0;
@@ -540,7 +540,7 @@ namespace Rockyfi
         }
 
 
-        static float resolveValueMargin(Value value, float parentSize) 
+        static float resolveValueMargin(Value value, float parentSize)
         {
             if (value.unit == Unit.Auto)
             {
@@ -604,18 +604,18 @@ namespace Rockyfi
         }
 
         // ConfigCopy copies a config
-        static void ConfigCopy(Config dest, Config src) 
+        static void ConfigCopy(Config dest, Config src)
         {
             Config.Copy(dest, src);
         }
 
-        static void nodeMarkDirtyInternal(Node node) 
+        static void nodeMarkDirtyInternal(Node node)
         {
             if (!node.IsDirty)
             {
                 node.IsDirty = true;
                 node.Layout.computedFlexBasis = float.NaN;
-                if(node.Parent != null) 
+                if(node.Parent != null)
                 {
                     nodeMarkDirtyInternal(node.Parent);
                 }
@@ -623,7 +623,7 @@ namespace Rockyfi
         }
 
         // SetMeasureFunc sets measure function
-        static void SetMeasureFunc(Node node, MeasureFunc measureFunc) 
+        static void SetMeasureFunc(Node node, MeasureFunc measureFunc)
         {
             if ( measureFunc == null )
             {
@@ -642,7 +642,7 @@ namespace Rockyfi
         }
 
         // InsertChild inserts a child
-        static void InsertChild(Node node, Node child, int idx) 
+        static void InsertChild(Node node, Node child, int idx)
         {
             assertWithNode(node, child.Parent == null, "Child already has a parent, it must be removed first.");
             assertWithNode(node, node.Measure == null, "Cannot add child: Nodes with measure functions cannot have children.");
@@ -653,7 +653,7 @@ namespace Rockyfi
         }
 
         // RemoveChild removes child node
-        static void RemoveChild(Node node, Node child) 
+        static void RemoveChild(Node node, Node child)
         {
             if (node.Children.Remove(child))
             {
@@ -712,9 +712,9 @@ namespace Rockyfi
         }
 
         // NodeCopyStyle copies style
-        static void NodeCopyStyle(Node dstNode, Node srcNode) 
+        static void NodeCopyStyle(Node dstNode, Node srcNode)
         {
-            if (!styleEq(dstNode.Style, srcNode.Style)) 
+            if (!styleEq(dstNode.Style, srcNode.Style))
             {
                 Style.Copy(dstNode.Style, srcNode.Style);
                 nodeMarkDirtyInternal(dstNode);
@@ -724,7 +724,7 @@ namespace Rockyfi
         static float resolveFlexGrow(Node node)
         {
             // Root nodes flexGrow should always be 0
-            if (node.Parent == null) 
+            if (node.Parent == null)
             {
                 return 0;
             }
@@ -732,7 +732,7 @@ namespace Rockyfi
             {
                 return node.Style.FlexGrow;
             }
-            if (!FloatIsUndefined(node.Style.Flex) && node.Style.Flex > 0) 
+            if (!FloatIsUndefined(node.Style.Flex) && node.Style.Flex > 0)
             {
                 return node.Style.Flex;
             }
@@ -750,11 +750,11 @@ namespace Rockyfi
         }
 
         // StyleGetFlexShrink gets flex shrink
-        static float StyleGetFlexShrink(Node node) 
+        static float StyleGetFlexShrink(Node node)
         {
             if (FloatIsUndefined(node.Style.FlexShrink))
             {
-                if (node.Config.UseWebDefaults) 
+                if (node.Config.UseWebDefaults)
                 {
                     return webDefaultFlexShrink;
                 }
@@ -763,14 +763,14 @@ namespace Rockyfi
             return node.Style.FlexShrink;
         }
 
-        static float nodeResolveFlexShrink(Node node) 
+        static float nodeResolveFlexShrink(Node node)
         {
             // Root nodes flexShrink should always be 0
-            if (node.Parent == null) 
+            if (node.Parent == null)
             {
                 return 0;
             }
-            if (!FloatIsUndefined(node.Style.FlexShrink)) 
+            if (!FloatIsUndefined(node.Style.FlexShrink))
             {
                 return node.Style.FlexShrink;
             }
@@ -779,14 +779,14 @@ namespace Rockyfi
             {
                 return -node.Style.Flex;
             }
-            if (node.Config.UseWebDefaults) 
+            if (node.Config.UseWebDefaults)
             {
                 return webDefaultFlexShrink;
             }
             return defaultFlexShrink;
         }
 
-        static Value nodeResolveFlexBasisPtr(Node node) 
+        static Value nodeResolveFlexBasisPtr(Node node)
         {
             var style = node.Style;
             if (style.FlexBasis.unit != Unit.Auto && style.FlexBasis.unit != Unit.Undefined) {
@@ -811,13 +811,13 @@ namespace Rockyfi
         static int currentGenerationCount = 0;
 
         // FloatIsUndefined returns true if value is undefined
-        static bool FloatIsUndefined(float value) 
+        static bool FloatIsUndefined(float value)
         {
             return float.IsNaN(value);
         }
 
         // ValueEqual returns true if values are equal
-        static bool ValueEqual(Value a, Value b) 
+        static bool ValueEqual(Value a, Value b)
         {
             if (a.unit != b.unit) {
                 return false;
@@ -830,7 +830,7 @@ namespace Rockyfi
             return System.Math.Abs(a.value - b.value) < 0.0001f;
         }
 
-        static void resolveDimensions(Node node) 
+        static void resolveDimensions(Node node)
         {
             for (int dim = (int)Dimension.Width; dim <= (int)Dimension.Height; dim++) {
                 if (node.Style.MaxDimensions[dim].unit != Unit.Undefined &&
@@ -967,7 +967,7 @@ namespace Rockyfi
                 var baseline = node.Baseline(node, node.Layout.measuredDimensions[(int)Dimension.Width], node.Layout.measuredDimensions[(int)Dimension.Height]);
                 assertWithNode(node, !FloatIsUndefined(baseline), "Expect custom baseline function to not return NaN");
                 return baseline;
-            } 
+            }
             else
             {
                 Node baselineChild = null;
@@ -2225,7 +2225,7 @@ namespace Rockyfi
                         var marginMain = nodeMarginForAxis(currentRelativeChild, mainAxis, availableInnerWidth);
                         var marginCross = nodeMarginForAxis(currentRelativeChild, crossAxis, availableInnerWidth);
 
-                        float childCrossSize = 0; 
+                        float childCrossSize = 0;
                         float childMainSize = updatedMainSize + marginMain;
                         MeasureMode childCrossMeasureMode = MeasureMode.Undefined; // TODO : no init vaule ?
                         var childMainMeasureMode = MeasureMode.Exactly;
@@ -2663,7 +2663,7 @@ namespace Rockyfi
                 for (int i = 0; i < lineCount++; i++) {
                     int startIndex = endIndex;
                     int ii = 0;
-        
+
                     // compute the line's height and find the endInde.x
                     float lineHeight = 0;
                     float maxAscentForCurrentLine = 0;
@@ -3338,7 +3338,7 @@ namespace Rockyfi
 
         static void assertCond(bool cond, string format, params object[] args)
         {
-            if (!cond) 
+            if (!cond)
             {
                 throw new System.Exception(string.Format(format, args));
             }
@@ -3350,7 +3350,7 @@ namespace Rockyfi
         }
 
         static void assertWithConfig(Config config, bool condition, string message) {
-            if (!condition) 
+            if (!condition)
             {
                 throw new System.Exception(message);
             }
