@@ -1,3 +1,5 @@
 /flex
 /bin
 /obj
+/packages
+/.vs
