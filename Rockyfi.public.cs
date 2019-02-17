@@ -5,13 +5,19 @@ using System.Text;
 
 namespace Rockyfi
 {
-    public struct Size
+    public class Size
     {
         public float Width;
         public float Height;
+
+        public Size(float w, float h)
+        {
+            Width = w;
+            Height = h;
+        }
     }
 
-    public struct Value
+    public class Value
     {
         public float value;
         public Unit unit;
@@ -22,7 +28,22 @@ namespace Rockyfi
             this.unit = u;
         }
 
-        readonly public static Value UndefinedValue = new Value(float.NaN, Unit.Undefined);
+        public static Value UndefinedValue
+        {
+            get
+            {
+                return new Value(float.NaN, Unit.Undefined);
+            }
+        }
+
+        public static void CopyValue(Value[] dest, Value[] src)
+        {
+            for (int i = 0; i < src.Length; i++)
+            {
+                dest[i].value = src[i].value;
+                dest[i].unit = src[i].unit;
+            }
+        }
     }
 
     public class Config

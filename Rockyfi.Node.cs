@@ -16,7 +16,7 @@ namespace Rockyfi
         internal MeasureFunc measureFunc;
         internal BaselineFunc baselineFunc;
         internal PrintFunc printFunc;
-        internal Config config;
+        internal Config config = CreateDefaultConfig();
 
         internal bool IsDirty = false;
         internal bool hasNewLayout = true;
@@ -29,28 +29,33 @@ namespace Rockyfi
         public object Context;
         public readonly Dictionary<string, object> Atrribute = new Dictionary<string, object>();
 
-        public void Update(float availableWidth, float availableHeight,
-            Direction parentDirection, 
-            MeasureMode widthMeasureMode, MeasureMode heightMeasureMode, 
-            float parentWidth, float parentHeight,
-            bool performLayout, Config config)
+        public void Update(float parentWidth, float parentHeight, Direction parentDirection)
         {
-            nodelayoutImpl(this, availableWidth, availableHeight,
-                parentDirection, widthMeasureMode, heightMeasureMode, parentWidth, parentHeight,
-                performLayout, config);
+            CalculateLayout(this, parentWidth, parentHeight, parentDirection);
         }
-
 
 
 
         internal void Helper_SetDimensions(Value value, Dimension dimension)
         {
-            if (value.unit == Unit.Auto)
-                StyleSetWidthAuto();
-            else if (value.unit == Unit.Percent)
-                StyleSetWidthPercent(value.value);
-            else if (value.unit == Unit.Point)
-                StyleSetWidth(value.value);
+            if (dimension == Dimension.Width)
+            {
+                if (value.unit == Unit.Auto)
+                    StyleSetWidthAuto();
+                else if (value.unit == Unit.Percent)
+                    StyleSetWidthPercent(value.value);
+                else if (value.unit == Unit.Point)
+                    StyleSetWidth(value.value);
+            }
+            else
+            {
+                if (value.unit == Unit.Auto)
+                    StyleSetHeightAuto();
+                else if (value.unit == Unit.Percent)
+                    StyleSetHeightPercent(value.value);
+                else if (value.unit == Unit.Point)
+                    StyleSetHeight(value.value);
+            }
         }
     }
 

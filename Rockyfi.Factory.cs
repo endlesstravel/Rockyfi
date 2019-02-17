@@ -17,8 +17,7 @@ namespace Rockyfi
     // Logger defines logging function
     public delegate int LoggerFunc(Config config, Node node, LogLevel level, string format, params object[] args);
 
-
-    public delegate int DrawNodeFunc(float x, float y, float width, float height, Node node);
+    public delegate void DrawNodeFunc(float x, float y, float width, float height, Node node);
 
     partial class Factory
     {
@@ -77,6 +76,8 @@ namespace Rockyfi
                         node.Helper_SetDimensions(parseValueFromString(attr.Value), Dimension.Height);
                         break;
                 }
+
+                node.Atrribute.Add(attr.Name.ToString(), attr.Value);
             }
             return node;
         }
@@ -86,41 +87,49 @@ namespace Rockyfi
             Node node = SetupNode(element);
             foreach (var e in element.Elements())
             {
-                Node.InsertChild(node, SetupTraverse(e), node.Children.Count);
+                var child = SetupTraverse(e);
+                Node.InsertChild(node, child, node.Children.Count);
             }
             return node;
 
         }
+
         Node SetupTraverseRoot(XElement element)
         {
-            if (element.Name.Equals(RootTagName))
+            if (element.Name.LocalName.Equals(RootTagName))
             {
                 return SetupTraverse(element);
             }
 
-            throw new Exception("root element is not <root /> !");
+            throw new Exception("root element is not <div /> !");
         }
 
-        public void Update(float availableWidth, float availableHeight,
-            Direction parentDirection,
-            MeasureMode widthMeasureMode, MeasureMode heightMeasureMode,
-            float parentWidth, float parentHeight,
-            bool performLayout)
+        public void Update(Direction direction)
         {
-            root.Update(availableWidth, availableHeight, parentDirection,
-                widthMeasureMode, heightMeasureMode, parentWidth, parentHeight,
-                performLayout, 
-                this.config);
+            root.Update(float.NaN, float.NaN, direction);
         }
 
-        public void LoadFromString(string xml, float rootWidth, float rootHeight)
+        public void Draw(DrawNodeFunc drawFunc)
         {
-            string tmp = @"
-<div>
-    <div width=""100px"" height=""30%"">
-    </div>
-</div>
-";
+            Queue<Node> queue = new Queue<Node>();
+            queue.Enqueue(root);
+            while (queue.Count != 0)
+            {
+                var node = queue.Dequeue();
+                drawFunc(node.LayoutGetLeft(), node.LayoutGetRight(),
+                    node.LayoutGetWidth(), node.LayoutGetHeight(),
+                    node
+                    );
+
+                foreach (var child in node.Children)
+                {
+                    queue.Enqueue(child);
+                }
+            }
+        }
+
+        public void LoadFromString(string xml)
+        {
             root = SetupTraverseRoot(XElement.Parse(xml));
         }
     }

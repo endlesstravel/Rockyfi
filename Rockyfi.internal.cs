@@ -25,8 +25,11 @@ namespace Rockyfi
 
     class Style
     {
-        readonly internal static Value autoValue = new Value(float.NaN, Unit.Auto);
-        internal static Value[] defaultEdgeValuesUnit()
+        internal static Value CreateAutoValue()
+        {
+            return new Value(float.NaN, Unit.Auto);
+        }
+        internal static Value[] CreateDefaultEdgeValuesUnit()
         {
             return new Value[Constant.EdgeCount]{
                 Value.UndefinedValue,
@@ -55,12 +58,12 @@ namespace Rockyfi
         internal float Flex = float.NaN;
         internal float FlexGrow = float.NaN;
         internal float FlexShrink = float.NaN;
-        internal Value FlexBasis = autoValue;
-        internal readonly Value[] Margin = defaultEdgeValuesUnit();
-        internal readonly Value[] Position = defaultEdgeValuesUnit();
-        internal readonly Value[] Padding = defaultEdgeValuesUnit();
-        internal readonly Value[] Border = defaultEdgeValuesUnit();
-        internal readonly Value[] Dimensions = new Value[2] { autoValue, autoValue };
+        internal Value FlexBasis = CreateAutoValue();
+        internal readonly Value[] Margin = CreateDefaultEdgeValuesUnit();
+        internal readonly Value[] Position = CreateDefaultEdgeValuesUnit();
+        internal readonly Value[] Padding = CreateDefaultEdgeValuesUnit();
+        internal readonly Value[] Border = CreateDefaultEdgeValuesUnit();
+        internal readonly Value[] Dimensions = new Value[2] { CreateAutoValue(), CreateAutoValue() };
         internal readonly Value[] MinDimensions = new Value[2] { Value.UndefinedValue, Value.UndefinedValue };
         internal readonly Value[] MaxDimensions = new Value[2] { Value.UndefinedValue, Value.UndefinedValue };
         // Yoga specific properties, not compatible with flexbox specification
@@ -83,20 +86,14 @@ namespace Rockyfi
             dest.FlexGrow = src.FlexGrow;
             dest.FlexShrink = src.FlexShrink;
 
-            for (int i = 0; i < src.Margin.Length; i++)
-            {
-                dest.Margin[i] = src.Margin[i];
-                dest.Position[i] = src.Position[i];
-                dest.Padding[i] = src.Padding[i];
-                dest.Border[i] = src.Border[i];
-            }
+            Value.CopyValue(dest.Margin, src.Margin);
+            Value.CopyValue(dest.Position, src.Position);
+            Value.CopyValue(dest.Padding, src.Padding);
+            Value.CopyValue(dest.Border, src.Border);
 
-            for (int i = 0; i < 2; i++)
-            {
-                dest.Dimensions[i] = src.Dimensions[i];
-                dest.MinDimensions[i] = src.MinDimensions[i];
-                dest.MaxDimensions[i] = src.MaxDimensions[i];
-            }
+            Value.CopyValue(dest.Dimensions, src.Dimensions);
+            Value.CopyValue(dest.MinDimensions, src.MinDimensions);
+            Value.CopyValue(dest.MaxDimensions, src.MaxDimensions);
 
             dest.AspectRatio = src.AspectRatio;
         }
@@ -236,7 +233,7 @@ namespace Rockyfi
                 return false;
             return feq(v1.value, v2.value);
         }
-        
+
 
         internal static Value computedEdgeValue(Value[] edges, Edge edge, Value defaultValue)
         {
@@ -3010,67 +3007,85 @@ namespace Rockyfi
             }
         }
 
-        // internal static calcStartWidth(Node node, float parentWidth) (float, MeasureMode) {
-        //     if (nodeIsStyleDimDefined(node, FlexDirection.Row, parentWidth) ) {
-        //         width := resolveValue(node.resolvedDimensions[dim[FlexDirection.Row]], parentWidth)
-        //         margin := nodeMarginForAxis(node, FlexDirection.Row, parentWidth)
-        //         return width + margin, MeasureMode.Exactly
-        //     }
-        //     if (resolveValue(&node.Style.MaxDimensions[Dimension.Width], parentWidth) >= 0.0 ) {
-        //         width := resolveValue(&node.Style.MaxDimensions[Dimension.Width], parentWidth)
-        //         return width, MeasureMode.AtMost
-        //     }
+        internal static void calcStartWidth(Node node, float parentWidth, out float out_width, out MeasureMode out_measureMode){
+            if (nodeIsStyleDimDefined(node, FlexDirection.Row, parentWidth) ) {
+                var width = resolveValue(node.resolvedDimensions[(int)dim[(int)FlexDirection.Row]], parentWidth);
+                var margin = nodeMarginForAxis(node, FlexDirection.Row, parentWidth);
+                out_width = width + margin;
+                out_measureMode = MeasureMode.Exactly;
+                return;
+            }
+            if (resolveValue(node.nodeStyle.MaxDimensions[(int)Dimension.Width], parentWidth) >= 0f ) {
+                out_width = resolveValue(node.nodeStyle.MaxDimensions[(int)Dimension.Width], parentWidth);
+                out_measureMode = MeasureMode.AtMost;
+                return;
+            }
 
-        //     width := parentWidth
-        //     widthMeasureMode := MeasureMode.Exactly
-        //     if (FloatIsUndefined(width) ) {
-        //         widthMeasureMode = MeasureMode.Undefined
-        //     }
-        //     return width, widthMeasureMode
-        // }
-        // internal static calcStartHeight(Node node, parentWidth, float parentHeight) (float, MeasureMode) {
-        //     if (nodeIsStyleDimDefined(node, FlexDirection.Column, parentHeight) ) {
-        //         height := resolveValue(node.resolvedDimensions[dim[FlexDirection.Column]], parentHeight)
-        //         margin := nodeMarginForAxis(node, FlexDirection.Column, parentWidth)
-        //         return height + margin, MeasureMode.Exactly
-        //     }
-        //     if (resolveValue(&node.Style.MaxDimensions[Dimension.Height], parentHeight) >= 0 ) {
-        //         height := resolveValue(&node.Style.MaxDimensions[Dimension.Height], parentHeight)
-        //         return height, MeasureMode.AtMost
-        //     }
-        //     height := parentHeight
-        //     heightMeasureMode := MeasureMode.Exactly
-        //     if (FloatIsUndefined(height) ) {
-        //         heightMeasureMode = MeasureMode.Undefined
-        //     }
-        //     return height, heightMeasureMode
-        // }
+            {
+                var width = parentWidth;
+                var widthMeasureMode = MeasureMode.Exactly;
+                if (FloatIsUndefined(width) ) {
+                    widthMeasureMode = MeasureMode.Undefined;
+                }
+                out_width = width;
+                out_measureMode = widthMeasureMode;
+                return;
+            }
+        }
+        internal static void calcStartHeight(Node node, float parentWidth, float parentHeight,
+            out float out_height, out MeasureMode out_measureMode) {
+            if (nodeIsStyleDimDefined(node, FlexDirection.Column, parentHeight) ) {
+                var height = resolveValue(node.resolvedDimensions[(int)dim[(int)FlexDirection.Column]], parentHeight);
+                var margin = nodeMarginForAxis(node, FlexDirection.Column, parentWidth);
+                out_height = height + margin;
+                out_measureMode = MeasureMode.Exactly;
+                return;
+            }
+            if (resolveValue(node.nodeStyle.MaxDimensions[(int)Dimension.Height], parentHeight) >= 0 ) {
+                out_height = resolveValue(node.nodeStyle.MaxDimensions[(int)Dimension.Height], parentHeight);
+                out_measureMode = MeasureMode.AtMost;
+                return;
+            }
 
-        // // CalculateLayout calculates layout
-        // internal static CalculateLayout(Node node, float parentWidth, float parentHeight, parentDirection Direction) {
-        //     // Increment the generation count. This will force the recursive routine to
-        //     // visit
-        //     // all dirty nodes at least once. Subsequent visits will be skipped if the
-        //     // input
-        //     // parameters don't change.
-        //     currentGenerationCount++
+            {
 
-        //     resolveDimensions(node)
+                var height = parentHeight;
+                var heightMeasureMode = MeasureMode.Exactly;
+                if (FloatIsUndefined(height) ) {
+                    heightMeasureMode = MeasureMode.Undefined;
+                }
+                out_height = height;
+                out_measureMode = heightMeasureMode;
+                return;
+            }
+        }
 
-        //     width, widthMeasureMode := calcStartWidth(node, parentWidth)
-        //     height, heightMeasureMode := calcStartHeight(node, parentWidth, parentHeight)
+        // CalculateLayout calculates layout
+        internal static void CalculateLayout(Node node, float parentWidth, float parentHeight, Direction parentDirection) {
+            // Increment the generation count. This will force the recursive routine to
+            // visit
+            // all dirty nodes at least once. Subsequent visits will be skipped if the
+            // input
+            // parameters don't change.
+            currentGenerationCount++;
 
-        //     if layoutNodeInternal(node, width, height, parentDirection,
-        //         widthMeasureMode, heightMeasureMode, parentWidth, parentHeight,
-        //         true, "initial", node.Config) {
-        //         nodeSetPosition(node, node.Layout.Direction, parentWidth, parentHeight, parentWidth)
-        //         roundToPixelGrid(node, node.Config.PointScaleFactor, 0, 0)
+            resolveDimensions(node);
 
-        //         if (gPrintTree ) {
-        //             NodePrint(node, PrintOptionsLayout|PrintOptionsChildren|PrintOptionsStyle)
-        //         }
-        //     }
-        // }
+            calcStartWidth(node, parentWidth, out float width, out MeasureMode widthMeasureMode);
+            calcStartHeight(node, parentWidth, parentHeight, out float height, out MeasureMode heightMeasureMode);
+
+            if (layoutNodeInternal(node, width, height, parentDirection,
+                widthMeasureMode, heightMeasureMode, parentWidth, parentHeight,
+                true, "initial", node.config)) {
+                nodeSetPosition(node, node.nodeLayout.Direction, parentWidth, parentHeight, parentWidth);
+                roundToPixelGrid(node, node.config.PointScaleFactor, 0, 0);
+
+                if (gPrintTree ) {
+                    // NodePrint(node, PrintOptionsLayout|PrintOptionsChildren|PrintOptionsStyle);
+                    System.Console.WriteLine("NodePrint(node, PrintOptionsLayout|PrintOptionsChildren|PrintOptionsStyle);");
+                }
+            }
+        }
 
 
         internal static void log(Node node, LogLevel level, string format, params object[] args) {
