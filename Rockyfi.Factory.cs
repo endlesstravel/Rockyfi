@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Rockyfi
 {
     // MeasureFunc describes function for measuring
-    internal delegate Size MeasureFunc(Node node, float width, MeasureMode widthMode, float height, MeasureMode heightMode);
+    public delegate Size MeasureFunc(Node node, float width, MeasureMode widthMode, float height, MeasureMode heightMode);
 
     // PrintFunc defines function for printing
     internal delegate void PrintFunc(Node node);

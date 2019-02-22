@@ -5,6 +5,37 @@ using System.Collections.Generic;
 
 namespace Rockyfi
 {
+    class InnerFunc
+    {
+        static internal float fmaxf(float a, float b)
+        {
+	        if (float.IsNaN(a)) {
+                return b;
+	        }
+	        if (float.IsNaN(b)) {
+                return a;
+	        }
+	        // TODO: signed zeros
+	        if (a > b) {
+                return a;
+	        }
+            return b;
+        }
+        static internal float fminf(float a, float b)
+        {
+	        if (float.IsNaN(a)) {
+                return b;
+	        }
+	        if (float.IsNaN(b)) {
+                return a;
+	        }
+	        // TODO: signed zeros
+	        if (a < b) {
+                return a;
+	        }
+            return b;
+        }
+    }
 
     class Constant
     {
@@ -629,7 +660,7 @@ namespace Rockyfi
                 return resolveValue(node.nodeStyle.Padding[(int)Edge.Start], widthSize);
             }
 
-            return System.Math.Max(resolveValue(computedEdgeValue(node.nodeStyle.Padding, leading[(int)axis], ValueZero), widthSize), 0);
+            return InnerFunc.fmaxf(resolveValue(computedEdgeValue(node.nodeStyle.Padding, leading[(int)axis], ValueZero), widthSize), 0);
         }
 
         internal static float nodeTrailingPadding(Node node, FlexDirection axis, float widthSize) {
@@ -638,7 +669,7 @@ namespace Rockyfi
                 return resolveValue(node.nodeStyle.Padding[(int)Edge.End], widthSize);
             }
 
-            return System.Math.Max(resolveValue(computedEdgeValue(node.nodeStyle.Padding, trailing[(int)axis], ValueZero), widthSize), 0);
+            return InnerFunc.fmaxf(resolveValue(computedEdgeValue(node.nodeStyle.Padding, trailing[(int)axis], ValueZero), widthSize), 0);
         }
 
         internal static float nodeLeadingBorder(Node node, FlexDirection axis) {
@@ -647,7 +678,7 @@ namespace Rockyfi
                 return node.nodeStyle.Border[(int)Edge.Start].value;
             }
 
-            return System.Math.Max(computedEdgeValue(node.nodeStyle.Border, leading[(int)axis], ValueZero).value, 0);
+            return InnerFunc.fmaxf(computedEdgeValue(node.nodeStyle.Border, leading[(int)axis], ValueZero).value, 0);
         }
 
         internal static float nodeTrailingBorder(Node node, FlexDirection axis) {
@@ -656,7 +687,7 @@ namespace Rockyfi
                 return node.nodeStyle.Border[(int)Edge.End].value;
             }
 
-            return System.Math.Max(computedEdgeValue(node.nodeStyle.Border, trailing[(int)axis], ValueZero).value, 0);
+            return InnerFunc.fmaxf(computedEdgeValue(node.nodeStyle.Border, trailing[(int)axis], ValueZero).value, 0);
         }
 
         internal static float nodeLeadingPaddingAndBorder(Node node, FlexDirection axis, float widthSize) {
@@ -889,7 +920,7 @@ namespace Rockyfi
         // nodeBoundAxis is like nodeBoundAxisWithinMinAndMax but also ensures that
         // the value doesn't go below the padding and border amount.
         internal static float nodeBoundAxis(Node node, FlexDirection axis, float value, float axisSize, float widthSize) {
-            return System.Math.Max(nodeBoundAxisWithinMinAndMax(node, axis, value, axisSize),
+            return InnerFunc.fmaxf(nodeBoundAxisWithinMinAndMax(node, axis, value, axisSize),
                 nodePaddingAndBorderForAxis(node, axis, widthSize));
         }
 
@@ -983,17 +1014,17 @@ namespace Rockyfi
                     (child.config.IsExperimentalFeatureEnabled(ExperimentalFeature.WebFlexBasis) &&
                         child.nodeLayout.computedFlexBasisGeneration != currentGenerationCount)) {
                     child.nodeLayout.computedFlexBasis =
-                        System.Math.Max(resolvedFlexBasis, nodePaddingAndBorderForAxis(child, mainAxis, parentWidth));
+                        InnerFunc.fmaxf(resolvedFlexBasis, nodePaddingAndBorderForAxis(child, mainAxis, parentWidth));
                 }
             } else if (isMainAxisRow && isRowStyleDimDefined ) {
                 // The width is definite, so use that as the flex basis.
                 child.nodeLayout.computedFlexBasis =
-                    System.Math.Max(resolveValue(child.resolvedDimensions[(int)Dimension.Width], parentWidth),
+                    InnerFunc.fmaxf(resolveValue(child.resolvedDimensions[(int)Dimension.Width], parentWidth),
                         nodePaddingAndBorderForAxis(child, FlexDirection.Row, parentWidth));
             } else if (!isMainAxisRow && isColumnStyleDimDefined ) {
                 // The height is definite, so use that as the flex basis.
                 child.nodeLayout.computedFlexBasis =
-                    System.Math.Max(resolveValue(child.resolvedDimensions[(int)Dimension.Height], parentHeight),
+                    InnerFunc.fmaxf(resolveValue(child.resolvedDimensions[(int)Dimension.Height], parentHeight),
                         nodePaddingAndBorderForAxis(child, FlexDirection.Column, parentWidth));
             } else {
                 // Compute the flex basis and hypothetical main size (i.e. the clamped
@@ -1052,12 +1083,12 @@ namespace Rockyfi
                 if (!FloatIsUndefined(child.nodeStyle.AspectRatio) ) {
                     if (!isMainAxisRow && childWidthMeasureMode == MeasureMode.Exactly ) {
                         child.nodeLayout.computedFlexBasis =
-                            System.Math.Max((childWidth-marginRow)/child.nodeStyle.AspectRatio,
+                            InnerFunc.fmaxf((childWidth-marginRow)/child.nodeStyle.AspectRatio,
                                 nodePaddingAndBorderForAxis(child, FlexDirection.Column, parentWidth));
                         return;
                     } else if (isMainAxisRow && childHeightMeasureMode == MeasureMode.Exactly ) {
                         child.nodeLayout.computedFlexBasis =
-                            System.Math.Max((childHeight-marginColumn)*child.nodeStyle.AspectRatio,
+                            InnerFunc.fmaxf((childHeight-marginColumn)*child.nodeStyle.AspectRatio,
                                 nodePaddingAndBorderForAxis(child, FlexDirection.Row, parentWidth));
                         return;
                     }
@@ -1086,7 +1117,7 @@ namespace Rockyfi
                     config);
 
                 child.nodeLayout.computedFlexBasis =
-                    System.Math.Max(child.nodeLayout.measuredDimensions[(int)dim[(int)mainAxis]],
+                    InnerFunc.fmaxf(child.nodeLayout.measuredDimensions[(int)dim[(int)mainAxis]],
                         nodePaddingAndBorderForAxis(child, mainAxis, parentWidth));
             }
 
@@ -1147,11 +1178,11 @@ namespace Rockyfi
                 if (!FloatIsUndefined(child.nodeStyle.AspectRatio) ) {
                     if (FloatIsUndefined(childWidth) ) {
                         childWidth =
-                            marginRow + System.Math.Max((childHeight-marginColumn)*child.nodeStyle.AspectRatio,
+                            marginRow + InnerFunc.fmaxf((childHeight-marginColumn)*child.nodeStyle.AspectRatio,
                                 nodePaddingAndBorderForAxis(child, FlexDirection.Column, width));
                     } else if (FloatIsUndefined(childHeight) ) {
                         childHeight =
-                            marginColumn + System.Math.Max((childWidth-marginRow)/child.nodeStyle.AspectRatio,
+                            marginColumn + InnerFunc.fmaxf((childWidth-marginRow)/child.nodeStyle.AspectRatio,
                                 nodePaddingAndBorderForAxis(child, FlexDirection.Row, width));
                     }
                 }
@@ -1262,11 +1293,11 @@ namespace Rockyfi
             var marginAxisColumn = nodeMarginForAxis(node, FlexDirection.Column, availableWidth);
 
             // We want to make sure we don't call measure with negative size
-            var innerWidth = System.Math.Max(0, availableWidth-marginAxisRow-paddingAndBorderAxisRow);
+            var innerWidth = InnerFunc.fmaxf(0, availableWidth-marginAxisRow-paddingAndBorderAxisRow);
             if (FloatIsUndefined(availableWidth) ) {
                 innerWidth = availableWidth;
             }
-            var innerHeight = System.Math.Max(0, availableHeight-marginAxisColumn-paddingAndBorderAxisColumn);
+            var innerHeight = InnerFunc.fmaxf(0, availableHeight-marginAxisColumn-paddingAndBorderAxisColumn);
             if (FloatIsUndefined(availableHeight) ) {
                 innerHeight = availableHeight;
             }
@@ -1571,13 +1602,13 @@ namespace Rockyfi
             var availableInnerWidth = availableWidth - marginAxisRow - paddingAndBorderAxisRow;
             if (!FloatIsUndefined(availableInnerWidth) ) {
                 // We want to make sure our available width does not violate min and max raints
-                availableInnerWidth = System.Math.Max(System.Math.Min(availableInnerWidth, maxInnerWidth), minInnerWidth);
+                availableInnerWidth = InnerFunc.fmaxf(InnerFunc.fminf(availableInnerWidth, maxInnerWidth), minInnerWidth);
             }
 
             var availableInnerHeight = availableHeight - marginAxisColumn - paddingAndBorderAxisColumn;
             if (!FloatIsUndefined(availableInnerHeight) ) {
                 // We want to make sure our available height does not violate min and max raints
-                availableInnerHeight = System.Math.Max(System.Math.Min(availableInnerHeight, maxInnerHeight), minInnerHeight);
+                availableInnerHeight = InnerFunc.fmaxf(InnerFunc.fminf(availableInnerHeight, maxInnerHeight), minInnerHeight);
             }
 
             var availableInnerMainDim = availableInnerHeight;
@@ -1717,8 +1748,8 @@ namespace Rockyfi
 
                     if (child.nodeStyle.PositionType != PositionType.Absolute ) {
                         var childMarginMainAxis = nodeMarginForAxis(child, mainAxis, availableInnerWidth);
-                        var flexBasisWithMaxConstraints = System.Math.Min(resolveValue(child.nodeStyle.MaxDimensions[(int)dim[(int)mainAxis]], mainAxisParentSize), child.nodeLayout.computedFlexBasis);
-                        var flexBasisWithMinAndMaxConstraints = System.Math.Max(resolveValue(child.nodeStyle.MinDimensions[(int)dim[(int)mainAxis]], mainAxisParentSize), flexBasisWithMaxConstraints);
+                        var flexBasisWithMaxConstraints = InnerFunc.fminf(resolveValue(child.nodeStyle.MaxDimensions[(int)dim[(int)mainAxis]], mainAxisParentSize), child.nodeLayout.computedFlexBasis);
+                        var flexBasisWithMinAndMaxConstraints = InnerFunc.fmaxf(resolveValue(child.nodeStyle.MinDimensions[(int)dim[(int)mainAxis]], mainAxisParentSize), flexBasisWithMaxConstraints);
 
                         // If this is a multi-line flow and this item pushes us over the
                         // available size, we've
@@ -1848,9 +1879,9 @@ namespace Rockyfi
                     currentRelativeChild = firstRelativeChild;
                     while (currentRelativeChild != null) {
                         childFlexBasis =
-                            System.Math.Min(resolveValue(currentRelativeChild.nodeStyle.MaxDimensions[(int)dim[(int)mainAxis]],
+                            InnerFunc.fminf(resolveValue(currentRelativeChild.nodeStyle.MaxDimensions[(int)dim[(int)mainAxis]],
                                 mainAxisParentSize),
-                                System.Math.Max(resolveValue(currentRelativeChild.nodeStyle.MinDimensions[(int)dim[(int)mainAxis]],
+                                InnerFunc.fmaxf(resolveValue(currentRelativeChild.nodeStyle.MinDimensions[(int)dim[(int)mainAxis]],
                                     mainAxisParentSize),
                                     currentRelativeChild.nodeLayout.computedFlexBasis));
 
@@ -1916,9 +1947,9 @@ namespace Rockyfi
                     currentRelativeChild = firstRelativeChild;
                     while (currentRelativeChild != null) {
                         childFlexBasis =
-                            System.Math.Min(resolveValue(currentRelativeChild.nodeStyle.MaxDimensions[(int)dim[(int)mainAxis]],
+                            InnerFunc.fminf(resolveValue(currentRelativeChild.nodeStyle.MaxDimensions[(int)dim[(int)mainAxis]],
                                 mainAxisParentSize),
-                                System.Math.Max(resolveValue(currentRelativeChild.nodeStyle.MinDimensions[(int)dim[(int)mainAxis]],
+                                InnerFunc.fmaxf(resolveValue(currentRelativeChild.nodeStyle.MinDimensions[(int)dim[(int)mainAxis]],
                                     mainAxisParentSize),
                                     currentRelativeChild.nodeLayout.computedFlexBasis));
                         float updatedMainSize = childFlexBasis;
@@ -2000,12 +2031,12 @@ namespace Rockyfi
                             if (isMainAxisRow ) {
                                 v = (childMainSize - marginMain) / currentRelativeChild.nodeStyle.AspectRatio;
                             }
-                            childCrossSize = System.Math.Max(v, nodePaddingAndBorderForAxis(currentRelativeChild, crossAxis, availableInnerWidth));
+                            childCrossSize = InnerFunc.fmaxf(v, nodePaddingAndBorderForAxis(currentRelativeChild, crossAxis, availableInnerWidth));
                             childCrossMeasureMode = MeasureMode.Exactly;
 
                             // Parent size raint should have higher priority than flex
                             if (nodeIsFlex(currentRelativeChild) ) {
-                                childCrossSize = System.Math.Min(childCrossSize-marginCross, availableInnerCrossDim);
+                                childCrossSize = InnerFunc.fminf(childCrossSize-marginCross, availableInnerCrossDim);
                                 childMainSize = marginMain;
                                 if (isMainAxisRow ) {
                                     childMainSize += childCrossSize * currentRelativeChild.nodeStyle.AspectRatio;
@@ -2093,7 +2124,7 @@ namespace Rockyfi
                     if (node.nodeStyle.MinDimensions[(int)dim[(int)mainAxis]].unit != Unit.Undefined &&
                         resolveValue(node.nodeStyle.MinDimensions[(int)dim[(int)mainAxis]], mainAxisParentSize) >= 0) {
                         remainingFreeSpace =
-                            System.Math.Max(0,
+                            InnerFunc.fmaxf(0,
                                 resolveValue(node.nodeStyle.MinDimensions[(int)dim[(int)mainAxis]], mainAxisParentSize)-
                                     (availableInnerMainDim-remainingFreeSpace));
                     } else {
@@ -2124,7 +2155,7 @@ namespace Rockyfi
                         break;
                     case Justify.SpaceBetween:
                         if (itemsOnLine > 1 ) {
-                            betweenMainDim = System.Math.Max(remainingFreeSpace, 0) / (float)(itemsOnLine-1);
+                            betweenMainDim = InnerFunc.fmaxf(remainingFreeSpace, 0) / (float)(itemsOnLine-1);
                         } else {
                             betweenMainDim = 0;
                         }
@@ -2188,7 +2219,7 @@ namespace Rockyfi
 
                                 // The cross dimension is the max of the elements dimension since
                                 // there can only be one element in that cross dimension.
-                                crossDim = System.Math.Max(crossDim, nodeDimWithMargin(child, crossAxis, availableInnerWidth));
+                                crossDim = InnerFunc.fmaxf(crossDim, nodeDimWithMargin(child, crossAxis, availableInnerWidth));
                             }
                         } else if (performLayout ) {
                             child.nodeLayout.Position[(int)pos[(int)mainAxis]] +=
@@ -2329,11 +2360,11 @@ namespace Rockyfi
 
                                 if (marginLeadingValue(child, crossAxis).unit == Unit.Auto &&
                                     marginTrailingValue(child, crossAxis).unit == Unit.Auto) {
-                                    leadingCrossDim += System.Math.Max(0, remainingCrossDim/2);
+                                    leadingCrossDim += InnerFunc.fmaxf(0, remainingCrossDim/2);
                                 } else if (marginTrailingValue(child, crossAxis).unit == Unit.Auto ) {
                                     // No-Op
                                 } else if (marginLeadingValue(child, crossAxis).unit == Unit.Auto ) {
-                                    leadingCrossDim += System.Math.Max(0, remainingCrossDim);
+                                    leadingCrossDim += InnerFunc.fmaxf(0, remainingCrossDim);
                                 } else if (alignItem == Align.FlexStart ) {
                                     // No-Op
                                 } else if (alignItem == Align.Center ) {
@@ -2349,7 +2380,7 @@ namespace Rockyfi
                 }
 
                 totalLineCrossDim += crossDim;
-                maxLineMainDim = System.Math.Max(maxLineMainDim, mainDim);
+                maxLineMainDim = InnerFunc.fmaxf(maxLineMainDim, mainDim);
 
                 lineCount++;
                 startOfLineIndex = endOfLineIndex;
@@ -2398,7 +2429,7 @@ namespace Rockyfi
                 }
 
                 int endIndex = 0;
-                for (int i = 0; i < lineCount++; i++) {
+                for (int i = 0; i < lineCount; i++) {
                     int startIndex = endIndex;
                     int ii = 0;
 
@@ -2416,16 +2447,16 @@ namespace Rockyfi
                                 break;
                             }
                             if (nodeIsLayoutDimDefined(child, crossAxis) ) {
-                                lineHeight = System.Math.Max(lineHeight,
+                                lineHeight = InnerFunc.fmaxf(lineHeight,
                                     child.nodeLayout.measuredDimensions[(int)dim[(int)crossAxis]]+
                                         nodeMarginForAxis(child, crossAxis, availableInnerWidth));
                             }
                             if (nodeAlignItem(node, child) == Align.Baseline ) {
                                 float ascent = Baseline(child) + nodeLeadingMargin(child, FlexDirection.Column, availableInnerWidth);
                                 float descent = child.nodeLayout.measuredDimensions[(int)Dimension.Height] + nodeMarginForAxis(child, FlexDirection.Column, availableInnerWidth) - ascent;
-                                maxAscentForCurrentLine = System.Math.Max(maxAscentForCurrentLine, ascent);
-                                maxDescentForCurrentLine = System.Math.Max(maxDescentForCurrentLine, descent);
-                                lineHeight = System.Math.Max(lineHeight, maxAscentForCurrentLine+maxDescentForCurrentLine);
+                                maxAscentForCurrentLine = InnerFunc.fmaxf(maxAscentForCurrentLine, ascent);
+                                maxDescentForCurrentLine = InnerFunc.fmaxf(maxDescentForCurrentLine, descent);
+                                lineHeight = InnerFunc.fmaxf(lineHeight, maxAscentForCurrentLine+maxDescentForCurrentLine);
                             }
                         }
                     }
@@ -2535,8 +2566,8 @@ namespace Rockyfi
                     nodeBoundAxis(node, mainAxis, maxLineMainDim, mainAxisParentSize, parentWidth);
             } else if (measureModeMainDim == MeasureMode.AtMost &&
                 node.nodeStyle.Overflow == Overflow.Scroll) {
-                node.nodeLayout.measuredDimensions[(int)dim[(int)mainAxis]] = System.Math.Max(
-                    System.Math.Min(availableInnerMainDim+paddingAndBorderAxisMain,
+                node.nodeLayout.measuredDimensions[(int)dim[(int)mainAxis]] = InnerFunc.fmaxf(
+                    InnerFunc.fminf(availableInnerMainDim+paddingAndBorderAxisMain,
                         nodeBoundAxisWithinMinAndMax(node, mainAxis, maxLineMainDim, mainAxisParentSize)),
                     paddingAndBorderAxisMain);
             }
@@ -2554,7 +2585,7 @@ namespace Rockyfi
             } else if (measureModeCrossDim == MeasureMode.AtMost &&
                 node.nodeStyle.Overflow == Overflow.Scroll) {
                 node.nodeLayout.measuredDimensions[(int)dim[(int)crossAxis]] =
-                    System.Math.Max(System.Math.Min(availableInnerCrossDim+paddingAndBorderAxisCross,
+                    InnerFunc.fmaxf(InnerFunc.fminf(availableInnerCrossDim+paddingAndBorderAxisCross,
                         nodeBoundAxisWithinMinAndMax(node,
                             crossAxis,
                             totalLineCrossDim+paddingAndBorderAxisCross,

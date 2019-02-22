@@ -3,6 +3,7 @@ namespace Rockyfi
 {
     public partial class Node
     {
+        #region Style
         // StyleSetWidth sets width
         public void StyleSetWidth(float width) {
             var dim = this.nodeStyle.Dimensions[(int)Dimension.Width];
@@ -561,6 +562,24 @@ namespace Rockyfi
             }
             return this.nodeLayout.Padding[(int)edge];
         }
+        #endregion
 
+        #region other props
+        public void SetMeasureFunc(MeasureFunc func)
+        {
+            Node.SetMeasureFunc(this, func);
+        }
+        public void SetBaselineFunc(BaselineFunc func)
+        {
+            this.baselineFunc = func;
+        }
+        #endregion
+
+        #region tree
+        public void InsertChild(Node child, int idx)
+        {
+            Node.InsertChild(this, child, idx);
+        }
+        #endregion
     }
 }

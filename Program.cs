@@ -27,7 +27,7 @@ namespace FlexCs
 
             factory.Draw((x, y, w, h, node) =>
             {
-                Console.WriteLine($"{node.Atrribute["id"]}    {x}  {y}  {w}  {h}");
+                //Console.WriteLine($"{node.Atrribute["id"]}    {x}  {y}  {w}  {h}");
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{node.Atrribute["id"]}", x, y - 10);
             });
@@ -36,7 +36,7 @@ namespace FlexCs
         static void Main(string[] args)
         {
             var t = new Rockyfi.RociyfiTest();
-            t.TestAll();
+            t.XTestAll();
             Boot.Init(new BootConfig
             {
 
