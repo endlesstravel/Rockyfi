@@ -15,7 +15,31 @@ namespace Rockyfi
                 throw new Exception();
             }
         }
-        #if true
+
+        static void assertEqual(object a, object b)
+        {
+            if (a != b)
+            {
+                throw new Exception();
+            }
+        }
+
+        static void assertTrue(bool value)
+        {
+            if (!value)
+            {
+                throw new Exception();
+            }
+        }
+
+        static void assertFalse(bool value)
+        {
+            if (value)
+            {
+                throw new Exception();
+            }
+        }
+
         #region absolute
         void TestAbsoluteLayoutWidthHeightStartTop()
         {
@@ -932,9 +956,7 @@ namespace Rockyfi
             assertFloatEqual(20, rootChild0.LayoutGetHeight());
         }
         #endregion
-        #endif
         
-        #if true
         #region align_content_test
         void TestAlignContentFlexStart()
         {
@@ -2749,9 +2771,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0Child0.LayoutGetHeight());
         }
         #endregion
-        #endif
         
-        #if true
         #region align_self_test.go
         void TestAlign_self_center()
         {
@@ -2976,9 +2996,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild1child0.LayoutGetHeight());
         }
         #endregion
-        #endif
 
-        #if true
         #region aspect_ration_test.go
         static Size _measure(Node node, float width, MeasureMode widthMode,
             float height, MeasureMode heightMode)
@@ -3691,9 +3709,7 @@ namespace Rockyfi
         }
 
         #endregion
-        #endif
 
-        #if true
         #region baseline_func_test.go
         static float baselineFunc(Node node, float width, float height) {
 	        return (float)node.Context;
@@ -3746,8 +3762,8233 @@ namespace Rockyfi
 	        assertFloatEqual(20, rootChild1child0.LayoutGetHeight());
         }
         #endregion
-        #endif
 
+        #region border_test.go
+        void TestBorder_no_size()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetBorder(Edge.Left, 10);
+            root.StyleSetBorder(Edge.Top, 10);
+            root.StyleSetBorder(Edge.Right, 10);
+            root.StyleSetBorder(Edge.Bottom, 10);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(20, root.LayoutGetWidth());
+            assertFloatEqual(20, root.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(20, root.LayoutGetWidth());
+            assertFloatEqual(20, root.LayoutGetHeight());
+        }
+
+        void TestBorder_container_match_child()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetBorder(Edge.Left, 10);
+            root.StyleSetBorder(Edge.Top, 10);
+            root.StyleSetBorder(Edge.Right, 10);
+            root.StyleSetBorder(Edge.Bottom, 10);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(30, root.LayoutGetWidth());
+            assertFloatEqual(30, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(30, root.LayoutGetWidth());
+            assertFloatEqual(30, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+        }
+
+        void TestBorder_flex_child()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetBorder(Edge.Left, 10);
+            root.StyleSetBorder(Edge.Top, 10);
+            root.StyleSetBorder(Edge.Right, 10);
+            root.StyleSetBorder(Edge.Bottom, 10);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+        }
+
+        void TestBorder_stretch_child()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetBorder(Edge.Left, 10);
+            root.StyleSetBorder(Edge.Top, 10);
+            root.StyleSetBorder(Edge.Right, 10);
+            root.StyleSetBorder(Edge.Bottom, 10);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(80, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(80, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+        }
+
+        void TestBorder_center_child()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetBorder(Edge.Start, 10);
+            root.StyleSetBorder(Edge.End, 20);
+            root.StyleSetBorder(Edge.Bottom, 20);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild0.LayoutGetLeft());
+            assertFloatEqual(35, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(35, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+        }
+
+        #endregion
+
+        #region compute_margin_test.go
+        void TestComputed_layout_margin()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+            root.StyleSetMarginPercent(Edge.Start, 10);
+
+            Node.CalculateLayout(root, 100, 100, Direction.LTR);
+
+            assertFloatEqual(10, root.LayoutGetMargin(Edge.Left));
+            assertFloatEqual(0, root.LayoutGetMargin(Edge.Right));
+
+            Node.CalculateLayout(root, 100, 100, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetMargin(Edge.Left));
+            assertFloatEqual(10, root.LayoutGetMargin(Edge.Right));
+        }
+
+        #endregion
+
+        #region compute_padding_test.go
+
+        void TestComputed_layout_padding()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+            root.StyleSetPaddingPercent(Edge.Start, 10);
+
+            Node.CalculateLayout(root, 100, 100, Direction.LTR);
+
+            assertFloatEqual(10, root.LayoutGetPadding(Edge.Left));
+            assertFloatEqual(0, root.LayoutGetPadding(Edge.Right));
+
+            Node.CalculateLayout(root, 100, 100, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetPadding(Edge.Left));
+            assertFloatEqual(10, root.LayoutGetPadding(Edge.Right));
+        }
+
+        #endregion
+
+        #region dimension_test.go
+        void TestWrap_child()
+        {
+
+            var root = Node.CreateDefaultNode();
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(100);
+            rootChild0.StyleSetHeight(100);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+        }
+
+        void TestWrap_grandchild()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+
+            var rootChild0 = Node.CreateDefaultNode();
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetWidth(100);
+            rootChild0Child0.StyleSetHeight(100);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetHeight());
+        }
+
+        #endregion
+
+        #region dirty_marking_test.go
+        void TestDirty_propagation()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.FlexStart);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(20);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(20);
+            root.InsertChild(rootChild1, 1);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            rootChild0.StyleSetWidth(20);
+
+            assertTrue(rootChild0.IsDirty);
+            assertFalse(rootChild1.IsDirty);
+            assertTrue(root.IsDirty);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFalse(rootChild0.IsDirty);
+            assertFalse(rootChild1.IsDirty);
+            assertFalse(root.IsDirty);
+
+        }
+
+        void TestDirty_propagation_only_if_prop_changed()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.FlexStart);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(20);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(20);
+            root.InsertChild(rootChild1, 1);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            rootChild0.StyleSetWidth(50);
+
+            assertFalse(rootChild0.IsDirty);
+            assertFalse(rootChild1.IsDirty);
+            assertFalse(root.IsDirty);
+
+        }
+
+        void TestDirty_mark_all_children_as_dirty_when_display_changes()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetHeight(100);
+
+            var child0 = Node.CreateDefaultNode();
+            child0.StyleSetFlexGrow(1);
+            var child1 = Node.CreateDefaultNode();
+            child1.StyleSetFlexGrow(1);
+
+            var child1Child0 = Node.CreateDefaultNode();
+            var child1Child0Child0 = Node.CreateDefaultNode();
+            child1Child0Child0.StyleSetWidth(8);
+            child1Child0Child0.StyleSetHeight(16);
+
+            child1Child0.InsertChild(child1Child0Child0, 0);
+
+            child1.InsertChild(child1Child0, 0);
+            root.InsertChild(child0, 0);
+            root.InsertChild(child1, 0);
+
+            child0.StyleSetDisplay(Display.Flex);
+            child1.StyleSetDisplay(Display.None);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(0, child1Child0Child0.LayoutGetWidth());
+            assertFloatEqual(0, child1Child0Child0.LayoutGetHeight());
+
+            child0.StyleSetDisplay(Display.None);
+            child1.StyleSetDisplay(Display.Flex);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(8, child1Child0Child0.LayoutGetWidth());
+            assertFloatEqual(16, child1Child0Child0.LayoutGetHeight());
+
+            child0.StyleSetDisplay(Display.Flex);
+            child1.StyleSetDisplay(Display.None);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(0, child1Child0Child0.LayoutGetWidth());
+            assertFloatEqual(0, child1Child0Child0.LayoutGetHeight());
+
+            child0.StyleSetDisplay(Display.None);
+            child1.StyleSetDisplay(Display.Flex);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(8, child1Child0Child0.LayoutGetWidth());
+            assertFloatEqual(16, child1Child0Child0.LayoutGetHeight());
+        }
+
+        void TestDirty_node_only_if_children_are_actually_removed()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.FlexStart);
+            root.StyleSetWidth(50);
+            root.StyleSetHeight(50);
+
+            var child0 = Node.CreateDefaultNode();
+            child0.StyleSetWidth(50);
+            child0.StyleSetHeight(25);
+            root.InsertChild(child0, 0);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            var child1 = Node.CreateDefaultNode();
+            root.RemoveChild(child1);
+            assertFalse(root.IsDirty);
+
+            root.RemoveChild(child0);
+            assertTrue(root.IsDirty);
+        }
+
+        #endregion
+
+        #region display_test.go
+        void TestDisplay_none()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            rootChild1.StyleSetDisplay(Display.None);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+        }
+
+        void TestDisplay_none_fixed_size()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(20);
+            rootChild1.StyleSetHeight(20);
+            rootChild1.StyleSetDisplay(Display.None);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+        }
+
+        void TestDisplay_none_with_margin()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMargin(Edge.Left, 10);
+            rootChild0.StyleSetMargin(Edge.Top, 10);
+            rootChild0.StyleSetMargin(Edge.Right, 10);
+            rootChild0.StyleSetMargin(Edge.Bottom, 10);
+            rootChild0.StyleSetWidth(20);
+            rootChild0.StyleSetHeight(20);
+            rootChild0.StyleSetDisplay(Display.None);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+        }
+
+        void TestDisplay_none_with_child()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexShrink(1);
+            rootChild0.StyleSetFlexBasisPercent(0);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            rootChild1.StyleSetFlexShrink(1);
+            rootChild1.StyleSetFlexBasisPercent(0);
+            rootChild1.StyleSetDisplay(Display.None);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild1child0 = Node.CreateDefaultNode();
+            rootChild1child0.StyleSetFlexGrow(1);
+            rootChild1child0.StyleSetFlexShrink(1);
+            rootChild1child0.StyleSetFlexBasisPercent(0);
+            rootChild1child0.StyleSetWidth(20);
+            rootChild1child0.StyleSetMinWidth(0);
+            rootChild1child0.StyleSetMinHeight(0);
+            rootChild1.InsertChild(rootChild1child0, 0);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetFlexGrow(1);
+            rootChild2.StyleSetFlexShrink(1);
+            rootChild2.StyleSetFlexBasisPercent(0);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1child0.LayoutGetTop());
+            assertFloatEqual(0, rootChild1child0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1child0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(50, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1child0.LayoutGetTop());
+            assertFloatEqual(0, rootChild1child0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(50, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+        }
+
+        void TestDisplay_none_with_position()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            rootChild1.StyleSetPosition(Edge.Top, 10);
+            rootChild1.StyleSetDisplay(Display.None);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+        }
+
+        #endregion
+
+        #region edge_test.go
+        void TestStart_overrides()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Start, 10);
+            rootChild0.StyleSetMargin(Edge.Left, 20);
+            rootChild0.StyleSetMargin(Edge.Right, 20);
+            root.InsertChild(rootChild0, 0);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetRight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetRight());
+        }
+
+        void TestEnd_overrides()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.End, 10);
+            rootChild0.StyleSetMargin(Edge.Left, 20);
+            rootChild0.StyleSetMargin(Edge.Right, 20);
+            root.InsertChild(rootChild0, 0);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetRight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetRight());
+        }
+
+        void TestHorizontal_overridden()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Horizontal, 10);
+            rootChild0.StyleSetMargin(Edge.Left, 20);
+            root.InsertChild(rootChild0, 0);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetRight());
+        }
+
+        void TestVertical_overridden()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Column);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Vertical, 10);
+            rootChild0.StyleSetMargin(Edge.Top, 20);
+            root.InsertChild(rootChild0, 0);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(20, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetBottom());
+        }
+
+        void TestHorizontal_overrides_all()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Column);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Horizontal, 10);
+            rootChild0.StyleSetMargin(Edge.All, 20);
+            root.InsertChild(rootChild0, 0);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetRight());
+            assertFloatEqual(20, rootChild0.LayoutGetBottom());
+        }
+
+        void TestVertical_overrides_all()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Column);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Vertical, 10);
+            rootChild0.StyleSetMargin(Edge.All, 20);
+            root.InsertChild(rootChild0, 0);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(20, rootChild0.LayoutGetRight());
+            assertFloatEqual(10, rootChild0.LayoutGetBottom());
+        }
+
+        void TestAll_overridden()
+        {
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Column);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Left, 10);
+            rootChild0.StyleSetMargin(Edge.Top, 10);
+            rootChild0.StyleSetMargin(Edge.Right, 10);
+            rootChild0.StyleSetMargin(Edge.Bottom, 10);
+            rootChild0.StyleSetMargin(Edge.All, 20);
+            root.InsertChild(rootChild0, 0);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetRight());
+            assertFloatEqual(10, rootChild0.LayoutGetBottom());
+        }
+
+        #endregion
+
+        #region flex_direction_test.go
+        void TestFlex_direction_column_no_height()
+        {
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetHeight(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(30, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(10, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(20, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(30, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(10, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(20, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+        }
+
+        void TestFlex_direction_row_no_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(30, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(30, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+        }
+
+        void TestFlex_direction_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetHeight(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(10, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(20, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(10, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(20, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+        }
+
+        void TestFlex_direction_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(90, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+        }
+
+        void TestFlex_direction_column_reverse()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.ColumnReverse);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetHeight(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(90, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(80, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(70, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(90, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(80, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(70, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+        }
+
+        void TestFlex_direction_row_reverse()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.RowReverse);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(90, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+        }
+
+        #endregion
+
+        #region flex_test.go
+        void TestFlex_basis_flex_grow_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasis(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(75, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(75, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(25, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(75, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(75, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(25, rootChild1.LayoutGetHeight());
+        }
+
+        void TestFlex_basis_flex_grow_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasis(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(75, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(25, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(25, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(75, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(25, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+        }
+
+        void TestFlex_basis_flex_shrink_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexShrink(1);
+            rootChild0.StyleSetFlexBasis(100);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexBasis(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+        }
+
+        void TestFlex_basis_flex_shrink_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexShrink(1);
+            rootChild0.StyleSetFlexBasis(100);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexBasis(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+        }
+
+        void TestFlex_shrink_to_zero()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetHeight(75);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexShrink(1);
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(50);
+            rootChild2.StyleSetHeight(50);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(50, root.LayoutGetWidth());
+            assertFloatEqual(75, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(50, rootChild2.LayoutGetTop());
+            assertFloatEqual(50, rootChild2.LayoutGetWidth());
+            assertFloatEqual(50, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(50, root.LayoutGetWidth());
+            assertFloatEqual(75, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(50, rootChild2.LayoutGetTop());
+            assertFloatEqual(50, rootChild2.LayoutGetWidth());
+            assertFloatEqual(50, rootChild2.LayoutGetHeight());
+        }
+
+        void TestFlex_basis_overrides_main_size()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasis(50);
+            rootChild0.StyleSetHeight(20);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            rootChild1.StyleSetHeight(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetFlexGrow(1);
+            rootChild2.StyleSetHeight(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(60, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(60, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(80, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(20, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(60, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(60, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(80, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(20, rootChild2.LayoutGetHeight());
+        }
+
+        void TestFlex_grow_shrink_at_most()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetFlexGrow(1);
+            rootChild0Child0.StyleSetFlexShrink(1);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetHeight());
+        }
+
+        void TestFlex_grow_less_than_factor_one()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(500);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(0.2f);
+            rootChild0.StyleSetFlexBasis(40);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(0.2f);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetFlexGrow(0.4f);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(132, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(132, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(92, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(224, rootChild2.LayoutGetTop());
+            assertFloatEqual(200, rootChild2.LayoutGetWidth());
+            assertFloatEqual(184, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(132, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(132, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(92, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(224, rootChild2.LayoutGetTop());
+            assertFloatEqual(200, rootChild2.LayoutGetWidth());
+            assertFloatEqual(184, rootChild2.LayoutGetHeight());
+        }
+
+        #endregion
+
+        #region flex_wrap_test.go
+        void TestWrap_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexWrap(Wrap.Wrap);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(30);
+            rootChild0.StyleSetHeight(30);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(30);
+            rootChild1.StyleSetHeight(30);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(30);
+            rootChild2.StyleSetHeight(30);
+            root.InsertChild(rootChild2, 2);
+
+            var rootChild3 = Node.CreateDefaultNode();
+            rootChild3.StyleSetWidth(30);
+            rootChild3.StyleSetHeight(30);
+            root.InsertChild(rootChild3, 3);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(60, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(30, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(30, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(30, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(60, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild3.LayoutGetLeft());
+            assertFloatEqual(0, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(30, rootChild3.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(60, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(30, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild1.LayoutGetLeft());
+            assertFloatEqual(30, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(30, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild2.LayoutGetLeft());
+            assertFloatEqual(60, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild3.LayoutGetLeft());
+            assertFloatEqual(0, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(30, rootChild3.LayoutGetHeight());
+        }
+
+        void TestWrap_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetFlexWrap(Wrap.Wrap);
+            root.StyleSetWidth(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(30);
+            rootChild0.StyleSetHeight(30);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(30);
+            rootChild1.StyleSetHeight(30);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(30);
+            rootChild2.StyleSetHeight(30);
+            root.InsertChild(rootChild2, 2);
+
+            var rootChild3 = Node.CreateDefaultNode();
+            rootChild3.StyleSetWidth(30);
+            rootChild3.StyleSetHeight(30);
+            root.InsertChild(rootChild3, 3);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(60, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(30, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(30, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild3.LayoutGetLeft());
+            assertFloatEqual(30, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(30, rootChild3.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(60, root.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(30, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(30, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild3.LayoutGetLeft());
+            assertFloatEqual(30, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(30, rootChild3.LayoutGetHeight());
+        }
+
+        void TestWrap_row_align_items_flex_end()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetAlignItems(Align.FlexEnd);
+            root.StyleSetFlexWrap(Wrap.Wrap);
+            root.StyleSetWidth(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(30);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(30);
+            rootChild1.StyleSetHeight(20);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(30);
+            rootChild2.StyleSetHeight(30);
+            root.InsertChild(rootChild2, 2);
+
+            var rootChild3 = Node.CreateDefaultNode();
+            rootChild3.StyleSetWidth(30);
+            rootChild3.StyleSetHeight(30);
+            root.InsertChild(rootChild3, 3);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(60, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild1.LayoutGetLeft());
+            assertFloatEqual(10, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild3.LayoutGetLeft());
+            assertFloatEqual(30, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(30, rootChild3.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(60, root.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild1.LayoutGetLeft());
+            assertFloatEqual(10, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild3.LayoutGetLeft());
+            assertFloatEqual(30, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(30, rootChild3.LayoutGetHeight());
+        }
+
+        void TestWrap_row_align_items_center()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetFlexWrap(Wrap.Wrap);
+            root.StyleSetWidth(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(30);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(30);
+            rootChild1.StyleSetHeight(20);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(30);
+            rootChild2.StyleSetHeight(30);
+            root.InsertChild(rootChild2, 2);
+
+            var rootChild3 = Node.CreateDefaultNode();
+            rootChild3.StyleSetWidth(30);
+            rootChild3.StyleSetHeight(30);
+            root.InsertChild(rootChild3, 3);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(60, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild1.LayoutGetLeft());
+            assertFloatEqual(5, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild3.LayoutGetLeft());
+            assertFloatEqual(30, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(30, rootChild3.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(60, root.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild1.LayoutGetLeft());
+            assertFloatEqual(5, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild3.LayoutGetLeft());
+            assertFloatEqual(30, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(30, rootChild3.LayoutGetHeight());
+        }
+
+        void TestFlex_wrap_children_with_min_main_overriding_flex_basis()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetFlexWrap(Wrap.Wrap);
+            root.StyleSetWidth(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexBasis(50);
+            rootChild0.StyleSetMinWidth(55);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexBasis(50);
+            rootChild1.StyleSetMinWidth(55);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(55, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(55, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(45, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(55, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(45, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(55, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+        }
+
+        void TestFlex_wrap_wrap_to_child_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0.StyleSetAlignItems(Align.FlexStart);
+            rootChild0.StyleSetFlexWrap(Wrap.Wrap);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetWidth(100);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0Child0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0Child0.StyleSetWidth(100);
+            rootChild0Child0Child0.StyleSetHeight(100);
+            rootChild0Child0.InsertChild(rootChild0Child0Child0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(100);
+            rootChild1.StyleSetHeight(100);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0Child0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0Child0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(100, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0Child0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0Child0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(100, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+        }
+
+        void TestFlex_wrap_align_stretch_fits_one_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetFlexWrap(Wrap.Wrap);
+            root.StyleSetWidth(150);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(150, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(150, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+        }
+
+        void TestWrap_reverse_row_align_content_flex_start()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetFlexWrap(Wrap.WrapReverse);
+            root.StyleSetWidth(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(30);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(30);
+            rootChild1.StyleSetHeight(20);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(30);
+            rootChild2.StyleSetHeight(30);
+            root.InsertChild(rootChild2, 2);
+
+            var rootChild3 = Node.CreateDefaultNode();
+            rootChild3.StyleSetWidth(30);
+            rootChild3.StyleSetHeight(40);
+            root.InsertChild(rootChild3, 3);
+
+            var rootChild4 = Node.CreateDefaultNode();
+            rootChild4.StyleSetWidth(30);
+            rootChild4.StyleSetHeight(50);
+            root.InsertChild(rootChild4, 4);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(80, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(70, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild1.LayoutGetLeft());
+            assertFloatEqual(60, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild2.LayoutGetLeft());
+            assertFloatEqual(50, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild3.LayoutGetLeft());
+            assertFloatEqual(10, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(80, root.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild0.LayoutGetLeft());
+            assertFloatEqual(70, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild1.LayoutGetLeft());
+            assertFloatEqual(60, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild2.LayoutGetLeft());
+            assertFloatEqual(50, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild3.LayoutGetLeft());
+            assertFloatEqual(10, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+        }
+
+        void TestWrap_reverse_row_align_content_center()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetAlignContent(Align.Center);
+            root.StyleSetFlexWrap(Wrap.WrapReverse);
+            root.StyleSetWidth(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(30);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(30);
+            rootChild1.StyleSetHeight(20);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(30);
+            rootChild2.StyleSetHeight(30);
+            root.InsertChild(rootChild2, 2);
+
+            var rootChild3 = Node.CreateDefaultNode();
+            rootChild3.StyleSetWidth(30);
+            rootChild3.StyleSetHeight(40);
+            root.InsertChild(rootChild3, 3);
+
+            var rootChild4 = Node.CreateDefaultNode();
+            rootChild4.StyleSetWidth(30);
+            rootChild4.StyleSetHeight(50);
+            root.InsertChild(rootChild4, 4);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(80, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(70, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild1.LayoutGetLeft());
+            assertFloatEqual(60, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild2.LayoutGetLeft());
+            assertFloatEqual(50, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild3.LayoutGetLeft());
+            assertFloatEqual(10, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(80, root.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild0.LayoutGetLeft());
+            assertFloatEqual(70, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild1.LayoutGetLeft());
+            assertFloatEqual(60, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild2.LayoutGetLeft());
+            assertFloatEqual(50, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild3.LayoutGetLeft());
+            assertFloatEqual(10, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+        }
+
+        void TestWrap_reverse_row_single_line_different_size()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetFlexWrap(Wrap.WrapReverse);
+            root.StyleSetWidth(300);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(30);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(30);
+            rootChild1.StyleSetHeight(20);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(30);
+            rootChild2.StyleSetHeight(30);
+            root.InsertChild(rootChild2, 2);
+
+            var rootChild3 = Node.CreateDefaultNode();
+            rootChild3.StyleSetWidth(30);
+            rootChild3.StyleSetHeight(40);
+            root.InsertChild(rootChild3, 3);
+
+            var rootChild4 = Node.CreateDefaultNode();
+            rootChild4.StyleSetWidth(30);
+            rootChild4.StyleSetHeight(50);
+            root.InsertChild(rootChild4, 4);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(300, root.LayoutGetWidth());
+            assertFloatEqual(50, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(40, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild1.LayoutGetLeft());
+            assertFloatEqual(30, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild2.LayoutGetLeft());
+            assertFloatEqual(20, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(90, rootChild3.LayoutGetLeft());
+            assertFloatEqual(10, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(120, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(300, root.LayoutGetWidth());
+            assertFloatEqual(50, root.LayoutGetHeight());
+
+            assertFloatEqual(270, rootChild0.LayoutGetLeft());
+            assertFloatEqual(40, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(240, rootChild1.LayoutGetLeft());
+            assertFloatEqual(30, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(210, rootChild2.LayoutGetLeft());
+            assertFloatEqual(20, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(180, rootChild3.LayoutGetLeft());
+            assertFloatEqual(10, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+        }
+
+        void TestWrap_reverse_row_align_content_stretch()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetAlignContent(Align.Stretch);
+            root.StyleSetFlexWrap(Wrap.WrapReverse);
+            root.StyleSetWidth(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(30);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(30);
+            rootChild1.StyleSetHeight(20);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(30);
+            rootChild2.StyleSetHeight(30);
+            root.InsertChild(rootChild2, 2);
+
+            var rootChild3 = Node.CreateDefaultNode();
+            rootChild3.StyleSetWidth(30);
+            rootChild3.StyleSetHeight(40);
+            root.InsertChild(rootChild3, 3);
+
+            var rootChild4 = Node.CreateDefaultNode();
+            rootChild4.StyleSetWidth(30);
+            rootChild4.StyleSetHeight(50);
+            root.InsertChild(rootChild4, 4);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(80, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(70, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild1.LayoutGetLeft());
+            assertFloatEqual(60, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild2.LayoutGetLeft());
+            assertFloatEqual(50, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild3.LayoutGetLeft());
+            assertFloatEqual(10, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(80, root.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild0.LayoutGetLeft());
+            assertFloatEqual(70, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild1.LayoutGetLeft());
+            assertFloatEqual(60, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild2.LayoutGetLeft());
+            assertFloatEqual(50, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild3.LayoutGetLeft());
+            assertFloatEqual(10, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+        }
+
+        void TestWrap_reverse_row_align_content_space_around()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetAlignContent(Align.SpaceAround);
+            root.StyleSetFlexWrap(Wrap.WrapReverse);
+            root.StyleSetWidth(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(30);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(30);
+            rootChild1.StyleSetHeight(20);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(30);
+            rootChild2.StyleSetHeight(30);
+            root.InsertChild(rootChild2, 2);
+
+            var rootChild3 = Node.CreateDefaultNode();
+            rootChild3.StyleSetWidth(30);
+            rootChild3.StyleSetHeight(40);
+            root.InsertChild(rootChild3, 3);
+
+            var rootChild4 = Node.CreateDefaultNode();
+            rootChild4.StyleSetWidth(30);
+            rootChild4.StyleSetHeight(50);
+            root.InsertChild(rootChild4, 4);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(80, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(70, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild1.LayoutGetLeft());
+            assertFloatEqual(60, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild2.LayoutGetLeft());
+            assertFloatEqual(50, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild3.LayoutGetLeft());
+            assertFloatEqual(10, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(80, root.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild0.LayoutGetLeft());
+            assertFloatEqual(70, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild1.LayoutGetLeft());
+            assertFloatEqual(60, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild2.LayoutGetLeft());
+            assertFloatEqual(50, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(70, rootChild3.LayoutGetLeft());
+            assertFloatEqual(10, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+        }
+
+        void TestWrap_reverse_column_fixed_size()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetFlexWrap(Wrap.WrapReverse);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(30);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(30);
+            rootChild1.StyleSetHeight(20);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(30);
+            rootChild2.StyleSetHeight(30);
+            root.InsertChild(rootChild2, 2);
+
+            var rootChild3 = Node.CreateDefaultNode();
+            rootChild3.StyleSetWidth(30);
+            rootChild3.StyleSetHeight(40);
+            root.InsertChild(rootChild3, 3);
+
+            var rootChild4 = Node.CreateDefaultNode();
+            rootChild4.StyleSetWidth(30);
+            rootChild4.StyleSetHeight(50);
+            root.InsertChild(rootChild4, 4);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(170, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(170, rootChild1.LayoutGetLeft());
+            assertFloatEqual(10, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(170, rootChild2.LayoutGetLeft());
+            assertFloatEqual(30, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(170, rootChild3.LayoutGetLeft());
+            assertFloatEqual(60, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(140, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(30, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(10, rootChild1.LayoutGetTop());
+            assertFloatEqual(30, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(30, rootChild2.LayoutGetTop());
+            assertFloatEqual(30, rootChild2.LayoutGetWidth());
+            assertFloatEqual(30, rootChild2.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild3.LayoutGetLeft());
+            assertFloatEqual(60, rootChild3.LayoutGetTop());
+            assertFloatEqual(30, rootChild3.LayoutGetWidth());
+            assertFloatEqual(40, rootChild3.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild4.LayoutGetLeft());
+            assertFloatEqual(0, rootChild4.LayoutGetTop());
+            assertFloatEqual(30, rootChild4.LayoutGetWidth());
+            assertFloatEqual(50, rootChild4.LayoutGetHeight());
+        }
+
+        void TestWrapped_row_within_align_items_center()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0.StyleSetFlexWrap(Wrap.Wrap);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetWidth(150);
+            rootChild0Child0.StyleSetHeight(80);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0child1 = Node.CreateDefaultNode();
+            rootChild0child1.StyleSetWidth(80);
+            rootChild0child1.StyleSetHeight(80);
+            rootChild0.InsertChild(rootChild0child1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(160, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(150, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(80, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(80, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(160, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(150, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(120, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(80, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(80, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
+        }
+
+        void TestWrapped_row_within_align_items_flex_start()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.FlexStart);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0.StyleSetFlexWrap(Wrap.Wrap);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetWidth(150);
+            rootChild0Child0.StyleSetHeight(80);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0child1 = Node.CreateDefaultNode();
+            rootChild0child1.StyleSetWidth(80);
+            rootChild0child1.StyleSetHeight(80);
+            rootChild0.InsertChild(rootChild0child1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(160, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(150, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(80, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(80, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(160, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(150, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(120, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(80, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(80, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
+        }
+
+        void TestWrapped_row_within_align_items_flex_end()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.FlexEnd);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0.StyleSetFlexWrap(Wrap.Wrap);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetWidth(150);
+            rootChild0Child0.StyleSetHeight(80);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0child1 = Node.CreateDefaultNode();
+            rootChild0child1.StyleSetWidth(80);
+            rootChild0child1.StyleSetHeight(80);
+            rootChild0.InsertChild(rootChild0child1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(160, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(150, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(80, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(80, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(160, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(150, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(120, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(80, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(80, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
+        }
+
+        void TestWrapped_column_max_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetAlignContent(Align.Center);
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetFlexWrap(Wrap.Wrap);
+            root.StyleSetWidth(700);
+            root.StyleSetHeight(500);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(100);
+            rootChild0.StyleSetHeight(500);
+            rootChild0.StyleSetMaxHeight(200);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetMargin(Edge.Left, 20);
+            rootChild1.StyleSetMargin(Edge.Top, 20);
+            rootChild1.StyleSetMargin(Edge.Right, 20);
+            rootChild1.StyleSetMargin(Edge.Bottom, 20);
+            rootChild1.StyleSetWidth(200);
+            rootChild1.StyleSetHeight(200);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(100);
+            rootChild2.StyleSetHeight(100);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(700, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(250, rootChild0.LayoutGetLeft());
+            assertFloatEqual(30, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(200, rootChild1.LayoutGetLeft());
+            assertFloatEqual(250, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(200, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(420, rootChild2.LayoutGetLeft());
+            assertFloatEqual(200, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(700, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(350, rootChild0.LayoutGetLeft());
+            assertFloatEqual(30, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(300, rootChild1.LayoutGetLeft());
+            assertFloatEqual(250, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(200, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(180, rootChild2.LayoutGetLeft());
+            assertFloatEqual(200, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+        }
+
+        void TestWrapped_column_max_height_flex()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetAlignContent(Align.Center);
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetFlexWrap(Wrap.Wrap);
+            root.StyleSetWidth(700);
+            root.StyleSetHeight(500);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexShrink(1);
+            rootChild0.StyleSetFlexBasisPercent(0);
+            rootChild0.StyleSetWidth(100);
+            rootChild0.StyleSetHeight(500);
+            rootChild0.StyleSetMaxHeight(200);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            rootChild1.StyleSetFlexShrink(1);
+            rootChild1.StyleSetFlexBasisPercent(0);
+            rootChild1.StyleSetMargin(Edge.Left, 20);
+            rootChild1.StyleSetMargin(Edge.Top, 20);
+            rootChild1.StyleSetMargin(Edge.Right, 20);
+            rootChild1.StyleSetMargin(Edge.Bottom, 20);
+            rootChild1.StyleSetWidth(200);
+            rootChild1.StyleSetHeight(200);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(100);
+            rootChild2.StyleSetHeight(100);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(700, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(300, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(180, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(250, rootChild1.LayoutGetLeft());
+            assertFloatEqual(200, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(180, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(300, rootChild2.LayoutGetLeft());
+            assertFloatEqual(400, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(700, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(300, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(180, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(250, rootChild1.LayoutGetLeft());
+            assertFloatEqual(200, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(180, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(300, rootChild2.LayoutGetLeft());
+            assertFloatEqual(400, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+        }
+
+        void TestWrap_nodes_with_content_sizing_overflowing_margin()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(500);
+            root.StyleSetHeight(500);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0.StyleSetFlexWrap(Wrap.Wrap);
+            rootChild0.StyleSetWidth(85);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0Child0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0Child0.StyleSetWidth(40);
+            rootChild0Child0Child0.StyleSetHeight(40);
+            rootChild0Child0.InsertChild(rootChild0Child0Child0, 0);
+
+            var rootChild0child1 = Node.CreateDefaultNode();
+            rootChild0child1.StyleSetMargin(Edge.Right, 10);
+            rootChild0.InsertChild(rootChild0child1, 1);
+
+            var rootChild0child1Child0 = Node.CreateDefaultNode();
+            rootChild0child1Child0.StyleSetWidth(40);
+            rootChild0child1Child0.StyleSetHeight(40);
+            rootChild0child1.InsertChild(rootChild0child1Child0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(500, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(85, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0Child0Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0Child0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(40, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(40, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0child1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0child1Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0child1Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0child1Child0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(500, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(415, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(85, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(45, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0Child0Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0Child0Child0.LayoutGetHeight());
+
+            assertFloatEqual(35, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(40, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(40, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0child1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0child1Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0child1Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0child1Child0.LayoutGetHeight());
+        }
+
+        void TestWrap_nodes_with_content_sizing_margin_cross()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(500);
+            root.StyleSetHeight(500);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0.StyleSetFlexWrap(Wrap.Wrap);
+            rootChild0.StyleSetWidth(70);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0Child0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0Child0.StyleSetWidth(40);
+            rootChild0Child0Child0.StyleSetHeight(40);
+            rootChild0Child0.InsertChild(rootChild0Child0Child0, 0);
+
+            var rootChild0child1 = Node.CreateDefaultNode();
+            rootChild0child1.StyleSetMargin(Edge.Top, 10);
+            rootChild0.InsertChild(rootChild0child1, 1);
+
+            var rootChild0child1Child0 = Node.CreateDefaultNode();
+            rootChild0child1Child0.StyleSetWidth(40);
+            rootChild0child1Child0.StyleSetHeight(40);
+            rootChild0child1.InsertChild(rootChild0child1Child0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(500, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(70, rootChild0.LayoutGetWidth());
+            assertFloatEqual(90, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0Child0Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0Child0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(40, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0child1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0child1Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0child1Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0child1Child0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(500, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(430, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(70, rootChild0.LayoutGetWidth());
+            assertFloatEqual(90, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0Child0Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0Child0Child0.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(40, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0child1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0child1Child0.LayoutGetTop());
+            assertFloatEqual(40, rootChild0child1Child0.LayoutGetWidth());
+            assertFloatEqual(40, rootChild0child1Child0.LayoutGetHeight());
+        }
+
+        #endregion
+
+        #region justify_content_test.go
+        void TestJustify_content_row_flex_start()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(102);
+            root.StyleSetHeight(102);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(102, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(102, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(102, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(92, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(102, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(82, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(102, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(72, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(102, rootChild2.LayoutGetHeight());
+        }
+
+        void TestJustify_content_row_flex_end()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetJustifyContent(Justify.FlexEnd);
+            root.StyleSetWidth(102);
+            root.StyleSetHeight(102);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(72, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(102, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(82, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(102, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(92, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(102, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(102, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(102, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(102, rootChild2.LayoutGetHeight());
+        }
+
+        void TestJustify_content_row_center()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetWidth(102);
+            root.StyleSetHeight(102);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(36, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(102, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(46, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(102, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(56, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(102, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(56, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(102, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(46, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(102, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(36, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(102, rootChild2.LayoutGetHeight());
+        }
+
+        void TestJustify_content_row_space_between()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetJustifyContent(Justify.SpaceBetween);
+            root.StyleSetWidth(102);
+            root.StyleSetHeight(102);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(102, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(46, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(102, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(92, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(102, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(92, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(102, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(46, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(102, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(102, rootChild2.LayoutGetHeight());
+        }
+
+        void TestJustify_content_row_space_around()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetJustifyContent(Justify.SpaceAround);
+            root.StyleSetWidth(102);
+            root.StyleSetHeight(102);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(12, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(102, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(46, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(102, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(102, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(102, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(46, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(10, rootChild1.LayoutGetWidth());
+            assertFloatEqual(102, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(12, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(10, rootChild2.LayoutGetWidth());
+            assertFloatEqual(102, rootChild2.LayoutGetHeight());
+        }
+
+        void TestJustify_content_column_flex_start()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(102);
+            root.StyleSetHeight(102);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetHeight(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(102, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(10, rootChild1.LayoutGetTop());
+            assertFloatEqual(102, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(10, rootChild2.LayoutGetTop());
+            assertFloatEqual(102, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(102, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(10, rootChild1.LayoutGetTop());
+            assertFloatEqual(102, rootChild1.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(10, rootChild2.LayoutGetTop());
+            assertFloatEqual(102, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+        }
+
+        void TestJustify_content_column_flex_end()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.FlexEnd);
+            root.StyleSetWidth(102);
+            root.StyleSetHeight(102);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetHeight(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(72, rootChild0.LayoutGetTop());
+            assertFloatEqual(102, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(82, rootChild1.LayoutGetTop());
+            assertFloatEqual(102, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(92, rootChild2.LayoutGetTop());
+            assertFloatEqual(102, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(72, rootChild0.LayoutGetTop());
+            assertFloatEqual(102, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(82, rootChild1.LayoutGetTop());
+            assertFloatEqual(102, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(92, rootChild2.LayoutGetTop());
+            assertFloatEqual(102, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+        }
+
+        void TestJustify_content_column_center()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetWidth(102);
+            root.StyleSetHeight(102);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetHeight(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(36, rootChild0.LayoutGetTop());
+            assertFloatEqual(102, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(46, rootChild1.LayoutGetTop());
+            assertFloatEqual(102, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(56, rootChild2.LayoutGetTop());
+            assertFloatEqual(102, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(36, rootChild0.LayoutGetTop());
+            assertFloatEqual(102, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(46, rootChild1.LayoutGetTop());
+            assertFloatEqual(102, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(56, rootChild2.LayoutGetTop());
+            assertFloatEqual(102, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+        }
+
+        void TestJustify_content_column_space_between()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.SpaceBetween);
+            root.StyleSetWidth(102);
+            root.StyleSetHeight(102);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetHeight(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(102, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(46, rootChild1.LayoutGetTop());
+            assertFloatEqual(102, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(92, rootChild2.LayoutGetTop());
+            assertFloatEqual(102, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(102, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(46, rootChild1.LayoutGetTop());
+            assertFloatEqual(102, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(92, rootChild2.LayoutGetTop());
+            assertFloatEqual(102, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+        }
+
+        void TestJustify_content_column_space_around()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.SpaceAround);
+            root.StyleSetWidth(102);
+            root.StyleSetHeight(102);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(10);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetHeight(10);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(12, rootChild0.LayoutGetTop());
+            assertFloatEqual(102, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(46, rootChild1.LayoutGetTop());
+            assertFloatEqual(102, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(80, rootChild2.LayoutGetTop());
+            assertFloatEqual(102, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(102, root.LayoutGetWidth());
+            assertFloatEqual(102, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(12, rootChild0.LayoutGetTop());
+            assertFloatEqual(102, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(46, rootChild1.LayoutGetTop());
+            assertFloatEqual(102, rootChild1.LayoutGetWidth());
+            assertFloatEqual(10, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(80, rootChild2.LayoutGetTop());
+            assertFloatEqual(102, rootChild2.LayoutGetWidth());
+            assertFloatEqual(10, rootChild2.LayoutGetHeight());
+        }
+
+        #endregion
+
+        #region margin_test.go
+        void TestMargin_start()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMargin(Edge.Start, 10);
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_top()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMargin(Edge.Top, 10);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_end()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetJustifyContent(Justify.FlexEnd);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMargin(Edge.End, 10);
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_bottom()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.FlexEnd);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMargin(Edge.Bottom, 10);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(80, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(80, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_and_flex_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Start, 10);
+            rootChild0.StyleSetMargin(Edge.End, 10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(80, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(80, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_and_flex_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Top, 10);
+            rootChild0.StyleSetMargin(Edge.Bottom, 10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_and_stretch_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Top, 10);
+            rootChild0.StyleSetMargin(Edge.Bottom, 10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_and_stretch_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Start, 10);
+            rootChild0.StyleSetMargin(Edge.End, 10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(80, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(80, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_with_sibling_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.End, 10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(45, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(55, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(45, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(55, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(45, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(45, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_with_sibling_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMargin(Edge.Bottom, 10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(45, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(55, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(45, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(45, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(55, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(45, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_bottom()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Bottom);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(150, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(150, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_top()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Top);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(100, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(150, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(100, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(150, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_bottom_and_top()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Top);
+            rootChild0.StyleSetMarginAuto(Edge.Bottom);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(50, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(150, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(50, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(150, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_bottom_and_top_justify_center()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Top);
+            rootChild0.StyleSetMarginAuto(Edge.Bottom);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(50, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(150, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild0.LayoutGetLeft());
+            assertFloatEqual(50, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild1.LayoutGetLeft());
+            assertFloatEqual(150, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_mutiple_children_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Top);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetMarginAuto(Edge.Top);
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(50);
+            rootChild2.StyleSetHeight(50);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(25, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(100, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild2.LayoutGetLeft());
+            assertFloatEqual(150, rootChild2.LayoutGetTop());
+            assertFloatEqual(50, rootChild2.LayoutGetWidth());
+            assertFloatEqual(50, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(25, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(100, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild2.LayoutGetLeft());
+            assertFloatEqual(150, rootChild2.LayoutGetTop());
+            assertFloatEqual(50, rootChild2.LayoutGetWidth());
+            assertFloatEqual(50, rootChild2.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_mutiple_children_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Right);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetMarginAuto(Edge.Right);
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(50);
+            rootChild2.StyleSetHeight(50);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(75, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(75, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild2.LayoutGetLeft());
+            assertFloatEqual(75, rootChild2.LayoutGetTop());
+            assertFloatEqual(50, rootChild2.LayoutGetWidth());
+            assertFloatEqual(50, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(125, rootChild0.LayoutGetLeft());
+            assertFloatEqual(75, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild1.LayoutGetLeft());
+            assertFloatEqual(75, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(75, rootChild2.LayoutGetTop());
+            assertFloatEqual(50, rootChild2.LayoutGetWidth());
+            assertFloatEqual(50, rootChild2.LayoutGetHeight());
+
+        }
+
+        void Testargin_auto_left_and_right_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Left);
+            rootChild0.StyleSetMarginAuto(Edge.Right);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(75, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild1.LayoutGetLeft());
+            assertFloatEqual(75, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild0.LayoutGetLeft());
+            assertFloatEqual(75, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(75, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_left_and_right()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Left);
+            rootChild0.StyleSetMarginAuto(Edge.Right);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_start_and_end_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Start);
+            rootChild0.StyleSetMarginAuto(Edge.End);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(75, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild1.LayoutGetLeft());
+            assertFloatEqual(75, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild0.LayoutGetLeft());
+            assertFloatEqual(75, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(75, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_start_and_end()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Start);
+            rootChild0.StyleSetMarginAuto(Edge.End);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_left_and_right_column_and_center()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Left);
+            rootChild0.StyleSetMarginAuto(Edge.Right);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_left()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Left);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_right()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Right);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_left_and_right_strech()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Left);
+            rootChild0.StyleSetMarginAuto(Edge.Right);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_top_and_bottom_strech()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Top);
+            rootChild0.StyleSetMarginAuto(Edge.Bottom);
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(50, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(150, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild0.LayoutGetLeft());
+            assertFloatEqual(50, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild1.LayoutGetLeft());
+            assertFloatEqual(150, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMargin_should_not_be_part_of_max_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(250);
+            root.StyleSetHeight(250);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMargin(Edge.Top, 20);
+            rootChild0.StyleSetWidth(100);
+            rootChild0.StyleSetHeight(100);
+            rootChild0.StyleSetMaxHeight(100);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(250, root.LayoutGetWidth());
+            assertFloatEqual(250, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(250, root.LayoutGetWidth());
+            assertFloatEqual(250, root.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_should_not_be_part_of_max_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(250);
+            root.StyleSetHeight(250);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMargin(Edge.Left, 20);
+            rootChild0.StyleSetWidth(100);
+            rootChild0.StyleSetMaxWidth(100);
+            rootChild0.StyleSetHeight(100);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(250, root.LayoutGetWidth());
+            assertFloatEqual(250, root.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(250, root.LayoutGetWidth());
+            assertFloatEqual(250, root.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_left_right_child_bigger_than_parent()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetWidth(52);
+            root.StyleSetHeight(52);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Left);
+            rootChild0.StyleSetMarginAuto(Edge.Right);
+            rootChild0.StyleSetWidth(72);
+            rootChild0.StyleSetHeight(72);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(52, root.LayoutGetWidth());
+            assertFloatEqual(52, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-10, rootChild0.LayoutGetTop());
+            assertFloatEqual(72, rootChild0.LayoutGetWidth());
+            assertFloatEqual(72, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(52, root.LayoutGetWidth());
+            assertFloatEqual(52, root.LayoutGetHeight());
+
+            assertFloatEqual(-20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-10, rootChild0.LayoutGetTop());
+            assertFloatEqual(72, rootChild0.LayoutGetWidth());
+            assertFloatEqual(72, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_left_child_bigger_than_parent()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetWidth(52);
+            root.StyleSetHeight(52);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Left);
+            rootChild0.StyleSetWidth(72);
+            rootChild0.StyleSetHeight(72);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(52, root.LayoutGetWidth());
+            assertFloatEqual(52, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-10, rootChild0.LayoutGetTop());
+            assertFloatEqual(72, rootChild0.LayoutGetWidth());
+            assertFloatEqual(72, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(52, root.LayoutGetWidth());
+            assertFloatEqual(52, root.LayoutGetHeight());
+
+            assertFloatEqual(-20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-10, rootChild0.LayoutGetTop());
+            assertFloatEqual(72, rootChild0.LayoutGetWidth());
+            assertFloatEqual(72, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_fix_left_auto_right_child_bigger_than_parent()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetWidth(52);
+            root.StyleSetHeight(52);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMargin(Edge.Left, 10);
+            rootChild0.StyleSetMarginAuto(Edge.Right);
+            rootChild0.StyleSetWidth(72);
+            rootChild0.StyleSetHeight(72);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(52, root.LayoutGetWidth());
+            assertFloatEqual(52, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-10, rootChild0.LayoutGetTop());
+            assertFloatEqual(72, rootChild0.LayoutGetWidth());
+            assertFloatEqual(72, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(52, root.LayoutGetWidth());
+            assertFloatEqual(52, root.LayoutGetHeight());
+
+            assertFloatEqual(-20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-10, rootChild0.LayoutGetTop());
+            assertFloatEqual(72, rootChild0.LayoutGetWidth());
+            assertFloatEqual(72, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMargin_auto_left_fix_right_child_bigger_than_parent()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetWidth(52);
+            root.StyleSetHeight(52);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMarginAuto(Edge.Left);
+            rootChild0.StyleSetMargin(Edge.Right, 10);
+            rootChild0.StyleSetWidth(72);
+            rootChild0.StyleSetHeight(72);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(52, root.LayoutGetWidth());
+            assertFloatEqual(52, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-10, rootChild0.LayoutGetTop());
+            assertFloatEqual(72, rootChild0.LayoutGetWidth());
+            assertFloatEqual(72, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(52, root.LayoutGetWidth());
+            assertFloatEqual(52, root.LayoutGetHeight());
+
+            assertFloatEqual(-30, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-10, rootChild0.LayoutGetTop());
+            assertFloatEqual(72, rootChild0.LayoutGetWidth());
+            assertFloatEqual(72, rootChild0.LayoutGetHeight());
+
+        }
+
+        #endregion
+
+        #region min_max_dimension_test.go
+        void TestMax_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMaxWidth(50);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMax_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            rootChild0.StyleSetMaxHeight(50);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(90, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestMin_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMinHeight(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(80, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(80, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(20, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMin_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMinWidth(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(80, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(20, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(80, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(20, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestJustify_content_min_max()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetWidth(100);
+            root.StyleSetMinHeight(100);
+            root.StyleSetMaxHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(60);
+            rootChild0.StyleSetHeight(60);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetTop());
+            assertFloatEqual(60, rootChild0.LayoutGetWidth());
+            assertFloatEqual(60, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetTop());
+            assertFloatEqual(60, rootChild0.LayoutGetWidth());
+            assertFloatEqual(60, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestAlign_items_min_max()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetMinWidth(100);
+            root.StyleSetMaxWidth(200);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(60);
+            rootChild0.StyleSetHeight(60);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(60, rootChild0.LayoutGetWidth());
+            assertFloatEqual(60, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(60, rootChild0.LayoutGetWidth());
+            assertFloatEqual(60, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestJustify_content_overflow_min_max()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetMinHeight(100);
+            root.StyleSetMaxHeight(110);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(50);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(50);
+            rootChild2.StyleSetHeight(50);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(50, root.LayoutGetWidth());
+            assertFloatEqual(110, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-20, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(30, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(80, rootChild2.LayoutGetTop());
+            assertFloatEqual(50, rootChild2.LayoutGetWidth());
+            assertFloatEqual(50, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(50, root.LayoutGetWidth());
+            assertFloatEqual(110, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-20, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(30, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(80, rootChild2.LayoutGetTop());
+            assertFloatEqual(50, rootChild2.LayoutGetWidth());
+            assertFloatEqual(50, rootChild2.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_to_min()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetMinHeight(100);
+            root.StyleSetMaxHeight(500);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexShrink(1);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_in_at_most_container()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetAlignItems(Align.FlexStart);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetFlexGrow(1);
+            rootChild0Child0.StyleSetFlexBasis(0);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_child()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasis(0);
+            rootChild0.StyleSetHeight(100);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_within_constrained_min_max_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetMinHeight(100);
+            root.StyleSetMaxHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_within_max_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0.StyleSetMaxWidth(100);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetFlexGrow(1);
+            rootChild0Child0.StyleSetHeight(20);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(20, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(20, rootChild0Child0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(20, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(20, rootChild0Child0.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_within_constrained_max_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0.StyleSetMaxWidth(300);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetFlexGrow(1);
+            rootChild0Child0.StyleSetHeight(20);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(20, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(20, rootChild0Child0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(20, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(20, rootChild0Child0.LayoutGetHeight());
+
+        }
+
+        void TestFlex_root_ignored()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexGrow(1);
+            root.StyleSetWidth(100);
+            root.StyleSetMinHeight(100);
+            root.StyleSetMaxHeight(500);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasis(200);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(100);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(300, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(200, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(300, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(200, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_root_minimized()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetMinHeight(100);
+            root.StyleSetMaxHeight(500);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMinHeight(100);
+            rootChild0.StyleSetMaxHeight(500);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetFlexGrow(1);
+            rootChild0Child0.StyleSetFlexBasis(200);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0child1 = Node.CreateDefaultNode();
+            rootChild0child1.StyleSetHeight(100);
+            rootChild0.InsertChild(rootChild0child1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(300, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(300, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(200, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(100, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0child1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(300, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(300, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(200, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(100, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0child1.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_height_maximized()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(500);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMinHeight(100);
+            rootChild0.StyleSetMaxHeight(500);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetFlexGrow(1);
+            rootChild0Child0.StyleSetFlexBasis(200);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0child1 = Node.CreateDefaultNode();
+            rootChild0child1.StyleSetHeight(100);
+            rootChild0.InsertChild(rootChild0child1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(500, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(400, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(400, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(100, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0child1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(500, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(400, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(400, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(100, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0child1.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_within_constrained_min_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetMinWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetWidth(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(50, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_within_constrained_min_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetMinHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(0, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_within_constrained_max_row()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0.StyleSetMaxWidth(100);
+            rootChild0.StyleSetHeight(100);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetFlexShrink(1);
+            rootChild0Child0.StyleSetFlexBasis(100);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0child1 = Node.CreateDefaultNode();
+            rootChild0child1.StyleSetWidth(50);
+            rootChild0.InsertChild(rootChild0child1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(50, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0child1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(50, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0child1.LayoutGetHeight());
+
+        }
+
+        void TestFlex_grow_within_constrained_max_column()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(100);
+            root.StyleSetMaxHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexShrink(1);
+            rootChild0.StyleSetFlexBasis(100);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetHeight(50);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(100, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestChild_min_max_width_flexing()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(120);
+            root.StyleSetHeight(50);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasis(0);
+            rootChild0.StyleSetMinWidth(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            rootChild1.StyleSetFlexBasisPercent(50);
+            rootChild1.StyleSetMaxWidth(20);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(120, root.LayoutGetWidth());
+            assertFloatEqual(50, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(20, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(120, root.LayoutGetWidth());
+            assertFloatEqual(50, root.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(20, rootChild1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild1.LayoutGetHeight());
+
+        }
+
+        void TestMin_width_overrides_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(50);
+            root.StyleSetMinWidth(100);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(0, root.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(0, root.LayoutGetHeight());
+
+        }
+
+        void TestMax_width_overrides_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetMaxWidth(100);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(0, root.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(0, root.LayoutGetHeight());
+
+        }
+
+        void TestMin_height_overrides_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetHeight(50);
+            root.StyleSetMinHeight(100);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+        }
+
+        void TestMax_height_overrides_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetHeight(200);
+            root.StyleSetMaxHeight(100);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+        }
+
+        void TestMin_max_percent_no_width_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetAlignItems(Align.FlexStart);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetMinWidthPercent(10);
+            rootChild0.StyleSetMaxWidthPercent(10);
+            rootChild0.StyleSetMinHeightPercent(10);
+            rootChild0.StyleSetMaxHeightPercent(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(90, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+        }
+        #endregion
+
+        #region node_child_test.go
+        void TestReset_layout_when_child_removed()
+        {
+            var root = Node.CreateDefaultNode();
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(100);
+            rootChild0.StyleSetHeight(100);
+            root.InsertChild(rootChild0, 0);
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            root.RemoveChild(rootChild0);
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertTrue(float.IsNaN(rootChild0.LayoutGetWidth()));
+            assertTrue(float.IsNaN(rootChild0.LayoutGetHeight()));
+        }
+
+        #endregion
+
+        #region padding_test.go
+        void TestPadding_no_size()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetPadding(Edge.Left, 10);
+            root.StyleSetPadding(Edge.Top, 10);
+            root.StyleSetPadding(Edge.Right, 10);
+            root.StyleSetPadding(Edge.Bottom, 10);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(20, root.LayoutGetWidth());
+            assertFloatEqual(20, root.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(20, root.LayoutGetWidth());
+            assertFloatEqual(20, root.LayoutGetHeight());
+        }
+
+        void TestPadding_container_match_child()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetPadding(Edge.Left, 10);
+            root.StyleSetPadding(Edge.Top, 10);
+            root.StyleSetPadding(Edge.Right, 10);
+            root.StyleSetPadding(Edge.Bottom, 10);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(30, root.LayoutGetWidth());
+            assertFloatEqual(30, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(30, root.LayoutGetWidth());
+            assertFloatEqual(30, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+        }
+
+        void TestPadding_flex_child()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetPadding(Edge.Left, 10);
+            root.StyleSetPadding(Edge.Top, 10);
+            root.StyleSetPadding(Edge.Right, 10);
+            root.StyleSetPadding(Edge.Bottom, 10);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetWidth(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(80, rootChild0.LayoutGetHeight());
+        }
+
+        void TestPadding_stretch_child()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetPadding(Edge.Left, 10);
+            root.StyleSetPadding(Edge.Top, 10);
+            root.StyleSetPadding(Edge.Right, 10);
+            root.StyleSetPadding(Edge.Bottom, 10);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(80, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(80, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+        }
+
+        void TestPadding_center_child()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetPadding(Edge.Start, 10);
+            root.StyleSetPadding(Edge.End, 20);
+            root.StyleSetPadding(Edge.Bottom, 20);
+            root.StyleSetWidth(100);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(10);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild0.LayoutGetLeft());
+            assertFloatEqual(35, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(100, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(35, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+        }
+
+        void TestChild_with_padding_align_end()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.FlexEnd);
+            root.StyleSetAlignItems(Align.FlexEnd);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetPadding(Edge.Left, 20);
+            rootChild0.StyleSetPadding(Edge.Top, 20);
+            rootChild0.StyleSetPadding(Edge.Right, 20);
+            rootChild0.StyleSetPadding(Edge.Bottom, 20);
+            rootChild0.StyleSetWidth(100);
+            rootChild0.StyleSetHeight(100);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild0.LayoutGetLeft());
+            assertFloatEqual(100, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(100, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+        }
+
+        #endregion
+
+        #region percentage_test.go
+        void TestPercentage_width_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidthPercent(30);
+            rootChild0.StyleSetHeightPercent(30);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(60, rootChild0.LayoutGetWidth());
+            assertFloatEqual(60, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(140, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(60, rootChild0.LayoutGetWidth());
+            assertFloatEqual(60, rootChild0.LayoutGetHeight());
+        }
+
+        void TestPercentage_position_left_top()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(400);
+            root.StyleSetHeight(400);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetPositionPercent(Edge.Left, 10);
+            rootChild0.StyleSetPositionPercent(Edge.Top, 20);
+            rootChild0.StyleSetWidthPercent(45);
+            rootChild0.StyleSetHeightPercent(55);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(400, root.LayoutGetWidth());
+            assertFloatEqual(400, root.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild0.LayoutGetLeft());
+            assertFloatEqual(80, rootChild0.LayoutGetTop());
+            assertFloatEqual(180, rootChild0.LayoutGetWidth());
+            assertFloatEqual(220, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(400, root.LayoutGetWidth());
+            assertFloatEqual(400, root.LayoutGetHeight());
+
+            assertFloatEqual(260, rootChild0.LayoutGetLeft());
+            assertFloatEqual(80, rootChild0.LayoutGetTop());
+            assertFloatEqual(180, rootChild0.LayoutGetWidth());
+            assertFloatEqual(220, rootChild0.LayoutGetHeight());
+        }
+
+        void TestPercentage_position_bottom_right()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(500);
+            root.StyleSetHeight(500);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetPositionPercent(Edge.Right, 20);
+            rootChild0.StyleSetPositionPercent(Edge.Bottom, 10);
+            rootChild0.StyleSetWidthPercent(55);
+            rootChild0.StyleSetHeightPercent(15);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(500, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(-100, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-50, rootChild0.LayoutGetTop());
+            assertFloatEqual(275, rootChild0.LayoutGetWidth());
+            assertFloatEqual(75, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(500, root.LayoutGetWidth());
+            assertFloatEqual(500, root.LayoutGetHeight());
+
+            assertFloatEqual(125, rootChild0.LayoutGetLeft());
+            assertFloatEqual(-50, rootChild0.LayoutGetTop());
+            assertFloatEqual(275, rootChild0.LayoutGetWidth());
+            assertFloatEqual(75, rootChild0.LayoutGetHeight());
+        }
+
+        void TestPercentage_flex_basis()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasisPercent(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            rootChild1.StyleSetFlexBasisPercent(25);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(125, rootChild0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(125, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(75, rootChild1.LayoutGetWidth());
+            assertFloatEqual(200, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(75, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(125, rootChild0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(75, rootChild1.LayoutGetWidth());
+            assertFloatEqual(200, rootChild1.LayoutGetHeight());
+        }
+
+        void TestPercentage_flex_basis_cross()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasisPercent(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            rootChild1.StyleSetFlexBasisPercent(25);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(125, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(125, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(75, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(125, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(125, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(75, rootChild1.LayoutGetHeight());
+        }
+
+        void TestPercentage_flex_basis_cross_min_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMinHeightPercent(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(2);
+            rootChild1.StyleSetMinHeightPercent(10);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(140, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(140, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(60, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(140, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(140, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(60, rootChild1.LayoutGetHeight());
+        }
+
+        void TestPercentage_flex_basis_main_max_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasisPercent(10);
+            rootChild0.StyleSetMaxHeightPercent(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(4);
+            rootChild1.StyleSetFlexBasisPercent(10);
+            rootChild1.StyleSetMaxHeightPercent(20);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(52, rootChild0.LayoutGetWidth());
+            assertFloatEqual(120, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(52, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(148, rootChild1.LayoutGetWidth());
+            assertFloatEqual(40, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(148, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(52, rootChild0.LayoutGetWidth());
+            assertFloatEqual(120, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(148, rootChild1.LayoutGetWidth());
+            assertFloatEqual(40, rootChild1.LayoutGetHeight());
+        }
+
+        void TestPercentage_flex_basis_cross_max_height()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasisPercent(10);
+            rootChild0.StyleSetMaxHeightPercent(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(4);
+            rootChild1.StyleSetFlexBasisPercent(10);
+            rootChild1.StyleSetMaxHeightPercent(20);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(120, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(120, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(40, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(120, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(120, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(40, rootChild1.LayoutGetHeight());
+        }
+
+        void TestPercentage_flex_basis_main_max_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasisPercent(15);
+            rootChild0.StyleSetMaxWidthPercent(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(4);
+            rootChild1.StyleSetFlexBasisPercent(10);
+            rootChild1.StyleSetMaxWidthPercent(20);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(120, rootChild0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(120, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(40, rootChild1.LayoutGetWidth());
+            assertFloatEqual(200, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(120, rootChild0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(40, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(40, rootChild1.LayoutGetWidth());
+            assertFloatEqual(200, rootChild1.LayoutGetHeight());
+        }
+
+        void TestPercentage_flex_basis_cross_max_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasisPercent(10);
+            rootChild0.StyleSetMaxWidthPercent(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(4);
+            rootChild1.StyleSetFlexBasisPercent(15);
+            rootChild1.StyleSetMaxWidthPercent(20);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(120, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(40, rootChild1.LayoutGetWidth());
+            assertFloatEqual(150, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(120, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(160, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(40, rootChild1.LayoutGetWidth());
+            assertFloatEqual(150, rootChild1.LayoutGetHeight());
+        }
+
+        void TestPercentage_flex_basis_main_min_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasisPercent(15);
+            rootChild0.StyleSetMinWidthPercent(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(4);
+            rootChild1.StyleSetFlexBasisPercent(10);
+            rootChild1.StyleSetMinWidthPercent(20);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(120, rootChild0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(120, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(80, rootChild1.LayoutGetWidth());
+            assertFloatEqual(200, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(80, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(120, rootChild0.LayoutGetWidth());
+            assertFloatEqual(200, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(80, rootChild1.LayoutGetWidth());
+            assertFloatEqual(200, rootChild1.LayoutGetHeight());
+        }
+
+        void TestPercentage_flex_basis_cross_min_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasisPercent(10);
+            rootChild0.StyleSetMinWidthPercent(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(4);
+            rootChild1.StyleSetFlexBasisPercent(15);
+            rootChild1.StyleSetMinWidthPercent(20);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(150, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(50, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(150, rootChild1.LayoutGetHeight());
+        }
+
+        void TestPercentage_multiple_nested_with_padding_margin_and_percentage_values()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetFlexBasisPercent(10);
+            rootChild0.StyleSetMargin(Edge.Left, 5);
+            rootChild0.StyleSetMargin(Edge.Top, 5);
+            rootChild0.StyleSetMargin(Edge.Right, 5);
+            rootChild0.StyleSetMargin(Edge.Bottom, 5);
+            rootChild0.StyleSetPadding(Edge.Left, 3);
+            rootChild0.StyleSetPadding(Edge.Top, 3);
+            rootChild0.StyleSetPadding(Edge.Right, 3);
+            rootChild0.StyleSetPadding(Edge.Bottom, 3);
+            rootChild0.StyleSetMinWidthPercent(60);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetMargin(Edge.Left, 5);
+            rootChild0Child0.StyleSetMargin(Edge.Top, 5);
+            rootChild0Child0.StyleSetMargin(Edge.Right, 5);
+            rootChild0Child0.StyleSetMargin(Edge.Bottom, 5);
+            rootChild0Child0.StyleSetPaddingPercent(Edge.Left, 3);
+            rootChild0Child0.StyleSetPaddingPercent(Edge.Top, 3);
+            rootChild0Child0.StyleSetPaddingPercent(Edge.Right, 3);
+            rootChild0Child0.StyleSetPaddingPercent(Edge.Bottom, 3);
+            rootChild0Child0.StyleSetWidthPercent(50);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0Child0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0Child0.StyleSetMarginPercent(Edge.Left, 5);
+            rootChild0Child0Child0.StyleSetMarginPercent(Edge.Top, 5);
+            rootChild0Child0Child0.StyleSetMarginPercent(Edge.Right, 5);
+            rootChild0Child0Child0.StyleSetMarginPercent(Edge.Bottom, 5);
+            rootChild0Child0Child0.StyleSetPadding(Edge.Left, 3);
+            rootChild0Child0Child0.StyleSetPadding(Edge.Top, 3);
+            rootChild0Child0Child0.StyleSetPadding(Edge.Right, 3);
+            rootChild0Child0Child0.StyleSetPadding(Edge.Bottom, 3);
+            rootChild0Child0Child0.StyleSetWidthPercent(45);
+            rootChild0Child0.InsertChild(rootChild0Child0Child0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(4);
+            rootChild1.StyleSetFlexBasisPercent(15);
+            rootChild1.StyleSetMinWidthPercent(20);
+            root.InsertChild(rootChild1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(5, rootChild0.LayoutGetLeft());
+            assertFloatEqual(5, rootChild0.LayoutGetTop());
+            assertFloatEqual(190, rootChild0.LayoutGetWidth());
+            assertFloatEqual(48, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(8, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(8, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(92, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(25, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(10, rootChild0Child0Child0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0Child0Child0.LayoutGetTop());
+            assertFloatEqual(36, rootChild0Child0Child0.LayoutGetWidth());
+            assertFloatEqual(6, rootChild0Child0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(58, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(142, rootChild1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(5, rootChild0.LayoutGetLeft());
+            assertFloatEqual(5, rootChild0.LayoutGetTop());
+            assertFloatEqual(190, rootChild0.LayoutGetWidth());
+            assertFloatEqual(48, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(90, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(8, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(92, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(25, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(46, rootChild0Child0Child0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0Child0Child0.LayoutGetTop());
+            assertFloatEqual(36, rootChild0Child0Child0.LayoutGetWidth());
+            assertFloatEqual(6, rootChild0Child0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1.LayoutGetLeft());
+            assertFloatEqual(58, rootChild1.LayoutGetTop());
+            assertFloatEqual(200, rootChild1.LayoutGetWidth());
+            assertFloatEqual(142, rootChild1.LayoutGetHeight());
+        }
+
+        void TestPercentage_margin_should_calculate_based_only_on_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetMarginPercent(Edge.Left, 10);
+            rootChild0.StyleSetMarginPercent(Edge.Top, 10);
+            rootChild0.StyleSetMarginPercent(Edge.Right, 10);
+            rootChild0.StyleSetMarginPercent(Edge.Bottom, 10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetWidth(10);
+            rootChild0Child0.StyleSetHeight(10);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetTop());
+            assertFloatEqual(160, rootChild0.LayoutGetWidth());
+            assertFloatEqual(60, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0Child0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0.LayoutGetTop());
+            assertFloatEqual(160, rootChild0.LayoutGetWidth());
+            assertFloatEqual(60, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(150, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0Child0.LayoutGetHeight());
+        }
+
+        void TestPercentage_padding_should_calculate_based_only_on_width()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexGrow(1);
+            rootChild0.StyleSetPaddingPercent(Edge.Left, 10);
+            rootChild0.StyleSetPaddingPercent(Edge.Top, 10);
+            rootChild0.StyleSetPaddingPercent(Edge.Right, 10);
+            rootChild0.StyleSetPaddingPercent(Edge.Bottom, 10);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetWidth(10);
+            rootChild0Child0.StyleSetHeight(10);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(20, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0Child0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(200, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(170, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(20, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0Child0.LayoutGetHeight());
+        }
+
+        void TestPercentage_absolute_position()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetPositionType(PositionType.Absolute);
+            rootChild0.StyleSetPositionPercent(Edge.Left, 30);
+            rootChild0.StyleSetPositionPercent(Edge.Top, 10);
+            rootChild0.StyleSetWidth(10);
+            rootChild0.StyleSetHeight(10);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild0.LayoutGetLeft());
+            assertFloatEqual(10, rootChild0.LayoutGetTop());
+            assertFloatEqual(10, rootChild0.LayoutGetWidth());
+            assertFloatEqual(10, rootChild0.LayoutGetHeight());
+        }
+
+        void TestPercentage_width_height_undefined_parent_size()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidthPercent(50);
+            rootChild0.StyleSetHeightPercent(50);
+            root.InsertChild(rootChild0, 0);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(0, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(0, root.LayoutGetWidth());
+            assertFloatEqual(0, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(0, rootChild0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild0.LayoutGetHeight());
+        }
+
+        void TestPercent_within_flex_grow()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetFlexDirection(FlexDirection.Row);
+            root.StyleSetWidth(350);
+            root.StyleSetHeight(100);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetWidth(100);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild1 = Node.CreateDefaultNode();
+            rootChild1.StyleSetFlexGrow(1);
+            root.InsertChild(rootChild1, 1);
+
+            var rootChild1child0 = Node.CreateDefaultNode();
+            rootChild1child0.StyleSetWidthPercent(100);
+            rootChild1.InsertChild(rootChild1child0, 0);
+
+            var rootChild2 = Node.CreateDefaultNode();
+            rootChild2.StyleSetWidth(100);
+            root.InsertChild(rootChild2, 2);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(350, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(150, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1child0.LayoutGetTop());
+            assertFloatEqual(150, rootChild1child0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1child0.LayoutGetHeight());
+
+            assertFloatEqual(250, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(350, root.LayoutGetWidth());
+            assertFloatEqual(100, root.LayoutGetHeight());
+
+            assertFloatEqual(250, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(100, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(100, rootChild1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1.LayoutGetTop());
+            assertFloatEqual(150, rootChild1.LayoutGetWidth());
+            assertFloatEqual(100, rootChild1.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild1child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild1child0.LayoutGetTop());
+            assertFloatEqual(150, rootChild1child0.LayoutGetWidth());
+            assertFloatEqual(0, rootChild1child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild2.LayoutGetLeft());
+            assertFloatEqual(0, rootChild2.LayoutGetTop());
+            assertFloatEqual(100, rootChild2.LayoutGetWidth());
+            assertFloatEqual(100, rootChild2.LayoutGetHeight());
+        }
+
+        void TestPercentage_container_in_wrapping_container()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetJustifyContent(Justify.Center);
+            root.StyleSetAlignItems(Align.Center);
+            root.StyleSetWidth(200);
+            root.StyleSetHeight(200);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0Child0.StyleSetJustifyContent(Justify.Center);
+            rootChild0Child0.StyleSetWidthPercent(100);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0Child0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0Child0.StyleSetWidth(50);
+            rootChild0Child0Child0.StyleSetHeight(50);
+            rootChild0Child0.InsertChild(rootChild0Child0Child0, 0);
+
+            var rootChild0Child0_child1 = Node.CreateDefaultNode();
+            rootChild0Child0_child1.StyleSetWidth(50);
+            rootChild0Child0_child1.StyleSetHeight(50);
+            rootChild0Child0.InsertChild(rootChild0Child0_child1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(75, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0Child0Child0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0Child0Child0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0Child0_child1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0_child1.LayoutGetTop());
+            assertFloatEqual(50, rootChild0Child0_child1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0Child0_child1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(200, root.LayoutGetWidth());
+            assertFloatEqual(200, root.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0.LayoutGetLeft());
+            assertFloatEqual(75, rootChild0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(50, rootChild0Child0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0Child0.LayoutGetTop());
+            assertFloatEqual(50, rootChild0Child0Child0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0Child0Child0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0_child1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0_child1.LayoutGetTop());
+            assertFloatEqual(50, rootChild0Child0_child1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0Child0_child1.LayoutGetHeight());
+        }
+
+        void TestPercent_absolute_position()
+        {
+
+
+            var root = Node.CreateDefaultNode();
+            root.StyleSetWidth(60);
+            root.StyleSetHeight(50);
+
+            var rootChild0 = Node.CreateDefaultNode();
+            rootChild0.StyleSetFlexDirection(FlexDirection.Row);
+            rootChild0.StyleSetPositionType(PositionType.Absolute);
+            rootChild0.StyleSetPositionPercent(Edge.Left, 50);
+            rootChild0.StyleSetWidthPercent(100);
+            rootChild0.StyleSetHeight(50);
+            root.InsertChild(rootChild0, 0);
+
+            var rootChild0Child0 = Node.CreateDefaultNode();
+            rootChild0Child0.StyleSetWidthPercent(100);
+            rootChild0.InsertChild(rootChild0Child0, 0);
+
+            var rootChild0child1 = Node.CreateDefaultNode();
+            rootChild0child1.StyleSetWidthPercent(100);
+            rootChild0.InsertChild(rootChild0child1, 1);
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(60, root.LayoutGetWidth());
+            assertFloatEqual(50, root.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(60, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(60, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(60, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(60, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0child1.LayoutGetHeight());
+
+            Node.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+
+            assertFloatEqual(0, root.LayoutGetLeft());
+            assertFloatEqual(0, root.LayoutGetTop());
+            assertFloatEqual(60, root.LayoutGetWidth());
+            assertFloatEqual(50, root.LayoutGetHeight());
+
+            assertFloatEqual(30, rootChild0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0.LayoutGetTop());
+            assertFloatEqual(60, rootChild0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0.LayoutGetHeight());
+
+            assertFloatEqual(0, rootChild0Child0.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0Child0.LayoutGetTop());
+            assertFloatEqual(60, rootChild0Child0.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0Child0.LayoutGetHeight());
+
+            assertFloatEqual(-60, rootChild0child1.LayoutGetLeft());
+            assertFloatEqual(0, rootChild0child1.LayoutGetTop());
+            assertFloatEqual(60, rootChild0child1.LayoutGetWidth());
+            assertFloatEqual(50, rootChild0child1.LayoutGetHeight());
+        }
+
+        #endregion
 
         public void XTestAll()
         {

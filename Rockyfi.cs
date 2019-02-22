@@ -580,6 +580,10 @@ namespace Rockyfi
         {
             Node.InsertChild(this, child, idx);
         }
+        public void RemoveChild(Node child)
+        {
+            Node.RemoveChild(this, child);
+        }
         #endregion
     }
 }
