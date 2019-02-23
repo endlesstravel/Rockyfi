@@ -1,7 +1,6 @@
 
 namespace Rockyfi
 {
-
     public enum Align
     {
         Auto,
