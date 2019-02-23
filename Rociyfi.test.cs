@@ -14079,14 +14079,21 @@ namespace Rockyfi
         }
         #endregion
 
-
-
         #region measure_test.go
+        class TestInteger
+        {
+            public int Count = 0;
+            public void Increase()
+            {
+                Count++;
+            }
+        }
         static Size _measure3(Node node, float width, MeasureMode widthMode, float height, MeasureMode heightMode)
         {
             if (node.Context != null)
             {
-                node.Context = (int)node.Context + 1;
+                var ti = (TestInteger)node.Context;
+                ti.Increase();
             }
 
             return new Size(10, 10);
@@ -14123,10 +14130,10 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            int measureCount = 0;
+            var measureIntegerCount = new TestInteger();
 
             var rootChild0 = Node.CreateDefaultNode();
-            rootChild0.Context = measureCount;
+            rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure);
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexShrink(1);
@@ -14134,7 +14141,7 @@ namespace Rockyfi
 
             Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
-            assertEqual(0, measureCount);
+            assertEqual(0, measureIntegerCount.Count);
         }
 
         void TestMeasure_absolute_child_with_no_constraints()
@@ -14144,17 +14151,17 @@ namespace Rockyfi
             var rootChild0 = Node.CreateDefaultNode();
             root.InsertChild(rootChild0, 0);
 
-            int measureCount = 0;
+            var measureIntegerCount = new TestInteger();
 
             var rootChild0Child0 = Node.CreateDefaultNode();
             rootChild0Child0.StyleSetPositionType(PositionType.Absolute);
-            rootChild0Child0.Context = measureCount;
+            rootChild0Child0.Context = measureIntegerCount;
             rootChild0Child0.SetMeasureFunc(_measure3);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
             Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
-            assertEqual(1, measureCount);
+            assertEqual(1, measureIntegerCount.Count);
         }
 
         void TestDont_measure_when_min_equals_max()
@@ -14164,10 +14171,10 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            int measureCount = 0;
+            var measureIntegerCount = new TestInteger();
 
             var rootChild0 = Node.CreateDefaultNode();
-            rootChild0.Context = measureCount;
+            rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure3);
             rootChild0.StyleSetMinWidth(10);
             rootChild0.StyleSetMaxWidth(10);
@@ -14177,7 +14184,7 @@ namespace Rockyfi
 
             Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
-            assertEqual(0, measureCount);
+            assertEqual(0, measureIntegerCount.Count);
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
@@ -14191,10 +14198,10 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            int measureCount = 0;
+            var measureIntegerCount = new TestInteger();
 
             var rootChild0 = Node.CreateDefaultNode();
-            rootChild0.Context = measureCount;
+            rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure3);
             rootChild0.StyleSetMinWidthPercent(10);
             rootChild0.StyleSetMaxWidthPercent(10);
@@ -14204,7 +14211,7 @@ namespace Rockyfi
 
             Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
-            assertEqual(0, measureCount);
+            assertEqual(0, measureIntegerCount.Count);
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
@@ -14218,10 +14225,10 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            int measureCount = 0;
+            var measureIntegerCount = new TestInteger();
 
             var rootChild0 = Node.CreateDefaultNode();
-            rootChild0.Context = measureCount;
+            rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure3);
             rootChild0.StyleSetMinWidthPercent(10);
             rootChild0.StyleSetMaxWidthPercent(10);
@@ -14231,7 +14238,7 @@ namespace Rockyfi
 
             Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
-            assertEqual(0, measureCount);
+            assertEqual(0, measureIntegerCount.Count);
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
@@ -14245,10 +14252,10 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            int measureCount = 0;
+            var measureIntegerCount = new TestInteger();
 
             var rootChild0 = Node.CreateDefaultNode();
-            rootChild0.Context = measureCount;
+            rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure3);
             rootChild0.StyleSetMinWidth(10);
             rootChild0.StyleSetMaxWidth(10);
@@ -14258,7 +14265,7 @@ namespace Rockyfi
 
             Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
-            assertEqual(0, measureCount);
+            assertEqual(0, measureIntegerCount.Count);
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
@@ -14306,12 +14313,12 @@ namespace Rockyfi
             root.StyleSetFlexDirection(FlexDirection.Column);
             root.StyleSetFlexGrow(0);
 
-            int measureCount = 0;
+            var measureIntegerCount = new TestInteger();
 
             var rootChild0 = Node.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Column);
             rootChild0.StyleSetPadding(Edge.All, 100);
-            rootChild0.Context = measureCount;
+            rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure3);
 
             root.InsertChild(rootChild0, 0);

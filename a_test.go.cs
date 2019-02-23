@@ -19,16 +19,16 @@ namespace Rockyfi
 
 
 
-    #region issue5_test.go
-    #endregion
+        #region issue5_test.go
+        #endregion
 
-    #region math_test.go
-    #endregion
+        #region math_test.go
+        #endregion
 
 
 
 #if false
 #endif
 
-}
+    }
 }
