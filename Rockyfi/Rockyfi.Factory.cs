@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using System.Xml;
 using System.Text.RegularExpressions;
 
 namespace Rockyfi
@@ -45,7 +45,7 @@ namespace Rockyfi
         }
     }
 
-    partial class Factory
+    public partial class Factory
     {
         const string RootTagName = "div";
         const string ElementTagName = "div";
@@ -88,10 +88,10 @@ namespace Rockyfi
             return res;
         }
 
-        Node SetupNode(XElement ele)
+        Node SetupNode(XmlNode ele)
         {
             Node node = Rockyfi.CreateDefaultNode();
-            foreach (var attr in ele.Attributes())
+            foreach (XmlAttribute attr in ele.Attributes)
             {
                 switch(attr.Name.ToString())
                 {
@@ -108,10 +108,10 @@ namespace Rockyfi
             return node;
         }
 
-        Node SetupTraverse(XElement element)
+        Node SetupTraverse(XmlNode element)
         {
             Node node = SetupNode(element);
-            foreach (var e in element.Elements())
+            foreach (XmlNode e in element.ChildNodes)
             {
                 var child = SetupTraverse(e);
                 node.InsertChild(child, node.Children.Count);
@@ -120,9 +120,9 @@ namespace Rockyfi
 
         }
 
-        Node SetupTraverseRoot(XElement element)
+        Node SetupTraverseRoot(XmlNode element)
         {
-            if (element.Name.LocalName.Equals(RootTagName))
+            if (element.Name.Equals(RootTagName))
             {
                 return SetupTraverse(element);
             }
@@ -156,7 +156,9 @@ namespace Rockyfi
 
         public void LoadFromString(string xml)
         {
-            root = SetupTraverseRoot(XElement.Parse(xml));
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            root = SetupTraverseRoot(doc.FirstChild);
         }
     }
 }

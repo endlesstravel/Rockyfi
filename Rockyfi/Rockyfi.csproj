@@ -8,9 +8,10 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Rockyfi</RootNamespace>
     <AssemblyName>Rockyfi</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,19 +37,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Rockyfi.cs" />
-    <Compile Include="Rockyfi.enum.cs" />
+    <Compile Include="Rockyfi.Enum.cs" />
     <Compile Include="Rockyfi.Factory.cs" />
-    <Compile Include="Rockyfi.internal.cs" />
+    <Compile Include="Rockyfi.Rockyfi.cs" />
     <Compile Include="Rockyfi.Node.cs" />
     <Compile Include="Rockyfi.Print.cs" />
-    <Compile Include="Rockyfi.public.cs" />
-    <Compile Include="Rockyfi.Rockyfi.cs" />
-    <Compile Include="Rockyfi.struct.cs" />
+    <Compile Include="Rockyfi.Public.cs" />
+    <Compile Include="Rockyfi.Struct.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

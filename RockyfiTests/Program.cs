@@ -16,12 +16,12 @@
 //";
 //            factory = new Rockyfi.Factory();
 //            factory.LoadFromString(tmpXML1);
-//            factory.Update(Rockyfi.Direction.LTR);
+//            factory.CalculateLayout(Rockyfi.Direction.LTR);
 //        }
 
 //        public override void Update(float dt)
 //        {
-//            factory.Update(Rockyfi.Direction.LTR);
+//            factory.CalculateLayout(Rockyfi.Direction.LTR);
 //            Love.Misc.FPSGraph.FPSGraph.Update(dt);
 //        }
 

@@ -3,10 +3,14 @@ Rockyfi/obj
 Rockyfi/bin
 Rockyfi/packages
 
-Rockyfi/.vs
 RockyfiTests/obj
 RockyfiTests/bin
 RockyfiTests/packages
+
+RockyfiFactory/.vs
+RockyfiFactory/obj
+RockyfiFactory/bin
+RockyfiFactory/packages
 
 /flex
 /bin
