@@ -130,6 +130,15 @@ namespace Rockyfi
 
     public partial class Node
     {
+        // FloatsEqual returns true if floats are approx. equal
+        public static bool FloatsEqual(float a, float b)
+        {
+            if (FloatIsUndefined(a))
+            {
+                return FloatIsUndefined(b);
+            }
+            return System.Math.Abs(a - b) < 0.0001f;
+        }
         // roundValueToPixelGrid rounds value to pixel grid
         public static float roundValueToPixelGrid(float value, float pointScaleFactor, bool forceCeil, bool forceFloor)
         {

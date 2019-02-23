@@ -666,6 +666,16 @@ namespace Rockyfi
         {
             return this.baselineFunc;
         }
+
+        public void SetPrintFunc(PrintFunc printFunc)
+        {
+            this.printFunc = printFunc;
+        }
+
+        public PrintFunc GetPrintFunc()
+        {
+            return this.printFunc;
+        }
         #endregion
 
         #region tree

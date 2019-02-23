@@ -133,7 +133,7 @@ namespace Rockyfi
     public partial class Node
     {
 
-        class CachedMeasurement
+        internal class CachedMeasurement
         {
             internal float availableWidth;
             internal float availableHeight;
@@ -153,7 +153,7 @@ namespace Rockyfi
             }
         }
 
-        class Layout
+        internal class Layout
         {
             internal readonly float[] Position = new float[4];
             internal readonly float[] Dimensions = new float[2]{ float.NaN, float.NaN };
@@ -594,14 +594,6 @@ namespace Rockyfi
                     node.resolvedDimensions[dim] = node.nodeStyle.Dimensions[dim];
                 }
             }
-        }
-
-        // FloatsEqual returns true if floats are approx. equal
-        internal static bool FloatsEqual(float a, float b)  {
-            if (FloatIsUndefined(a)) {
-                return FloatIsUndefined(b);
-            }
-            return System.Math.Abs(a-b) < 0.0001f;
         }
 
         // // see print.go

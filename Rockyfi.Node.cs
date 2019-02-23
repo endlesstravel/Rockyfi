@@ -4,8 +4,8 @@ namespace Rockyfi
 {
     public partial class Node
     {
-        readonly Style nodeStyle = new Style();
-        readonly Layout nodeLayout = new Layout();
+        readonly internal Style nodeStyle = new Style();
+        readonly internal Layout nodeLayout = new Layout();
         internal int lineIndex;
 
         internal Node Parent = null;

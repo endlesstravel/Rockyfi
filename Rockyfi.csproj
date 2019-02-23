@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="a_test.go.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Rociyfi.Print.cs" />
     <Compile Include="Rociyfi.test.cs" />
     <Compile Include="Rockyfi.cs" />
     <Compile Include="Rockyfi.enum.cs" />

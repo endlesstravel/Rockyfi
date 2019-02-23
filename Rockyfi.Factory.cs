@@ -9,7 +9,7 @@ namespace Rockyfi
     public delegate Size MeasureFunc(Node node, float width, MeasureMode widthMode, float height, MeasureMode heightMode);
 
     // PrintFunc defines function for printing
-    internal delegate void PrintFunc(Node node);
+    public delegate void PrintFunc(Node node);
 
     // BaselineFunc describes function for baseline
     public delegate float BaselineFunc(Node node, float width, float height);

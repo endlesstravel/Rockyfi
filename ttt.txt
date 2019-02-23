@@ -1,0 +1,232 @@
+
+// AlignToString returns string version of Align enum
+static string AlignToString(Align value) {
+	switch (value) {
+	case Align.Auto:
+		return "auto";
+	case Align.FlexStart:
+		return "flex-start";
+	case Align.Center:
+		return "center";
+	case Align.FlexEnd:
+		return "flex-end";
+	case Align.Stretch:
+		return "stretch";
+	case Align.Baseline:
+		return "baseline";
+	case Align.SpaceBetween:
+		return "space-between";
+	case Align.SpaceAround:
+		return "space-around";
+	}
+	return "unknown";
+}
+
+// DimensionToString returns string version of Dimension enum
+static string DimensionToString(Dimension value) {
+	switch (value) {
+	case Dimension.Width:
+		return "width";
+	case Dimension.Height:
+		return "height";
+	}
+	return "unknown";
+}
+
+// DirectionToString returns string version of Direction enum
+static string DirectionToString(Direction value) {
+	switch (value) {
+	case Direction.Inherit:
+		return "inherit";
+	case Direction.LTR:
+		return "ltr";
+	case Direction.RTL:
+		return "rtl";
+	}
+	return "unknown";
+}
+
+// DisplayToString returns string version of Display enum
+static string DisplayToString(Display value) {
+	switch (value) {
+	case Display.Flex:
+		return "flex";
+	case Display.None:
+		return "none";
+	}
+	return "unknown";
+}
+
+// EdgeToString returns string version of Edge enum
+static string EdgeToString(Edge value) {
+	switch (value) {
+	case Edge.Left:
+		return "left";
+	case Edge.Top:
+		return "top";
+	case Edge.Right:
+		return "right";
+	case Edge.Bottom:
+		return "bottom";
+	case Edge.Start:
+		return "start";
+	case Edge.End:
+		return "end";
+	case Edge.Horizontal:
+		return "horizontal";
+	case Edge.Vertical:
+		return "vertical";
+	case Edge.All:
+		return "all";
+	}
+	return "unknown";
+}
+
+// ExperimentalFeatureToString returns string version of ExperimentalFeature enum
+static string ExperimentalFeatureToString(ExperimentalFeature value) {
+	switch (value) {
+	case ExperimentalFeatureWeb.FlexBasis:
+		return "web-flex-basis";
+	}
+	return "unknown";
+}
+
+// FlexDirectionToString returns string version of FlexDirection enum
+static string FlexDirectionToString(FlexDirection value) {
+	switch (value) {
+	case FlexDirection.Column:
+		return "column";
+	case FlexDirection.ColumnReverse:
+		return "column-reverse";
+	case FlexDirection.Row:
+		return "row";
+	case FlexDirection.RowReverse:
+		return "row-reverse";
+	}
+	return "unknown";
+}
+
+// JustifyToString returns string version of Justify enum
+static string JustifyToString(Justify value) {
+	switch (value) {
+	case Justify.FlexStart:
+		return "flex-start";
+	case Justify.Center:
+		return "center";
+	case Justify.FlexEnd:
+		return "flex-end";
+	case Justify.SpaceBetween:
+		return "space-between";
+	case Justify.SpaceAround:
+		return "space-around";
+	}
+	return "unknown";
+}
+
+// LogLevelToString returns string version of LogLevel enum
+static string LogLevelToString(LogLevel value) {
+	switch (value) {
+	case LogLevel.Error:
+		return "error";
+	case LogLevel.Warn:
+		return "warn";
+	case LogLevel.Info:
+		return "info";
+	case LogLevel.Debug:
+		return "debug";
+	case LogLevel.Verbose:
+		return "verbose";
+	case LogLevel.Fatal:
+		return "fatal";
+	}
+	return "unknown";
+}
+
+// MeasureModeToString returns string version of MeasureMode enum
+static string MeasureModeToString(MeasureMode value) {
+	switch (value) {
+	case MeasureMode.Undefined:
+		return "undefined";
+	case MeasureMode.Exactly:
+		return "exactly";
+	case MeasureMode.AtMost:
+		return "at-most";
+	}
+	return "unknown";
+}
+
+// NodeTypeToString returns string version of NodeType enum
+static string NodeTypeToString(NodeType value) {
+	switch (value) {
+	case NodeType.Default:
+		return "default";
+	case NodeType.Text:
+		return "text";
+	}
+	return "unknown";
+}
+
+// OverflowToString returns string version of Overflow enum
+static string OverflowToString(Overflow value) {
+	switch (value) {
+	case Overflow.Visible:
+		return "visible";
+	case Overflow.Hidden:
+		return "hidden";
+	case Overflow.Scroll:
+		return "scroll";
+	}
+	return "unknown";
+}
+
+// PositionTypeToString returns string version of PositionType enum
+static string PositionTypeToString(PositionType value) {
+	switch (value) {
+	case PositionType.Relative:
+		return "relative";
+	case PositionType.Absolute:
+		return "absolute";
+	}
+	return "unknown";
+}
+
+// PrintOptionsToString returns string version of PrintOptions enum
+static string PrintOptionsToString(PrintOptions value) {
+	switch (value) {
+	case PrintOptions.Layout:
+		return "layout";
+	case PrintOptions.Style:
+		return "style";
+	case PrintOptions.Children:
+		return "children";
+	}
+	return "unknown";
+}
+
+// UnitToString returns string version of Unit enum
+static string UnitToString(Unit value) {
+	switch (value) {
+	case Unit.Undefined:
+		return "undefined";
+	case Unit.Point:
+		return "point";
+	case Unit.Percent:
+		return "percent";
+	case Unit.Auto:
+		return "auto";
+	}
+	return "unknown";
+}
+
+// WrapToString returns string version of Wrap enum
+static string WrapToString(Wrap value) {
+	switch (value) {
+	case Wrap.NoWrap:
+		return "no-wrap";
+	case Wrap.Wrap:
+		return "wrap";
+	case Wrap.WrapReverse:
+		return "wrap-reverse";
+	}
+	return "unknown";
+}
