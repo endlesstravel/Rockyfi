@@ -8,7 +8,7 @@ namespace Rockyfi
 {
     class NodePrinter
     {
-        public NodePrinter(StreamWriter writer, bool PrintOptionsLayout,bool PrintOptionsStyle,bool PrintOptionsChildren)
+        public NodePrinter(StringBuilder writer, bool PrintOptionsLayout,bool PrintOptionsStyle,bool PrintOptionsChildren)
         {
             this.writer = writer;
             this.PrintOptionsLayout = PrintOptionsLayout;
@@ -18,7 +18,7 @@ namespace Rockyfi
 
         static Node nodeDefaults = Node.CreateDefaultNode();
 
-        StreamWriter writer;
+        StringBuilder writer;
         bool PrintOptionsLayout;
         bool PrintOptionsStyle;
         bool PrintOptionsChildren;
@@ -181,14 +181,14 @@ namespace Rockyfi
         }
 
         void printf(string str) {
-            writer.Write(str);
+            writer.Append(str);
         }
 
         void printIndent(int n)
         {
             List<string> indent = new List<string>(n);
             for (int i = 0; i < n; i ++) indent.Add("");
-            writer.Write(string.Join("  ", indent));
+            writer.Append(string.Join("  ", indent));
         }
 
         bool fourValuesEqual(Value[] four) {
