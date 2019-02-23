@@ -240,6 +240,17 @@ namespace Rockyfi
             return node;
         }
 
+        internal static Node CreateDefaultNode(Config config)
+        {
+            var node = new Node();
+            if (config.UseWebDefaults) {
+                node.nodeStyle.FlexDirection = FlexDirection.Row;
+                node.nodeStyle.AlignContent = Align.Stretch;
+            }
+            node.config = config;
+            return node;
+        }
+
         readonly internal static Value ValueZero =  new Value(0, Unit.Point);
         readonly internal static Value ValueUndefined = new Value(float.NaN, Unit.Undefined);
 
@@ -344,22 +355,6 @@ namespace Rockyfi
         //     return array == null ? 0 : array.Length;
         // }
 
-        // // Reset resets a node
-        internal static void Reset(ref Node node)
-        {
-            assertWithNode(node, node.Children.Count == 0, "Cannot reset a node which still has children attached");
-            assertWithNode(node, node.Parent == null, "Cannot reset a node still attached to a parent");
-            node.Children.Clear();
-
-            var config = node.config;
-            node = CreateDefaultNode();
-            if(config.UseWebDefaults)
-            {
-                node.nodeStyle.FlexDirection = FlexDirection.Row;
-                node.nodeStyle.AlignContent = Align.Stretch;
-            }
-            node.config = config;
-        }
 
         // ConfigGetDefault returns default config, only for C#
         internal static Config ConfigGetDefault() {
@@ -478,16 +473,6 @@ namespace Rockyfi
                 }
             }
             return true;
-        }
-
-        // NodeCopyStyle copies style
-        internal static void NodeCopyStyle(Node dstNode, Node srcNode)
-        {
-            if (!styleEq(dstNode.nodeStyle, srcNode.nodeStyle))
-            {
-                Style.Copy(dstNode.nodeStyle, srcNode.nodeStyle);
-                nodeMarkDirtyInternal(dstNode);
-            }
         }
 
         internal static float resolveFlexGrow(Node node)
@@ -2680,30 +2665,6 @@ namespace Rockyfi
                 lastSize > size && (lastComputedSize <= size || FloatsEqual(size, lastComputedSize));
         }
 
-        // roundValueToPixelGrid rounds value to pixel grid
-        internal static float roundValueToPixelGrid(float value, float pointScaleFactor, bool forceCeil, bool forceFloor) {
-            var scaledValue = value * pointScaleFactor;
-            var fractial = fmodf(scaledValue, 1f);
-            if (FloatsEqual(fractial, 0) ) {
-                // First we check if the value is already rounded
-                scaledValue = scaledValue - fractial;
-            } else if (FloatsEqual(fractial, 1) ) {
-                scaledValue = scaledValue - fractial + 1;
-            } else if (forceCeil ) {
-                // Next we check if we need to use forced rounding
-                scaledValue = scaledValue - fractial + 1;
-            } else if (forceFloor ) {
-                scaledValue = scaledValue - fractial;
-            } else {
-                // Finally we just round the value
-                float f = 0;
-                if (fractial >= 0.5f ) {
-                    f = 1.0f;
-                }
-                scaledValue = scaledValue - fractial + f;
-            }
-            return scaledValue / pointScaleFactor;
-        }
 
         // nodeCanUseCachedMeasurement returns true if can use cached measurement
         internal static bool nodeCanUseCachedMeasurement(MeasureMode widthMode, float width, MeasureMode heightMode, float height, MeasureMode lastWidthMode, float lastWidth, MeasureMode lastHeightMode, float lastHeight, float lastComputedWidth, float lastComputedHeight, float marginRow, float marginColumn, Config config) {

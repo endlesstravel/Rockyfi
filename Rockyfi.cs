@@ -94,6 +94,11 @@ namespace Rockyfi
             }
         }
 
+        public PositionType StyleGetPositionType()
+        {
+            return this.nodeStyle.PositionType;
+        }
+
         // StyleSetPosition sets position
         public void StyleSetPosition(Edge edge, float position) {
             var pos = this.nodeStyle.Position[(int)edge];
@@ -133,12 +138,22 @@ namespace Rockyfi
             }
         }
 
+        public Direction StyleGetDirection()
+        {
+            return this.nodeStyle.Direction;
+        }
+
         // StyleSetFlexDirection sets flex directions
         public void StyleSetFlexDirection(FlexDirection flexDirection) {
             if (this.nodeStyle.FlexDirection != flexDirection) {
                 this.nodeStyle.FlexDirection = flexDirection;
                 nodeMarkDirtyInternal(this);
             }
+        }
+
+        public FlexDirection StyleGetFlexDirection()
+        {
+            return this.nodeStyle.FlexDirection;
         }
 
         // StyleSetJustifyContent sets justify content
@@ -149,12 +164,22 @@ namespace Rockyfi
             }
         }
 
+        public Justify StyleGetJustifyContent()
+        {
+            return this.nodeStyle.JustifyContent;
+        }
+
         // StyleSetAlignContent sets align content
         public void StyleSetAlignContent(Align alignContent) {
             if (this.nodeStyle.AlignContent != alignContent) {
                 this.nodeStyle.AlignContent = alignContent;
                 nodeMarkDirtyInternal(this);
             }
+        }
+
+        public Align StyleGetAlignContent()
+        {
+            return this.nodeStyle.AlignContent;
         }
 
         // StyleSetAlignItems sets align content
@@ -165,12 +190,22 @@ namespace Rockyfi
             }
         }
 
+        public Align StyleGetAlignItems()
+        {
+            return this.nodeStyle.AlignItems;
+        }
+
         // StyleSetAlignSelf sets align self
         public void StyleSetAlignSelf(Align alignSelf) {
             if (this.nodeStyle.AlignSelf != alignSelf) {
                 this.nodeStyle.AlignSelf = alignSelf;
                 nodeMarkDirtyInternal(this);
             }
+        }
+
+        public Align StyleGetAlignSelf()
+        {
+            return this.nodeStyle.AlignSelf;
         }
 
         // StyleSetFlexWrap sets flex wrap
@@ -181,12 +216,22 @@ namespace Rockyfi
             }
         }
 
+        public Wrap StyleGetFlexWrap()
+        {
+            return this.nodeStyle.FlexWrap;
+        }
+
         // StyleSetOverflow sets overflow
         public void StyleSetOverflow(Overflow overflow) {
             if (this.nodeStyle.Overflow != overflow) {
                 this.nodeStyle.Overflow = overflow;
                 nodeMarkDirtyInternal(this);
             }
+        }
+
+        public Overflow StyleGetOverflow()
+        {
+            return this.nodeStyle.Overflow;
         }
 
         // StyleSetDisplay sets display
@@ -197,12 +242,22 @@ namespace Rockyfi
             }
         }
 
+        public Display StyleGetDisplay()
+        {
+            return this.nodeStyle.Display;
+        }
+
         // StyleSetFlex sets flex
         public void StyleSetFlex(float flex) {
             if (this.nodeStyle.Flex != flex) {
                 this.nodeStyle.Flex = flex;
                 nodeMarkDirtyInternal(this);
             }
+        }
+
+        public float StyleGetFlex()
+        {
+            return this.nodeStyle.Flex;
         }
 
         // StyleSetFlexGrow sets flex grow
@@ -213,12 +268,22 @@ namespace Rockyfi
             }
         }
 
+        public float StyleGetFlexGrow()
+        {
+            return this.nodeStyle.FlexGrow;
+        }
+
         // StyleSetFlexShrink sets flex shrink
         public void StyleSetFlexShrink(float flexShrink) {
             if (this.nodeStyle.FlexShrink != flexShrink) {
                 this.nodeStyle.FlexShrink = flexShrink;
                 nodeMarkDirtyInternal(this);
             }
+        }
+
+        public float StyleGetFlexShrink()
+        {
+            return this.nodeStyle.FlexShrink;
         }
 
         // StyleSetFlexBasis sets flex basis
@@ -254,6 +319,11 @@ namespace Rockyfi
                 this.nodeStyle.FlexBasis.unit = Unit.Auto;
                 nodeMarkDirtyInternal(this);
             }
+        }
+
+        public Value NodeStyleGetFlexBasis()
+        {
+            return this.nodeStyle.FlexBasis;
         }
 
         // StyleSetMargin sets margin
@@ -562,6 +632,17 @@ namespace Rockyfi
             }
             return this.nodeLayout.Padding[(int)edge];
         }
+
+        public Direction LayoutGetDirection()
+        {
+            return this.nodeLayout.Direction;
+        }
+
+        public bool LayoutGetHadOverflow()
+        {
+            return this.nodeLayout.HadOverflow;
+        }
+
         #endregion
 
         #region other props
@@ -573,9 +654,17 @@ namespace Rockyfi
         {
             this.baselineFunc = func;
         }
+        public void GetStyle()
+        {
+
+        }
         #endregion
 
         #region tree
+        public Node GetChild(int idx)
+        {
+            return Node.GetChild(this, idx);
+        }
         public void InsertChild(Node child, int idx)
         {
             Node.InsertChild(this, child, idx);
