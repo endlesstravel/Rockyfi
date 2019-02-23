@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Rockyfi;
 
 // https://github.com/nunit/nunit-csharp-samples/blob/master/syntax/AssertSyntaxTests.cs
-namespace Rockyfi
+namespace RociyfiTest
 {
     class RociyfiTest
     {
@@ -14682,7 +14683,6 @@ namespace Rockyfi
             assertEqual(got, exp);
         }
         #endregion
-
 
         public void XTestAll()
         {

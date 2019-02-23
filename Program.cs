@@ -9,7 +9,7 @@ namespace FlexCs
         public override void Load()
         {
             string tmpXML1 = @"
-<div width=""100px"" height=""100px"" id=""root"">
+<div width=""520px"" height=""300px"" id=""root"">
     <div width=""50px"" height=""30%"" id=""child-1"">
     </div>
 </div>
@@ -19,12 +19,18 @@ namespace FlexCs
             factory.Update(Rockyfi.Direction.LTR);
         }
 
+        public override void Update(float dt)
+        {
+            factory.Update(Rockyfi.Direction.LTR);
+            Love.Misc.FPSGraph.FPSGraph.Update(dt);
+        }
+
         public override void Draw()
         {
+
+            Love.Misc.FPSGraph.FPSGraph.Draw();
             Graphics.SetColor(Color.White);
-
             Graphics.Translate(100, 100);
-
             factory.Draw((x, y, w, h, node) =>
             {
                 //Console.WriteLine($"{node.Atrribute["id"]}    {x}  {y}  {w}  {h}");
@@ -35,7 +41,7 @@ namespace FlexCs
 
         static void Main(string[] args)
         {
-            var t = new Rockyfi.RociyfiTest();
+            var t = new RociyfiTest.RociyfiTest();
             t.XTestAll();
             Boot.Init(new BootConfig
             {
