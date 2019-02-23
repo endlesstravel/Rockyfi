@@ -6,8 +6,68 @@ namespace FlexCs
     class Program : Scene
     {
         Rockyfi.Factory factory;
+
+        int p
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        int p2;
+        public int p3
+        {
+            get
+            {
+                return 1;
+            }
+        }
+        public int ppp3
+        {
+            set
+            {
+                value = 1;
+            }
+        }
+
+        public int p4;
+
+        public static int p5
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        public static int p6;
+
         public override void Load()
         {
+
+            Type t = this.GetType();
+            System.Reflection.MemberInfo[] members = t.GetMembers();
+            System.Reflection.PropertyInfo[] properties = t.GetProperties();
+            System.Reflection.FieldInfo[] fieldInfos = t.GetFields();
+
+            Console.WriteLine("--------------mem");
+            foreach (var m in members)
+            {
+                Console.WriteLine(m.Name);
+            }
+            Console.WriteLine("--------------p");
+            foreach (var p in properties)
+            {
+                Console.WriteLine(p.Name + "  " + (p.GetGetMethod().Name));
+            }
+            Console.WriteLine("--------------f");
+            foreach (var f in fieldInfos)
+            {
+                Console.WriteLine(f.Name);
+            }
+            Console.WriteLine("--------------");
+
             string tmpXML1 = @"
 <div width=""520px"" height=""300px"" id=""root"">
     <div width=""50px"" height=""30%"" id=""child-1"">
@@ -41,13 +101,10 @@ namespace FlexCs
             Love.Misc.FPSGraph.FPSGraph.Draw();
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
-            //Console.WriteLine("----------------------");
             factory.Draw((x, y, w, h, node) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{(node.Atrribute.TryGetValue("id", out object id) ? id : "")}", x, y);
-                //Console.WriteLine(string.Format("{0} {1} {2} {3}", node.LayoutGetLeft(), node.LayoutGetRight(),
-                //    node.LayoutGetWidth(), node.LayoutGetHeight()));
             });
         }
 

@@ -227,6 +227,8 @@ namespace Rockyfi
 
         Node SetupNormalNode(XmlNode ele)
         {
+            Console.WriteLine("---------------");
+            Console.WriteLine(ele.InnerXml);
             Node node = Rockyfi.CreateDefaultNode();
             foreach (XmlAttribute attr in ele.Attributes)
             {
@@ -356,49 +358,6 @@ namespace Rockyfi
             return node;
         }
 
-
-        #region DataCenter
-        class DataBind
-        {
-            enum Type
-            {
-                For,
-            }
-
-            object data;
-
-        }
-        readonly Dictionary<string, Node> effectBind = new Dictionary<string, Node>();
-
-        /// <summary>
-        /// insert child
-        /// </summary>
-        void InsertChild(Node node, Node child, int idx)
-        {
-            // TODO: data check
-            Rockyfi.InsertChild(node, child, idx);
-        }
-
-        // delete
-        void RemoveChild(Node node, Node child)
-        {
-            // TODO: data check
-            Rockyfi.RemoveChild(node, child);
-        }
-
-        // update
-        void SetData()
-        {
-
-        }
-
-        // update
-        void GetData()
-        {
-
-        }
-
-        #endregion
 
         Node SetupTraverse(XmlNode element)
         {
