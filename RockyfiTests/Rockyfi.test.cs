@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Rockyfi;
-
-// https://github.com/nunit/nunit-csharp-samples/blob/master/syntax/AssertSyntaxTests.cs
-namespace RociyfiTest
+using NUnit.Framework;
+namespace Rockyfi
 {
-    class RociyfiTest
+    [TestFixture()]
+    public class TestUnit
     {
         static void assertFloatEqual(float expect, float real)
         {
+            Assert.AreEqual(expect, real, 0.0001f);
             if (Math.Abs(expect - real) > 0.0001f)
             {
                 throw new Exception();
@@ -19,6 +18,7 @@ namespace RociyfiTest
 
         static void assertEqual(object a, object b)
         {
+            Assert.AreEqual(a, b);
             if (a == null && b == null)
             {
                 return;
@@ -37,6 +37,7 @@ namespace RociyfiTest
 
         static void assertTrue(bool value)
         {
+            Assert.IsTrue(value);
             if (!value)
             {
                 throw new Exception();
@@ -45,6 +46,7 @@ namespace RociyfiTest
 
         static void assertFalse(bool value)
         {
+            Assert.IsFalse(value);
             if (value)
             {
                 throw new Exception();
@@ -53,7 +55,7 @@ namespace RociyfiTest
 
 
         #region absolute
-        void TestAbsoluteLayoutWidthHeightStartTop()
+        [Test] public void TestAbsoluteLayoutWidthHeightStartTop()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -91,7 +93,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutStartTopEndBottom()
+        [Test] public void TestAbsoluteLayoutStartTopEndBottom()
         {
 
 
@@ -131,7 +133,7 @@ namespace RociyfiTest
             assertFloatEqual(80, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutWidthHeightStartTopEndBottom()
+        [Test] public void TestAbsoluteLayoutWidthHeightStartTopEndBottom()
         {
 
 
@@ -173,7 +175,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestDoNotClampHeightOfAbsoluteNodeToHeightOfItsOverflowHiddenParent()
+        [Test] public void TestDoNotClampHeightOfAbsoluteNodeToHeightOfItsOverflowHiddenParent()
         {
 
 
@@ -228,7 +230,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0Child0.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutWithinBorder()
+        [Test] public void TestAbsoluteLayoutWithinBorder()
         {
 
 
@@ -342,7 +344,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild3.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutAlignItemsAndJustifyContentCenter()
+        [Test] public void TestAbsoluteLayoutAlignItemsAndJustifyContentCenter()
         {
 
 
@@ -383,7 +385,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutAlignItemsAndJustifyContentFlexEnd()
+        [Test] public void TestAbsoluteLayoutAlignItemsAndJustifyContentFlexEnd()
         {
 
 
@@ -424,7 +426,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutJustifyContentCenter()
+        [Test] public void TestAbsoluteLayoutJustifyContentCenter()
         {
 
 
@@ -464,7 +466,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutAlignItemsCenter()
+        [Test] public void TestAbsoluteLayoutAlignItemsCenter()
         {
 
 
@@ -504,7 +506,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutAlignItemsCenterOnChildOnly()
+        [Test] public void TestAbsoluteLayoutAlignItemsCenterOnChildOnly()
         {
 
 
@@ -544,7 +546,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutAlignItemsAndJustifyContentCenterAndTopPosition()
+        [Test] public void TestAbsoluteLayoutAlignItemsAndJustifyContentCenterAndTopPosition()
         {
 
 
@@ -586,7 +588,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutAlignItemsAndJustifyContentCenterAndBottomPosition()
+        [Test] public void TestAbsoluteLayoutAlignItemsAndJustifyContentCenterAndBottomPosition()
         {
 
 
@@ -628,7 +630,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsoluteLayoutAlignItemsAndJustifyContentCenterAndLeftPosition()
+        [Test] public void TestAbsoluteLayoutAlignItemsAndJustifyContentCenterAndLeftPosition()
         {
 
 
@@ -670,7 +672,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsolute_layout_align_items_and_justify_content_center_and_right_position()
+        [Test] public void TestAbsolute_layout_align_items_and_justify_content_center_and_right_position()
         {
 
 
@@ -712,7 +714,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestPosition_root_with_rtl_should_position_withoutdirection()
+        [Test] public void TestPosition_root_with_rtl_should_position_withoutdirection()
         {
 
 
@@ -735,7 +737,7 @@ namespace RociyfiTest
             assertFloatEqual(52, root.LayoutGetHeight());
         }
 
-        void TestAbsolute_layout_percentage_bottom_based_on_parent_height()
+        [Test] public void TestAbsolute_layout_percentage_bottom_based_on_parent_height()
         {
 
 
@@ -808,7 +810,7 @@ namespace RociyfiTest
             assertFloatEqual(160, rootChild2.LayoutGetHeight());
         }
 
-        void TestAbsolute_layout_in_wrap_reverse_column_container()
+        [Test] public void TestAbsolute_layout_in_wrap_reverse_column_container()
         {
 
 
@@ -847,7 +849,7 @@ namespace RociyfiTest
             assertFloatEqual(20, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsolute_layout_in_wrap_reverse_row_container()
+        [Test] public void TestAbsolute_layout_in_wrap_reverse_row_container()
         {
 
 
@@ -887,7 +889,7 @@ namespace RociyfiTest
             assertFloatEqual(20, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsolute_layout_in_wrap_reverse_column_container_flex_end()
+        [Test] public void TestAbsolute_layout_in_wrap_reverse_column_container_flex_end()
         {
 
 
@@ -927,7 +929,7 @@ namespace RociyfiTest
             assertFloatEqual(20, rootChild0.LayoutGetHeight());
         }
 
-        void TestAbsolute_layout_in_wrap_reverse_row_container_flex_end()
+        [Test] public void TestAbsolute_layout_in_wrap_reverse_row_container_flex_end()
         {
 
 
@@ -970,7 +972,7 @@ namespace RociyfiTest
         #endregion
 
         #region align_content_test
-        void TestAlignContentFlexStart()
+        [Test] public void TestAlignContentFlexStart()
         {
 
 
@@ -1069,7 +1071,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_flex_start_without_height_on_children()
+        [Test] public void TestAlign_content_flex_start_without_height_on_children()
         {
 
 
@@ -1165,7 +1167,7 @@ namespace RociyfiTest
             assertFloatEqual(0, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_flex_start_with_flex()
+        [Test] public void TestAlign_content_flex_start_with_flex()
         {
 
 
@@ -1266,7 +1268,7 @@ namespace RociyfiTest
             assertFloatEqual(0, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_flex_end()
+        [Test] public void TestAlign_content_flex_end()
         {
 
 
@@ -1365,7 +1367,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch()
+        [Test] public void TestAlign_content_stretch()
         {
 
 
@@ -1459,7 +1461,7 @@ namespace RociyfiTest
             assertFloatEqual(0, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_spacebetween()
+        [Test] public void TestAlign_content_spacebetween()
         {
 
 
@@ -1560,7 +1562,7 @@ namespace RociyfiTest
 
         }
 
-        void TestAlign_content_spacearound()
+        [Test] public void TestAlign_content_spacearound()
         {
 
 
@@ -1661,7 +1663,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_row()
+        [Test] public void TestAlign_content_stretch_row()
         {
 
 
@@ -1756,7 +1758,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_row_with_children()
+        [Test] public void TestAlign_content_stretch_row_with_children()
         {
 
 
@@ -1867,7 +1869,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_row_with_flex()
+        [Test] public void TestAlign_content_stretch_row_with_flex()
         {
 
 
@@ -1968,7 +1970,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_row_with_flex_no_shrink()
+        [Test] public void TestAlign_content_stretch_row_with_flex_no_shrink()
         {
 
 
@@ -2068,7 +2070,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_row_with_margin()
+        [Test] public void TestAlign_content_stretch_row_with_margin()
         {
 
 
@@ -2171,7 +2173,7 @@ namespace RociyfiTest
             assertFloatEqual(20, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_row_with_padding()
+        [Test] public void TestAlign_content_stretch_row_with_padding()
         {
 
 
@@ -2274,7 +2276,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_row_with_single_row()
+        [Test] public void TestAlign_content_stretch_row_with_single_row()
         {
 
 
@@ -2327,7 +2329,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_row_with_fixed_height()
+        [Test] public void TestAlign_content_stretch_row_with_fixed_height()
         {
 
 
@@ -2423,7 +2425,7 @@ namespace RociyfiTest
             assertFloatEqual(20, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_row_with_max_height()
+        [Test] public void TestAlign_content_stretch_row_with_max_height()
         {
 
 
@@ -2519,7 +2521,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_row_with_min_height()
+        [Test] public void TestAlign_content_stretch_row_with_min_height()
         {
 
 
@@ -2615,7 +2617,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_column()
+        [Test] public void TestAlign_content_stretch_column()
         {
 
 
@@ -2728,7 +2730,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestAlign_content_stretch_is_not_overriding_align_items()
+        [Test] public void TestAlign_content_stretch_is_not_overriding_align_items()
         {
 
 
@@ -2785,7 +2787,7 @@ namespace RociyfiTest
         #endregion
 
         #region align_self_test.go
-        void TestAlign_self_center()
+        [Test] public void TestAlign_self_center()
         {
 
 
@@ -2823,7 +2825,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestAlign_self_flex_end()
+        [Test] public void TestAlign_self_flex_end()
         {
 
 
@@ -2861,7 +2863,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestAlign_self_flex_start()
+        [Test] public void TestAlign_self_flex_start()
         {
 
 
@@ -2899,7 +2901,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestAlign_self_flex_end_override_flex_start()
+        [Test] public void TestAlign_self_flex_end_override_flex_start()
         {
 
 
@@ -2938,7 +2940,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestAlign_self_baseline()
+        [Test] public void TestAlign_self_baseline()
         {
 
 
@@ -3025,7 +3027,7 @@ namespace RociyfiTest
             return new Size(width, height);
         }
 
-        void TestAspect_ratio_cross_defined()
+        [Test] public void TestAspect_ratio_cross_defined()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3045,7 +3047,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_main_defined()
+        [Test] public void TestAspect_ratio_main_defined()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3065,7 +3067,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_both_dimensions_defined_row()
+        [Test] public void TestAspect_ratio_both_dimensions_defined_row()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
@@ -3087,7 +3089,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_both_dimensions_defined_column()
+        [Test] public void TestAspect_ratio_both_dimensions_defined_column()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3108,7 +3110,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_align_stretch()
+        [Test] public void TestAspect_ratio_align_stretch()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -3126,7 +3128,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_flex_grow()
+        [Test] public void TestAspect_ratio_flex_grow()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3147,7 +3149,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_flex_shrink()
+        [Test] public void TestAspect_ratio_flex_shrink()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3168,7 +3170,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_basis()
+        [Test] public void TestAspect_ratio_basis()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3188,7 +3190,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_absolute_layout_width_defined()
+        [Test] public void TestAspect_ratio_absolute_layout_width_defined()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -3210,7 +3212,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_absolute_layout_height_defined()
+        [Test] public void TestAspect_ratio_absolute_layout_height_defined()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -3232,7 +3234,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_with_max_cross_defined()
+        [Test] public void TestAspect_ratio_with_max_cross_defined()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3253,7 +3255,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_with_max_main_defined()
+        [Test] public void TestAspect_ratio_with_max_main_defined()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3274,7 +3276,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_with_min_cross_defined()
+        [Test] public void TestAspect_ratio_with_min_cross_defined()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3295,7 +3297,7 @@ namespace RociyfiTest
             assertFloatEqual(30, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_with_min_main_defined()
+        [Test] public void TestAspect_ratio_with_min_main_defined()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3316,7 +3318,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_double_cross()
+        [Test] public void TestAspect_ratio_double_cross()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3336,7 +3338,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_half_cross()
+        [Test] public void TestAspect_ratio_half_cross()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3356,7 +3358,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_double_main()
+        [Test] public void TestAspect_ratio_double_main()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3376,7 +3378,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_half_main()
+        [Test] public void TestAspect_ratio_half_main()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3396,7 +3398,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_with_measure_func()
+        [Test] public void TestAspect_ratio_with_measure_func()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3416,7 +3418,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_width_height_flex_grow_row()
+        [Test] public void TestAspect_ratio_width_height_flex_grow_row()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
@@ -3439,7 +3441,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_width_height_flex_grow_column()
+        [Test] public void TestAspect_ratio_width_height_flex_grow_column()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3461,7 +3463,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_height_as_flex_basis()
+        [Test] public void TestAspect_ratio_height_as_flex_basis()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3494,7 +3496,7 @@ namespace RociyfiTest
             assertFloatEqual(125, rootChild1.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_width_as_flex_basis()
+        [Test] public void TestAspect_ratio_width_as_flex_basis()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3526,7 +3528,7 @@ namespace RociyfiTest
             assertFloatEqual(125, rootChild1.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_overrides_flex_grow_row()
+        [Test] public void TestAspect_ratio_overrides_flex_grow_row()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3548,7 +3550,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_overrides_flex_grow_column()
+        [Test] public void TestAspect_ratio_overrides_flex_grow_column()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3569,7 +3571,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_left_right_absolute()
+        [Test] public void TestAspect_ratio_left_right_absolute()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -3591,7 +3593,7 @@ namespace RociyfiTest
             assertFloatEqual(80, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_top_bottom_absolute()
+        [Test] public void TestAspect_ratio_top_bottom_absolute()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -3613,7 +3615,7 @@ namespace RociyfiTest
             assertFloatEqual(80, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_width_overrides_align_stretch_row()
+        [Test] public void TestAspect_ratio_width_overrides_align_stretch_row()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
@@ -3633,7 +3635,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_height_overrides_align_stretch_column()
+        [Test] public void TestAspect_ratio_height_overrides_align_stretch_column()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -3652,7 +3654,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_allow_child_overflow_parent_size()
+        [Test] public void TestAspect_ratio_allow_child_overflow_parent_size()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -3672,7 +3674,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_defined_main_with_margin()
+        [Test] public void TestAspect_ratio_defined_main_with_margin()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
@@ -3696,7 +3698,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
         }
 
-        void TestAspect_ratio_defined_cross_with_margin()
+        [Test] public void TestAspect_ratio_defined_cross_with_margin()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
@@ -3727,7 +3729,7 @@ namespace RociyfiTest
 	        return (float)node.Context;
         }
 
-        void TestAlign_baseline_customer_func() {
+        [Test] public void TestAlign_baseline_customer_func() {
 	        var root = Node.CreateDefaultNode();
 	        root.StyleSetFlexDirection(FlexDirection.Row);
 	        root.StyleSetAlignItems(Align.Baseline);
@@ -3776,7 +3778,7 @@ namespace RociyfiTest
         #endregion
 
         #region border_test.go
-        void TestBorder_no_size()
+        [Test] public void TestBorder_no_size()
         {
 
 
@@ -3800,7 +3802,7 @@ namespace RociyfiTest
             assertFloatEqual(20, root.LayoutGetHeight());
         }
 
-        void TestBorder_container_match_child()
+        [Test] public void TestBorder_container_match_child()
         {
 
 
@@ -3839,7 +3841,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestBorder_flex_child()
+        [Test] public void TestBorder_flex_child()
         {
 
 
@@ -3880,7 +3882,7 @@ namespace RociyfiTest
             assertFloatEqual(80, rootChild0.LayoutGetHeight());
         }
 
-        void TestBorder_stretch_child()
+        [Test] public void TestBorder_stretch_child()
         {
 
 
@@ -3920,7 +3922,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestBorder_center_child()
+        [Test] public void TestBorder_center_child()
         {
 
 
@@ -3965,7 +3967,7 @@ namespace RociyfiTest
         #endregion
 
         #region compute_margin_test.go
-        void TestComputed_layout_margin()
+        [Test] public void TestComputed_layout_margin()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -3987,7 +3989,7 @@ namespace RociyfiTest
 
         #region compute_padding_test.go
 
-        void TestComputed_layout_padding()
+        [Test] public void TestComputed_layout_padding()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -4008,11 +4010,11 @@ namespace RociyfiTest
         #endregion
 
         #region default_values_test.go
-        void TestAssert_default_values()
+        [Test] public void TestAssert_default_values()
         {
             var root = Node.CreateDefaultNode();
 
-            assertEqual(0, (root.Children.Count));
+            assertEqual(0, (root.ChildrenCount));
             Node nilNode = null;
             assertEqual(nilNode, root.GetChild(1));
             assertEqual(nilNode, root.GetChild(0));
@@ -4091,7 +4093,7 @@ namespace RociyfiTest
 
         }
 
-        void TestAssert_webdefault_values()
+        [Test] public void TestAssert_webdefault_values()
         {
 
             var config = Node.CreateDefaultConfig();
@@ -4104,7 +4106,7 @@ namespace RociyfiTest
 
         }
 
-        void TestAssert_webdefault_values_reset()
+        [Test] public void TestAssert_webdefault_values_reset()
         {
 
             var config = Node.CreateDefaultConfig();
@@ -4121,7 +4123,7 @@ namespace RociyfiTest
         #endregion
 
         #region dimension_test.go
-        void TestWrap_child()
+        [Test] public void TestWrap_child()
         {
 
             var root = Node.CreateDefaultNode();
@@ -4155,7 +4157,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestWrap_grandchild()
+        [Test] public void TestWrap_grandchild()
         {
 
 
@@ -4206,7 +4208,7 @@ namespace RociyfiTest
         #endregion
 
         #region dirty_marking_test.go
-        void TestDirty_propagation()
+        [Test] public void TestDirty_propagation()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -4239,7 +4241,7 @@ namespace RociyfiTest
 
         }
 
-        void TestDirty_propagation_only_if_prop_changed()
+        [Test] public void TestDirty_propagation_only_if_prop_changed()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -4266,7 +4268,7 @@ namespace RociyfiTest
 
         }
 
-        void TestDirty_mark_all_children_as_dirty_when_display_changes()
+        [Test] public void TestDirty_mark_all_children_as_dirty_when_display_changes()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
@@ -4313,7 +4315,7 @@ namespace RociyfiTest
             assertFloatEqual(16, child1Child0Child0.LayoutGetHeight());
         }
 
-        void TestDirty_node_only_if_children_are_actually_removed()
+        [Test] public void TestDirty_node_only_if_children_are_actually_removed()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -4338,7 +4340,7 @@ namespace RociyfiTest
         #endregion
 
         #region display_test.go
-        void TestDisplay_none()
+        [Test] public void TestDisplay_none()
         {
 
 
@@ -4390,7 +4392,7 @@ namespace RociyfiTest
             assertFloatEqual(0, rootChild1.LayoutGetHeight());
         }
 
-        void TestDisplay_none_fixed_size()
+        [Test] public void TestDisplay_none_fixed_size()
         {
 
 
@@ -4443,7 +4445,7 @@ namespace RociyfiTest
             assertFloatEqual(0, rootChild1.LayoutGetHeight());
         }
 
-        void TestDisplay_none_with_margin()
+        [Test] public void TestDisplay_none_with_margin()
         {
 
 
@@ -4500,7 +4502,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
         }
 
-        void TestDisplay_none_with_child()
+        [Test] public void TestDisplay_none_with_child()
         {
 
 
@@ -4591,7 +4593,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
         }
 
-        void TestDisplay_none_with_position()
+        [Test] public void TestDisplay_none_with_position()
         {
 
 
@@ -4647,7 +4649,7 @@ namespace RociyfiTest
         #endregion
 
         #region edge_test.go
-        void TestStart_overrides()
+        [Test] public void TestStart_overrides()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
@@ -4670,7 +4672,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetRight());
         }
 
-        void TestEnd_overrides()
+        [Test] public void TestEnd_overrides()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
@@ -4693,7 +4695,7 @@ namespace RociyfiTest
             assertFloatEqual(20, rootChild0.LayoutGetRight());
         }
 
-        void TestHorizontal_overridden()
+        [Test] public void TestHorizontal_overridden()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
@@ -4711,7 +4713,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetRight());
         }
 
-        void TestVertical_overridden()
+        [Test] public void TestVertical_overridden()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Column);
@@ -4729,7 +4731,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetBottom());
         }
 
-        void TestHorizontal_overrides_all()
+        [Test] public void TestHorizontal_overrides_all()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Column);
@@ -4749,7 +4751,7 @@ namespace RociyfiTest
             assertFloatEqual(20, rootChild0.LayoutGetBottom());
         }
 
-        void TestVertical_overrides_all()
+        [Test] public void TestVertical_overrides_all()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Column);
@@ -4769,7 +4771,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetBottom());
         }
 
-        void TestAll_overridden()
+        [Test] public void TestAll_overridden()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Column);
@@ -4795,7 +4797,7 @@ namespace RociyfiTest
         #endregion
 
         #region flex_direction_test.go
-        void TestFlex_direction_column_no_height()
+        [Test] public void TestFlex_direction_column_no_height()
         {
 
             var root = Node.CreateDefaultNode();
@@ -4857,7 +4859,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
         }
 
-        void TestFlex_direction_row_no_width()
+        [Test] public void TestFlex_direction_row_no_width()
         {
 
 
@@ -4921,7 +4923,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
         }
 
-        void TestFlex_direction_column()
+        [Test] public void TestFlex_direction_column()
         {
 
 
@@ -4985,7 +4987,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
         }
 
-        void TestFlex_direction_row()
+        [Test] public void TestFlex_direction_row()
         {
 
 
@@ -5050,7 +5052,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
         }
 
-        void TestFlex_direction_column_reverse()
+        [Test] public void TestFlex_direction_column_reverse()
         {
 
 
@@ -5115,7 +5117,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
         }
 
-        void TestFlex_direction_row_reverse()
+        [Test] public void TestFlex_direction_row_reverse()
         {
 
 
@@ -5183,7 +5185,7 @@ namespace RociyfiTest
         #endregion
 
         #region flex_test.go
-        void TestFlex_basis_flex_grow_column()
+        [Test] public void TestFlex_basis_flex_grow_column()
         {
 
 
@@ -5234,7 +5236,7 @@ namespace RociyfiTest
             assertFloatEqual(25, rootChild1.LayoutGetHeight());
         }
 
-        void TestFlex_basis_flex_grow_row()
+        [Test] public void TestFlex_basis_flex_grow_row()
         {
 
 
@@ -5286,7 +5288,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
         }
 
-        void TestFlex_basis_flex_shrink_column()
+        [Test] public void TestFlex_basis_flex_shrink_column()
         {
 
 
@@ -5337,7 +5339,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
         }
 
-        void TestFlex_basis_flex_shrink_row()
+        [Test] public void TestFlex_basis_flex_shrink_row()
         {
 
 
@@ -5389,7 +5391,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
         }
 
-        void TestFlex_shrink_to_zero()
+        [Test] public void TestFlex_shrink_to_zero()
         {
 
 
@@ -5456,7 +5458,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild2.LayoutGetHeight());
         }
 
-        void TestFlex_basis_overrides_main_size()
+        [Test] public void TestFlex_basis_overrides_main_size()
         {
 
 
@@ -5524,7 +5526,7 @@ namespace RociyfiTest
             assertFloatEqual(20, rootChild2.LayoutGetHeight());
         }
 
-        void TestFlex_grow_shrink_at_most()
+        [Test] public void TestFlex_grow_shrink_at_most()
         {
 
 
@@ -5574,7 +5576,7 @@ namespace RociyfiTest
             assertFloatEqual(0, rootChild0Child0.LayoutGetHeight());
         }
 
-        void TestFlex_grow_less_than_factor_one()
+        [Test] public void TestFlex_grow_less_than_factor_one()
         {
 
 
@@ -5642,7 +5644,7 @@ namespace RociyfiTest
         #endregion
 
         #region flex_wrap_test.go
-        void TestWrap_column()
+        [Test] public void TestWrap_column()
         {
 
 
@@ -5724,7 +5726,7 @@ namespace RociyfiTest
             assertFloatEqual(30, rootChild3.LayoutGetHeight());
         }
 
-        void TestWrap_row()
+        [Test] public void TestWrap_row()
         {
 
 
@@ -5807,7 +5809,7 @@ namespace RociyfiTest
             assertFloatEqual(30, rootChild3.LayoutGetHeight());
         }
 
-        void TestWrap_row_align_items_flex_end()
+        [Test] public void TestWrap_row_align_items_flex_end()
         {
 
 
@@ -5891,7 +5893,7 @@ namespace RociyfiTest
             assertFloatEqual(30, rootChild3.LayoutGetHeight());
         }
 
-        void TestWrap_row_align_items_center()
+        [Test] public void TestWrap_row_align_items_center()
         {
 
 
@@ -5975,7 +5977,7 @@ namespace RociyfiTest
             assertFloatEqual(30, rootChild3.LayoutGetHeight());
         }
 
-        void TestFlex_wrap_children_with_min_main_overriding_flex_basis()
+        [Test] public void TestFlex_wrap_children_with_min_main_overriding_flex_basis()
         {
 
 
@@ -6030,7 +6032,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
         }
 
-        void TestFlex_wrap_wrap_to_child_height()
+        [Test] public void TestFlex_wrap_wrap_to_child_height()
         {
 
 
@@ -6110,7 +6112,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
         }
 
-        void TestFlex_wrap_align_stretch_fits_one_row()
+        [Test] public void TestFlex_wrap_align_stretch_fits_one_row()
         {
 
 
@@ -6162,7 +6164,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
         }
 
-        void TestWrap_reverse_row_align_content_flex_start()
+        [Test] public void TestWrap_reverse_row_align_content_flex_start()
         {
 
 
@@ -6260,7 +6262,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestWrap_reverse_row_align_content_center()
+        [Test] public void TestWrap_reverse_row_align_content_center()
         {
 
 
@@ -6359,7 +6361,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestWrap_reverse_row_single_line_different_size()
+        [Test] public void TestWrap_reverse_row_single_line_different_size()
         {
 
 
@@ -6457,7 +6459,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestWrap_reverse_row_align_content_stretch()
+        [Test] public void TestWrap_reverse_row_align_content_stretch()
         {
 
 
@@ -6556,7 +6558,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestWrap_reverse_row_align_content_space_around()
+        [Test] public void TestWrap_reverse_row_align_content_space_around()
         {
 
 
@@ -6655,7 +6657,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestWrap_reverse_column_fixed_size()
+        [Test] public void TestWrap_reverse_column_fixed_size()
         {
 
 
@@ -6754,7 +6756,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
         }
 
-        void TestWrapped_row_within_align_items_center()
+        [Test] public void TestWrapped_row_within_align_items_center()
         {
 
 
@@ -6822,7 +6824,7 @@ namespace RociyfiTest
             assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
         }
 
-        void TestWrapped_row_within_align_items_flex_start()
+        [Test] public void TestWrapped_row_within_align_items_flex_start()
         {
 
 
@@ -6890,7 +6892,7 @@ namespace RociyfiTest
             assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
         }
 
-        void TestWrapped_row_within_align_items_flex_end()
+        [Test] public void TestWrapped_row_within_align_items_flex_end()
         {
 
 
@@ -6958,7 +6960,7 @@ namespace RociyfiTest
             assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
         }
 
-        void TestWrapped_column_max_height()
+        [Test] public void TestWrapped_column_max_height()
         {
 
 
@@ -7034,7 +7036,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
         }
 
-        void TestWrapped_column_max_height_flex()
+        [Test] public void TestWrapped_column_max_height_flex()
         {
 
 
@@ -7116,7 +7118,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
         }
 
-        void TestWrap_nodes_with_content_sizing_overflowing_margin()
+        [Test] public void TestWrap_nodes_with_content_sizing_overflowing_margin()
         {
 
 
@@ -7211,7 +7213,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild0child1Child0.LayoutGetHeight());
         }
 
-        void TestWrap_nodes_with_content_sizing_margin_cross()
+        [Test] public void TestWrap_nodes_with_content_sizing_margin_cross()
         {
 
 
@@ -7321,7 +7323,7 @@ namespace RociyfiTest
             outNode = root;
         }
 
-        void TestChildren_overflow_no_wrap_and_no_flex_children()
+        [Test] public void TestChildren_overflow_no_wrap_and_no_flex_children()
         {
             newHadOverflowTests(out Config config, out Node root);
             var child0 = Node.CreateDefaultNode();
@@ -7341,7 +7343,7 @@ namespace RociyfiTest
             assertTrue(root.LayoutGetHadOverflow());
         }
 
-        void TestSpacing_overflow_no_wrap_and_no_flex_children()
+        [Test] public void TestSpacing_overflow_no_wrap_and_no_flex_children()
         {
             newHadOverflowTests(out Config config, out Node root);
             var child0 = Node.CreateDefaultNode();
@@ -7361,7 +7363,7 @@ namespace RociyfiTest
             assertTrue(root.LayoutGetHadOverflow());
         }
 
-        void TestNo_overflow_no_wrap_and_flex_children()
+        [Test] public void TestNo_overflow_no_wrap_and_flex_children()
         {
             newHadOverflowTests(out Config config, out Node root);
             var child0 = Node.CreateDefaultNode();
@@ -7382,7 +7384,7 @@ namespace RociyfiTest
             assertFalse(root.LayoutGetHadOverflow());
         }
 
-        void TestHadOverflow_gets_reset_if_not_logger_valid()
+        [Test] public void TestHadOverflow_gets_reset_if_not_logger_valid()
         {
             newHadOverflowTests(out Config config, out Node root);
             var child0 = Node.CreateDefaultNode();
@@ -7408,7 +7410,7 @@ namespace RociyfiTest
             assertFalse(root.LayoutGetHadOverflow());
         }
 
-        void TestSpacing_overflow_in_nested_nodes()
+        [Test] public void TestSpacing_overflow_in_nested_nodes()
         {
             newHadOverflowTests(out Config config, out Node root);
             var child0 = Node.CreateDefaultNode();
@@ -7435,7 +7437,7 @@ namespace RociyfiTest
         #endregion
 
         #region justify_content_test.go
-        void TestJustify_content_row_flex_start()
+        [Test] public void TestJustify_content_row_flex_start()
         {
 
 
@@ -7500,7 +7502,7 @@ namespace RociyfiTest
             assertFloatEqual(102, rootChild2.LayoutGetHeight());
         }
 
-        void TestJustify_content_row_flex_end()
+        [Test] public void TestJustify_content_row_flex_end()
         {
 
 
@@ -7566,7 +7568,7 @@ namespace RociyfiTest
             assertFloatEqual(102, rootChild2.LayoutGetHeight());
         }
 
-        void TestJustify_content_row_center()
+        [Test] public void TestJustify_content_row_center()
         {
 
 
@@ -7632,7 +7634,7 @@ namespace RociyfiTest
             assertFloatEqual(102, rootChild2.LayoutGetHeight());
         }
 
-        void TestJustify_content_row_space_between()
+        [Test] public void TestJustify_content_row_space_between()
         {
 
 
@@ -7698,7 +7700,7 @@ namespace RociyfiTest
             assertFloatEqual(102, rootChild2.LayoutGetHeight());
         }
 
-        void TestJustify_content_row_space_around()
+        [Test] public void TestJustify_content_row_space_around()
         {
 
 
@@ -7764,7 +7766,7 @@ namespace RociyfiTest
             assertFloatEqual(102, rootChild2.LayoutGetHeight());
         }
 
-        void TestJustify_content_column_flex_start()
+        [Test] public void TestJustify_content_column_flex_start()
         {
 
 
@@ -7827,7 +7829,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
         }
 
-        void TestJustify_content_column_flex_end()
+        [Test] public void TestJustify_content_column_flex_end()
         {
 
 
@@ -7892,7 +7894,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
         }
 
-        void TestJustify_content_column_center()
+        [Test] public void TestJustify_content_column_center()
         {
 
 
@@ -7957,7 +7959,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
         }
 
-        void TestJustify_content_column_space_between()
+        [Test] public void TestJustify_content_column_space_between()
         {
 
 
@@ -8022,7 +8024,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
         }
 
-        void TestJustify_content_column_space_around()
+        [Test] public void TestJustify_content_column_space_around()
         {
 
 
@@ -8090,7 +8092,7 @@ namespace RociyfiTest
         #endregion
 
         #region margin_test.go
-        void TestMargin_start()
+        [Test] public void TestMargin_start()
         {
 
 
@@ -8129,7 +8131,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_top()
+        [Test] public void TestMargin_top()
         {
 
 
@@ -8167,7 +8169,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_end()
+        [Test] public void TestMargin_end()
         {
 
 
@@ -8207,7 +8209,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_bottom()
+        [Test] public void TestMargin_bottom()
         {
 
 
@@ -8246,7 +8248,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_and_flex_row()
+        [Test] public void TestMargin_and_flex_row()
         {
 
 
@@ -8286,7 +8288,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_and_flex_column()
+        [Test] public void TestMargin_and_flex_column()
         {
 
 
@@ -8325,7 +8327,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_and_stretch_row()
+        [Test] public void TestMargin_and_stretch_row()
         {
 
 
@@ -8365,7 +8367,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_and_stretch_column()
+        [Test] public void TestMargin_and_stretch_column()
         {
 
 
@@ -8404,7 +8406,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_with_sibling_row()
+        [Test] public void TestMargin_with_sibling_row()
         {
 
 
@@ -8457,7 +8459,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_with_sibling_column()
+        [Test] public void TestMargin_with_sibling_column()
         {
 
 
@@ -8509,7 +8511,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_bottom()
+        [Test] public void TestMargin_auto_bottom()
         {
 
 
@@ -8564,7 +8566,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_top()
+        [Test] public void TestMargin_auto_top()
         {
 
 
@@ -8619,7 +8621,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_bottom_and_top()
+        [Test] public void TestMargin_auto_bottom_and_top()
         {
 
 
@@ -8675,7 +8677,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_bottom_and_top_justify_center()
+        [Test] public void TestMargin_auto_bottom_and_top_justify_center()
         {
 
 
@@ -8731,7 +8733,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_mutiple_children_column()
+        [Test] public void TestMargin_auto_mutiple_children_column()
         {
 
 
@@ -8802,7 +8804,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_mutiple_children_row()
+        [Test] public void TestMargin_auto_mutiple_children_row()
         {
 
 
@@ -8874,7 +8876,7 @@ namespace RociyfiTest
 
         }
 
-        void Testargin_auto_left_and_right_column()
+        [Test] public void Testargin_auto_left_and_right_column()
         {
 
 
@@ -8931,7 +8933,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_left_and_right()
+        [Test] public void TestMargin_auto_left_and_right()
         {
 
 
@@ -8986,7 +8988,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_start_and_end_column()
+        [Test] public void TestMargin_auto_start_and_end_column()
         {
 
 
@@ -9043,7 +9045,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_start_and_end()
+        [Test] public void TestMargin_auto_start_and_end()
         {
 
 
@@ -9098,7 +9100,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_left_and_right_column_and_center()
+        [Test] public void TestMargin_auto_left_and_right_column_and_center()
         {
 
 
@@ -9154,7 +9156,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_left()
+        [Test] public void TestMargin_auto_left()
         {
 
 
@@ -9209,7 +9211,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_right()
+        [Test] public void TestMargin_auto_right()
         {
 
 
@@ -9264,7 +9266,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_left_and_right_strech()
+        [Test] public void TestMargin_auto_left_and_right_strech()
         {
 
 
@@ -9320,7 +9322,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_top_and_bottom_strech()
+        [Test] public void TestMargin_auto_top_and_bottom_strech()
         {
 
 
@@ -9375,7 +9377,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_should_not_be_part_of_max_height()
+        [Test] public void TestMargin_should_not_be_part_of_max_height()
         {
 
 
@@ -9415,7 +9417,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_should_not_be_part_of_max_width()
+        [Test] public void TestMargin_should_not_be_part_of_max_width()
         {
 
 
@@ -9455,7 +9457,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_left_right_child_bigger_than_parent()
+        [Test] public void TestMargin_auto_left_right_child_bigger_than_parent()
         {
 
 
@@ -9496,7 +9498,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_left_child_bigger_than_parent()
+        [Test] public void TestMargin_auto_left_child_bigger_than_parent()
         {
 
 
@@ -9536,7 +9538,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_fix_left_auto_right_child_bigger_than_parent()
+        [Test] public void TestMargin_fix_left_auto_right_child_bigger_than_parent()
         {
 
 
@@ -9577,7 +9579,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMargin_auto_left_fix_right_child_bigger_than_parent()
+        [Test] public void TestMargin_auto_left_fix_right_child_bigger_than_parent()
         {
 
 
@@ -9667,7 +9669,7 @@ namespace RociyfiTest
             return new Size(84, 49);
         }
 
-        void TestMeasure_once_single_flexible_child()
+        [Test] public void TestMeasure_once_single_flexible_child()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
@@ -9689,7 +9691,7 @@ namespace RociyfiTest
 
         }
 
-        void TestRemeasure_with_same_exact_width_larger_than_needed_height()
+        [Test] public void TestRemeasure_with_same_exact_width_larger_than_needed_height()
         {
             var root = Node.CreateDefaultNode();
 
@@ -9707,7 +9709,7 @@ namespace RociyfiTest
 
         }
 
-        void TestRemeasure_with_same_atmost_width_larger_than_needed_height()
+        [Test] public void TestRemeasure_with_same_atmost_width_larger_than_needed_height()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -9726,7 +9728,7 @@ namespace RociyfiTest
 
         }
 
-        void TestRemeasure_with_computed_width_larger_than_needed_height()
+        [Test] public void TestRemeasure_with_computed_width_larger_than_needed_height()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -9746,7 +9748,7 @@ namespace RociyfiTest
 
         }
 
-        void TestRemeasure_with_atmost_computed_width_undefined_height()
+        [Test] public void TestRemeasure_with_atmost_computed_width_undefined_height()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -9764,7 +9766,7 @@ namespace RociyfiTest
             assertEqual(1, measureCount);
         }
 
-        void TestRemeasure_with_already_measured_value_smaller_but_still_float_equal()
+        [Test] public void TestRemeasure_with_already_measured_value_smaller_but_still_float_equal()
         {
             int measureCount = 0;
 
@@ -9833,7 +9835,7 @@ namespace RociyfiTest
             return new Size(width, height);
         }
 
-        void TestExactly_measure_stretched_child_column()
+        [Test] public void TestExactly_measure_stretched_child_column()
         {
             var constraintList = CreateMeasureConstraintList(10);
 
@@ -9854,7 +9856,7 @@ namespace RociyfiTest
             assertEqual(MeasureMode.Exactly, constraintList[0].widthMode);
         }
 
-        void TestExactly_measure_stretched_child_row()
+        [Test] public void TestExactly_measure_stretched_child_row()
         {
             var constraintList = CreateMeasureConstraintList(10);
 
@@ -9876,7 +9878,7 @@ namespace RociyfiTest
             assertEqual(MeasureMode.Exactly, constraintList[0].heightMode);
         }
 
-        void TestAt_most_main_axis_column()
+        [Test] public void TestAt_most_main_axis_column()
         {
             var constraintList = CreateMeasureConstraintList(10);
 
@@ -9897,7 +9899,7 @@ namespace RociyfiTest
             assertEqual(MeasureMode.AtMost, constraintList[0].heightMode);
         }
 
-        void TestAt_most_cross_axis_column()
+        [Test] public void TestAt_most_cross_axis_column()
         {
             var constraintList = CreateMeasureConstraintList(10);
 
@@ -9919,7 +9921,7 @@ namespace RociyfiTest
             assertEqual(MeasureMode.AtMost, constraintList[0].widthMode);
         }
 
-        void TestAt_most_main_axis_row()
+        [Test] public void TestAt_most_main_axis_row()
         {
             var constraintList = CreateMeasureConstraintList(10);
 
@@ -9941,7 +9943,7 @@ namespace RociyfiTest
             assertEqual(MeasureMode.AtMost, constraintList[0].widthMode);
         }
 
-        void TestAt_most_cross_axis_row()
+        [Test] public void TestAt_most_cross_axis_row()
         {
             var constraintList = CreateMeasureConstraintList(10);
 
@@ -9964,7 +9966,7 @@ namespace RociyfiTest
             assertEqual(MeasureMode.AtMost, constraintList[0].heightMode);
         }
 
-        void TestFlex_child()
+        [Test] public void TestFlex_child()
         {
             var constraintList = CreateMeasureConstraintList(10);
 
@@ -9988,7 +9990,7 @@ namespace RociyfiTest
             assertEqual(MeasureMode.Exactly, constraintList[1].heightMode);
         }
 
-        void TestFlex_child_with_flex_basis()
+        [Test] public void TestFlex_child_with_flex_basis()
         {
             var constraintList = CreateMeasureConstraintList(10);
 
@@ -10010,7 +10012,7 @@ namespace RociyfiTest
             assertEqual(MeasureMode.Exactly, constraintList[0].heightMode);
         }
 
-        void TestOverflow_scroll_column()
+        [Test] public void TestOverflow_scroll_column()
         {
             var constraintList = CreateMeasureConstraintList(10);
 
@@ -10036,7 +10038,7 @@ namespace RociyfiTest
             assertEqual(MeasureMode.Undefined, constraintList[0].heightMode);
         }
 
-        void TestOverflow_scroll_row()
+        [Test] public void TestOverflow_scroll_row()
         {
             var constraintList = CreateMeasureConstraintList(10);
 
@@ -10066,7 +10068,7 @@ namespace RociyfiTest
         #endregion
 
         #region min_max_dimension_test.go
-        void TestMax_width()
+        [Test] public void TestMax_width()
         {
 
 
@@ -10104,7 +10106,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMax_height()
+        [Test] public void TestMax_height()
         {
 
 
@@ -10143,7 +10145,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMin_height()
+        [Test] public void TestMin_height()
         {
 
 
@@ -10195,7 +10197,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMin_width()
+        [Test] public void TestMin_width()
         {
 
 
@@ -10248,7 +10250,7 @@ namespace RociyfiTest
 
         }
 
-        void TestJustify_content_min_max()
+        [Test] public void TestJustify_content_min_max()
         {
 
 
@@ -10288,7 +10290,7 @@ namespace RociyfiTest
 
         }
 
-        void TestAlign_items_min_max()
+        [Test] public void TestAlign_items_min_max()
         {
 
 
@@ -10328,7 +10330,7 @@ namespace RociyfiTest
 
         }
 
-        void TestJustify_content_overflow_min_max()
+        [Test] public void TestJustify_content_overflow_min_max()
         {
 
 
@@ -10397,7 +10399,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_to_min()
+        [Test] public void TestFlex_grow_to_min()
         {
 
 
@@ -10450,7 +10452,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_in_at_most_container()
+        [Test] public void TestFlex_grow_in_at_most_container()
         {
 
 
@@ -10504,7 +10506,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_child()
+        [Test] public void TestFlex_grow_child()
         {
 
 
@@ -10542,7 +10544,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_within_constrained_min_max_column()
+        [Test] public void TestFlex_grow_within_constrained_min_max_column()
         {
 
 
@@ -10593,7 +10595,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_within_max_width()
+        [Test] public void TestFlex_grow_within_max_width()
         {
 
 
@@ -10646,7 +10648,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_within_constrained_max_width()
+        [Test] public void TestFlex_grow_within_constrained_max_width()
         {
 
 
@@ -10699,7 +10701,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_root_ignored()
+        [Test] public void TestFlex_root_ignored()
         {
 
 
@@ -10753,7 +10755,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_root_minimized()
+        [Test] public void TestFlex_grow_root_minimized()
         {
 
 
@@ -10822,7 +10824,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_height_maximized()
+        [Test] public void TestFlex_grow_height_maximized()
         {
 
 
@@ -10890,7 +10892,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_within_constrained_min_row()
+        [Test] public void TestFlex_grow_within_constrained_min_row()
         {
 
 
@@ -10942,7 +10944,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_within_constrained_min_column()
+        [Test] public void TestFlex_grow_within_constrained_min_column()
         {
 
 
@@ -10992,7 +10994,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_within_constrained_max_row()
+        [Test] public void TestFlex_grow_within_constrained_max_row()
         {
 
 
@@ -11059,7 +11061,7 @@ namespace RociyfiTest
 
         }
 
-        void TestFlex_grow_within_constrained_max_column()
+        [Test] public void TestFlex_grow_within_constrained_max_column()
         {
 
 
@@ -11111,7 +11113,7 @@ namespace RociyfiTest
 
         }
 
-        void TestChild_min_max_width_flexing()
+        [Test] public void TestChild_min_max_width_flexing()
         {
 
 
@@ -11167,7 +11169,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMin_width_overrides_width()
+        [Test] public void TestMin_width_overrides_width()
         {
 
 
@@ -11190,7 +11192,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMax_width_overrides_width()
+        [Test] public void TestMax_width_overrides_width()
         {
 
 
@@ -11213,7 +11215,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMin_height_overrides_height()
+        [Test] public void TestMin_height_overrides_height()
         {
 
 
@@ -11236,7 +11238,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMax_height_overrides_height()
+        [Test] public void TestMax_height_overrides_height()
         {
 
 
@@ -11259,7 +11261,7 @@ namespace RociyfiTest
 
         }
 
-        void TestMin_max_percent_no_width_height()
+        [Test] public void TestMin_max_percent_no_width_height()
         {
 
 
@@ -11302,7 +11304,7 @@ namespace RociyfiTest
         #endregion
 
         #region node_child_test.go
-        void TestReset_layout_when_child_removed()
+        [Test] public void TestReset_layout_when_child_removed()
         {
             var root = Node.CreateDefaultNode();
 
@@ -11329,7 +11331,7 @@ namespace RociyfiTest
         #endregion
 
         #region padding_test.go
-        void TestPadding_no_size()
+        [Test] public void TestPadding_no_size()
         {
 
 
@@ -11353,7 +11355,7 @@ namespace RociyfiTest
             assertFloatEqual(20, root.LayoutGetHeight());
         }
 
-        void TestPadding_container_match_child()
+        [Test] public void TestPadding_container_match_child()
         {
 
 
@@ -11392,7 +11394,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestPadding_flex_child()
+        [Test] public void TestPadding_flex_child()
         {
 
 
@@ -11433,7 +11435,7 @@ namespace RociyfiTest
             assertFloatEqual(80, rootChild0.LayoutGetHeight());
         }
 
-        void TestPadding_stretch_child()
+        [Test] public void TestPadding_stretch_child()
         {
 
 
@@ -11473,7 +11475,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestPadding_center_child()
+        [Test] public void TestPadding_center_child()
         {
 
 
@@ -11515,7 +11517,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestChild_with_padding_align_end()
+        [Test] public void TestChild_with_padding_align_end()
         {
 
 
@@ -11561,7 +11563,7 @@ namespace RociyfiTest
         #endregion
 
         #region percentage_test.go
-        void TestPercentage_width_height()
+        [Test] public void TestPercentage_width_height()
         {
 
 
@@ -11599,7 +11601,7 @@ namespace RociyfiTest
             assertFloatEqual(60, rootChild0.LayoutGetHeight());
         }
 
-        void TestPercentage_position_left_top()
+        [Test] public void TestPercentage_position_left_top()
         {
 
 
@@ -11639,7 +11641,7 @@ namespace RociyfiTest
             assertFloatEqual(220, rootChild0.LayoutGetHeight());
         }
 
-        void TestPercentage_position_bottom_right()
+        [Test] public void TestPercentage_position_bottom_right()
         {
 
 
@@ -11679,7 +11681,7 @@ namespace RociyfiTest
             assertFloatEqual(75, rootChild0.LayoutGetHeight());
         }
 
-        void TestPercentage_flex_basis()
+        [Test] public void TestPercentage_flex_basis()
         {
 
 
@@ -11732,7 +11734,7 @@ namespace RociyfiTest
             assertFloatEqual(200, rootChild1.LayoutGetHeight());
         }
 
-        void TestPercentage_flex_basis_cross()
+        [Test] public void TestPercentage_flex_basis_cross()
         {
 
 
@@ -11784,7 +11786,7 @@ namespace RociyfiTest
             assertFloatEqual(75, rootChild1.LayoutGetHeight());
         }
 
-        void TestPercentage_flex_basis_cross_min_height()
+        [Test] public void TestPercentage_flex_basis_cross_min_height()
         {
 
 
@@ -11836,7 +11838,7 @@ namespace RociyfiTest
             assertFloatEqual(60, rootChild1.LayoutGetHeight());
         }
 
-        void TestPercentage_flex_basis_main_max_height()
+        [Test] public void TestPercentage_flex_basis_main_max_height()
         {
 
 
@@ -11891,7 +11893,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild1.LayoutGetHeight());
         }
 
-        void TestPercentage_flex_basis_cross_max_height()
+        [Test] public void TestPercentage_flex_basis_cross_max_height()
         {
 
 
@@ -11945,7 +11947,7 @@ namespace RociyfiTest
             assertFloatEqual(40, rootChild1.LayoutGetHeight());
         }
 
-        void TestPercentage_flex_basis_main_max_width()
+        [Test] public void TestPercentage_flex_basis_main_max_width()
         {
 
 
@@ -12000,7 +12002,7 @@ namespace RociyfiTest
             assertFloatEqual(200, rootChild1.LayoutGetHeight());
         }
 
-        void TestPercentage_flex_basis_cross_max_width()
+        [Test] public void TestPercentage_flex_basis_cross_max_width()
         {
 
 
@@ -12054,7 +12056,7 @@ namespace RociyfiTest
             assertFloatEqual(150, rootChild1.LayoutGetHeight());
         }
 
-        void TestPercentage_flex_basis_main_min_width()
+        [Test] public void TestPercentage_flex_basis_main_min_width()
         {
 
 
@@ -12109,7 +12111,7 @@ namespace RociyfiTest
             assertFloatEqual(200, rootChild1.LayoutGetHeight());
         }
 
-        void TestPercentage_flex_basis_cross_min_width()
+        [Test] public void TestPercentage_flex_basis_cross_min_width()
         {
 
 
@@ -12163,7 +12165,7 @@ namespace RociyfiTest
             assertFloatEqual(150, rootChild1.LayoutGetHeight());
         }
 
-        void TestPercentage_multiple_nested_with_padding_margin_and_percentage_values()
+        [Test] public void TestPercentage_multiple_nested_with_padding_margin_and_percentage_values()
         {
 
 
@@ -12269,7 +12271,7 @@ namespace RociyfiTest
             assertFloatEqual(142, rootChild1.LayoutGetHeight());
         }
 
-        void TestPercentage_margin_should_calculate_based_only_on_width()
+        [Test] public void TestPercentage_margin_should_calculate_based_only_on_width()
         {
 
 
@@ -12324,7 +12326,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0Child0.LayoutGetHeight());
         }
 
-        void TestPercentage_padding_should_calculate_based_only_on_width()
+        [Test] public void TestPercentage_padding_should_calculate_based_only_on_width()
         {
 
 
@@ -12379,7 +12381,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0Child0.LayoutGetHeight());
         }
 
-        void TestPercentage_absolute_position()
+        [Test] public void TestPercentage_absolute_position()
         {
 
 
@@ -12419,7 +12421,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestPercentage_width_height_undefined_parent_size()
+        [Test] public void TestPercentage_width_height_undefined_parent_size()
         {
 
 
@@ -12454,7 +12456,7 @@ namespace RociyfiTest
             assertFloatEqual(0, rootChild0.LayoutGetHeight());
         }
 
-        void TestPercent_within_flex_grow()
+        [Test] public void TestPercent_within_flex_grow()
         {
 
 
@@ -12533,7 +12535,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
         }
 
-        void TestPercentage_container_in_wrapping_container()
+        [Test] public void TestPercentage_container_in_wrapping_container()
         {
 
 
@@ -12616,7 +12618,7 @@ namespace RociyfiTest
             assertFloatEqual(50, rootChild0Child0_child1.LayoutGetHeight());
         }
 
-        void TestPercent_absolute_position()
+        [Test] public void TestPercent_absolute_position()
         {
 
 
@@ -12687,7 +12689,7 @@ namespace RociyfiTest
         #endregion
 
         #region relayout_test.go
-        void TestDont_cache_computed_flex_basis_between_layouts()
+        [Test] public void TestDont_cache_computed_flex_basis_between_layouts()
         {
             var config = Node.CreateDefaultConfig();
             config.SetExperimentalFeatureEnabled(ExperimentalFeature.WebFlexBasis, true);
@@ -12706,7 +12708,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
-        void TestRecalculate_resolvedDimonsion_onchange()
+        [Test] public void TestRecalculate_resolvedDimonsion_onchange()
         {
             var root = Node.CreateDefaultNode();
 
@@ -12727,7 +12729,7 @@ namespace RociyfiTest
         #endregion
 
         #region rounding_function_test.go
-        void TestRounding_value()
+        [Test] public void TestRounding_value()
         {
 
             // Test that whole numbers are rounded to whole despite ceil/floor flags
@@ -12763,7 +12765,7 @@ namespace RociyfiTest
             return new Size(0.5f, 0.5f);
         }
 
-        void TestRounding_feature_with_custom_measure_func_floor()
+        [Test] public void TestRounding_feature_with_custom_measure_func_floor()
         {
 
             var config = Node.CreateDefaultConfig();
@@ -12809,7 +12811,7 @@ namespace RociyfiTest
             assertFloatEqual(12.0f, rootChild0.LayoutGetHeight());
         }
 
-        void TestRounding_feature_with_custom_measure_func_ceil()
+        [Test] public void TestRounding_feature_with_custom_measure_func_ceil()
         {
 
             var config = Node.CreateDefaultConfig();
@@ -12827,7 +12829,7 @@ namespace RociyfiTest
             assertFloatEqual(11, rootChild0.LayoutGetHeight());
         }
 
-        void TestRounding_feature_with_custom_measure_and_fractial_matching_scale()
+        [Test] public void TestRounding_feature_with_custom_measure_and_fractial_matching_scale()
         {
 
             var config = Node.CreateDefaultConfig();
@@ -12850,7 +12852,7 @@ namespace RociyfiTest
         #endregion
 
         #region rounding_test.go
-        void TestRounding_flex_basis_flex_grow_row_width_of_100()
+        [Test] public void TestRounding_flex_basis_flex_grow_row_width_of_100()
         {
 
 
@@ -12915,7 +12917,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_flex_basis_flex_grow_row_prime_number_width()
+        [Test] public void TestRounding_flex_basis_flex_grow_row_prime_number_width()
         {
 
 
@@ -13008,7 +13010,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild4.LayoutGetHeight());
         }
 
-        void TestRounding_flex_basis_flex_shrink_row()
+        [Test] public void TestRounding_flex_basis_flex_shrink_row()
         {
 
 
@@ -13074,7 +13076,7 @@ namespace RociyfiTest
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_flex_basis_overrides_main_size()
+        [Test] public void TestRounding_flex_basis_overrides_main_size()
         {
 
 
@@ -13142,7 +13144,7 @@ namespace RociyfiTest
             assertFloatEqual(24, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_total_fractial()
+        [Test] public void TestRounding_total_fractial()
         {
 
 
@@ -13210,7 +13212,7 @@ namespace RociyfiTest
             assertFloatEqual(24, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_total_fractial_nested()
+        [Test] public void TestRounding_total_fractial_nested()
         {
 
 
@@ -13312,7 +13314,7 @@ namespace RociyfiTest
             assertFloatEqual(24, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_fractial_input_1()
+        [Test] public void TestRounding_fractial_input_1()
         {
 
 
@@ -13380,7 +13382,7 @@ namespace RociyfiTest
             assertFloatEqual(24, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_fractial_input_2()
+        [Test] public void TestRounding_fractial_input_2()
         {
 
 
@@ -13448,7 +13450,7 @@ namespace RociyfiTest
             assertFloatEqual(25, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_fractial_input_3()
+        [Test] public void TestRounding_fractial_input_3()
         {
 
 
@@ -13517,7 +13519,7 @@ namespace RociyfiTest
             assertFloatEqual(25, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_fractial_input_4()
+        [Test] public void TestRounding_fractial_input_4()
         {
 
 
@@ -13586,7 +13588,7 @@ namespace RociyfiTest
             assertFloatEqual(24, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_inner_node_controversy_horizontal()
+        [Test] public void TestRounding_inner_node_controversy_horizontal()
         {
 
 
@@ -13668,7 +13670,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_inner_node_controversy_vertical()
+        [Test] public void TestRounding_inner_node_controversy_vertical()
         {
 
 
@@ -13749,7 +13751,7 @@ namespace RociyfiTest
             assertFloatEqual(107, rootChild2.LayoutGetHeight());
         }
 
-        void TestRounding_inner_node_controversy_combined()
+        [Test] public void TestRounding_inner_node_controversy_combined()
         {
 
 
@@ -13880,7 +13882,7 @@ namespace RociyfiTest
         #endregion
 
         #region size_overflow_test.go
-        void TestNested_overflowing_child()
+        [Test] public void TestNested_overflowing_child()
         {
 
 
@@ -13930,7 +13932,7 @@ namespace RociyfiTest
             assertFloatEqual(200, rootChild0Child0.LayoutGetHeight());
         }
 
-        void TestNested_overflowing_child_in_constraint_parent()
+        [Test] public void TestNested_overflowing_child_in_constraint_parent()
         {
 
 
@@ -13982,7 +13984,7 @@ namespace RociyfiTest
             assertFloatEqual(200, rootChild0Child0.LayoutGetHeight());
         }
 
-        void TestParent_wrap_child_size_overflowing_parent()
+        [Test] public void TestParent_wrap_child_size_overflowing_parent()
         {
 
 
@@ -14036,7 +14038,7 @@ namespace RociyfiTest
         #endregion
 
         #region style_test.go
-        void TestCopy_style_same()
+        [Test] public void TestCopy_style_same()
         {
             var node0 = Node.CreateDefaultNode();
             var node1 = Node.CreateDefaultNode();
@@ -14046,7 +14048,7 @@ namespace RociyfiTest
             assertFalse(node0.IsDirty);
         }
 
-        void TestCopy_style_modified()
+        [Test] public void TestCopy_style_modified()
         {
             var node0 = Node.CreateDefaultNode();
             assertFalse(node0.IsDirty);
@@ -14063,7 +14065,7 @@ namespace RociyfiTest
             assertFloatEqual(10, node0.StyleGetMaxHeight().value);
         }
 
-        void TestCopy_style_modified_same()
+        [Test] public void TestCopy_style_modified_same()
         {
             var node0 = Node.CreateDefaultNode();
             node0.StyleSetFlexDirection(FlexDirection.Row);
@@ -14125,7 +14127,7 @@ namespace RociyfiTest
             return new Size(0, 0);
         }
 
-        void TestDont_measure_single_grow_shrink_child()
+        [Test] public void TestDont_measure_single_grow_shrink_child()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -14145,7 +14147,7 @@ namespace RociyfiTest
             assertEqual(0, measureIntegerCount.Count);
         }
 
-        void TestMeasure_absolute_child_with_no_constraints()
+        [Test] public void TestMeasure_absolute_child_with_no_constraints()
         {
             var root = Node.CreateDefaultNode();
 
@@ -14165,7 +14167,7 @@ namespace RociyfiTest
             assertEqual(1, measureIntegerCount.Count);
         }
 
-        void TestDont_measure_when_min_equals_max()
+        [Test] public void TestDont_measure_when_min_equals_max()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -14192,7 +14194,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestDont_measure_when_min_equals_max_percentages()
+        [Test] public void TestDont_measure_when_min_equals_max_percentages()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -14219,7 +14221,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestDont_measure_when_min_equals_max_mixed_width_percent()
+        [Test] public void TestDont_measure_when_min_equals_max_mixed_width_percent()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -14246,7 +14248,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestDont_measure_when_min_equals_max_mixed_height_percent()
+        [Test] public void TestDont_measure_when_min_equals_max_mixed_height_percent()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
@@ -14273,7 +14275,7 @@ namespace RociyfiTest
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
         }
 
-        void TestMeasure_enough_size_should_be_in_single_line()
+        [Test] public void TestMeasure_enough_size_should_be_in_single_line()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(100);
@@ -14290,7 +14292,7 @@ namespace RociyfiTest
             assertFloatEqual(16, rootChild0.LayoutGetHeight());
         }
 
-        void TestMeasure_not_enough_size_should_wrap()
+        [Test] public void TestMeasure_not_enough_size_should_wrap()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetWidth(55);
@@ -14307,7 +14309,7 @@ namespace RociyfiTest
             assertFloatEqual(32, rootChild0.LayoutGetHeight());
         }
 
-        void TestMeasure_zero_space_should_grow()
+        [Test] public void TestMeasure_zero_space_should_grow()
         {
             var root = Node.CreateDefaultNode();
             root.StyleSetHeight(200);
@@ -14330,7 +14332,7 @@ namespace RociyfiTest
             assertFloatEqual(0, rootChild0.LayoutGetTop());
         }
 
-        void TestMeasure_flex_direction_row_and_padding()
+        [Test] public void TestMeasure_flex_direction_row_and_padding()
         {
 
 
@@ -14369,7 +14371,7 @@ namespace RociyfiTest
             assertFloatEqual(5, rootChild1.LayoutGetHeight());
         }
 
-        void TestMeasure_flex_direction_column_and_padding()
+        [Test] public void TestMeasure_flex_direction_column_and_padding()
         {
 
 
@@ -14405,7 +14407,7 @@ namespace RociyfiTest
             assertFloatEqual(5, rootChild1.LayoutGetHeight());
         }
 
-        void TestMeasure_flex_direction_row_no_padding()
+        [Test] public void TestMeasure_flex_direction_row_no_padding()
         {
 
 
@@ -14441,7 +14443,7 @@ namespace RociyfiTest
             assertFloatEqual(5, rootChild1.LayoutGetHeight());
         }
 
-        void TestMeasure_flex_direction_row_no_padding_align_items_flexstart()
+        [Test] public void TestMeasure_flex_direction_row_no_padding_align_items_flexstart()
         {
 
 
@@ -14478,7 +14480,7 @@ namespace RociyfiTest
             assertFloatEqual(5, rootChild1.LayoutGetHeight());
         }
 
-        void TestMeasure_with_fixed_size()
+        [Test] public void TestMeasure_with_fixed_size()
         {
 
 
@@ -14516,7 +14518,7 @@ namespace RociyfiTest
             assertFloatEqual(5, rootChild1.LayoutGetHeight());
         }
 
-        void TestMeasure_with_flex_shrink()
+        [Test] public void TestMeasure_with_flex_shrink()
         {
 
 
@@ -14553,7 +14555,7 @@ namespace RociyfiTest
             assertFloatEqual(5, rootChild1.LayoutGetHeight());
         }
 
-        void TestMeasure_no_padding()
+        [Test] public void TestMeasure_no_padding()
         {
 
 
@@ -14612,7 +14614,7 @@ namespace RociyfiTest
 #endif
         */
 
-        void TestCan_nullify_measure_func_on_any_node()
+        [Test] public void TestCan_nullify_measure_func_on_any_node()
         {
             var root = Node.CreateDefaultNode();
             root.InsertChild(Node.CreateDefaultNode(), 0);
@@ -14621,7 +14623,7 @@ namespace RociyfiTest
             assertTrue(root.GetMeasureFunc() == null);
         }
 
-        void TestCant_call_negative_measure()
+        [Test] public void TestCant_call_negative_measure()
         {
 
 
@@ -14638,7 +14640,7 @@ namespace RociyfiTest
             Node.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
         }
 
-        void TestCant_call_negative_measure_horizontal()
+        [Test] public void TestCant_call_negative_measure_horizontal()
         {
 
 
@@ -14658,7 +14660,7 @@ namespace RociyfiTest
         #endregion
 
         #region issue5
-        void TestIssue5() {
+        [Test] public void TestIssue5() {
             var config = Node.CreateDefaultConfig();
             config.Context = "test";
 
@@ -14678,15 +14680,15 @@ namespace RociyfiTest
             printer.Print(root);
             var got = writer.ToString();
             var exp = @"<div layout=""width: 40; height: 40; top: 0; left: 0;"" style=""height: 100%; "">
-<div layout=""width: 40; height: 40; top: 0; left: 0;"" style=""padding: 20px; ""></div>
+  <div layout=""width: 40; height: 40; top: 0; left: 0;"" style=""padding: 20px; ""></div>
 </div>".Replace("\r\n", "\n");
             assertEqual(got, exp);
         }
         #endregion
 
-        public void XTestAll()
+        public void RunTest()
         {
-            var m = typeof(RociyfiTest).GetMethods(
+            var m = typeof(TestUnit).GetMethods(
                 System.Reflection.BindingFlags.NonPublic |
                 System.Reflection.BindingFlags.Instance
                 );

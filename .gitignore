@@ -1,3 +1,13 @@
+Rockyfi/.vs
+Rockyfi/obj
+Rockyfi/bin
+Rockyfi/packages
+
+Rockyfi/.vs
+RockyfiTests/obj
+RockyfiTests/bin
+RockyfiTests/packages
+
 /flex
 /bin
 /obj

@@ -11,14 +11,25 @@ namespace Rockyfi
         internal Node Parent = null;
         internal readonly List<Node> Children = new List<Node>();
 
+        public int ChildrenCount
+        {
+            get
+            {
+                return Children.Count;
+            }
+        }
         internal Node NextChild;
 
         internal MeasureFunc measureFunc;
         internal BaselineFunc baselineFunc;
         internal PrintFunc printFunc;
-        internal Config config = CreateDefaultConfig();
+        internal Config config = Constant.configDefaults;
 
-        internal bool IsDirty = false;
+        public bool IsDirty
+        {
+            get;
+            private set;
+        }
         internal bool hasNewLayout = true;
         internal NodeType NodeType = NodeType.Default;
 
@@ -33,8 +44,6 @@ namespace Rockyfi
         {
             CalculateLayout(this, parentWidth, parentHeight, parentDirection);
         }
-
-
 
         internal void Helper_SetDimensions(Value value, Dimension dimension)
         {

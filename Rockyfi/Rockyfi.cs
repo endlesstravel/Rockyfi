@@ -268,9 +268,28 @@ namespace Rockyfi
             }
         }
 
+        // StyleGetFlexGrow gets flex grow
         public float StyleGetFlexGrow()
         {
+            if (float.IsNaN(this.nodeStyle.FlexGrow))
+            {
+                return defaultFlexGrow;
+            }
             return this.nodeStyle.FlexGrow;
+        }
+
+        // StyleGetFlexShrink gets flex shrink
+        public float StyleGetFlexShrink()
+        {
+            if (float.IsNaN(this.nodeStyle.FlexShrink))
+            {
+                if (this.config.UseWebDefaults)
+                {
+                    return webDefaultFlexShrink;
+                }
+                return defaultFlexShrink;
+            }
+            return this.nodeStyle.FlexShrink;
         }
 
         // StyleSetFlexShrink sets flex shrink
@@ -279,11 +298,6 @@ namespace Rockyfi
                 this.nodeStyle.FlexShrink = flexShrink;
                 nodeMarkDirtyInternal(this);
             }
-        }
-
-        public float StyleGetFlexShrink()
-        {
-            return this.nodeStyle.FlexShrink;
         }
 
         // StyleSetFlexBasis sets flex basis

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Rockyfi
 {
-    class NodePrinter
+    public class NodePrinter
     {
         public NodePrinter(StringBuilder writer, bool PrintOptionsLayout,bool PrintOptionsStyle,bool PrintOptionsChildren)
         {
@@ -15,8 +15,6 @@ namespace Rockyfi
             this.PrintOptionsStyle = PrintOptionsStyle;
             this.PrintOptionsChildren = PrintOptionsChildren;
         }
-
-        static Node nodeDefaults = Node.CreateDefaultNode();
 
         StringBuilder writer;
         bool PrintOptionsLayout;
@@ -49,19 +47,19 @@ namespace Rockyfi
 
             if (PrintOptionsStyle) {
                 printer.printf("style=\"");
-                if (node.nodeStyle.FlexDirection != nodeDefaults.nodeStyle.FlexDirection) {
+                if (node.nodeStyle.FlexDirection != Constant.nodeDefaults.nodeStyle.FlexDirection) {
                     printer.printf($"flex-direction: {FlexDirectionToString(node.nodeStyle.FlexDirection)}; ");
                 }
-                if (node.nodeStyle.JustifyContent != nodeDefaults.nodeStyle.JustifyContent) {
+                if (node.nodeStyle.JustifyContent != Constant.nodeDefaults.nodeStyle.JustifyContent) {
                     printer.printf($"justify-content: {JustifyToString(node.nodeStyle.JustifyContent)}; ");
                 }
-                if (node.nodeStyle.AlignItems != nodeDefaults.nodeStyle.AlignItems) {
+                if (node.nodeStyle.AlignItems != Constant.nodeDefaults.nodeStyle.AlignItems) {
                     printer.printf($"align-items: {AlignToString(node.nodeStyle.AlignItems)}; ");
                 }
-                if (node.nodeStyle.AlignContent != nodeDefaults.nodeStyle.AlignContent) {
+                if (node.nodeStyle.AlignContent != Constant.nodeDefaults.nodeStyle.AlignContent) {
                     printer.printf($"align-content: {AlignToString(node.nodeStyle.AlignContent)}; ");
                 }
-                if (node.nodeStyle.AlignSelf != nodeDefaults.nodeStyle.AlignSelf) {
+                if (node.nodeStyle.AlignSelf != Constant.nodeDefaults.nodeStyle.AlignSelf) {
                     printer.printf($"align-self: {AlignToString(node.nodeStyle.AlignSelf)}; ");
                 }
 
@@ -70,15 +68,15 @@ namespace Rockyfi
                 printer.printNumberIfNotAuto(node, "flex-basis", node.nodeStyle.FlexBasis);
                 printer.printFloatIfNotUndefined(node, "flex", node.nodeStyle.Flex);
 
-                if (node.nodeStyle.FlexWrap != nodeDefaults.nodeStyle.FlexWrap) {
+                if (node.nodeStyle.FlexWrap != Constant.nodeDefaults.nodeStyle.FlexWrap) {
                     printer.printf($"flexWrap: {WrapToString(node.nodeStyle.FlexWrap)}; ");
                 }
 
-                if (node.nodeStyle.Overflow != nodeDefaults.nodeStyle.Overflow) {
+                if (node.nodeStyle.Overflow != Constant.nodeDefaults.nodeStyle.Overflow) {
                     printer.printf($"overflow: {OverflowToString(node.nodeStyle.Overflow)}; ");
                 }
 
-                if (node.nodeStyle.Display != nodeDefaults.nodeStyle.Display) {
+                if (node.nodeStyle.Display != Constant.nodeDefaults.nodeStyle.Display) {
                     printer.printf($"display: {DisplayToString(node.nodeStyle.Display)}; ");
                 }
 
@@ -93,7 +91,7 @@ namespace Rockyfi
                 printer.printNumberIfNotAuto(node, "min-width", node.nodeStyle.MinDimensions[(int)Dimension.Width]);
                 printer.printNumberIfNotAuto(node, "min-height", node.nodeStyle.MinDimensions[(int)Dimension.Height]);
 
-                if (node.nodeStyle.PositionType != nodeDefaults.nodeStyle.PositionType) {
+                if (node.nodeStyle.PositionType != Constant.nodeDefaults.nodeStyle.PositionType) {
                     printer.printf($"position: {PositionTypeToString(node.nodeStyle.PositionType)}; ");
                 }
 
@@ -186,9 +184,7 @@ namespace Rockyfi
 
         void printIndent(int n)
         {
-            List<string> indent = new List<string>(n);
-            for (int i = 0; i < n; i ++) indent.Add("");
-            writer.Append(string.Join("  ", indent));
+            for (int i = 0; i < n; i ++) writer.Append("  ");
         }
 
         bool fourValuesEqual(Value[] four) {
@@ -200,7 +196,7 @@ namespace Rockyfi
 
 
         // AlignToString returns string version of Align enum
-        static string AlignToString(Align value)
+        public static string AlignToString(Align value)
         {
             switch (value)
             {
@@ -225,7 +221,7 @@ namespace Rockyfi
         }
 
         // DimensionToString returns string version of Dimension enum
-        static string DimensionToString(Dimension value)
+        public static string DimensionToString(Dimension value)
         {
             switch (value)
             {
@@ -238,7 +234,7 @@ namespace Rockyfi
         }
 
         // DirectionToString returns string version of Direction enum
-        static string DirectionToString(Direction value)
+        public static string DirectionToString(Direction value)
         {
             switch (value)
             {
@@ -253,7 +249,7 @@ namespace Rockyfi
         }
 
         // DisplayToString returns string version of Display enum
-        static string DisplayToString(Display value)
+        public static string DisplayToString(Display value)
         {
             switch (value)
             {
@@ -266,7 +262,7 @@ namespace Rockyfi
         }
 
         // EdgeToString returns string version of Edge enum
-        static string EdgeToString(Edge value)
+        public static string EdgeToString(Edge value)
         {
             switch (value)
             {
@@ -293,7 +289,7 @@ namespace Rockyfi
         }
 
         // ExperimentalFeatureToString returns string version of ExperimentalFeature enum
-        static string ExperimentalFeatureToString(ExperimentalFeature value)
+        public static string ExperimentalFeatureToString(ExperimentalFeature value)
         {
             switch (value)
             {
@@ -304,7 +300,7 @@ namespace Rockyfi
         }
 
         // FlexDirectionToString returns string version of FlexDirection enum
-        static string FlexDirectionToString(FlexDirection value)
+        public static string FlexDirectionToString(FlexDirection value)
         {
             switch (value)
             {
@@ -321,7 +317,7 @@ namespace Rockyfi
         }
 
         // JustifyToString returns string version of Justify enum
-        static string JustifyToString(Justify value)
+        public static string JustifyToString(Justify value)
         {
             switch (value)
             {
@@ -340,7 +336,7 @@ namespace Rockyfi
         }
 
         // LogLevelToString returns string version of LogLevel enum
-        static string LogLevelToString(LogLevel value)
+        public static string LogLevelToString(LogLevel value)
         {
             switch (value)
             {
@@ -361,7 +357,7 @@ namespace Rockyfi
         }
 
         // MeasureModeToString returns string version of MeasureMode enum
-        static string MeasureModeToString(MeasureMode value)
+        public static string MeasureModeToString(MeasureMode value)
         {
             switch (value)
             {
@@ -376,7 +372,7 @@ namespace Rockyfi
         }
 
         // NodeTypeToString returns string version of NodeType enum
-        static string NodeTypeToString(NodeType value)
+        public static string NodeTypeToString(NodeType value)
         {
             switch (value)
             {
@@ -389,7 +385,7 @@ namespace Rockyfi
         }
 
         // OverflowToString returns string version of Overflow enum
-        static string OverflowToString(Overflow value)
+        public static string OverflowToString(Overflow value)
         {
             switch (value)
             {
@@ -404,7 +400,7 @@ namespace Rockyfi
         }
 
         // PositionType returns string version of PositionType enum
-        static string PositionTypeToString(PositionType value)
+        public static string PositionTypeToString(PositionType value)
         {
             switch (value)
             {
@@ -417,7 +413,7 @@ namespace Rockyfi
         }
 
         // PrintOptionsToString returns string version of PrintOptions enum
-        static string PrintOptionsToString(PrintOptions value)
+        public static string PrintOptionsToString(PrintOptions value)
         {
             switch (value)
             {
@@ -432,7 +428,7 @@ namespace Rockyfi
         }
 
         // UnitToString returns string version of Unit enum
-        static string UnitToString(Unit value)
+        public static string UnitToString(Unit value)
         {
             switch (value)
             {
@@ -449,7 +445,7 @@ namespace Rockyfi
         }
 
         // WrapToString returns string version of Wrap enum
-        static string WrapToString(Wrap value)
+        public static string WrapToString(Wrap value)
         {
             switch (value)
             {

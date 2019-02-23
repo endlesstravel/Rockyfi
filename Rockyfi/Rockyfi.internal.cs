@@ -52,6 +52,11 @@ namespace Rockyfi
         internal const int measureModeCount = 3;
         internal static readonly string[] measureModeNames = { "UNDEFINED", "EXACTLY", "AT_MOST" };
         internal static readonly string[] layoutModeNames = { "LAY_UNDEFINED", "LAY_EXACTLY", "LAY_AT_MOST" };
+
+
+
+        internal readonly static Node nodeDefaults = Node.CreateDefaultNode();
+        internal readonly static Config configDefaults = Node.CreateDefaultConfig();
     }
 
     class Style
@@ -234,32 +239,10 @@ namespace Rockyfi
         const float defaultFlexShrink = 0;
         const float webDefaultFlexShrink = 1;
 
-        internal static Node CreateDefaultNode()
-        {
-            var node = new Node();
-            return node;
-        }
-
-        internal static Node CreateDefaultNode(Config config)
-        {
-            var node = new Node();
-            if (config.UseWebDefaults) {
-                node.nodeStyle.FlexDirection = FlexDirection.Row;
-                node.nodeStyle.AlignContent = Align.Stretch;
-            }
-            node.config = config;
-            return node;
-        }
-
         readonly internal static Value ValueZero =  new Value(0, Unit.Point);
         readonly internal static Value ValueUndefined = new Value(float.NaN, Unit.Undefined);
 
         readonly internal static Value ValueAuto = new Value(float.NaN, Unit.Auto);
-
-        internal static Config CreateDefaultConfig()
-        {
-            return new Config();
-        }
 
         internal static bool feq(float a, float b)
         {
@@ -491,30 +474,6 @@ namespace Rockyfi
                 return node.nodeStyle.Flex;
             }
             return defaultFlexGrow;
-        }
-
-        // StyleGetFlexGrow gets flex grow
-        internal static float StyleGetFlexGrow(Node node)
-        {
-            if (FloatIsUndefined(node.nodeStyle.FlexGrow))
-            {
-                return defaultFlexGrow;
-            }
-            return node.nodeStyle.FlexGrow;
-        }
-
-        // StyleGetFlexShrink gets flex shrink
-        internal static float StyleGetFlexShrink(Node node)
-        {
-            if (FloatIsUndefined(node.nodeStyle.FlexShrink))
-            {
-                if (node.config.UseWebDefaults)
-                {
-                    return webDefaultFlexShrink;
-                }
-                return defaultFlexShrink;
-            }
-            return node.nodeStyle.FlexShrink;
         }
 
         internal static float nodeResolveFlexShrink(Node node)
@@ -3044,32 +3003,6 @@ namespace Rockyfi
             }
         }
 
-        // CalculateLayout calculates layout
-        internal static void CalculateLayout(Node node, float parentWidth, float parentHeight, Direction parentDirection) {
-            // Increment the generation count. This will force the recursive routine to
-            // visit
-            // all dirty nodes at least once. Subsequent visits will be skipped if the
-            // input
-            // parameters don't change.
-            currentGenerationCount++;
-
-            resolveDimensions(node);
-
-            calcStartWidth(node, parentWidth, out float width, out MeasureMode widthMeasureMode);
-            calcStartHeight(node, parentWidth, parentHeight, out float height, out MeasureMode heightMeasureMode);
-
-            if (layoutNodeInternal(node, width, height, parentDirection,
-                widthMeasureMode, heightMeasureMode, parentWidth, parentHeight,
-                true, "initial", node.config)) {
-                nodeSetPosition(node, node.nodeLayout.Direction, parentWidth, parentHeight, parentWidth);
-                roundToPixelGrid(node, node.config.PointScaleFactor, 0, 0);
-
-                if (gPrintTree ) {
-                    // NodePrint(node, PrintOptionsLayout|PrintOptionsChildren|PrintOptionsStyle);
-                    System.Console.WriteLine("NodePrint(node, PrintOptionsLayout|PrintOptionsChildren|PrintOptionsStyle);");
-                }
-            }
-        }
 
 
         internal static void log(Node node, LogLevel level, string format, params object[] args) {

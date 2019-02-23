@@ -48,14 +48,15 @@ namespace Rockyfi
 
     public class Config
     {
+        public bool UseWebDefaults = false;
+        public object Context = null;
+        public LoggerFunc Logger = DefaultLog;
+
         readonly internal bool[] experimentalFeatures = new bool[Constant.ExperimentalFeatureCount + 1];
-        internal bool UseWebDefaults = false;
         internal bool UseLegacyStretchBehaviour = false;
         internal float PointScaleFactor = 1;
-        internal LoggerFunc Logger = DefaultLog;
-        internal object Context = null;
 
-        static int DefaultLog(Config config, Node node, LogLevel level, string format, params object[] args)
+        public static int DefaultLog(Config config, Node node, LogLevel level, string format, params object[] args)
         {
             switch (level)
             {
@@ -75,7 +76,7 @@ namespace Rockyfi
             return 0;
         }
 
-        internal static void Copy(Config dest, Config src)
+        public static void Copy(Config dest, Config src)
         {
             dest.UseWebDefaults = src.UseWebDefaults;
             dest.UseLegacyStretchBehaviour = src.UseLegacyStretchBehaviour;
@@ -90,20 +91,20 @@ namespace Rockyfi
         }
 
         // SetExperimentalFeatureEnabled enables experimental feature
-        internal void SetExperimentalFeatureEnabled(ExperimentalFeature feature, bool enabled)
+        public void SetExperimentalFeatureEnabled(ExperimentalFeature feature, bool enabled)
         {
             this.experimentalFeatures[(int)feature] = enabled;
         }
 
         // IsExperimentalFeatureEnabled returns if experimental feature is enabled
-        internal bool IsExperimentalFeatureEnabled(ExperimentalFeature feature)
+        public bool IsExperimentalFeatureEnabled(ExperimentalFeature feature)
         {
             return this.experimentalFeatures[(int)feature];
         }
 
 
         // SetPointScaleFactor sets scale factor
-        internal void SetPointScaleFactor(float pixelsInPoint)
+        public void SetPointScaleFactor(float pixelsInPoint)
         {
             assertWithConfig(this, pixelsInPoint >= 0, "Scale factor should not be less than zero");
 
@@ -201,6 +202,60 @@ namespace Rockyfi
                 node.nodeStyle.AlignContent = Align.Stretch;
             }
             node.config = config;
+        }
+
+
+        public static Node CreateDefaultNode()
+        {
+            var node = new Node();
+            return node;
+        }
+
+        public static Node CreateDefaultNode(Config config)
+        {
+            var node = new Node();
+            if (config.UseWebDefaults)
+            {
+                node.nodeStyle.FlexDirection = FlexDirection.Row;
+                node.nodeStyle.AlignContent = Align.Stretch;
+            }
+            node.config = config;
+            return node;
+        }
+
+        public static Config CreateDefaultConfig()
+        {
+            return new Config();
+        }
+
+        // CalculateLayout calculates layout
+        public static void CalculateLayout(Node node, float parentWidth, float parentHeight, Direction parentDirection)
+        {
+            // Increment the generation count. This will force the recursive routine to
+            // visit
+            // all dirty nodes at least once. Subsequent visits will be skipped if the
+            // input
+            // parameters don't change.
+            currentGenerationCount++;
+
+            resolveDimensions(node);
+
+            calcStartWidth(node, parentWidth, out float width, out MeasureMode widthMeasureMode);
+            calcStartHeight(node, parentWidth, parentHeight, out float height, out MeasureMode heightMeasureMode);
+
+            if (layoutNodeInternal(node, width, height, parentDirection,
+                widthMeasureMode, heightMeasureMode, parentWidth, parentHeight,
+                true, "initial", node.config))
+            {
+                nodeSetPosition(node, node.nodeLayout.Direction, parentWidth, parentHeight, parentWidth);
+                roundToPixelGrid(node, node.config.PointScaleFactor, 0, 0);
+
+                if (gPrintTree)
+                {
+                    // NodePrint(node, PrintOptionsLayout|PrintOptionsChildren|PrintOptionsStyle);
+                    System.Console.WriteLine("NodePrint(node, PrintOptionsLayout|PrintOptionsChildren|PrintOptionsStyle);");
+                }
+            }
         }
     }
 }
