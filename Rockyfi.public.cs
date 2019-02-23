@@ -176,6 +176,7 @@ namespace Rockyfi
             }
         }
 
+
         // // Reset resets a node
         public static void Reset(ref Node node)
         {

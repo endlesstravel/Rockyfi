@@ -646,17 +646,25 @@ namespace Rockyfi
         #endregion
 
         #region other props
-        public void SetMeasureFunc(MeasureFunc func)
-        {
-            Node.SetMeasureFunc(this, func);
-        }
-        public void SetBaselineFunc(BaselineFunc func)
-        {
-            this.baselineFunc = func;
-        }
-        public void GetStyle()
-        {
 
+        public void SetMeasureFunc(MeasureFunc measureFunc)
+        {
+            Node.SetMeasureFunc(this, measureFunc);
+        }
+
+        public MeasureFunc GetMeasureFunc()
+        {
+            return this.measureFunc;
+        }
+
+        public void SetBaselineFunc(BaselineFunc baselineFunc)
+        {
+            this.baselineFunc = baselineFunc;
+        }
+
+        public BaselineFunc GetBaselineFunc()
+        {
+            return this.baselineFunc;
         }
         #endregion
 
