@@ -157,11 +157,6 @@ namespace Rockyfi
             return res;
         }
 
-        void OnWarnning(string msg)
-        {
-
-        }
-
         readonly static char[] NullCharSpliter = { ' '};
         Value[] ParseFourValueFromString(string text)
         {
@@ -213,7 +208,7 @@ namespace Rockyfi
             if (t.Length == 2)
             {
                 head = t[0];
-                head = t[1];
+                tail = t[1];
                 return true;
             }
             if (t.Length == 1)
@@ -224,9 +219,13 @@ namespace Rockyfi
 
             return false;
         }
+        void OnWarnning(string msg)
+        {
+
+        }
 
 
-        Node SetupNode(XmlNode ele)
+        Node SetupNormalNode(XmlNode ele)
         {
             Node node = Rockyfi.CreateDefaultNode();
             foreach (XmlAttribute attr in ele.Attributes)
@@ -344,7 +343,7 @@ namespace Rockyfi
                                         }
                                     }
                                 }
-                                else if (Rockyfi.StringToEdge(attr.Value, out Edge edge))
+                                else if (Rockyfi.StringToEdge(tail, out Edge edge))
                                 {
                                     node.Helper_SetMarginPaddingBorder(head, edge, parseValueFromString(attr.Value));
                                 }
@@ -352,19 +351,65 @@ namespace Rockyfi
                         }
                         break;
                 }
-
                 node.Atrribute.Add(attr.Name.ToString(), attr.Value);
             }
             return node;
         }
 
+
+        #region DataCenter
+        class DataBind
+        {
+            enum Type
+            {
+                For,
+            }
+
+            object data;
+
+        }
+        readonly Dictionary<string, Node> effectBind = new Dictionary<string, Node>();
+
+        /// <summary>
+        /// insert child
+        /// </summary>
+        void InsertChild(Node node, Node child, int idx)
+        {
+            // TODO: data check
+            Rockyfi.InsertChild(node, child, idx);
+        }
+
+        // delete
+        void RemoveChild(Node node, Node child)
+        {
+            // TODO: data check
+            Rockyfi.RemoveChild(node, child);
+        }
+
+        // update
+        void SetData()
+        {
+
+        }
+
+        // update
+        void GetData()
+        {
+
+        }
+
+        #endregion
+
         Node SetupTraverse(XmlNode element)
         {
-            Node node = SetupNode(element);
+            Node node = SetupNormalNode(element);
             foreach (XmlNode e in element.ChildNodes)
             {
                 var child = SetupTraverse(e);
-                node.InsertChild(child, node.Children.Count);
+                if (child != null)
+                {
+                    this.InsertChild(node, child, node.Children.Count);
+                }
             }
             return node;
 
@@ -392,7 +437,7 @@ namespace Rockyfi
             while (queue.Count != 0)
             {
                 var node = queue.Dequeue();
-                drawFunc(node.LayoutGetLeft(), node.LayoutGetRight(),
+                drawFunc(node.LayoutGetLeft(), node.LayoutGetTop(),
                     node.LayoutGetWidth(), node.LayoutGetHeight(),
                     node
                     );
