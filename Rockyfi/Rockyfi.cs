@@ -10,10 +10,10 @@ namespace Rockyfi
             if (dim.value != width || dim.unit != Unit.Point) {
                 dim.value = width;
                 dim.unit = Unit.Point;
-                if (FloatIsUndefined(width)) {
+                if (Rockyfi.FloatIsUndefined(width)) {
                     dim.unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -23,10 +23,10 @@ namespace Rockyfi
             if (dim.value != width || dim.unit != Unit.Percent) {
                 dim.value = width;
                 dim.unit = Unit.Percent;
-                if (FloatIsUndefined(width)) {
+                if (Rockyfi.FloatIsUndefined(width)) {
                     dim.unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -36,7 +36,7 @@ namespace Rockyfi
             if (dim.unit != Unit.Auto) {
                 dim.value = float.NaN;
                 dim.unit = Unit.Auto;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -51,10 +51,10 @@ namespace Rockyfi
             if (dim.value != height || dim.unit != Unit.Point) {
                 dim.value = height;
                 dim.unit = Unit.Point;
-                if (FloatIsUndefined(height)) {
+                if (Rockyfi.FloatIsUndefined(height)) {
                     dim.unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -64,10 +64,10 @@ namespace Rockyfi
             if (dim.value != height || dim.unit != Unit.Percent) {
                 dim.value = height;
                 dim.unit = Unit.Percent;
-                if (FloatIsUndefined(height)) {
+                if (Rockyfi.FloatIsUndefined(height)) {
                     dim.unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -77,7 +77,7 @@ namespace Rockyfi
             if (dim.unit != Unit.Auto) {
                 dim.value = float.NaN;
                 dim.unit = Unit.Auto;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Rockyfi
         public void StyleSetPositionType(PositionType positionType) {
             if (this.nodeStyle.PositionType != positionType) {
                 this.nodeStyle.PositionType = positionType;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -105,10 +105,10 @@ namespace Rockyfi
             if (pos.value != position || pos.unit != Unit.Point) {
                 pos.value = position;
                 pos.unit = Unit.Point;
-                if (FloatIsUndefined(position)) {
+                if (Rockyfi.FloatIsUndefined(position)) {
                     pos.unit = Unit.Undefined;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -118,10 +118,10 @@ namespace Rockyfi
             if (pos.value != position || pos.unit != Unit.Percent) {
                 pos.value = position;
                 pos.unit = Unit.Percent;
-                if (FloatIsUndefined(position)) {
+                if (Rockyfi.FloatIsUndefined(position)) {
                     pos.unit = Unit.Undefined;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -134,7 +134,7 @@ namespace Rockyfi
         public void StyleSetDirection(Direction direction) {
             if (this.nodeStyle.Direction != direction) {
                 this.nodeStyle.Direction = direction;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -147,7 +147,7 @@ namespace Rockyfi
         public void StyleSetFlexDirection(FlexDirection flexDirection) {
             if (this.nodeStyle.FlexDirection != flexDirection) {
                 this.nodeStyle.FlexDirection = flexDirection;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -160,7 +160,7 @@ namespace Rockyfi
         public void StyleSetJustifyContent(Justify justifyContent) {
             if (this.nodeStyle.JustifyContent != justifyContent) {
                 this.nodeStyle.JustifyContent = justifyContent;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -173,7 +173,7 @@ namespace Rockyfi
         public void StyleSetAlignContent(Align alignContent) {
             if (this.nodeStyle.AlignContent != alignContent) {
                 this.nodeStyle.AlignContent = alignContent;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -186,7 +186,7 @@ namespace Rockyfi
         public void StyleSetAlignItems(Align alignItems) {
             if (this.nodeStyle.AlignItems != alignItems) {
                 this.nodeStyle.AlignItems = alignItems;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -199,7 +199,7 @@ namespace Rockyfi
         public void StyleSetAlignSelf(Align alignSelf) {
             if (this.nodeStyle.AlignSelf != alignSelf) {
                 this.nodeStyle.AlignSelf = alignSelf;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -212,7 +212,7 @@ namespace Rockyfi
         public void StyleSetFlexWrap(Wrap flexWrap) {
             if (this.nodeStyle.FlexWrap != flexWrap) {
                 this.nodeStyle.FlexWrap = flexWrap;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -225,7 +225,7 @@ namespace Rockyfi
         public void StyleSetOverflow(Overflow overflow) {
             if (this.nodeStyle.Overflow != overflow) {
                 this.nodeStyle.Overflow = overflow;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -238,7 +238,7 @@ namespace Rockyfi
         public void StyleSetDisplay(Display display) {
             if (this.nodeStyle.Display != display) {
                 this.nodeStyle.Display = display;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -251,7 +251,7 @@ namespace Rockyfi
         public void StyleSetFlex(float flex) {
             if (this.nodeStyle.Flex != flex) {
                 this.nodeStyle.Flex = flex;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -264,7 +264,7 @@ namespace Rockyfi
         public void StyleSetFlexGrow(float flexGrow) {
             if (this.nodeStyle.FlexGrow != flexGrow) {
                 this.nodeStyle.FlexGrow = flexGrow;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -273,7 +273,7 @@ namespace Rockyfi
         {
             if (float.IsNaN(this.nodeStyle.FlexGrow))
             {
-                return defaultFlexGrow;
+                return Constant.defaultFlexGrow;
             }
             return this.nodeStyle.FlexGrow;
         }
@@ -285,9 +285,9 @@ namespace Rockyfi
             {
                 if (this.config.UseWebDefaults)
                 {
-                    return webDefaultFlexShrink;
+                    return Constant.webDefaultFlexShrink;
                 }
-                return defaultFlexShrink;
+                return Constant.defaultFlexShrink;
             }
             return this.nodeStyle.FlexShrink;
         }
@@ -296,7 +296,7 @@ namespace Rockyfi
         public void StyleSetFlexShrink(float flexShrink) {
             if (this.nodeStyle.FlexShrink != flexShrink) {
                 this.nodeStyle.FlexShrink = flexShrink;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -306,10 +306,10 @@ namespace Rockyfi
                 this.nodeStyle.FlexBasis.unit != Unit.Point) {
                 this.nodeStyle.FlexBasis.value = flexBasis;
                 this.nodeStyle.FlexBasis.unit = Unit.Point;
-                if (FloatIsUndefined(flexBasis)) {
+                if (Rockyfi.FloatIsUndefined(flexBasis)) {
                     this.nodeStyle.FlexBasis.unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -319,10 +319,10 @@ namespace Rockyfi
                 this.nodeStyle.FlexBasis.unit != Unit.Percent) {
                 this.nodeStyle.FlexBasis.value = flexBasis;
                 this.nodeStyle.FlexBasis.unit = Unit.Percent;
-                if (FloatIsUndefined(flexBasis)) {
+                if (Rockyfi.FloatIsUndefined(flexBasis)) {
                     this.nodeStyle.FlexBasis.unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -331,7 +331,7 @@ namespace Rockyfi
             if (this.nodeStyle.FlexBasis.unit != Unit.Auto) {
                 this.nodeStyle.FlexBasis.value = float.NaN;
                 this.nodeStyle.FlexBasis.unit = Unit.Auto;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -346,10 +346,10 @@ namespace Rockyfi
                 this.nodeStyle.Margin[(int)edge].unit != Unit.Point) {
                 this.nodeStyle.Margin[(int)edge].value = margin;
                 this.nodeStyle.Margin[(int)edge].unit = Unit.Point;
-                if (FloatIsUndefined(margin)) {
+                if (Rockyfi.FloatIsUndefined(margin)) {
                     this.nodeStyle.Margin[(int)edge].unit = Unit.Undefined;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -359,10 +359,10 @@ namespace Rockyfi
                 this.nodeStyle.Margin[(int)edge].unit != Unit.Percent) {
                 this.nodeStyle.Margin[(int)edge].value = margin;
                 this.nodeStyle.Margin[(int)edge].unit = Unit.Percent;
-                if (FloatIsUndefined(margin)) {
+                if (Rockyfi.FloatIsUndefined(margin)) {
                     this.nodeStyle.Margin[(int)edge].unit = Unit.Undefined;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -376,7 +376,7 @@ namespace Rockyfi
             if (this.nodeStyle.Margin[(int)edge].unit != Unit.Auto) {
                 this.nodeStyle.Margin[(int)edge].value = float.NaN;
                 this.nodeStyle.Margin[(int)edge].unit = Unit.Auto;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -386,10 +386,10 @@ namespace Rockyfi
                 this.nodeStyle.Padding[(int)edge].unit != Unit.Point) {
                 this.nodeStyle.Padding[(int)edge].value = padding;
                 this.nodeStyle.Padding[(int)edge].unit = Unit.Point;
-                if (FloatIsUndefined(padding)) {
+                if (Rockyfi.FloatIsUndefined(padding)) {
                     this.nodeStyle.Padding[(int)edge].unit = Unit.Undefined;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -399,10 +399,10 @@ namespace Rockyfi
                 this.nodeStyle.Padding[(int)edge].unit != Unit.Percent) {
                 this.nodeStyle.Padding[(int)edge].value = padding;
                 this.nodeStyle.Padding[(int)edge].unit = Unit.Percent;
-                if (FloatIsUndefined(padding)) {
+                if (Rockyfi.FloatIsUndefined(padding)) {
                     this.nodeStyle.Padding[(int)edge].unit = Unit.Undefined;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -417,10 +417,10 @@ namespace Rockyfi
                 this.nodeStyle.Border[(int)edge].unit != Unit.Point) {
                 this.nodeStyle.Border[(int)edge].value = border;
                 this.nodeStyle.Border[(int)edge].unit = Unit.Point;
-                if (FloatIsUndefined(border)) {
+                if (Rockyfi.FloatIsUndefined(border)) {
                     this.nodeStyle.Border[(int)edge].unit = Unit.Undefined;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -435,10 +435,10 @@ namespace Rockyfi
                 this.nodeStyle.MinDimensions[(int)Dimension.Width].unit != Unit.Point) {
                 this.nodeStyle.MinDimensions[(int)Dimension.Width].value = minWidth;
                 this.nodeStyle.MinDimensions[(int)Dimension.Width].unit = Unit.Point;
-                if (FloatIsUndefined(minWidth)) {
+                if (Rockyfi.FloatIsUndefined(minWidth)) {
                     this.nodeStyle.MinDimensions[(int)Dimension.Width].unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -448,10 +448,10 @@ namespace Rockyfi
                 this.nodeStyle.MinDimensions[(int)Dimension.Width].unit != Unit.Percent) {
                 this.nodeStyle.MinDimensions[(int)Dimension.Width].value = minWidth;
                 this.nodeStyle.MinDimensions[(int)Dimension.Width].unit = Unit.Percent;
-                if (FloatIsUndefined(minWidth)) {
+                if (Rockyfi.FloatIsUndefined(minWidth)) {
                     this.nodeStyle.MinDimensions[(int)Dimension.Width].unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -466,10 +466,10 @@ namespace Rockyfi
                 this.nodeStyle.MinDimensions[(int)Dimension.Height].unit != Unit.Point) {
                 this.nodeStyle.MinDimensions[(int)Dimension.Height].value = minHeight;
                 this.nodeStyle.MinDimensions[(int)Dimension.Height].unit = Unit.Point;
-                if (FloatIsUndefined(minHeight)) {
+                if (Rockyfi.FloatIsUndefined(minHeight)) {
                     this.nodeStyle.MinDimensions[(int)Dimension.Height].unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -479,10 +479,10 @@ namespace Rockyfi
                 this.nodeStyle.MinDimensions[(int)Dimension.Height].unit != Unit.Percent) {
                 this.nodeStyle.MinDimensions[(int)Dimension.Height].value = minHeight;
                 this.nodeStyle.MinDimensions[(int)Dimension.Height].unit = Unit.Percent;
-                if (FloatIsUndefined(minHeight)) {
+                if (Rockyfi.FloatIsUndefined(minHeight)) {
                     this.nodeStyle.MinDimensions[(int)Dimension.Height].unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -497,10 +497,10 @@ namespace Rockyfi
                 this.nodeStyle.MaxDimensions[(int)Dimension.Width].unit != Unit.Point) {
                 this.nodeStyle.MaxDimensions[(int)Dimension.Width].value = maxWidth;
                 this.nodeStyle.MaxDimensions[(int)Dimension.Width].unit = Unit.Point;
-                if (FloatIsUndefined(maxWidth)) {
+                if (Rockyfi.FloatIsUndefined(maxWidth)) {
                     this.nodeStyle.MaxDimensions[(int)Dimension.Width].unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -510,10 +510,10 @@ namespace Rockyfi
                 this.nodeStyle.MaxDimensions[(int)Dimension.Width].unit != Unit.Percent) {
                 this.nodeStyle.MaxDimensions[(int)Dimension.Width].value = maxWidth;
                 this.nodeStyle.MaxDimensions[(int)Dimension.Width].unit = Unit.Percent;
-                if (FloatIsUndefined(maxWidth)) {
+                if (Rockyfi.FloatIsUndefined(maxWidth)) {
                     this.nodeStyle.MaxDimensions[(int)Dimension.Width].unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -528,10 +528,10 @@ namespace Rockyfi
                 this.nodeStyle.MaxDimensions[(int)Dimension.Height].unit != Unit.Point) {
                 this.nodeStyle.MaxDimensions[(int)Dimension.Height].value = maxHeight;
                 this.nodeStyle.MaxDimensions[(int)Dimension.Height].unit = Unit.Point;
-                if (FloatIsUndefined(maxHeight)) {
+                if (Rockyfi.FloatIsUndefined(maxHeight)) {
                     this.nodeStyle.MaxDimensions[(int)Dimension.Height].unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -541,10 +541,10 @@ namespace Rockyfi
                 this.nodeStyle.MaxDimensions[(int)Dimension.Height].unit != Unit.Percent) {
                 this.nodeStyle.MaxDimensions[(int)Dimension.Height].value = maxHeight;
                 this.nodeStyle.MaxDimensions[(int)Dimension.Height].unit = Unit.Percent;
-                if (FloatIsUndefined(maxHeight)) {
+                if (Rockyfi.FloatIsUndefined(maxHeight)) {
                     this.nodeStyle.MaxDimensions[(int)Dimension.Height].unit = Unit.Auto;
                 }
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -557,7 +557,7 @@ namespace Rockyfi
         public void StyleSetAspectRatio(float aspectRatio) {
             if (this.nodeStyle.AspectRatio != aspectRatio) {
                 this.nodeStyle.AspectRatio = aspectRatio;
-                nodeMarkDirtyInternal(this);
+                Rockyfi.nodeMarkDirtyInternal(this);
             }
         }
 
@@ -593,7 +593,7 @@ namespace Rockyfi
 
         // LayoutGetMargin gets margin
         public float LayoutGetMargin(Edge edge) {
-            assertWithNode(this, edge < Edge.End, "Cannot get layout properties of multi-edge shorthands");
+            Rockyfi.assertWithNode(this, edge < Edge.End, "Cannot get layout properties of multi-edge shorthands");
             if (edge == Edge.Left) {
                 if (this.nodeLayout.Direction == Direction.RTL) {
                     return this.nodeLayout.Margin[(int)Edge.End];
@@ -611,7 +611,7 @@ namespace Rockyfi
 
         // LayoutGetBorder gets border
         public float LayoutGetBorder(Edge edge) {
-            assertWithNode(this, edge < Edge.End,
+            Rockyfi.assertWithNode(this, edge < Edge.End,
                 "Cannot get layout properties of multi-edge shorthands");
             if (edge == Edge.Left) {
                 if (this.nodeLayout.Direction == Direction.RTL) {
@@ -630,7 +630,7 @@ namespace Rockyfi
 
         // LayoutGetPadding gets padding
         public float LayoutGetPadding(Edge edge) {
-            assertWithNode(this, edge < Edge.End,
+            Rockyfi.assertWithNode(this, edge < Edge.End,
                 "Cannot get layout properties of multi-edge shorthands");
             if (edge == Edge.Left) {
                 if (this.nodeLayout.Direction == Direction.RTL) {
@@ -663,7 +663,7 @@ namespace Rockyfi
 
         public void SetMeasureFunc(MeasureFunc measureFunc)
         {
-            Node.SetMeasureFunc(this, measureFunc);
+            Rockyfi.SetMeasureFunc(this, measureFunc);
         }
 
         public MeasureFunc GetMeasureFunc()
@@ -695,15 +695,15 @@ namespace Rockyfi
         #region tree
         public Node GetChild(int idx)
         {
-            return Node.GetChild(this, idx);
+            return Rockyfi.GetChild(this, idx);
         }
         public void InsertChild(Node child, int idx)
         {
-            Node.InsertChild(this, child, idx);
+            Rockyfi.InsertChild(this, child, idx);
         }
         public void RemoveChild(Node child)
         {
-            Node.RemoveChild(this, child);
+            Rockyfi.RemoveChild(this, child);
         }
         #endregion
     }

@@ -55,8 +55,14 @@ namespace Rockyfi
 
 
 
-        internal readonly static Node nodeDefaults = Node.CreateDefaultNode();
-        internal readonly static Config configDefaults = Node.CreateDefaultConfig();
+        internal readonly static Node nodeDefaults = Rockyfi.CreateDefaultNode();
+        internal readonly static Config configDefaults = Rockyfi.CreateDefaultConfig();
+
+
+
+        internal const float defaultFlexGrow = 0;
+        internal const float defaultFlexShrink = 0;
+        internal const float webDefaultFlexShrink = 1;
     }
 
     class Style
@@ -135,9 +141,8 @@ namespace Rockyfi
         }
     }
 
-    public partial class Node
+    public partial class Rockyfi
     {
-
         internal class CachedMeasurement
         {
             internal float availableWidth;
@@ -234,10 +239,6 @@ namespace Rockyfi
                 cachedLayout.ResetToDefault();
             }
         }
-
-        const float defaultFlexGrow = 0;
-        const float defaultFlexShrink = 0;
-        const float webDefaultFlexShrink = 1;
 
         readonly internal static Value ValueZero =  new Value(0, Unit.Point);
         readonly internal static Value ValueUndefined = new Value(float.NaN, Unit.Undefined);
@@ -378,7 +379,7 @@ namespace Rockyfi
                 // TODO: t18095186 Move nodeType to opt-in function and mark appropriate places in Litho
                 node.NodeType = NodeType.Default;
             } else {
-                assertWithNode(
+                Rockyfi.assertWithNode(
                     node,
                     node.Children.Count == 0,
                     "Cannot set measure function: Nodes with measure functions cannot have children.");
@@ -391,8 +392,8 @@ namespace Rockyfi
         // InsertChild inserts a child
         internal static void InsertChild(Node node, Node child, int idx)
         {
-            assertWithNode(node, child.Parent == null, "Child already has a parent, it must be removed first.");
-            assertWithNode(node, node.measureFunc == null, "Cannot add child: Nodes with measure functions cannot have children.");
+            Rockyfi.assertWithNode(node, child.Parent == null, "Child already has a parent, it must be removed first.");
+            Rockyfi.assertWithNode(node, node.measureFunc == null, "Cannot add child: Nodes with measure functions cannot have children.");
 
             node.Children.Insert(idx, child);
             child.Parent = node;
@@ -418,7 +419,7 @@ namespace Rockyfi
 
         // MarkDirty marks node as dirty
         internal static void MarkDirty(Node node) {
-            assertWithNode(node, node.measureFunc != null,
+            Rockyfi.assertWithNode(node, node.measureFunc != null,
                 "Only leaf nodes with custom measure functions should manually mark themselves as dirty");
             nodeMarkDirtyInternal(node);
         }
@@ -473,7 +474,7 @@ namespace Rockyfi
             {
                 return node.nodeStyle.Flex;
             }
-            return defaultFlexGrow;
+            return Constant.defaultFlexGrow;
         }
 
         internal static float nodeResolveFlexShrink(Node node)
@@ -494,9 +495,9 @@ namespace Rockyfi
             }
             if (node.config.UseWebDefaults)
             {
-                return webDefaultFlexShrink;
+                return Constant.webDefaultFlexShrink;
             }
-            return defaultFlexShrink;
+            return Constant.defaultFlexShrink;
         }
 
         internal static Value nodeResolveFlexBasisPtr(Node node)
@@ -670,7 +671,7 @@ namespace Rockyfi
         internal static float Baseline(Node node) {
             if (node.baselineFunc != null) {
                 var baseline = node.baselineFunc(node, node.nodeLayout.measuredDimensions[(int)Dimension.Width], node.nodeLayout.measuredDimensions[(int)Dimension.Height]);
-                assertWithNode(node, !FloatIsUndefined(baseline), "Expect custom baseline function to not return NaN");
+                Rockyfi.assertWithNode(node, !FloatIsUndefined(baseline), "Expect custom baseline function to not return NaN");
                 return baseline;
             }
             else
@@ -1221,7 +1222,7 @@ namespace Rockyfi
 
         // nodeWithMeasureFuncSetMeasuredDimensions sets measure dimensions for node with measure func
         internal static void nodeWithMeasureFuncSetMeasuredDimensions(Node node, float availableWidth, float availableHeight, MeasureMode widthMeasureMode, MeasureMode heightMeasureMode, float parentWidth, float parentHeight) {
-            assertWithNode(node, node.measureFunc != null, "Expected node to have custom measure function");
+            Rockyfi.assertWithNode(node, node.measureFunc != null, "Expected node to have custom measure function");
 
             var paddingAndBorderAxisRow = nodePaddingAndBorderForAxis(node, FlexDirection.Row, availableWidth);
             var paddingAndBorderAxisColumn = nodePaddingAndBorderForAxis(node, FlexDirection.Column, availableWidth);
@@ -1430,8 +1431,8 @@ namespace Rockyfi
             Direction parentDirection, MeasureMode widthMeasureMode,
             MeasureMode heightMeasureMode, float parentWidth, float parentHeight,
             bool performLayout, Config config) {
-            // assertWithNode(node, YGFloatIsUndefined(availableWidth) ? widthMeasureMode == YGMeasureModeUndefined : true, "availableWidth is indefinite so widthMeasureMode must be YGMeasureModeUndefined");
-            //assertWithNode(node, YGFloatIsUndefined(availableHeight) ? heightMeasureMode == YGMeasureModeUndefined : true, "availableHeight is indefinite so heightMeasureMode must be YGMeasureModeUndefined");
+            // Rockyfi.assertWithNode(node, YGFloatIsUndefined(availableWidth) ? widthMeasureMode == YGMeasureModeUndefined : true, "availableWidth is indefinite so widthMeasureMode must be YGMeasureModeUndefined");
+            //Rockyfi.assertWithNode(node, YGFloatIsUndefined(availableHeight) ? heightMeasureMode == YGMeasureModeUndefined : true, "availableHeight is indefinite so heightMeasureMode must be YGMeasureModeUndefined");
 
             // Set the resolved resolution in the node's layout.
             var direction = nodeResolveDirection(node, parentDirection);
@@ -2629,10 +2630,10 @@ namespace Rockyfi
             var effectiveLastHeight = lastHeight;
 
             if (useRoundedComparison ) {
-                effectiveWidth = roundValueToPixelGrid(width, config.PointScaleFactor, false, false);
-                effectiveHeight = roundValueToPixelGrid(height, config.PointScaleFactor, false, false);
-                effectiveLastWidth = roundValueToPixelGrid(lastWidth, config.PointScaleFactor, false, false);
-                effectiveLastHeight = roundValueToPixelGrid(lastHeight, config.PointScaleFactor, false, false);
+                effectiveWidth = Rockyfi.RoundValueToPixelGrid(width, config.PointScaleFactor, false, false);
+                effectiveHeight = Rockyfi.RoundValueToPixelGrid(height, config.PointScaleFactor, false, false);
+                effectiveLastWidth = Rockyfi.RoundValueToPixelGrid(lastWidth, config.PointScaleFactor, false, false);
+                effectiveLastHeight = Rockyfi.RoundValueToPixelGrid(lastHeight, config.PointScaleFactor, false, false);
             }
 
             var hasSameWidthSpec = lastWidthMode == widthMode && FloatsEqual(effectiveLastWidth, effectiveWidth);
@@ -2920,8 +2921,8 @@ namespace Rockyfi
             // lead to unwanted text truncation.
             var textRounding = node.NodeType == NodeType.Text;
 
-            node.nodeLayout.Position[(int)Edge.Left] = roundValueToPixelGrid(nodeLeft, pointScaleFactor, false, textRounding);
-            node.nodeLayout.Position[(int)Edge.Top] = roundValueToPixelGrid(nodeTop, pointScaleFactor, false, textRounding);
+            node.nodeLayout.Position[(int)Edge.Left] = Rockyfi.RoundValueToPixelGrid(nodeLeft, pointScaleFactor, false, textRounding);
+            node.nodeLayout.Position[(int)Edge.Top] = Rockyfi.RoundValueToPixelGrid(nodeTop, pointScaleFactor, false, textRounding);
 
             // We multiply dimension by scale factor and if the result is close to the whole number, we don't have any fraction
             // To verify if the result is close to whole number we want to check both floor and ceil numbers
@@ -2931,19 +2932,19 @@ namespace Rockyfi
                 !FloatsEqual(fmodf(nodeHeight*pointScaleFactor, 1), 1);
 
             node.nodeLayout.Dimensions[(int)Dimension.Width] =
-                roundValueToPixelGrid(
+                Rockyfi.RoundValueToPixelGrid(
                     absoluteNodeRight,
                     pointScaleFactor,
                     (textRounding && hasFractionalWidth),
                     (textRounding && !hasFractionalWidth)) -
-                    roundValueToPixelGrid(absoluteNodeLeft, pointScaleFactor, false, textRounding);
+                    Rockyfi.RoundValueToPixelGrid(absoluteNodeLeft, pointScaleFactor, false, textRounding);
             node.nodeLayout.Dimensions[(int)Dimension.Height] =
-                roundValueToPixelGrid(
+                Rockyfi.RoundValueToPixelGrid(
                     absoluteNodeBottom,
                     pointScaleFactor,
                     (textRounding && hasFractionalHeight),
                     (textRounding && !hasFractionalHeight)) -
-                    roundValueToPixelGrid(absoluteNodeTop, pointScaleFactor, false, textRounding);
+                    Rockyfi.RoundValueToPixelGrid(absoluteNodeTop, pointScaleFactor, false, textRounding);
 
             foreach (var child in node.Children) {
                 roundToPixelGrid(child, pointScaleFactor, absoluteNodeLeft, absoluteNodeTop);

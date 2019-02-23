@@ -42,6 +42,7 @@
     <Compile Include="Rockyfi.Node.cs" />
     <Compile Include="Rockyfi.Print.cs" />
     <Compile Include="Rockyfi.public.cs" />
+    <Compile Include="Rockyfi.Rockyfi.cs" />
     <Compile Include="Rockyfi.struct.cs" />
   </ItemGroup>
   <ItemGroup>

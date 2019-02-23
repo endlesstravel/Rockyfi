@@ -142,7 +142,7 @@ namespace Rockyfi
         }
 
         void printEdgeIfNotUndefined(Node node, string str, Value[] edges, Edge edge) {
-            printNumberIfNotUndefined(node, str, Node.computedEdgeValue(edges, edge, Value.UndefinedValue));
+            printNumberIfNotUndefined(node, str, Rockyfi.computedEdgeValue(edges, edge, Value.UndefinedValue));
         }
 
         void printFloatIfNotUndefined(Node node, string str, float number) {
@@ -173,7 +173,7 @@ namespace Rockyfi
         }
 
         void printNumberIfNotZero(Node node, string str, Value number) {
-            if (!Node.FloatsEqual(number.value, 0)) {
+            if (!Rockyfi.FloatsEqual(number.value, 0)) {
                 printNumberIfNotUndefined(node, str, number);
             }
         }
@@ -188,8 +188,8 @@ namespace Rockyfi
         }
 
         bool fourValuesEqual(Value[] four) {
-            return Node.ValueEqual(four[0], four[1]) && Node.ValueEqual(four[0], four[2]) &&
-                Node.ValueEqual(four[0], four[3]);
+            return Rockyfi.ValueEqual(four[0], four[1]) && Rockyfi.ValueEqual(four[0], four[2]) &&
+                Rockyfi.ValueEqual(four[0], four[3]);
         }
 
 

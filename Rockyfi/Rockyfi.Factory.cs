@@ -19,13 +19,39 @@ namespace Rockyfi
 
     public delegate void DrawNodeFunc(float x, float y, float width, float height, Node node);
 
+
+    public partial class Node
+    {
+        internal void Helper_SetDimensions(Value value, Dimension dimension)
+        {
+            if (dimension == Dimension.Width)
+            {
+                if (value.unit == Unit.Auto)
+                    StyleSetWidthAuto();
+                else if (value.unit == Unit.Percent)
+                    StyleSetWidthPercent(value.value);
+                else if (value.unit == Unit.Point)
+                    StyleSetWidth(value.value);
+            }
+            else
+            {
+                if (value.unit == Unit.Auto)
+                    StyleSetHeightAuto();
+                else if (value.unit == Unit.Percent)
+                    StyleSetHeightPercent(value.value);
+                else if (value.unit == Unit.Point)
+                    StyleSetHeight(value.value);
+            }
+        }
+    }
+
     partial class Factory
     {
         const string RootTagName = "div";
         const string ElementTagName = "div";
 
         Node root;
-        Config config = Node.CreateDefaultConfig();
+        Config config = Rockyfi.CreateDefaultConfig();
 
         Regex valueRegex = new Regex(@"-?(\d*\.)?(\d+)(px|%)");
 
@@ -41,7 +67,7 @@ namespace Rockyfi
             {
                 string dig = text;
                 Unit uu = Unit.Undefined;
-               
+
                 if (text.EndsWith("%"))
                 {
                     dig = text.Substring(0, text.Length - 1);
@@ -64,7 +90,7 @@ namespace Rockyfi
 
         Node SetupNode(XElement ele)
         {
-            Node node = Node.CreateDefaultNode();
+            Node node = Rockyfi.CreateDefaultNode();
             foreach (var attr in ele.Attributes())
             {
                 switch(attr.Name.ToString())
@@ -88,7 +114,7 @@ namespace Rockyfi
             foreach (var e in element.Elements())
             {
                 var child = SetupTraverse(e);
-                Node.InsertChild(node, child, node.Children.Count);
+                node.InsertChild(child, node.Children.Count);
             }
             return node;
 
@@ -104,9 +130,9 @@ namespace Rockyfi
             throw new Exception("root element is not <div /> !");
         }
 
-        public void Update(Direction direction)
+        public void CalculateLayout(Direction direction)
         {
-            root.Update(float.NaN, float.NaN, direction);
+            root.CalculateLayout(float.NaN, float.NaN, direction);
         }
 
         public void Draw(DrawNodeFunc drawFunc)

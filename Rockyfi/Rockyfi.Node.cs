@@ -5,7 +5,7 @@ namespace Rockyfi
     public partial class Node
     {
         readonly internal Style nodeStyle = new Style();
-        readonly internal Layout nodeLayout = new Layout();
+        readonly internal Rockyfi.Layout nodeLayout = new Rockyfi.Layout();
         internal int lineIndex;
 
         internal Node Parent = null;
@@ -28,43 +28,21 @@ namespace Rockyfi
         public bool IsDirty
         {
             get;
-            private set;
+            internal set;
         }
         internal bool hasNewLayout = true;
         internal NodeType NodeType = NodeType.Default;
 
-        internal readonly Value[] resolvedDimensions = new Value[2] { ValueUndefined, ValueUndefined };
+        internal readonly Value[] resolvedDimensions = new Value[2] { Rockyfi.ValueUndefined, Rockyfi.ValueUndefined };
 
 
 
         public object Context;
         public readonly Dictionary<string, object> Atrribute = new Dictionary<string, object>();
 
-        public void Update(float parentWidth, float parentHeight, Direction parentDirection)
+        public void CalculateLayout(float parentWidth, float parentHeight, Direction parentDirection)
         {
-            CalculateLayout(this, parentWidth, parentHeight, parentDirection);
-        }
-
-        internal void Helper_SetDimensions(Value value, Dimension dimension)
-        {
-            if (dimension == Dimension.Width)
-            {
-                if (value.unit == Unit.Auto)
-                    StyleSetWidthAuto();
-                else if (value.unit == Unit.Percent)
-                    StyleSetWidthPercent(value.value);
-                else if (value.unit == Unit.Point)
-                    StyleSetWidth(value.value);
-            }
-            else
-            {
-                if (value.unit == Unit.Auto)
-                    StyleSetHeightAuto();
-                else if (value.unit == Unit.Percent)
-                    StyleSetHeightPercent(value.value);
-                else if (value.unit == Unit.Point)
-                    StyleSetHeight(value.value);
-            }
+            Rockyfi.CalculateLayout(this, parentWidth, parentHeight, parentDirection);
         }
     }
 

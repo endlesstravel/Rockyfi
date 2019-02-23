@@ -1,12 +1,11 @@
 ﻿using NUnit.Framework;
-using Rockyfi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rockyfi.Tests
+namespace XX
 {
     [TestFixture()]
     public class NodeTests
@@ -14,6 +13,7 @@ namespace Rockyfi.Tests
         [Test()]
         public void SetMeasureFuncTest()
         {
+            var root = Rockyfi.Rockyfi.CreateDefaultNode();
         }
     }
 }

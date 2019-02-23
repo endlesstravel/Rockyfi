@@ -129,7 +129,7 @@ namespace Rockyfi
         }
     }
 
-    public partial class Node
+    public partial class Rockyfi
     {
         // FloatsEqual returns true if floats are approx. equal
         public static bool FloatsEqual(float a, float b)
@@ -140,8 +140,8 @@ namespace Rockyfi
             }
             return System.Math.Abs(a - b) < 0.0001f;
         }
-        // roundValueToPixelGrid rounds value to pixel grid
-        public static float roundValueToPixelGrid(float value, float pointScaleFactor, bool forceCeil, bool forceFloor)
+        // Rockyfi.roundValueToPixelGrid rounds value to pixel grid
+        public static float RoundValueToPixelGrid(float value, float pointScaleFactor, bool forceCeil, bool forceFloor)
         {
             var scaledValue = value * pointScaleFactor;
             var fractial = fmodf(scaledValue, 1f);
@@ -190,8 +190,8 @@ namespace Rockyfi
         // // Reset resets a node
         public static void Reset(ref Node node)
         {
-            assertWithNode(node, node.Children.Count == 0, "Cannot reset a node which still has children attached");
-            assertWithNode(node, node.Parent == null, "Cannot reset a node still attached to a parent");
+            Rockyfi.assertWithNode(node, node.Children.Count == 0, "Cannot reset a node which still has children attached");
+            Rockyfi.assertWithNode(node, node.Parent == null, "Cannot reset a node still attached to a parent");
             node.Children.Clear();
 
             var config = node.config;
@@ -203,7 +203,6 @@ namespace Rockyfi
             }
             node.config = config;
         }
-
 
         public static Node CreateDefaultNode()
         {
@@ -257,5 +256,6 @@ namespace Rockyfi
                 }
             }
         }
+
     }
 }

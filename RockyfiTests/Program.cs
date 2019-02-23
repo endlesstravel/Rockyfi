@@ -3,7 +3,7 @@
 
 //namespace FlexCs
 //{
-//    class Program: Scene
+//    class Program : Scene
 //    {
 //        Rockyfi.Factory factory;
 //        public override void Load()
