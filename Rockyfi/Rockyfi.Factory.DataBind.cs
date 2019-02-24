@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace Rockyfi
 {
@@ -10,126 +9,6 @@ namespace Rockyfi
 
         #region DataCenter
 
-        // The Regex class itself is thread safe and immutable(read-only). That is, 
-        // Regex objects can be created on any thread and shared between threads; 
-        // matching methods can be called from any thread and never alter any global state.
-        // However, result objects (Match and MatchCollection) returned by Regex should be used on a single thread..
-        internal static Regex strRegex = new Regex(@"^'([^']*)'$");
-        internal static Regex objRegex = new Regex(@"^(([a-zA-Z]\w*)(\.([a-zA-Z]\w*))*)$");
-        internal static Regex ifRegex = new Regex(@"^([^=]+)\s*(==\s*([^=]+))?$");
-
-
-        // xxx.yy.zz -> [xxx, yy, zz]
-        static bool TryParseDotValue(string input, out string[] result)
-        {
-            if (objRegex.IsMatch(input))
-            {
-                result = input.Split('.');
-                return true;
-            }
-            result = null;
-            return false;
-        }
-
-        static bool TryParseStringValue(string input, out string result)
-        {
-            if (strRegex.IsMatch(input))
-            {
-                result = input.Substring(1, input.Length - 2);
-                return true;
-            }
-            result = null;
-            return false;
-        }
-
-        enum DataBindObjectType
-        {
-            Unknow,
-            Integer,
-            Float,
-            String,
-            ObjectSymbol,
-        }
-
-        /// <summary>
-        /// 11  : int
-        /// 11.11  : float
-        /// 'hello ?': string
-        /// true: boolean
-        /// false: boolean
-        /// xxx.bc.fd: object value
-        /// </summary>
-        class DataBindObjectExpress
-        {
-            string express;
-            DataBindObjectType type = DataBindObjectType.Unknow;
-            object value;
-            object cachedValue;
-            internal void UpdateExpress(string exp, Factory factory)
-            {
-                if (express == exp)
-                    return;
-
-                express = exp;
-                if (int.TryParse(express, out int intResult))
-                {
-                    value = intResult;
-                    type = DataBindObjectType.Integer;
-                }
-                else if (float.TryParse(express, out float floatResult))
-                {
-                    value = intResult;
-                    type = DataBindObjectType.Float;
-                }
-                else if (TryParseDotValue(express, out string[] objResult))
-                {
-                    value = intResult;
-                    factory.TryGetObject(objResult, out cachedValue);
-                    type = DataBindObjectType.ObjectSymbol;
-                }
-                else if (TryParseStringValue(express, out string strResult))
-                {
-                    value = intResult;
-                    type = DataBindObjectType.String;
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// ^\s*([\w\.]+)\s*(==\s*([\w\.]+))?\s*$
-        /// ^\s*([\w\.]+)\s*(==\s*([\w\.]+))?\s*$
-        /// case 1: 
-        ///    bind:if="item"
-        ///    string is null or empty ?
-        ///    number is 0 ?
-        /// case 2:
-        /// </summary>
-        class DataBindIfExpress
-        {
-            string express;
-            bool isMono;
-            DataBindObjectExpress leftExpress;
-            DataBindObjectExpress RightExpress;
-
-            void InitExpress(Factory factory)
-            {
-                Match match = ifRegex.Match(express);
-                if(match.Success)
-                {
-                    isMono = match.Groups.Count == 2;
-                    if (isMono)
-                    {
-
-                    }
-                }
-            }
-
-            //bool Evaluate(Factory factory)
-            //{
-            //    ifRegex.Match(express);
-            //}
-        }
         class DataBind
         {
             object data;
@@ -171,7 +50,6 @@ namespace Rockyfi
             internal List<Node> nodes;
         }
         readonly Dictionary<string, DataBind> effectBind = new Dictionary<string, DataBind>();
-
         internal bool TryGetObjectPath(string[] objPath, int index, object input, out object obj)
         {
             obj = null;
@@ -226,7 +104,6 @@ namespace Rockyfi
 
             return false;
         }
-
         internal bool TryGetObject(string[] objPath, out object obj)
         {
             obj = null;
@@ -241,11 +118,6 @@ namespace Rockyfi
             return false;
         }
 
-        internal void ResoloveObjectValue(string express)
-        {
-
-        }
-        
         /// <summary>
         /// insert child
         /// </summary>
@@ -275,7 +147,6 @@ namespace Rockyfi
                 }
             }
         }
-
 
         /// <summary>
         /// update data in value
