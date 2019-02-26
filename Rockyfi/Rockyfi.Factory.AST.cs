@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace Rockyfi
 {
     // simple lex
-    // copy and adapt from lua 5.3 :
+    // copy from lua 5.3 :
     // Numeral ::= [0-9]+ | [0-9]*.[0-9]+
     // LiteralString ::= '[^']*'
     // binop ::=  ‘+’ | ‘-’ | ‘*’ | ‘/’ | '==' | '!=' | '||' | '&&'
@@ -15,14 +15,14 @@ namespace Rockyfi
     // exp ::=  null | false | true | Numeral | '(’ exp ‘)’ | LiteralString | exp binop exp | unop exp 
     //
 
-    class Lex
+    public class Lex
     {
-        enum TokenType
+        public enum TokenType
         {
             Unknow, //
             Add,    // +
             Sub,    // -
-            Mut,    // *
+            Mul,    // *
             Div,    // /
             Eq,     // ==
             Neq,    // !=
@@ -40,9 +40,9 @@ namespace Rockyfi
             ObjectId, // item | time.hour
             EOF,
         }
-        object currentValue;
-        TokenType currentType;
-        StreamReader reader;
+        public object currentValue;
+        public TokenType currentType;
+        public StreamReader reader;
 
         void LookHead(char c)
         {
@@ -60,42 +60,48 @@ namespace Rockyfi
             while(true)
             {
                 int c = reader.Read();
-                if(c == -1)
+                if(c == '\'')
+                    return sb.ToString();
+
+                if (c == -1)
                     throw new Exception("parse error, read string but EOF!");
 
-                if (reader.Peek() != '\'')
-                    sb.Append((char)c);
-                else
-                {
-                    return sb.ToString();
-                }
+                sb.Append((char)c);
             }
         }
 
-        string ReadId(char firstChar)
+        string[] ReadId(char firstChar)
         {
+            List<string> result = new List<string>();
             StringBuilder sb = new StringBuilder();
             sb.Append(firstChar);
             bool lastIsDot = firstChar == '.';
             while (true)
             {
                 int peek = reader.Peek();
-                if (char.IsLetterOrDigit((char)peek))
+
+                if (lastIsDot && ( peek == '.' || char.IsNumber((char)peek)))
+                {
+                    result.Add(sb.ToString() + (char)peek);
+                    throw new Exception("parse id error, unknow " + string.Join(".", result.ToArray()));
+                }
+
+                if (char.IsLetterOrDigit((char)peek)) // current
                 {
                     lastIsDot = false;
                     sb.Append((char)reader.Read());
                 }
-                else if (peek == '.')
+                else if (peek == '.') // next split
                 {
-                    if (lastIsDot)
-                        throw new Exception("parse error, read mutiply dot xx..yy!");
-
                     lastIsDot = true;
                     reader.Read();
+                    result.Add(sb.ToString());
+                    sb = new StringBuilder();
                 }
                 else
                 {
-                    return sb.ToString();
+                    result.Add(sb.ToString());
+                    return result.ToArray();
                 }
             }
         }
@@ -114,13 +120,11 @@ namespace Rockyfi
                 if (peek == '.')
                 {
                     if (alreadHasDot)
-                        throw new Exception("parse error, read number but more then one '.'!");
+                        throw new Exception("parse error, unknow :" + sb.ToString() + (char)peek );
 
                     sb.Append((char)reader.Read());
                     alreadHasDot = true;
-                }
-
-                if (char.IsNumber((char)peek))
+                } else if (char.IsLetterOrDigit((char)peek))
                     sb.Append((char)reader.Read());
                 else
                     break;
@@ -132,7 +136,17 @@ namespace Rockyfi
             return float.Parse(sb.ToString());
         }
 
-        void NextToken()
+        public string GetValueString()
+        {
+            var s = currentValue as string[];
+            if (s != null)
+            {
+                return "[obj symbol]" + string.Join(".", s);
+            }
+            return currentValue != null ? currentValue.ToString() : null;
+        }
+
+        public void NextToken()
         {
             // skip whitespace
             while (true)
@@ -143,6 +157,8 @@ namespace Rockyfi
                 reader.Read();
             }
 
+            currentValue = null;
+            currentType = TokenType.Unknow;
             while (true)
             { 
                 int c = reader.Read();
@@ -156,14 +172,14 @@ namespace Rockyfi
                 {
                     case '+': currentType = TokenType.Add; return;
                     case '-': currentType = TokenType.Sub; return;
-                    case '*': currentType = TokenType.Mut; return;
+                    case '*': currentType = TokenType.Mul; return;
                     case '/': currentType = TokenType.Div; return;
                     case '=': LookHead('='); currentType = TokenType.Eq; return;
                     case '!':
                         if (reader.Peek() != '=')
                         {
-                            reader.Read();
                             currentType = TokenType.Inverse;
+                            return;
                         }
                         LookHead('='); currentType = TokenType.Neq; return;
                     case '|': LookHead('|'); currentType = TokenType.Or; return;
@@ -184,20 +200,22 @@ namespace Rockyfi
                 if (char.IsLetter((char)c))
                 {
                     var str = ReadId((char)c);
-                    switch (str)
+                    if (str.Length == 1)
                     {
-                        case "null": currentType = TokenType.Null; return;
-                        case "false": currentType = TokenType.False; return;
-                        case "true": currentType = TokenType.True; return;
-                        default: currentType = TokenType.ObjectId; return;
+                        switch (str[0])
+                        {
+                            case "null": currentType = TokenType.Null; return;
+                            case "false": currentType = TokenType.False; return;
+                            case "true": currentType = TokenType.True; return;
+                            default: break;
+                        }
                     }
+                    currentType = TokenType.ObjectId; currentValue = str; return;
                 }
-
                 throw new Exception("parse error unknow : " + c);
             }
         }
     }
-
 
     public partial class Factory
     {
@@ -206,8 +224,12 @@ namespace Rockyfi
         // Regex objects can be created on any thread and shared between threads; 
         // matching methods can be called from any thread and never alter any global state.
         // However, result objects (Match and MatchCollection) returned by Regex should be used on a single thread..
+        internal static Regex ifRegex = new Regex(@"^([^=]+)\s*((==|!=)\s*([^=]+))?$");
+        //internal static Regex ifRegex = new Regex(@"^(((-?\d+)(\.\d+)?)|(([_a-zA-Z]\w*)(\.([_a-zA-Z]\w*))*))\s+(==|!=)\s+(((-?\d+)(\.\d+)?)|(([_a-zA-Z]\w*)(\.([_a-zA-Z]\w*))*))$");
+        internal static Regex forRegex = new Regex(@"^([_a-zA-Z]\w*)\s+in\s+(([_a-zA-Z]\w*)(\.([_a-zA-Z]\w*))*)$");
+        internal static Regex idRegex = new Regex(@"^[_a-zA-Z]\w*$");
         internal static Regex strRegex = new Regex(@"^'([^']*)'$");
-        internal static Regex objRegex = new Regex(@"^(([a-zA-Z]\w*)(\.([a-zA-Z]\w*))*)$");
+        internal static Regex objRegex = new Regex(@"^(([_a-zA-Z]\w*)(\.([_a-zA-Z]\w*))*)$");
 
 
         // xxx.yy.zz -> [xxx, yy, zz]
@@ -233,6 +255,11 @@ namespace Rockyfi
             return false;
         }
 
+        static bool TryParseIdValue(string input)
+        {
+            return idRegex.IsMatch(input);
+        }
+
         enum DataBindObjectType
         {
             Unknow,
@@ -244,13 +271,76 @@ namespace Rockyfi
 
         delegate object ABSEvaluateContext(string[] strPath);
 
-        public static bool LossyBoolJudge(object obj)
+        public static bool IsNumber(object value)
         {
+            return value is sbyte
+                    || value is byte
+                    || value is short
+                    || value is ushort
+                    || value is int
+                    || value is uint
+                    || value is long
+                    || value is ulong
+                    || value is float
+                    || value is double
+                    || value is decimal;
+        }
+
+        public static bool LossyBoolJudge(object obj, out bool isOtherObj)
+        {
+            isOtherObj = false;
             if (obj == null)
             {
                 return false;
             }
 
+            if (obj is bool)
+                return (bool)obj;
+
+            // https://stackoverflow.com/questions/745172/better-way-to-cast-object-to-int
+            if (obj is sbyte)
+                return (sbyte)obj != 0;
+
+            if (obj is byte)
+                return (byte)obj != 0;
+
+            if (obj is short)
+                return (short)obj != 0;
+
+            if (obj is ushort)
+                return (ushort)obj != 0;
+
+            if (obj is int)
+                return (int)obj != 0;
+
+            if (obj is uint)
+                return (uint)obj != 0;
+
+            if (obj is long)
+                return (long)obj != 0;
+
+            if (obj is ulong)
+                return (ulong)obj != 0;
+
+            if (obj is float)
+                return (float)obj != 0;
+
+            if (obj is uint)
+                return (uint)obj != 0;
+
+            if (obj is double)
+                return (double)obj != 0;
+
+            if (obj is decimal)
+                return (decimal)obj != 0;
+
+            if (obj is string)
+            {
+                return !"".Equals(obj);
+            }
+
+            isOtherObj = true;
+            return false;
         }
 
         /// <summary>
@@ -332,13 +422,54 @@ namespace Rockyfi
                     return null;
 
                 if (type == DataBindObjectType.ObjectSymbol)
-                    return context((string[])value);
+                    return context.Invoke((string[])value);
 
                 return value;
             }
         }
 
-        internal static Regex ifRegex = new Regex(@"^([^=]+)\s*(==\s*([^=]+))?$");
+        /// <summary>
+        /// item in aa.bb.c
+        /// item in list
+        /// </summary>
+        class DataBindForExpress
+        {
+            string express;
+
+            string iteratorName;
+            string[] dataSourceName;
+
+            /// <summary>
+            /// faild parse return null, otherwise return DataBindObjectExpress
+            /// </summary>
+            /// <param name="express"></param>
+            /// <returns></returns>
+            public static DataBindForExpress Parse(string express)
+            {
+                Match match = forRegex.Match(express);
+                if (match.Success)
+                {
+                    var result = new DataBindForExpress();
+                    result.iteratorName = match.Groups[1].Value.Trim();
+                    TryParseDotValue(match.Groups[2].Value.Trim(), out result.dataSourceName);
+                    return result;
+                }
+
+                return null;
+            }
+
+            public IEnumerable<object> Evaluate(ABSEvaluateContext context)
+            {
+                if (dataSourceName == null)
+                {
+                    throw new Exception("dataSourceName is null !");
+                }
+
+                object obj = context.Invoke(dataSourceName);
+                return obj as IEnumerable<object>;
+            }
+        }
+
         /// <summary>
         /// ^\s*([\w\.]+)\s*(==\s*([\w\.]+))?\s*$
         /// ^\s*([\w\.]+)\s*(==\s*([\w\.]+))?\s*$
@@ -351,7 +482,8 @@ namespace Rockyfi
         class DataBindIfExpress
         {
             string express;
-            bool isMono; // a == b ? or a ?
+            bool isJustObjectExpress; // a == b ? or a ?
+            bool isEqualOpt; //  a == b ? or a != b ?
             DataBindObjectExpress leftExpress;
             DataBindObjectExpress RightExpress;
 
@@ -366,18 +498,19 @@ namespace Rockyfi
                 {
                     if (match.Groups.Count == 2)
                     {
-                        isMono = true;
+                        isJustObjectExpress = true;
                         leftExpress = DataBindObjectExpress.Parse(match.Groups[1].Value.Trim());
                         if (leftExpress == null)
                             return false;
 
                         return true;
                     }
-                    else if (match.Groups.Count == 4)
+                    else if (match.Groups.Count == 5)
                     {
-                        isMono = false;
+                        isJustObjectExpress = false;
                         leftExpress = DataBindObjectExpress.Parse(match.Groups[1].Value.Trim());
-                        RightExpress = DataBindObjectExpress.Parse(match.Groups[3].Value.Trim());
+                        isEqualOpt = "==".Equals(match.Groups[3].Value.Trim());
+                        RightExpress = DataBindObjectExpress.Parse(match.Groups[4].Value.Trim());
                         if (leftExpress == null || RightExpress == null)
                             return false;
 
@@ -402,7 +535,39 @@ namespace Rockyfi
 
             bool Evaluate(ABSEvaluateContext context)
             {
+                if (isJustObjectExpress)
+                {
+                    return LossyBoolJudge(leftExpress.Evaluate(context), out var _drop);
+                }
 
+                object leftObj = leftExpress.Evaluate(context);
+                object rightObj = leftExpress.Evaluate(context);
+
+                // number equals ?
+                var result = false;
+                if (IsNumber(leftObj) && IsNumber(rightObj))
+                {
+                    result = (double)leftObj == (double)rightObj;
+                }
+                else if (leftObj is string && rightObj is string)
+                {
+                    result = string.Equals(leftObj, rightObj);
+                }
+                else
+                {
+                    var leftResult = LossyBoolJudge(leftExpress.Evaluate(context), out var leftIsOther);
+                    var RightResult = LossyBoolJudge(leftExpress.Evaluate(context), out var RightIsOther);
+                    if (leftIsOther || RightIsOther)
+                    {
+                        result = false;
+                    }
+                    else
+                    {
+                        result = leftResult == RightResult;
+                    }
+                }
+
+                return isEqualOpt ? result : !result;
             }
         }
         #endregion

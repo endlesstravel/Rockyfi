@@ -5,6 +5,17 @@ namespace Rockyfi
 {
     public partial class Factory
     {
+        class VirtualNode
+        {
+            internal VirtualNode Parent = null;
+            internal readonly List<VirtualNode> Childern = new List<VirtualNode>();
+            internal List<Node> RealNodes = new List<Node>();
+
+            internal bool IsDirty; // is this node need to re-calculate/render ?
+            internal DataBindIfExpress ifExpress;
+            internal DataBindForExpress forExpress;
+        }
+
         const string AttributeKey = "";
 
         #region DataCenter
@@ -139,11 +150,27 @@ namespace Rockyfi
         /// </summary>
         public void CommitDataChange()
         {
+            // 寻找那些最大的子树然后重新渲染
+            // 光度优先遍历树
+            List<Node> nodesNeedToReRender = new List<Node>();
+            Dictionary<Node, bool> nodeDirty = new Dictionary<Node, bool>(); // HashSet ???? not avaliable in .Net 2.0
+            Queue<Node> queue = new Queue<Node>();
+            queue.Enqueue(root);
+
+
+            while (queue.Count > 0)
+            {
+                var node = queue.Dequeue();
+                //if (nodeDirty.ContainsKey())
+                //{
+
+                //}
+            }
+
             foreach (var bind in effectBind.Values)
             {
                 if (bind.IsDirty)
                 {
-
                 }
             }
         }
