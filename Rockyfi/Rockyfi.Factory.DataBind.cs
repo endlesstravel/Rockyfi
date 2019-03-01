@@ -5,6 +5,16 @@ namespace Rockyfi
 {
     public partial class Factory
     {
+        //class VirtualNode
+        //{
+        //    internal VirtualNode Parent = null;
+        //    internal readonly List<VirtualNode> Childern = new List<VirtualNode>();
+        //    internal List<Node> RealNodes = new List<Node>();
+
+        //    internal bool IsDirty; // is this node need to re-calculate/render ?
+        //    internal DataBindIfExpress ifExpress;
+        //    internal DataBindForExpress forExpress;
+        //}
         class VirtualNode
         {
             internal VirtualNode Parent = null;
@@ -16,11 +26,22 @@ namespace Rockyfi
             internal DataBindForExpress forExpress;
         }
 
-        const string AttributeKey = "";
+        //const string AttributeKey = "";
 
-        #region DataCenter
+        #region DataBind
 
-        class DataBind
+        readonly Dictionary<string, DataBindObjectExpress> dataBindObjectExpressList = new Dictionary<string, DataBindObjectExpress>();
+        readonly Dictionary<string, DataBindForExpress> dataBindForExpressList = new Dictionary<string, DataBindForExpress>();
+        readonly Dictionary<string, DataBindIfExpress> dataBindIfExpressList = new Dictionary<string, DataBindIfExpress>();
+
+        public DataBindContext CreateDataContext(object obj)
+        {
+            var dbc = new DataBindContext();
+            dbc.Data = obj;
+            return dbc;
+        }
+
+        public class DataBindContext
         {
             object data;
 
@@ -52,16 +73,12 @@ namespace Rockyfi
                 }
             }
 
-            public bool IsDirty
-            {
-                internal get;
-                set;
-            }
+            public bool IsDirty { internal get; set; }
 
-            internal List<Node> nodes;
+            readonly internal List<Node> nodes = new List<Node>();
         }
-        readonly Dictionary<string, DataBind> effectBind = new Dictionary<string, DataBind>();
-        internal bool TryGetObjectPath(string[] objPath, int index, object input, out object obj)
+        readonly Dictionary<string, DataBindContext> effectBind = new Dictionary<string, DataBindContext>();
+        private static bool TryGetObjectPath(string[] objPath, int index, object input, out object obj)
         {
             obj = null;
             // current is final ?
@@ -115,18 +132,79 @@ namespace Rockyfi
 
             return false;
         }
-        internal bool TryGetObject(string[] objPath, out object obj)
+        static bool TryGetObject(ContextStack contextStack, string[] objPath, out object outObj)
         {
-            obj = null;
+            outObj = null;
             if (objPath == null || objPath.Length == 0)
             {
                 return false;
             }
-            if (effectBind.TryGetValue(objPath[0], out var dataBind))
+            if (contextStack.TryGet(objPath[0], out var dataBind))
             {
-                return TryGetObjectPath(objPath, 0, dataBind.Data, out obj);
+                return TryGetObjectPath(objPath, 0, dataBind.Data, out outObj);
             }
             return false;
+        }
+
+        class ContextStack
+        {
+            // TODO : we can do more optimization here !
+            // Sparse linked list access.
+            // Inert stack ??
+            // Artificial/Real statc
+            class ContextRealNode
+            {
+
+            }
+
+
+            readonly LinkedList<Dictionary<string, DataBindContext>> contextStack = new LinkedList<Dictionary<string, DataBindContext>>();
+            public ContextStack(Dictionary<string, DataBindContext> topContext)
+            {
+                contextStack.AddLast(topContext);
+            }
+
+            public ContextStack()
+            {
+                contextStack.AddLast(new Dictionary<string, DataBindContext>());
+            }
+
+
+            public bool TryGet(string name, out DataBindContext bindContext)
+            {
+                return (bindContext = Get(name)) != null;
+            }
+
+            public DataBindContext Get(string name)
+            {
+                var node = contextStack.Last;
+                while (node != null)
+                {
+                    var dictionary = node.Value;
+                    if (dictionary.TryGetValue(name, out DataBindContext value))
+                        return value;
+
+                    node = node.Previous;
+                }
+                return null;
+            }
+
+            public void Set(string name, DataBindContext value)
+            {
+                contextStack.Last.Value["name"] = value;
+            }
+
+            public Dictionary<string, DataBindContext> LeaveScope()
+            {
+                var last = contextStack.Last != null ? contextStack.Last.Value : null;
+                contextStack.RemoveLast();
+                return last;
+            }
+
+            public void EnterScope()
+            {
+                contextStack.AddLast(new Dictionary<string, DataBindContext>());
+            }
         }
 
         /// <summary>
@@ -151,7 +229,7 @@ namespace Rockyfi
         public void CommitDataChange()
         {
             // 寻找那些最大的子树然后重新渲染
-            // 光度优先遍历树
+            // 广度优先遍历树
             List<Node> nodesNeedToReRender = new List<Node>();
             Dictionary<Node, bool> nodeDirty = new Dictionary<Node, bool>(); // HashSet ???? not avaliable in .Net 2.0
             Queue<Node> queue = new Queue<Node>();
@@ -175,14 +253,22 @@ namespace Rockyfi
             }
         }
 
+        public void BindExpressWithNode(string key, Node node)
+        {
+            if (effectBind.TryGetValue(key, out DataBindContext bind))
+            {
+                bind.Data = data;
+            }
+        }
+
         /// <summary>
         /// update data in value
         /// </summary>
         /// <param name="key"></param>
         /// <param name="data"></param>
-        void SetData(string key, object data)
+        public void SetData(string key, object data)
         {
-            if (effectBind.TryGetValue(key, out DataBind bind))
+            if (effectBind.TryGetValue(key, out DataBindContext bind))
             {
                 bind.Data = data;
             }
@@ -199,9 +285,9 @@ namespace Rockyfi
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        object GetData(string key)
+        public object GetData(string key)
         {
-            return effectBind.TryGetValue(key, out DataBind data) ? data.Data : null;
+            return effectBind.TryGetValue(key, out DataBindContext data) ? data.Data : null;
         }
 
         #endregion

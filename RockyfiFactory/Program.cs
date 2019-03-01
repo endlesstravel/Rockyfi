@@ -124,13 +124,18 @@ namespace FlexCs
     <div width=""150px"" height=""100px"" id=""child-4""/>
 </div>
 ";
+            string tmpXML3 = @"
+<div width=""620px"" height=""500px"" flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" >
+    <div el-for=""item in list""  el:bind:id=""item"" width=""150px"" height=""100px""/>
+</div>
+";
             factory = new Rockyfi.Factory();
-            factory.LoadFromString(tmpXML2);
+            factory.LoadFromString(tmpXML3);
         }
 
         public override void Update(float dt)
         {
-            factory.CalculateLayout(Rockyfi.Direction.LTR);
+            factory.CalculateLayout();
             Love.Misc.FPSGraph.FPSGraph.Update(dt);
         }
 

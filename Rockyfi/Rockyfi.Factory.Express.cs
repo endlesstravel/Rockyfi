@@ -14,7 +14,7 @@ namespace Rockyfi
     // unop ::=  '!'
     // exp ::=  null | false | true | Numeral | '(’ exp ‘)’ | LiteralString | exp binop exp | unop exp 
     //
-
+    // advance lex parser
     public class Lex
     {
         public enum TokenType
@@ -217,6 +217,8 @@ namespace Rockyfi
         }
     }
 
+    // TODO : write test ......
+
     public partial class Factory
     {
         #region Abstract syntax tree
@@ -243,7 +245,6 @@ namespace Rockyfi
             result = null;
             return false;
         }
-
         static bool TryParseStringValue(string input, out string result)
         {
             if (strRegex.IsMatch(input))
@@ -254,7 +255,6 @@ namespace Rockyfi
             result = null;
             return false;
         }
-
         static bool TryParseIdValue(string input)
         {
             return idRegex.IsMatch(input);
@@ -269,8 +269,6 @@ namespace Rockyfi
             ObjectSymbol,
         }
 
-        delegate object ABSEvaluateContext(string[] strPath);
-
         public static bool IsNumber(object value)
         {
             return value is sbyte
@@ -284,63 +282,6 @@ namespace Rockyfi
                     || value is float
                     || value is double
                     || value is decimal;
-        }
-
-        public static bool LossyBoolJudge(object obj, out bool isOtherObj)
-        {
-            isOtherObj = false;
-            if (obj == null)
-            {
-                return false;
-            }
-
-            if (obj is bool)
-                return (bool)obj;
-
-            // https://stackoverflow.com/questions/745172/better-way-to-cast-object-to-int
-            if (obj is sbyte)
-                return (sbyte)obj != 0;
-
-            if (obj is byte)
-                return (byte)obj != 0;
-
-            if (obj is short)
-                return (short)obj != 0;
-
-            if (obj is ushort)
-                return (ushort)obj != 0;
-
-            if (obj is int)
-                return (int)obj != 0;
-
-            if (obj is uint)
-                return (uint)obj != 0;
-
-            if (obj is long)
-                return (long)obj != 0;
-
-            if (obj is ulong)
-                return (ulong)obj != 0;
-
-            if (obj is float)
-                return (float)obj != 0;
-
-            if (obj is uint)
-                return (uint)obj != 0;
-
-            if (obj is double)
-                return (double)obj != 0;
-
-            if (obj is decimal)
-                return (decimal)obj != 0;
-
-            if (obj is string)
-            {
-                return !"".Equals(obj);
-            }
-
-            isOtherObj = true;
-            return false;
         }
 
         /// <summary>
@@ -400,11 +341,13 @@ namespace Rockyfi
             /// </summary>
             /// <param name="express"></param>
             /// <returns></returns>
-            public static DataBindObjectExpress Parse(string express)
+            public static bool TryParse(string express, out DataBindObjectExpress bindExpress)
             {
+                express = express.Trim();
                 var dboe = new DataBindObjectExpress();
                 dboe.express = express;
-                return dboe.ParseExpress(express) ? dboe : null;
+                bindExpress = dboe.ParseExpress(express) ? dboe : null;
+                return bindExpress != null;
             }
 
             public bool UpdateExpress(string exp, Factory factory)
@@ -415,14 +358,16 @@ namespace Rockyfi
                 return ParseExpress(express);
             }
 
-
-            public object Evaluate(ABSEvaluateContext context)
+            public object Evaluate(ContextStack contextStack)
             {
                 if (type == DataBindObjectType.Unknow)
                     return null;
 
                 if (type == DataBindObjectType.ObjectSymbol)
-                    return context.Invoke((string[])value);
+                {
+                    TryGetObject(contextStack, (string[])value, out var resultObject);
+                    return resultObject;
+                }
 
                 return value;
             }
@@ -436,7 +381,8 @@ namespace Rockyfi
         {
             string express;
 
-            string iteratorName;
+            public string IteratorName { get; private set; }
+            public string[] DataSourceName { get { return dataSourceName; } }
             string[] dataSourceName;
 
             /// <summary>
@@ -444,29 +390,35 @@ namespace Rockyfi
             /// </summary>
             /// <param name="express"></param>
             /// <returns></returns>
-            public static DataBindForExpress Parse(string express)
+            public static bool TryParse(string express, out DataBindForExpress bindForExpress)
             {
+                express = express.Trim();
                 Match match = forRegex.Match(express);
                 if (match.Success)
                 {
                     var result = new DataBindForExpress();
-                    result.iteratorName = match.Groups[1].Value.Trim();
+                    result.IteratorName = match.Groups[1].Value.Trim();
                     TryParseDotValue(match.Groups[2].Value.Trim(), out result.dataSourceName);
-                    return result;
+                    bindForExpress = TryParseDotValue(match.Groups[2].Value.Trim(), out result.dataSourceName) ? result : null;
+                    return bindForExpress != null;
                 }
-
-                return null;
+                bindForExpress = null;
+                return false;
             }
 
-            public IEnumerable<object> Evaluate(ABSEvaluateContext context)
+            public IEnumerable<object> Evaluate(ContextStack contextStack)
             {
                 if (dataSourceName == null)
                 {
                     throw new Exception("dataSourceName is null !");
                 }
 
-                object obj = context.Invoke(dataSourceName);
-                return obj as IEnumerable<object>;
+                if(TryGetObject(contextStack, dataSourceName, out var resultObject))
+                {
+                    return resultObject as IEnumerable<object>;
+                }
+
+                return new List<object>();
             }
         }
 
@@ -499,22 +451,14 @@ namespace Rockyfi
                     if (match.Groups.Count == 2)
                     {
                         isJustObjectExpress = true;
-                        leftExpress = DataBindObjectExpress.Parse(match.Groups[1].Value.Trim());
-                        if (leftExpress == null)
-                            return false;
-
-                        return true;
+                        return DataBindObjectExpress.TryParse(match.Groups[1].Value, out leftExpress);
                     }
                     else if (match.Groups.Count == 5)
                     {
                         isJustObjectExpress = false;
-                        leftExpress = DataBindObjectExpress.Parse(match.Groups[1].Value.Trim());
                         isEqualOpt = "==".Equals(match.Groups[3].Value.Trim());
-                        RightExpress = DataBindObjectExpress.Parse(match.Groups[4].Value.Trim());
-                        if (leftExpress == null || RightExpress == null)
-                            return false;
-
-                        return true;
+                        return DataBindObjectExpress.TryParse(match.Groups[1].Value, out leftExpress)
+                            && DataBindObjectExpress.TryParse(match.Groups[4].Value, out RightExpress);
                     }
                 }
 
@@ -526,22 +470,24 @@ namespace Rockyfi
             /// </summary>
             /// <param name="express"></param>
             /// <returns></returns>
-            public static DataBindIfExpress Parse(string exp)
+            public static bool TryParse(string exp, out DataBindIfExpress bindIfExpress)
             {
+                exp = exp.Trim();
                 var ifExp = new DataBindIfExpress();
                 ifExp.express = exp;
-                return ifExp.ParseExpress(ifExp.express) ? ifExp : null;
+                bindIfExpress = ifExp.ParseExpress(ifExp.express) ? ifExp : null;
+                return bindIfExpress != null;
             }
 
-            bool Evaluate(ABSEvaluateContext context)
+            bool Evaluate(ContextStack contextStack)
             {
                 if (isJustObjectExpress)
                 {
-                    return LossyBoolJudge(leftExpress.Evaluate(context), out var _drop);
+                    return LossyBoolJudge(leftExpress.Evaluate(contextStack), out var _drop);
                 }
 
-                object leftObj = leftExpress.Evaluate(context);
-                object rightObj = leftExpress.Evaluate(context);
+                object leftObj = leftExpress.Evaluate(contextStack);
+                object rightObj = leftExpress.Evaluate(contextStack);
 
                 // number equals ?
                 var result = false;
@@ -555,8 +501,8 @@ namespace Rockyfi
                 }
                 else
                 {
-                    var leftResult = LossyBoolJudge(leftExpress.Evaluate(context), out var leftIsOther);
-                    var RightResult = LossyBoolJudge(leftExpress.Evaluate(context), out var RightIsOther);
+                    var leftResult = LossyBoolJudge(leftObj, out var leftIsOther);
+                    var RightResult = LossyBoolJudge(rightObj, out var RightIsOther);
                     if (leftIsOther || RightIsOther)
                     {
                         result = false;
@@ -569,6 +515,64 @@ namespace Rockyfi
 
                 return isEqualOpt ? result : !result;
             }
+
+            public static bool LossyBoolJudge(object obj, out bool isOtherObj)
+            {
+                isOtherObj = false;
+                if (obj == null)
+                {
+                    return false;
+                }
+
+                if (obj is bool)
+                    return (bool)obj;
+
+                // https://stackoverflow.com/questions/745172/better-way-to-cast-object-to-int
+                if (obj is sbyte)
+                    return (sbyte)obj != 0;
+
+                if (obj is byte)
+                    return (byte)obj != 0;
+
+                if (obj is short)
+                    return (short)obj != 0;
+
+                if (obj is ushort)
+                    return (ushort)obj != 0;
+
+                if (obj is int)
+                    return (int)obj != 0;
+
+                if (obj is uint)
+                    return (uint)obj != 0;
+
+                if (obj is long)
+                    return (long)obj != 0;
+
+                if (obj is ulong)
+                    return (ulong)obj != 0;
+
+                if (obj is float)
+                    return (float)obj != 0;
+
+                if (obj is uint)
+                    return (uint)obj != 0;
+
+                if (obj is double)
+                    return (double)obj != 0;
+
+                if (obj is decimal)
+                    return (decimal)obj != 0;
+
+                if (obj is string)
+                {
+                    return !"".Equals(obj);
+                }
+
+                isOtherObj = true;
+                return false;
+            }
+
         }
         #endregion
     }

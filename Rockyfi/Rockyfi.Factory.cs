@@ -116,15 +116,18 @@ namespace Rockyfi
 
     public partial class Factory
     {
+        const string ForELAttributeName = "el-for";
+        const string IfELAttributeName = "el-if";
+        const string BindELAttributePrefix = "el-bind";
         const string RootTagName = "div";
         const string ElementTagName = "div";
+
+        static Regex valueRegex = new Regex(@"-?(\d*\.)?(\d+)(px|%)");
 
         Node root;
         Config config = Rockyfi.CreateDefaultConfig();
 
-        Regex valueRegex = new Regex(@"-?(\d*\.)?(\d+)(px|%)");
-
-        Value parseValueFromString(string text)
+        Value ParseValueFromString(string text)
         {
             if (text == "auto")
             {
@@ -156,15 +159,13 @@ namespace Rockyfi
 
             return res;
         }
-
-        readonly static char[] NullCharSpliter = { ' '};
         Value[] ParseFourValueFromString(string text)
         {
             // Edge.Left  = 0;
             // Edge.Top = 1;
             // Edge.Right = 2;
             // Edge.Bottom = 3;
-            var vStr = text.Split(NullCharSpliter, StringSplitOptions.RemoveEmptyEntries);
+            var vStr = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (vStr.Length > 4)
             {
                 return null;
@@ -172,7 +173,7 @@ namespace Rockyfi
             Value[] res = new Value[vStr.Length];
             for (int i = 0; i < res.Length; i++)
             {
-                res[i] = parseValueFromString(vStr[i]);
+                res[i] = ParseValueFromString(vStr[i]);
             }
             if (res.Length == 0)
             {
@@ -224,169 +225,222 @@ namespace Rockyfi
 
         }
 
-
-        Node SetupNormalNode(XmlNode ele)
+        void RenderNodeStyleAttribute(Node node, XmlNode ele, XmlAttribute attr)
         {
-            Console.WriteLine("---------------");
-            Console.WriteLine(ele.InnerXml);
+            var attrName = attr.Name.ToString().ToLower();
+            switch (attrName)
+            {
+                case "position":
+                    if (Rockyfi.StringToPositionType(attr.Value, out PositionType position))
+                    {
+                        node.StyleSetPositionType(position);
+                    }
+                    break;
+                case "align-content":
+                    if (Rockyfi.StringToAlign(attr.Value, out Align alignContent))
+                    {
+                        node.StyleSetAlignContent(alignContent);
+                    }
+                    break;
+                case "align-items":
+                    if (Rockyfi.StringToAlign(attr.Value, out Align alignItem))
+                    {
+                        node.StyleSetAlignItems(alignItem);
+                    }
+                    break;
+                case "align-self":
+                    if (Rockyfi.StringToAlign(attr.Value, out Align alignSelf))
+                    {
+                        node.StyleSetAlignSelf(alignSelf);
+                    }
+                    break;
+                case "flex-direction":
+                    if (Rockyfi.StringToFlexDirection(attr.Value, out FlexDirection flexDirection))
+                    {
+                        node.StyleSetFlexDirection(flexDirection);
+                    }
+                    break;
+                case "flex-wrap":
+                    if (Rockyfi.StringToWrap(attr.Value, out Wrap flexWrap))
+                    {
+                        node.StyleSetFlexWrap(flexWrap);
+                    }
+                    break;
+                case "flex-basis":
+                    var flexBasisValue = ParseValueFromString(attr.Value);
+                    if (flexBasisValue.unit == Unit.Auto)
+                    {
+                        node.NodeStyleSetFlexBasisAuto();
+                    }
+                    else if (flexBasisValue.unit == Unit.Point)
+                    {
+                        node.StyleSetFlexBasis(flexBasisValue.value);
+                    }
+                    else if (flexBasisValue.unit == Unit.Percent)
+                    {
+                        node.StyleSetFlexBasisPercent(flexBasisValue.value);
+                    }
+                    break;
+                case "flex-shrink":
+                    if (float.TryParse(attr.Value, out float flexShrink))
+                    {
+                        node.StyleSetFlexShrink(flexShrink);
+                    }
+                    break;
+                case "flex-grow":
+                    if (float.TryParse(attr.Value, out float flexGrow))
+                    {
+                        node.StyleSetFlexGrow(flexGrow);
+                    }
+                    break;
+                case "justify-content":
+                    if (Rockyfi.StringToJustify(attr.Value, out Justify justifyContent))
+                    {
+                        node.StyleSetJustifyContent(justifyContent);
+                    }
+                    break;
+                case "direction":
+                    if (Rockyfi.StringToDirection(attr.Value, out Direction direction))
+                    {
+                        node.StyleSetDirection(direction);
+                    }
+                    break;
+                case "width":
+                    node.Helper_SetDimensions(ParseValueFromString(attr.Value), Dimension.Width);
+                    break;
+                case "height":
+                    node.Helper_SetDimensions(ParseValueFromString(attr.Value), Dimension.Height);
+                    break;
+                case "min-width":
+                    node.Helper_SetMinDimensions(ParseValueFromString(attr.Value), Dimension.Width);
+                    break;
+                case "min-height":
+                    node.Helper_SetMinDimensions(ParseValueFromString(attr.Value), Dimension.Height);
+                    break;
+                case "max-width":
+                    node.Helper_SetMaxDimensions(ParseValueFromString(attr.Value), Dimension.Width);
+                    break;
+                case "max-height":
+                    node.Helper_SetMaxDimensions(ParseValueFromString(attr.Value), Dimension.Height);
+                    break;
+                default:
+                    // parse [margin|padding|border]-[Edgexxxx]
+                    if (ParseBreakWork(attrName, out string head, out string tail))
+                    {
+                        if (head == "margin" || head == "padding" || head == "border")
+                        {
+                            if (tail == "")
+                            {
+                                var valueArray = ParseFourValueFromString(attr.Value);
+                                if (valueArray != null)
+                                {
+                                    for (int i = 0; i < valueArray.Length; i++)
+                                    {
+                                        node.Helper_SetMarginPaddingBorder(head, (Edge)i, valueArray[i]);
+                                    }
+                                }
+                            }
+                            else if (Rockyfi.StringToEdge(tail, out Edge edge))
+                            {
+                                node.Helper_SetMarginPaddingBorder(head, edge, ParseValueFromString(attr.Value));
+                            }
+                        }
+                    }
+                    break;
+            }
+            node.Atrribute.Add(attr.Name.ToString(), attr.Value);
+        }
+
+        Node[] RenderNode(XmlNode ele, ContextStack stack)
+        {
             Node node = Rockyfi.CreateDefaultNode();
             foreach (XmlAttribute attr in ele.Attributes)
             {
-                var attrName = attr.Name.ToString().ToLower();
-                switch (attrName)
-                {
-                    case "position":
-                        if (Rockyfi.StringToPositionType(attr.Value, out PositionType position))
-                        {
-                            node.StyleSetPositionType(position);
-                        }
-                        break;
-                    case "align-content":
-                        if (Rockyfi.StringToAlign(attr.Value, out Align alignContent))
-                        {
-                            node.StyleSetAlignContent(alignContent);
-                        }
-                        break;
-                    case "align-items":
-                        if (Rockyfi.StringToAlign(attr.Value, out Align alignItem))
-                        {
-                            node.StyleSetAlignItems(alignItem);
-                        }
-                        break;
-                    case "align-self":
-                        if (Rockyfi.StringToAlign(attr.Value, out Align alignSelf))
-                        {
-                            node.StyleSetAlignSelf(alignSelf);
-                        }
-                        break;
-                    case "flex-direction":
-                        if (Rockyfi.StringToFlexDirection(attr.Value, out FlexDirection flexDirection))
-                        {
-                            node.StyleSetFlexDirection(flexDirection);
-                        }
-                        break;
-                    case "flex-wrap":
-                        if (Rockyfi.StringToWrap(attr.Value, out Wrap flexWrap))
-                        {
-                            node.StyleSetFlexWrap(flexWrap);
-                        }
-                        break;
-                    case "flex-basis":
-                        var flexBasisValue = parseValueFromString(attr.Value);
-                        if (flexBasisValue.unit == Unit.Auto)
-                        {
-                            node.NodeStyleSetFlexBasisAuto();
-                        }
-                        else if (flexBasisValue.unit == Unit.Point)
-                        {
-                            node.StyleSetFlexBasis(flexBasisValue.value);
-                        }
-                        else if (flexBasisValue.unit == Unit.Percent)
-                        {
-                            node.StyleSetFlexBasisPercent(flexBasisValue.value);
-                        }
-                        break;
-                    case "flex-shrink":
-                        if (float.TryParse(attr.Value, out float flexShrink))
-                        {
-                            node.StyleSetFlexShrink(flexShrink);
-                        }
-                        break;
-                    case "flex-grow":
-                        if (float.TryParse(attr.Value, out float flexGrow))
-                        {
-                            node.StyleSetFlexGrow(flexGrow);
-                        }
-                        break;
-                    case "justify-content":
-                        if (Rockyfi.StringToJustify(attr.Value, out Justify justifyContent))
-                        {
-                            node.StyleSetJustifyContent(justifyContent);
-                        }
-                        break;
-                    case "direction":
-                        if (Rockyfi.StringToDirection(attr.Value, out Direction direction))
-                        {
-                            node.StyleSetDirection(direction);
-                        }
-                        break;
-                    case "width":
-                        node.Helper_SetDimensions(parseValueFromString(attr.Value), Dimension.Width);
-                        break;
-                    case "height":
-                        node.Helper_SetDimensions(parseValueFromString(attr.Value), Dimension.Height);
-                        break;
-                    case "min-width":
-                        node.Helper_SetMinDimensions(parseValueFromString(attr.Value), Dimension.Width);
-                        break;
-                    case "min-height":
-                        node.Helper_SetMinDimensions(parseValueFromString(attr.Value), Dimension.Height);
-                        break;
-                    case "max-width":
-                        node.Helper_SetMaxDimensions(parseValueFromString(attr.Value), Dimension.Width);
-                        break;
-                    case "max-height":
-                        node.Helper_SetMaxDimensions(parseValueFromString(attr.Value), Dimension.Height);
-                        break;
-                    default:
-                        // parse [margin|padding|border]-[Edgexxxx]
-                        if (ParseBreakWork(attrName, out string head, out string tail))
-                        {
-                            if (head == "margin"|| head == "padding" || head =="border")
-                            {
-                                if (tail == "")
-                                {
-                                    var valueArray = ParseFourValueFromString(attr.Value);
-                                    if (valueArray != null)
-                                    {
-                                        for (int i = 0; i < valueArray.Length; i++)
-                                        {
-                                            node.Helper_SetMarginPaddingBorder(head, (Edge)i, valueArray[i]);
-                                        }
-                                    }
-                                }
-                                else if (Rockyfi.StringToEdge(tail, out Edge edge))
-                                {
-                                    node.Helper_SetMarginPaddingBorder(head, edge, parseValueFromString(attr.Value));
-                                }
-                            }
-                        }
-                        break;
-                }
-                node.Atrribute.Add(attr.Name.ToString(), attr.Value);
+                RenderNodeStyleAttribute(node, ele, attr);
             }
             return node;
         }
 
+        // 
+        static Regex elBindAttributeRegex = new Regex(BindELAttributePrefix + @":(\w|-)+");
 
-        Node SetupTraverse(XmlNode element)
+        void RenderNodeProcessELBind(XmlNode element, ContextStack contextStack)
         {
-            Node node = SetupNormalNode(element);
-            foreach (XmlNode e in element.ChildNodes)
+            // process el-for
+            var forELExpress = element.Attributes.GetNamedItem(ForELAttributeName);
+            if (forELExpress != null && DataBindForExpress.TryParse(forELExpress.Value, out var forExpress))
             {
-                var child = SetupTraverse(e);
-                if (child != null)
+                var evaluatedForValue = forExpress.Evaluate(contextStack);
+                if (evaluatedForValue != null)
                 {
-                    this.InsertChild(node, child, node.Children.Count);
+                    var forContext = CreateDataContext(evaluatedForValue);
+                    contextStack.Set(forExpress.IteratorName, forContext);
+                    BindExpressWithNode();
                 }
             }
-            return node;
+            
+            foreach (XmlAttribute attr in element.Attributes)
+            {
+                // process el-bind:xxxx="xxxx"
+                if (elBindAttributeRegex.IsMatch(attr.Name))
+                {
+                    string bindELExpress = attr.Value;
+                    if (DataBindObjectExpress.TryParse(bindELExpress, out var bindExpress))
+                    {
+                        var bindObjValue = bindExpress.Evaluate(contextStack);
+                        if (bindObjValue != null)
+                        {
+                            string targetName = attr.Name.Split(':')[1];
+                            contextStack.Set(targetName, CreateDataContext(bindObjValue));
+                        }
+                    }
+                }
 
+                // process el-if
+                if (IfELAttributeName.Equals(attr.Name))
+                {
+
+                }
+            }
         }
 
-        Node SetupTraverseRoot(XmlNode element)
+        LinkedList<Node> TraverseRenderNode(XmlNode element, ContextStack contextStack)
+        {
+            contextStack.EnterScope();
+            LinkedList<Node> nodeList = new LinkedList<Node>();
+            RenderNodeProcessELBind(element, contextStack);
+            foreach (var node in nodeList)
+            {
+                foreach (XmlNode e in element.ChildNodes)
+                {
+                    var children = TraverseRenderNode(e, contextStack);
+                    foreach (var child in children)
+                    {
+                        node.InsertChild(child, node.Children.Count);
+                    }
+                }
+            }
+            contextStack.LeaveScope();
+            return nodeList;
+        }
+
+        Node TraverseRootRenderNode(XmlNode element)
         {
             if (element.Name.Equals(RootTagName))
             {
-                return SetupTraverse(element);
+                return TraverseRenderNode(element).First.Value;
             }
 
             throw new Exception("root element is not <div /> !");
         }
 
-        public void CalculateLayout(Direction direction)
+        public Direction Direction = Direction.LTR;
+        public float MaxWidth = float.NaN;
+        public float MaxHeight = float.NaN;
+
+        public void CalculateLayout()
         {
-            root.CalculateLayout(float.NaN, float.NaN, direction);
+            root.CalculateLayout(MaxWidth, MaxHeight, Direction);
         }
 
         public void Draw(DrawNodeFunc drawFunc)
@@ -412,7 +466,7 @@ namespace Rockyfi
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
-            root = SetupTraverseRoot(doc.FirstChild);
+            root = TraverseRootRenderNode(doc.FirstChild);
         }
     }
 }
