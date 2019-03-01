@@ -22,17 +22,17 @@ namespace Rockyfi
             internal List<Node> RealNodes = new List<Node>();
 
             internal bool IsDirty; // is this node need to re-calculate/render ?
-            internal DataBindIfExpress ifExpress;
-            internal DataBindForExpress forExpress;
+            internal IfDataBindExpress ifExpress;
+            internal ForDataBindExpress forExpress;
         }
 
         //const string AttributeKey = "";
 
         #region DataBind
 
-        readonly Dictionary<string, DataBindObjectExpress> dataBindObjectExpressList = new Dictionary<string, DataBindObjectExpress>();
-        readonly Dictionary<string, DataBindForExpress> dataBindForExpressList = new Dictionary<string, DataBindForExpress>();
-        readonly Dictionary<string, DataBindIfExpress> dataBindIfExpressList = new Dictionary<string, DataBindIfExpress>();
+        readonly Dictionary<string, ObjectDataBindExpress> dataBindObjectExpressList = new Dictionary<string, ObjectDataBindExpress>();
+        readonly Dictionary<string, ForDataBindExpress> dataBindForExpressList = new Dictionary<string, ForDataBindExpress>();
+        readonly Dictionary<string, IfDataBindExpress> dataBindIfExpressList = new Dictionary<string, IfDataBindExpress>();
 
         public DataBindContext CreateDataContext(object obj)
         {
@@ -44,13 +44,9 @@ namespace Rockyfi
         public class DataBindContext
         {
             object data;
-
             public object Data
             {
-                get
-                {
-                    return data;
-                }
+                get { return data; }
 
                 set
                 {
@@ -72,9 +68,9 @@ namespace Rockyfi
                     data = value;
                 }
             }
-
             public bool IsDirty { internal get; set; }
-
+            public bool GetAsBool() { return (bool)data; }
+            public IEnumerable<object> GetAsEnumerable() { return data as IEnumerable<object>; }
             readonly internal List<Node> nodes = new List<Node>();
         }
         readonly Dictionary<string, DataBindContext> effectBind = new Dictionary<string, DataBindContext>();
@@ -253,11 +249,18 @@ namespace Rockyfi
             }
         }
 
-        public void BindExpressWithNode(string key, Node node)
+        void BindExpressWithNode<TR>(IDataBindExpress<TR> express, Node node)
         {
-            if (effectBind.TryGetValue(key, out DataBindContext bind))
+            if (express == null || node == null)
+                return;
+
+            if (!express.IsEffectedByContext && express.TargetKeys != null)
             {
-                bind.Data = data;
+                // TODO:
+                //if (effectBind.TryGetValue(key, out DataBindContext bind))
+                //{
+                //    bind.Data = "";
+                //}
             }
         }
 

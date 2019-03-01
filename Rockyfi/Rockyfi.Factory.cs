@@ -123,6 +123,7 @@ namespace Rockyfi
         const string ElementTagName = "div";
 
         static Regex valueRegex = new Regex(@"-?(\d*\.)?(\d+)(px|%)");
+        static Regex elBindAttributeRegex = new Regex(BindELAttributePrefix + @":(\w|-)+");
 
         Node root;
         Config config = Rockyfi.CreateDefaultConfig();
@@ -351,7 +352,7 @@ namespace Rockyfi
             node.Atrribute.Add(attr.Name.ToString(), attr.Value);
         }
 
-        Node[] RenderNode(XmlNode ele, ContextStack stack)
+        Node RenderNodeProcessStyle(XmlNode ele, ContextStack stack)
         {
             Node node = Rockyfi.CreateDefaultNode();
             foreach (XmlAttribute attr in ele.Attributes)
@@ -361,31 +362,43 @@ namespace Rockyfi
             return node;
         }
 
-        // 
-        static Regex elBindAttributeRegex = new Regex(BindELAttributePrefix + @":(\w|-)+");
-
-        void RenderNodeProcessELBind(XmlNode element, ContextStack contextStack)
+        LinkedList<Node> RenderNodeProcessEL(XmlNode element, ContextStack contextStack)
         {
             // process el-for
-            var forELExpress = element.Attributes.GetNamedItem(ForELAttributeName);
-            if (forELExpress != null && DataBindForExpress.TryParse(forELExpress.Value, out var forExpress))
-            {
-                var evaluatedForValue = forExpress.Evaluate(contextStack);
-                if (evaluatedForValue != null)
-                {
-                    var forContext = CreateDataContext(evaluatedForValue);
-                    contextStack.Set(forExpress.IteratorName, forContext);
-                    BindExpressWithNode();
-                }
-            }
-            
+            DataBindContext forContext = null;
+            ForDataBindExpress forExpress = null;
+            IfDataBindExpress ifExpress = null;
+            DataBindContext ifContext = null;
+            LinkedList<ObjectDataBindExpress> objectBindedContextList = new LinkedList<ObjectDataBindExpress>();
+            LinkedList<XmlAttribute> attributeToDelete = new LinkedList<XmlAttribute>();
+
+            // el-for first
             foreach (XmlAttribute attr in element.Attributes)
             {
-                // process el-bind:xxxx="xxxx"
+                if (ForELAttributeName.Equals(attr.Name))
+                {
+                    if (ForDataBindExpress.TryParse(attr.Value, out forExpress))
+                    {
+                        var evaluatedForValue = forExpress.Evaluate(contextStack);
+
+                        if (evaluatedForValue != null)
+                        {
+                            forContext = CreateDataContext(evaluatedForValue);
+                            contextStack.Set(forExpress.IteratorName, forContext);
+                        }
+                    }
+                    attributeToDelete.AddLast(attr);
+                    break;
+                }
+            }
+
+            // process bind
+            foreach (XmlAttribute attr in element.Attributes)
+            {
+                // process el-bind:xxxx="xxx-yy"
                 if (elBindAttributeRegex.IsMatch(attr.Name))
                 {
-                    string bindELExpress = attr.Value;
-                    if (DataBindObjectExpress.TryParse(bindELExpress, out var bindExpress))
+                    if (ObjectDataBindExpress.TryParse(attr.Value, out var bindExpress))
                     {
                         var bindObjValue = bindExpress.Evaluate(contextStack);
                         if (bindObjValue != null)
@@ -393,45 +406,105 @@ namespace Rockyfi
                             string targetName = attr.Name.Split(':')[1];
                             contextStack.Set(targetName, CreateDataContext(bindObjValue));
                         }
+                        objectBindedContextList.AddLast(bindExpress);
                     }
+                    attributeToDelete.AddLast(attr);
                 }
-
-                // process el-if
-                if (IfELAttributeName.Equals(attr.Name))
+                else if (IfELAttributeName.Equals(attr.Name)) // process el-if
                 {
-
+                    string ifELExpress = attr.Value;
+                    if (IfDataBindExpress.TryParse(ifELExpress, out ifExpress))
+                    {
+                        var flagValue = ifExpress.Evaluate(contextStack);
+                        string targetName = attr.Name.Split(':')[1];
+                        ifContext = CreateDataContext(flagValue);
+                        contextStack.Set(targetName, ifContext);
+                    }
+                    attributeToDelete.AddLast(attr);
                 }
             }
+
+            //
+            if (ifExpress != null && ifContext != null)
+            {
+                if(!ifContext.GetAsBool())
+                {
+                    return new LinkedList<Node>();
+                }
+            }
+
+            var nodeList = new LinkedList<Node>();
+            if (forExpress != null && forContext != null)
+            {
+                // remove bind-attribute
+                foreach (var attr in attributeToDelete)
+                {
+                    element.Attributes.Remove(attr);
+                }
+
+                foreach (var obj in forContext.GetAsEnumerable())
+                {
+                    contextStack.EnterScope();
+                    contextStack.Set(forExpress.DataSourceName[0], CreateDataContext(obj));
+                    foreach (var node in RenderNode(element, contextStack))
+                    {
+                        nodeList.AddLast(node);
+                    }
+                    contextStack.LeaveScope();
+                }
+            }
+            else
+            {
+                nodeList.AddLast(RenderNodeProcessStyle(element, contextStack));
+            }
+
+            // bind express <--> node
+            foreach (var node in nodeList)
+            {
+                BindExpressWithNode(forExpress, node);
+                BindExpressWithNode(ifExpress, node);
+                foreach (var objExpress in objectBindedContextList)
+                {
+                    // TODO: set node attribute here ...
+
+                    BindExpressWithNode(objExpress, node);
+                }
+            }
+
+            return nodeList;
         }
 
-        LinkedList<Node> TraverseRenderNode(XmlNode element, ContextStack contextStack)
+        LinkedList<Node> RenderNode(XmlNode element, ContextStack contextStack)
         {
-            contextStack.EnterScope();
-            LinkedList<Node> nodeList = new LinkedList<Node>();
-            RenderNodeProcessELBind(element, contextStack);
+            LinkedList<Node> nodeList = RenderNodeProcessEL(element, contextStack);
             foreach (var node in nodeList)
             {
                 foreach (XmlNode e in element.ChildNodes)
                 {
-                    var children = TraverseRenderNode(e, contextStack);
+                    contextStack.EnterScope();
+                    var children = RenderNode(e, contextStack);
+                    contextStack.LeaveScope();
                     foreach (var child in children)
                     {
                         node.InsertChild(child, node.Children.Count);
                     }
                 }
             }
-            contextStack.LeaveScope();
             return nodeList;
         }
 
-        Node TraverseRootRenderNode(XmlNode element)
+        Node RenderTree(XmlNode element, ContextStack contextStack)
         {
-            if (element.Name.Equals(RootTagName))
-            {
-                return TraverseRenderNode(element).First.Value;
-            }
+            if (!element.Name.Equals(RootTagName))
+                throw new Exception("root element is not <div /> !");
 
-            throw new Exception("root element is not <div /> !");
+            if (element.Attributes.GetNamedItem(ForELAttributeName) != null)
+                throw new Exception("root element should not contains 'el-for' attribute !");
+
+            if (element.Attributes.GetNamedItem(ForELAttributeName) != null)
+                throw new Exception("root element should not contains 'el-if' attribute !");
+
+            return RenderNode(element, contextStack).First.Value;
         }
 
         public Direction Direction = Direction.LTR;
@@ -464,9 +537,22 @@ namespace Rockyfi
 
         public void LoadFromString(string xml)
         {
+            LoadFromString(xml, null);
+        }
+        public void LoadFromString(string xml, Dictionary<string, object> contextDictionary)
+        {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
-            root = TraverseRootRenderNode(doc.FirstChild);
+
+            var dataBindContext = new Dictionary<string, DataBindContext>();
+            if (contextDictionary != null)
+            {
+                foreach (var kv in contextDictionary)
+                {
+                    dataBindContext.Add(kv.Key, CreateDataContext(kv.Value));
+                }
+            }
+            root = RenderTree(doc.FirstChild, new ContextStack(dataBindContext));
         }
     }
 }
