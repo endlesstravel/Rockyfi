@@ -697,6 +697,10 @@ namespace Rockyfi
         {
             return Rockyfi.GetChild(this, idx);
         }
+        public void AddChild(Node child)
+        {
+            Rockyfi.InsertChild(this, child, ChildrenCount);
+        }
         public void InsertChild(Node child, int idx)
         {
             Rockyfi.InsertChild(this, child, idx);

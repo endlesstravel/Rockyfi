@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace Rockyfi
 {
@@ -249,7 +250,23 @@ namespace Rockyfi
             }
         }
 
-        void BindExpressWithNode<TR>(IDataBindExpress<TR> express, Node node)
+        //void BindExpressWithNode<TR>(XmlNode element, IDataBindExpress<TR> express, Node node, Node parentNode)
+        //{
+        //    if (express == null || node == null)
+        //        return;
+
+        //    if (!express.IsEffectedByContext && express.TargetKeys != null)
+        //    {
+        //        // TODO:
+        //        //if (effectBind.TryGetValue(key, out DataBindContext bind))
+        //        //{
+        //        //    bind.Data = "";
+        //        //}
+        //    }
+        //}
+
+
+        void BindIfExpressWithNode(XmlNode element, IfDataBindExpress express, Node node, Node parentNode)
         {
             if (express == null || node == null)
                 return;
@@ -262,6 +279,16 @@ namespace Rockyfi
                 //    bind.Data = "";
                 //}
             }
+        }
+
+        void BindForExpressWithNode(XmlNode element, ForDataBindExpress express, Node node, Node parentNode)
+        {
+            // TODO:
+        }
+
+        void BindObjectExpressWithNode(XmlNode element, ObjectDataBindExpress express, Node node, Node parentNode)
+        {
+            // TODO:
         }
 
         /// <summary>

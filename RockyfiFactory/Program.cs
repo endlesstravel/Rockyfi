@@ -126,7 +126,7 @@ namespace FlexCs
 ";
             string tmpXML3 = @"
 <div width=""620px"" height=""500px"" flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" >
-    <div el-for=""item in list""  el:bind:id=""item"" width=""150px"" height=""100px""/>
+    <div el-for=""item in list""  el-bind-id=""item"" width=""150px"" height=""100px""/>
 </div>
 ";
             factory = new Rockyfi.Factory();

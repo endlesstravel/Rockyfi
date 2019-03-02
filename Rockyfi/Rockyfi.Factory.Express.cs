@@ -12,7 +12,7 @@ namespace Rockyfi
     // LiteralString ::= '[^']*'
     // binop ::=  ‘+’ | ‘-’ | ‘*’ | ‘/’ | '==' | '!=' | '||' | '&&'
     // unop ::=  '!'
-    // exp ::=  null | false | true | Numeral | '(’ exp ‘)’ | LiteralString | exp binop exp | unop exp 
+    // exp ::=  null | false | true | Numeral | '(’ exp ‘)’ | LiteralString | exp binop exp | unop exp
     //
     // advance lex parser
     public class Lex
@@ -160,7 +160,7 @@ namespace Rockyfi
             currentValue = null;
             currentType = TokenType.Unknow;
             while (true)
-            { 
+            {
                 int c = reader.Read();
                 if (c == -1)
                 {
@@ -222,8 +222,8 @@ namespace Rockyfi
     public partial class Factory
     {
         #region Abstract syntax tree
-        // The Regex class itself is thread safe and immutable(read-only). That is, 
-        // Regex objects can be created on any thread and shared between threads; 
+        // The Regex class itself is thread safe and immutable(read-only). That is,
+        // Regex objects can be created on any thread and shared between threads;
         // matching methods can be called from any thread and never alter any global state.
         // However, result objects (Match and MatchCollection) returned by Regex should be used on a single thread..
         internal static Regex ifRegex = new Regex(@"^([^=]+)\s*((==|!=)\s*([^=]+))?$");
@@ -276,12 +276,11 @@ namespace Rockyfi
                     || value is decimal;
         }
 
-        interface IDataBindExpress<RT>
-        {
-            string[] TargetKeys { get; }
-            bool IsEffectedByContext { get; }
-            RT Evaluate(ContextStack contextStack);
-        }
+        //interface IDataBindExpress<RT>
+        //{
+        //    bool IsEffectedByContext { get; }
+        //    RT Evaluate(ContextStack contextStack);
+        //}
 
         /// <summary>
         /// 11  : int
@@ -291,7 +290,7 @@ namespace Rockyfi
         /// false: boolean
         /// xxx.bc.fd: object value
         /// </summary>
-        class ObjectDataBindExpress: IDataBindExpress<object>
+        class ObjectDataBindExpress
         {
             enum ObjectDataBindType
             {
@@ -309,9 +308,9 @@ namespace Rockyfi
                 get; private set;
             }
 
-            public string[] TargetKeys => IsEffectedByContext && value != null ? new string[]{(value as string[])[0]} : null;
+            public string TargetKeys => IsEffectedByContext && value != null ? (value as string[])[0] : null;
             public bool IsEffectedByContext => type == ObjectDataBindType.ObjectSymbol;
-            
+
             /// <summary>
             /// faild parse return null, otherwise return DataBindObjectExpress
             /// </summary>
@@ -349,18 +348,19 @@ namespace Rockyfi
                 return dboe.type != ObjectDataBindType.Unknow;
             }
 
-            public object Evaluate(ContextStack contextStack)
+            public bool TryEvaluate(ContextStack contextStack, out object result)
             {
+                result = null;
                 if (type == ObjectDataBindType.Unknow)
-                    return null;
+                    return false;
 
                 if (type == ObjectDataBindType.ObjectSymbol)
                 {
-                    TryGetObject(contextStack, (string[])value, out var resultObject);
-                    return resultObject;
+                    return TryGetObject(contextStack, (string[])value, out result);
                 }
 
-                return value;
+                result = value;
+                return true;
             }
         }
 
@@ -368,13 +368,13 @@ namespace Rockyfi
         /// item in aa.bb.c
         /// item in list
         /// </summary>
-        class ForDataBindExpress : IDataBindExpress<IEnumerable<object>>
+        class ForDataBindExpress
         {
             string express;
 
             public string IteratorName { get; private set; }
             public string[] DataSourceName => dataSourceName;
-            public string[] TargetKeys => dataSourceName != null ? new string[]{dataSourceName[0]} : null;
+            public string TargetKeys => dataSourceName != null ? dataSourceName[0] : null;
             public bool IsEffectedByContext => true;
 
             string[] dataSourceName;
@@ -400,32 +400,27 @@ namespace Rockyfi
                 return false;
             }
 
-            public IEnumerable<object> Evaluate(ContextStack contextStack)
+            public bool TryEvaluate(ContextStack contextStack, out IEnumerable<object> result)
             {
-                if (dataSourceName == null)
+                result = null;
+                if (dataSourceName != null && TryGetObject(contextStack, dataSourceName, out var resultObject))
                 {
-                    throw new Exception("dataSourceName is null !");
+                    result = resultObject as IEnumerable<object>;
                 }
-
-                if(TryGetObject(contextStack, dataSourceName, out var resultObject))
-                {
-                    return resultObject as IEnumerable<object>;
-                }
-
-                return new List<object>();
+                return result != null;
             }
         }
 
         /// <summary>
         /// ^\s*([\w\.]+)\s*(==\s*([\w\.]+))?\s*$
         /// ^\s*([\w\.]+)\s*(==\s*([\w\.]+))?\s*$
-        /// case 1: 
+        /// case 1:
         ///    bind:if="item"
         ///    string is null or empty ?
         ///    number is 0 ?
         /// case 2:
         /// </summary>
-        class IfDataBindExpress : IDataBindExpress<bool>
+        class IfDataBindExpress
         {
             string express;
             bool isJustObjectExpress; // a == b ? or a ?
@@ -439,37 +434,22 @@ namespace Rockyfi
                 {
                     if (isJustObjectExpress)
                     {
-                        return leftExpress.TargetKeys;
+                        return leftExpress.TargetKeys != null ? new string[] { leftExpress.TargetKeys } : null;
                     }
                     else if (leftExpress.TargetKeys != null && rightExpress.TargetKeys == null)
                     {
-                        return leftExpress.TargetKeys;
+                        return leftExpress.TargetKeys != null ? new string[] { leftExpress.TargetKeys } : null;
                     }
                     else if (leftExpress.TargetKeys == null && rightExpress.TargetKeys != null)
                     {
-                        return rightExpress.TargetKeys;
+                        return rightExpress.TargetKeys != null ? new string[] { rightExpress.TargetKeys } : null;
                     }
-                    var x = leftExpress.TargetKeys;
-                    var y = rightExpress.TargetKeys;
-                    var z = new string[x.Length + y.Length];
-                    x.CopyTo(z, 0);
-                    y.CopyTo(z, x.Length);
-                    return z;
+                    return new string[] { leftExpress.TargetKeys, rightExpress.TargetKeys };
                 }
             }
 
-            public bool IsEffectedByContext
-            {
-                get
-                {
-                    if (isJustObjectExpress)
-                    {
-                        return leftExpress.IsEffectedByContext;
-                    }
-
-                    return leftExpress.IsEffectedByContext || rightExpress.IsEffectedByContext;
-                }
-            }
+            public bool IsEffectedByContext => isJustObjectExpress ? leftExpress.IsEffectedByContext
+                : leftExpress.IsEffectedByContext || rightExpress.IsEffectedByContext;
 
             /// <summary>
             /// true: parse success, false parse failed
@@ -511,97 +491,67 @@ namespace Rockyfi
                 return bindIfExpress != null;
             }
 
-            public bool Evaluate(ContextStack contextStack)
+            public bool TryEvaluate(ContextStack contextStack, out bool result)
             {
+                result = false;
                 if (isJustObjectExpress)
                 {
-                    return LossyBoolJudge(leftExpress.Evaluate(contextStack), out var _drop);
-                }
+                    if (!leftExpress.TryEvaluate(contextStack, out var obj))
+                        return false;
 
-                object leftObj = leftExpress.Evaluate(contextStack);
-                object rightObj = leftExpress.Evaluate(contextStack);
-
-                // number equals ?
-                var result = false;
-                if (IsNumber(leftObj) && IsNumber(rightObj))
-                {
-                    result = (double)leftObj == (double)rightObj;
+                    return TryLossyBoolJudge(obj, out result);
                 }
-                else if (leftObj is string && rightObj is string)
+                else if (leftExpress.TryEvaluate(contextStack, out object leftObj)
+                    && rightExpress.TryEvaluate(contextStack, out object rightObj))
                 {
-                    result = string.Equals(leftObj, rightObj);
-                }
-                else
-                {
-                    var leftResult = LossyBoolJudge(leftObj, out var leftIsOther);
-                    var RightResult = LossyBoolJudge(rightObj, out var RightIsOther);
-                    if (leftIsOther || RightIsOther)
+                    if (IsNumber(leftObj) && IsNumber(rightObj)) // number equals .....
                     {
-                        result = false;
+                        result = (double)leftObj == (double)rightObj;
+                        return true;
                     }
-                    else
+                    else if (leftObj is string && rightObj is string) // string equal .....
                     {
-                        result = leftResult == RightResult;
+                        result = string.Equals(leftObj, rightObj);
+                        return true;
                     }
-                }
 
-                return isEqualOpt ? result : !result;
-            }
-
-            public static bool LossyBoolJudge(object obj, out bool isOtherObj)
-            {
-                isOtherObj = false;
-                if (obj == null)
-                {
+                    var leftTry = TryLossyBoolJudge(leftObj, out var leftResult);
+                    var rightTry = TryLossyBoolJudge(rightObj, out var RightResult);
+                    result = (leftTry ^ rightTry) ? false: leftResult == RightResult;
+                    result = isEqualOpt ? result : !result;
                     return false;
                 }
+                return false;
+            }
 
-                if (obj is bool)
-                    return (bool)obj;
+            public static bool TryLossyBoolJudge(object obj, out bool result)
+            {
+                if (obj == null)
+                {
+                    result = false;
+                    return true;
+                }
+
+                if (obj is bool) // if bool
+                {
+                    result = (bool)obj;
+                    return true;
+                }
 
                 // https://stackoverflow.com/questions/745172/better-way-to-cast-object-to-int
-                if (obj is sbyte)
-                    return (sbyte)obj != 0;
-
-                if (obj is byte)
-                    return (byte)obj != 0;
-
-                if (obj is short)
-                    return (short)obj != 0;
-
-                if (obj is ushort)
-                    return (ushort)obj != 0;
-
-                if (obj is int)
-                    return (int)obj != 0;
-
-                if (obj is uint)
-                    return (uint)obj != 0;
-
-                if (obj is long)
-                    return (long)obj != 0;
-
-                if (obj is ulong)
-                    return (ulong)obj != 0;
-
-                if (obj is float)
-                    return (float)obj != 0;
-
-                if (obj is uint)
-                    return (uint)obj != 0;
-
-                if (obj is double)
-                    return (double)obj != 0;
-
-                if (obj is decimal)
-                    return (decimal)obj != 0;
+                if (IsNumber(obj))
+                {
+                    result = (0.0).Equals(obj);
+                    return true;
+                }
 
                 if (obj is string)
                 {
-                    return !"".Equals(obj);
+                    result = !"".Equals(obj);
+                    return true;
                 }
 
-                isOtherObj = true;
+                result = false;
                 return false;
             }
 
