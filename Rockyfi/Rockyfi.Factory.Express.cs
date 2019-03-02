@@ -507,11 +507,13 @@ namespace Rockyfi
                     if (IsNumber(leftObj) && IsNumber(rightObj)) // number equals .....
                     {
                         result = (double)leftObj == (double)rightObj;
+                        result = isEqualOpt ? result : !result;
                         return true;
                     }
                     else if (leftObj is string && rightObj is string) // string equal .....
                     {
                         result = string.Equals(leftObj, rightObj);
+                        result = isEqualOpt ? result : !result;
                         return true;
                     }
 

@@ -82,7 +82,7 @@ namespace Rockyfi
             if (index == objPath.Length - 1)
             {
                 obj = input;
-                return input == null;
+                return input != null;
             }
 
 
@@ -188,7 +188,7 @@ namespace Rockyfi
 
             public void Set(string name, DataBindContext value)
             {
-                contextStack.Last.Value["name"] = value;
+                contextStack.Last.Value[name] = value;
             }
 
             public Dictionary<string, DataBindContext> LeaveScope()

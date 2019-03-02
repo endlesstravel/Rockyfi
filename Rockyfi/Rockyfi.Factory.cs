@@ -391,7 +391,7 @@ namespace Rockyfi
             return false;
         }
 
-        bool TryRenderNodeProcessEL(XmlNode element, ContextStack contextStack, out LinkedList<ObjectDataBindExpress> objectExpressesList)
+        bool TryRenderNodeProcessBindEL(XmlNode element, ContextStack contextStack, out LinkedList<ObjectDataBindExpress> objectExpressesList)
         {
             objectExpressesList = new LinkedList<ObjectDataBindExpress>();
             foreach (XmlAttribute attr in element.Attributes)
@@ -411,22 +411,52 @@ namespace Rockyfi
         LinkedList<Node> RenderNode(XmlNode element, ContextStack contextStack, bool processForEL, Node parentNode)
         {
             LinkedList<Node> nodeList = new LinkedList<Node>();
-            bool skipElement = 
-                (TryRenderNodeProcessIfEL(element, contextStack, out var ifExpress)
-                && ifExpress.TryEvaluate(contextStack, out var ifCondition)
-                && ifCondition == false);
+            bool isIfElExist = TryRenderNodeProcessIfEL(element, contextStack, out var ifExpress);
+            bool isBindElExist = TryRenderNodeProcessBindEL(element, contextStack, out var objectExpressList);
+            bool isForElExist = false;
+            ForDataBindExpress forExpress = null;
+            if (processForEL && (isForElExist = TryRenderNodeProcessForEL(element, contextStack, out forExpress)))
+            {// expand with for list
+                if (forExpress.TryEvaluate(contextStack, out var forList))
+                {
+                    foreach (object forContext in forList)
+                    {
 
-            if (skipElement)
-                return nodeList;
+                        contextStack.EnterScope();
+                        contextStack.Set(forExpress.IteratorName, CreateDataContext(forContext));
 
-            if (TryRenderNodeProcessForEL(element, contextStack, out var forExpress)
-                    && forExpress.TryEvaluate(contextStack, out var forList)) // expand with for list
+                        bool skipElement = (isIfElExist
+                            && ifExpress.TryEvaluate(contextStack, out var ifCondition)
+                            && ifCondition == false);
+                        if (!skipElement)
+                        {
+                            if (isBindElExist)
+                            {
+                                foreach (var objExpress in objectExpressList)
+                                {
+                                    if (objExpress.TryEvaluate(contextStack, out var objExpressResult))
+                                        contextStack.Set(objExpress.TargetKeys, CreateDataContext(objExpressResult));
+                                }
+                            }
+                            foreach (var forSiblingNode in RenderNode(element, contextStack, false, parentNode))
+                            {
+                                nodeList.AddLast(forSiblingNode);
+                            }
+                        }
+                        contextStack.LeaveScope();
+                    }
+                }
+            }
+            else
             {
-                foreach (object forContext in forList)
+                bool skipElement = (isIfElExist
+                    && ifExpress.TryEvaluate(contextStack, out var ifCondition)
+                    && ifCondition == false);
+
+                if (!skipElement)
                 {
                     contextStack.EnterScope();
-                    contextStack.Set(forExpress.TargetKeys, CreateDataContext(forContext));
-                    if(TryRenderNodeProcessEL(element, contextStack, out var objectExpressList))
+                    if (isBindElExist)
                     {
                         foreach (var objExpress in objectExpressList)
                         {
@@ -434,44 +464,33 @@ namespace Rockyfi
                                 contextStack.Set(objExpress.TargetKeys, CreateDataContext(objExpressResult));
                         }
                     }
-                    foreach (var forSiblingNode in RenderNode(element, contextStack, false, parentNode))
-                    {
-                        BindIfExpressWithNode(element, ifExpress, forSiblingNode, parentNode);
-                        BindForExpressWithNode(element, forExpress, forSiblingNode, parentNode);
-                        foreach (var objExpress in objectExpressList)
-                        {
-                            BindObjectExpressWithNode(element, objExpress, forSiblingNode, parentNode);
-                        }
-                        nodeList.AddLast(forSiblingNode);
-                    }
+                    var node = RenderTree(element, contextStack);
+                    nodeList.AddLast(node);
                     contextStack.LeaveScope();
-                }
 
-                if (nodeList.Count == 0)
-                {
-                    BindIfExpressWithNode(element, ifExpress, null, parentNode);
-                    BindForExpressWithNode(element, forExpress, null, parentNode);
+                    foreach (var objExpress in objectExpressList)
+                    {
+                        BindObjectExpressWithNode(element, objExpress, node, parentNode);
+                    }
                 }
+            }
+
+            // bind express <=> node
+            if (nodeList.Count == 0)
+            {
+                BindIfExpressWithNode(element, isIfElExist ? ifExpress : null, null, parentNode);
+                BindForExpressWithNode(element, (processForEL && isForElExist) ? forExpress : null, null, parentNode);
             }
             else
             {
-                contextStack.EnterScope();
-                if (TryRenderNodeProcessEL(element, contextStack, out var objectExpressList))
+                foreach (var node in nodeList)
                 {
+                    BindIfExpressWithNode(element, isIfElExist ? ifExpress : null, node, parentNode);
+                    BindForExpressWithNode(element, (processForEL && isForElExist) ? forExpress : null, node, parentNode);
                     foreach (var objExpress in objectExpressList)
                     {
-                        if (objExpress.TryEvaluate(contextStack, out var objExpressResult))
-                            contextStack.Set(objExpress.TargetKeys, CreateDataContext(objExpressResult));
+                        BindObjectExpressWithNode(element, objExpress, node, parentNode);
                     }
-                }
-                var node = RenderTree(element, contextStack);
-                nodeList.AddLast(node);
-                contextStack.LeaveScope();
-
-                BindIfExpressWithNode(element, ifExpress, node, parentNode);
-                foreach (var objExpress in objectExpressList)
-                {
-                    BindObjectExpressWithNode(element, objExpress, node, parentNode);
                 }
             }
             return nodeList;
@@ -548,6 +567,13 @@ namespace Rockyfi
                 }
             }
             root = RenderTree(rootElement, new ContextStack(dataBindContext));
+
+
+            var writer = new System.Text.StringBuilder();
+            var printer = new NodePrinter(writer, true, true, true);
+            printer.Print(root);
+            var got = writer.ToString();
+            Console.WriteLine(got);
         }
     }
 }
