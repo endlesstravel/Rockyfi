@@ -365,45 +365,35 @@ namespace Rockyfi
             }
         }
 
-        class ExpressionLanguageCollection
+        bool TryRenderNodeProcessForEL(XmlNode element, ContextStack contextStack, out ForDataBindExpress forExpress)
         {
-            public ForDataBindExpress ForExpress = null;
-            public IfDataBindExpress IfExpress = null;
-            public readonly LinkedList<ObjectDataBindExpress> ObjectExpressList = new LinkedList<ObjectDataBindExpress>();
-        }
-
-        ExpressionLanguageCollection RenderNodeProcessEL(XmlNode element, ContextStack contextStack)
-        {
-            var elCollection = new ExpressionLanguageCollection();
-
-            // process el-for
-            //DataBindContext forContext = null;
-            //ForDataBindExpress forExpress = null;
-            //IfDataBindExpress ifExpress = null;
-            //DataBindContext ifContext = null;
-            //LinkedList<ObjectDataBindExpress> objectBindedContextList = new LinkedList<ObjectDataBindExpress>();
-            //LinkedList<XmlAttribute> attributeToDelete = new LinkedList<XmlAttribute>();
-
-            // el-for first
             foreach (XmlAttribute attr in element.Attributes)
             {
                 if (ForELAttributeName.Equals(attr.Name))
                 {
-                    if (ForDataBindExpress.TryParse(attr.Value, out var forExpress))
-                    {
-                        elCollection.ForExpress = forExpress;
-                        //var evaluatedForValue = forExpress.Evaluate(contextStack);
-                        //if (evaluatedForValue != null)
-                        //{
-                        //    forContext = CreateDataContext(evaluatedForValue);
-                        //    contextStack.Set(forExpress.IteratorName, forContext);
-                        //}
-                    }
-                    break;
+                    return ForDataBindExpress.TryParse(attr.Value, out forExpress);
                 }
             }
+            forExpress = null;
+            return false;
+        }
 
-            // process bind
+        bool TryRenderNodeProcessIfEL(XmlNode element, ContextStack contextStack, out IfDataBindExpress ifExpress)
+        {
+            foreach (XmlAttribute attr in element.Attributes)
+            {
+                if (IfELAttributeName.Equals(attr.Name)) // process el-if
+                {
+                    return IfDataBindExpress.TryParse(attr.Value, out ifExpress);
+                }
+            }
+            ifExpress = null;
+            return false;
+        }
+
+        bool TryRenderNodeProcessEL(XmlNode element, ContextStack contextStack, out LinkedList<ObjectDataBindExpress> objectExpressesList)
+        {
+            objectExpressesList = new LinkedList<ObjectDataBindExpress>();
             foreach (XmlAttribute attr in element.Attributes)
             {
                 // process el-bind:xxxx="xxx-yy"
@@ -411,112 +401,79 @@ namespace Rockyfi
                 {
                     if (ObjectDataBindExpress.TryParse(attr.Value, out var bindExpress))
                     {
-                        elCollection.ObjectExpressList.AddLast(bindExpress);
-                    }
-                }
-                else if (IfELAttributeName.Equals(attr.Name)) // process el-if
-                {
-                    string ifELExpress = attr.Value;
-                    if (IfDataBindExpress.TryParse(ifELExpress, out var ifExpress))
-                    {
-                        //var flagValue = ifExpress.Evaluate(contextStack);
-                        //string targetName = attr.Name.Split(':')[1];
-                        //ifContext = CreateDataContext(flagValue);
-                        //contextStack.Set(targetName, ifContext);
-                        elCollection.IfExpress = ifExpress;
+                        objectExpressesList.AddLast(bindExpress);
                     }
                 }
             }
-
-            //var nodeList = new LinkedList<Node>();
-            //if (forExpress != null && forContext != null)
-            //{
-            //    // remove bind-attribute
-            //    foreach (var attr in attributeToDelete)
-            //    {
-            //        element.Attributes.Remove(attr);
-            //    }
-
-            //    foreach (var obj in forContext.GetAsEnumerable())
-            //    {
-            //        contextStack.EnterScope();
-            //        contextStack.Set(forExpress.DataSourceName[0], CreateDataContext(obj));
-            //        foreach (var node in RenderNode(element, contextStack))
-            //        {
-            //            nodeList.AddLast(node);
-            //        }
-            //        contextStack.LeaveScope();
-            //    }
-            //}
-            //else
-            //{
-            //    nodeList.AddLast(RenderNodeProcessStyle(element, contextStack));
-            //}
-
-            //// bind express <--> node
-            //foreach (var node in nodeList)
-            //{
-            //    BindExpressWithNode(forExpress, node);
-            //    BindExpressWithNode(ifExpress, node);
-            //    foreach (var objExpress in objectBindedContextList)
-            //    {
-            //        // TODO: set node attribute here ...
-
-            //        BindExpressWithNode(objExpress, node);
-            //    }
-            //}
-
-            return elCollection;
+            return objectExpressesList.Count != 0;
         }
 
-        LinkedList<Node> RenderNode(XmlNode element, ContextStack contextStack, bool processEL, Node parentNode)
+        LinkedList<Node> RenderNode(XmlNode element, ContextStack contextStack, bool processForEL, Node parentNode)
         {
             LinkedList<Node> nodeList = new LinkedList<Node>();
-            ExpressionLanguageCollection elCollection = null;
-            if (processEL && (elCollection = RenderNodeProcessEL(element, contextStack)) != null)
-            {
-                bool skipElement = 
-                    (elCollection.IfExpress != null 
-                    && elCollection.IfExpress.TryEvaluate(contextStack, out var ifCondition)
-                    && ifCondition == false);
+            bool skipElement = 
+                (TryRenderNodeProcessIfEL(element, contextStack, out var ifExpress)
+                && ifExpress.TryEvaluate(contextStack, out var ifCondition)
+                && ifCondition == false);
 
-                if(skipElement == false
-                    && elCollection.ForExpress != null
-                    && elCollection.ForExpress.TryEvaluate(contextStack, out var forList))
-                {
-                    foreach (object forContext in forList)
-                    {
-                        contextStack.EnterScope();
-                        contextStack.Set(elCollection.ForExpress.TargetKeys, CreateDataContext(forContext));
-                        foreach (var forSibling in RenderNode(element, contextStack, false, parentNode))
-                        {
-                            nodeList.AddLast(forSibling);
-                        }
-                        contextStack.LeaveScope();
-                    }
-                }
-
-                if (nodeList.Count > 0)
-                {
-                    BindIfExpressWithNode(element, elCollection.IfExpress, null, parentNode);
-                    BindForExpressWithNode(element, elCollection.ForExpress, null, parentNode);
-                }
-                else
-                {
-                    foreach (var node in nodeList)
-                    {
-                        BindIfExpressWithNode(element, elCollection.IfExpress, node, parentNode);
-                        BindForExpressWithNode(element, elCollection.ForExpress, node, parentNode);
-                    }
-                }
-
+            if (skipElement)
                 return nodeList;
+
+            if (TryRenderNodeProcessForEL(element, contextStack, out var forExpress)
+                    && forExpress.TryEvaluate(contextStack, out var forList)) // expand with for list
+            {
+                foreach (object forContext in forList)
+                {
+                    contextStack.EnterScope();
+                    contextStack.Set(forExpress.TargetKeys, CreateDataContext(forContext));
+                    if(TryRenderNodeProcessEL(element, contextStack, out var objectExpressList))
+                    {
+                        foreach (var objExpress in objectExpressList)
+                        {
+                            if (objExpress.TryEvaluate(contextStack, out var objExpressResult))
+                                contextStack.Set(objExpress.TargetKeys, CreateDataContext(objExpressResult));
+                        }
+                    }
+                    foreach (var forSiblingNode in RenderNode(element, contextStack, false, parentNode))
+                    {
+                        BindIfExpressWithNode(element, ifExpress, forSiblingNode, parentNode);
+                        BindForExpressWithNode(element, forExpress, forSiblingNode, parentNode);
+                        foreach (var objExpress in objectExpressList)
+                        {
+                            BindObjectExpressWithNode(element, objExpress, forSiblingNode, parentNode);
+                        }
+                        nodeList.AddLast(forSiblingNode);
+                    }
+                    contextStack.LeaveScope();
+                }
+
+                if (nodeList.Count == 0)
+                {
+                    BindIfExpressWithNode(element, ifExpress, null, parentNode);
+                    BindForExpressWithNode(element, forExpress, null, parentNode);
+                }
             }
             else
             {
-                nodeList.AddLast(RenderTree(element, contextStack));
-            }
+                contextStack.EnterScope();
+                if (TryRenderNodeProcessEL(element, contextStack, out var objectExpressList))
+                {
+                    foreach (var objExpress in objectExpressList)
+                    {
+                        if (objExpress.TryEvaluate(contextStack, out var objExpressResult))
+                            contextStack.Set(objExpress.TargetKeys, CreateDataContext(objExpressResult));
+                    }
+                }
+                var node = RenderTree(element, contextStack);
+                nodeList.AddLast(node);
+                contextStack.LeaveScope();
 
+                BindIfExpressWithNode(element, ifExpress, node, parentNode);
+                foreach (var objExpress in objectExpressList)
+                {
+                    BindObjectExpressWithNode(element, objExpress, node, parentNode);
+                }
+            }
             return nodeList;
         }
 
