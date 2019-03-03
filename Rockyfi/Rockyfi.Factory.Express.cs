@@ -228,10 +228,9 @@ namespace Rockyfi
         // However, result objects (Match and MatchCollection) returned by Regex should be used on a single thread..
         internal static Regex ifRegex = new Regex(@"^([^=]+)\s*((==|!=)\s*([^=]+))?$");
         //internal static Regex ifRegex = new Regex(@"^(((-?\d+)(\.\d+)?)|(([_a-zA-Z]\w*)(\.([_a-zA-Z]\w*))*))\s+(==|!=)\s+(((-?\d+)(\.\d+)?)|(([_a-zA-Z]\w*)(\.([_a-zA-Z]\w*))*))$");
-        internal static Regex forRegex = new Regex(@"^([_a-zA-Z]\w*)\s+in\s+(([_a-zA-Z]\w*)(\.([_a-zA-Z]\w*))*)$");
-        internal static Regex idRegex = new Regex(@"^[_a-zA-Z]\w*$");
+        internal static Regex forRegex = new Regex(@"^([_a-zA-Z][_\w]*)\s+in\s+(([_a-zA-Z][_\w]*)(\.([_a-zA-Z][_\w]*))*)$");
         internal static Regex strRegex = new Regex(@"^'([^']*)'$");
-        internal static Regex objRegex = new Regex(@"^(([_a-zA-Z]\w*)(\.([_a-zA-Z]\w*))*)$");
+        internal static Regex objRegex = new Regex(@"^(([_a-zA-Z][_\w]*)(\.([_a-zA-Z][_\w]*))*)$");
 
 
         // xxx.yy.zz -> [xxx, yy, zz]
@@ -255,11 +254,6 @@ namespace Rockyfi
             result = null;
             return false;
         }
-        static bool TryParseIdValue(string input)
-        {
-            return idRegex.IsMatch(input);
-        }
-
 
         public static bool IsNumber(object value)
         {
@@ -276,12 +270,33 @@ namespace Rockyfi
                     || value is decimal;
         }
 
-        //interface IDataBindExpress<RT>
-        //{
-        //    bool IsEffectedByContext { get; }
-        //    RT Evaluate(ContextStack contextStack);
-        //}
+        /// <summary>
+        /// item as id
+        /// item.color as color
+        /// </summary>
+        class AttributeDataBindExpress
+        {
+            string express;
+            public string TargetName { get; private set; }
+            ObjectDataBindExpress objectExpress = null;
 
+            public static bool TryParse(string express, string targetName, out AttributeDataBindExpress attributeExpress)
+            {
+                attributeExpress = null;
+                if ("".Equals(targetName))
+                    return false;
+
+                attributeExpress = new AttributeDataBindExpress();
+                attributeExpress.TargetName = targetName;
+                attributeExpress.express = express;
+                return ObjectDataBindExpress.TryParse(express, out attributeExpress.objectExpress);
+            }
+
+            public bool TryEvaluate(ContextStack contextStack, out object result)
+            {
+                return objectExpress.TryEvaluate(contextStack, out result);
+            }
+        }
         /// <summary>
         /// 11  : int
         /// 11.11  : float
@@ -356,7 +371,7 @@ namespace Rockyfi
 
                 if (type == ObjectDataBindType.ObjectSymbol)
                 {
-                    return TryGetObject(contextStack, (string[])value, out result);
+                    return contextStack.TryGetFromPath((string[])value, out result);
                 }
 
                 result = value;
@@ -403,7 +418,7 @@ namespace Rockyfi
             public bool TryEvaluate(ContextStack contextStack, out IEnumerable<object> result)
             {
                 result = null;
-                if (dataSourceName != null && TryGetObject(contextStack, dataSourceName, out var resultObject))
+                if (dataSourceName != null && contextStack.TryGetFromPath(dataSourceName, out var resultObject))
                 {
                     result = resultObject as IEnumerable<object>;
                 }

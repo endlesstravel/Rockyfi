@@ -38,8 +38,9 @@
   <ItemGroup>
     <Compile Include="Rockyfi.cs" />
     <Compile Include="Rockyfi.Enum.cs" />
+    <Compile Include="Rockyfi.Factory.ContextStack.cs" />
     <Compile Include="Rockyfi.Factory.Express.cs" />
-    <Compile Include="Rockyfi.Factory.cs" />
+    <Compile Include="Rockyfi.Factory.Renderer.cs" />
     <Compile Include="Rockyfi.Factory.DataBind.cs" />
     <Compile Include="Rockyfi.Rockyfi.cs" />
     <Compile Include="Rockyfi.Node.cs" />

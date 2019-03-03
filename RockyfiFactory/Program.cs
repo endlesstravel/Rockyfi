@@ -125,18 +125,19 @@ namespace FlexCs
     <div width=""150px"" height=""100px"" id=""child-4""/>
 </div>
 ";
-            string tmpXML3 = @"
-<div width=""620px"" height=""500px"" flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" >
-    <div el-for=""item in list"" el-if=""item != '2'"" el-bind-id=""item"" width=""150px"" height=""100px""/>
+            string tmpXML3 = @"<root>
+<div el-bind:padding-top=""pt"" el-bind:width=""w"" height=""300px"" flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" >
+    <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin-top=""mt"" el-bind:id=""item"" width=""100px"" height=""100px""/>
 </div>
-";
+</root>";
             factory = new Rockyfi.Factory();
             factory.LoadFromString(tmpXML3, new Dictionary<string, object>()
             {
+                { "w", "620px" },
+                { "mt", "5px" },
+                { "pt", "15px" },
                 { "list", new List<string>{ "1", "2", "3", "4", "5" } },
             });
-            //factory.LoadFromString(tmpXML3);
-
         }
 
         public override void Update(float dt)
@@ -147,14 +148,13 @@ namespace FlexCs
 
         public override void Draw()
         {
-
             Love.Misc.FPSGraph.FPSGraph.Draw();
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
             factory.Draw((x, y, w, h, node) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
-                Graphics.Print($"{(node.Atrribute.TryGetValue("id", out object id) ? id : "")}", x, y);
+                //Graphics.Print($"{(node.Atrribute.TryGetValue("id", out object id) ? id : "")}", x, y);
             });
         }
 
