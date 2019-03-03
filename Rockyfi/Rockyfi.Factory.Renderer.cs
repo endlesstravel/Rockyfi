@@ -499,19 +499,32 @@ namespace Rockyfi
             // process style
             RenderNodeProcessStyle(treeRootNode, element, contextStack);
 
-            // process inner text
-            if (RenderNodeProcessInnerText(element, contextStack, out var textDataBindExpress))
-            {
-                GetNodeCustomAttribute(treeRootNode).textDataBindExpress = textDataBindExpress;
-                BindTextExpressWithNode(element, textDataBindExpress, treeRootNode, parentNode);
-            }
 
             // render children
             foreach (XmlNode ele in element.ChildNodes)
             {
-                foreach (var childNode in RenderNode(ele, contextStack, treeRootNode))
+                if (XmlNodeType.Element == ele.NodeType)
                 {
-                    treeRootNode.AddChild(childNode);
+                    foreach (var childNode in RenderNode(ele, contextStack, treeRootNode))
+                    {
+                        treeRootNode.AddChild(childNode);
+                    }
+                }
+                else if (XmlNodeType.Text == ele.NodeType)
+                {
+                    // process inner text
+                    if (RenderNodeProcessInnerText(element, contextStack, out var textDataBindExpress))
+                    {
+                        var ca = GetNodeCustomAttribute(treeRootNode);
+                        ca.textDataBindExpress = textDataBindExpress;
+                        ca.textDataBindExpressCurrentValue = textDataBindExpress.Evaluate(contextStack).Trim();
+                        BindTextExpressWithNode(element, textDataBindExpress, treeRootNode, parentNode);
+                    }
+                    else
+                    {
+                        var ca = GetNodeCustomAttribute(treeRootNode);
+                        ca.textDataBindExpressCurrentValue = element.InnerText;
+                    }
                 }
             }
             return treeRootNode;
@@ -526,7 +539,7 @@ namespace Rockyfi
             root.CalculateLayout(MaxWidth, MaxHeight, Direction);
         }
 
-        public delegate void DrawNodeFunc(float x, float y, float width, float height, Dictionary<string, object> node);
+        public delegate void DrawNodeFunc(float x, float y, float width, float height, string text, Dictionary<string, object> node);
         public void Draw(DrawNodeFunc drawFunc)
         {
             Queue<Node> queue = new Queue<Node>();
@@ -534,9 +547,11 @@ namespace Rockyfi
             while (queue.Count != 0)
             {
                 var node = queue.Dequeue();
+                var contextAttr = GetNodeCustomAttribute(node);
                 drawFunc(node.LayoutGetLeft(), node.LayoutGetTop(),
                     node.LayoutGetWidth(), node.LayoutGetHeight(),
-                    GetNodeCustomAttribute(node).attributes
+                    contextAttr.textDataBindExpressCurrentValue,
+                    contextAttr.attributes
                     );
 
                 foreach (var child in node.Children)

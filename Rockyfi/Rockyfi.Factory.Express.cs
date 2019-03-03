@@ -291,7 +291,7 @@ namespace Rockyfi
                 }
                 public TextToken(ObjectDataBindExpress express)
                 {
-                    IsText = true;
+                    IsText = false;
                     this.Express = express;
                     this.Text = null;
                 }

@@ -15,6 +15,7 @@ namespace Rockyfi
             internal IfDataBindExpress ifExpress = null;
             internal ForDataBindExpress forExpress = null;
             internal TextDataBindExpress textDataBindExpress = null;
+            internal string textDataBindExpressCurrentValue = null;
             internal readonly LinkedList<AttributeDataBindExpress> attributeDataBindExpressList = new LinkedList<AttributeDataBindExpress>();
             internal readonly Dictionary<string, object> attributes = new Dictionary<string, object>();
             internal readonly List<Node> nodes = new List<Node>();

@@ -15,8 +15,11 @@ namespace FlexCs
 <div el-bind:padding-top=""pt"" 
     el-bind:width=""w"" 
     el-bind:height=""styleObj.StyleHeight""
+    id=""root""
     flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" >
-    <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin=""mt"" el-bind:id=""item"" width=""100px"" height=""100px""/>
+    <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin=""mt"" el-bind:id=""item"" width=""100px"" height=""100px"">
+        my id is {{item}}
+    </div>
 </div>
 ";
             factory = new Rockyfi.Factory();
@@ -43,10 +46,11 @@ namespace FlexCs
             Love.Misc.FPSGraph.FPSGraph.Draw();
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
-            factory.Draw((x, y, w, h, attr) =>
+            factory.Draw((x, y, w, h, text, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
-                Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, y);
+                Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, h + y - Graphics.GetFont().GetHeight());
+                Graphics.Printf(text, x, y, w, AlignMode.Center);
             });
         }
 
