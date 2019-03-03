@@ -18,7 +18,6 @@ namespace Rockyfi
     // Logger defines logging function
     public delegate int LoggerFunc(Config config, Node node, LogLevel level, string format, params object[] args);
 
-    public delegate void DrawNodeFunc(float x, float y, float width, float height, Node node);
 
 
     public partial class Node
@@ -364,16 +363,17 @@ namespace Rockyfi
                 string attrKey = attr.Name;
                 string attrValue = attr.Value;
                 RenderNodeProcessStyleAttribute(node, attrKey, attrValue);
+                GetNodeCustomAttribute(node).attributes[attrKey] = attrValue;
             }
 
             foreach (XmlAttribute attr in bindedAttr)
             {
                 string attrKey = attr.LocalName;
-                string attrValue = (BindELAttributePrefix.Equals(attr.Prefix) 
-                    && contextStack.TryGet(attrKey, out var bindContext)
-                    && (bindContext.Data != null)) ? bindContext.Data.ToString() : "";
-
-                RenderNodeProcessStyleAttribute(node, attrKey, attrValue);
+                if (contextStack.TryGet(attrKey, out var bindContext))
+                {
+                    GetNodeCustomAttribute(node).attributes[attrKey] = bindContext;
+                }
+                RenderNodeProcessStyleAttribute(node, attrKey, (bindContext != null) ? bindContext.ToString() : "");
             }
         }
 
@@ -434,7 +434,7 @@ namespace Rockyfi
                     {
 
                         contextStack.EnterScope();
-                        contextStack.Set(forExpress.IteratorName, CreateDataContext(forContext));
+                        contextStack.Set(forExpress.IteratorName, forContext);
 
                         bool skipElement = (isIfElExist
                             && ifExpress.TryEvaluate(contextStack, out var ifCondition)
@@ -446,7 +446,7 @@ namespace Rockyfi
                                 foreach (var objExpress in attributeExpressList)
                                 {
                                     if (objExpress.TryEvaluate(contextStack, out var objExpressResult))
-                                        contextStack.Set(objExpress.TargetName, CreateDataContext(objExpressResult));
+                                        contextStack.Set(objExpress.TargetName, objExpressResult);
                                 }
                             }
                             foreach (var forSiblingNode in RenderNode(element, contextStack, false, parentNode))
@@ -472,7 +472,7 @@ namespace Rockyfi
                         foreach (var objExpress in attributeExpressList)
                         {
                             if (objExpress.TryEvaluate(contextStack, out var objExpressResult))
-                                contextStack.Set(objExpress.TargetName, CreateDataContext(objExpressResult));
+                                contextStack.Set(objExpress.TargetName, objExpressResult);
                         }
                     }
                     var node = RenderTree(element, contextStack);
@@ -525,6 +525,7 @@ namespace Rockyfi
             root.CalculateLayout(MaxWidth, MaxHeight, Direction);
         }
 
+        public delegate void DrawNodeFunc(float x, float y, float width, float height, Dictionary<string, object> node);
         public void Draw(DrawNodeFunc drawFunc)
         {
             Queue<Node> queue = new Queue<Node>();
@@ -534,7 +535,7 @@ namespace Rockyfi
                 var node = queue.Dequeue();
                 drawFunc(node.LayoutGetLeft(), node.LayoutGetTop(),
                     node.LayoutGetWidth(), node.LayoutGetHeight(),
-                    node
+                    GetNodeCustomAttribute(node).attributes
                     );
 
                 foreach (var child in node.Children)
@@ -580,16 +581,7 @@ namespace Rockyfi
                             + attr.Name + " = " + attr.Value);
                 }
 
-                var dataBindContext = new Dictionary<string, DataBindContext>();
-                if (contextDictionary != null)
-                {
-                    foreach (var kv in contextDictionary)
-                    {
-                        dataBindContext.Add(kv.Key, CreateDataContext(kv.Value));
-                    }
-                }
-                root = RenderTree(rootElement, new ContextStack(dataBindContext));
-
+                root = RenderTree(rootElement, new ContextStack(contextDictionary));
                 Console.WriteLine(NodePrinter.PrintToString(root));
             }
         }

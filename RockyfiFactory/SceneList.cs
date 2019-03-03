@@ -39,10 +39,10 @@ namespace RockyfiFactory
         {
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
-            factory.Draw((x, y, w, h, node) =>
+            factory.Draw((x, y, w, h, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
-                //Graphics.Print($"{(node.Atrribute.TryGetValue("id", out object id) ? id : "")}", x, y);
+                Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, y);
             });
         }
     }

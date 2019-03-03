@@ -60,6 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="SceneList.cs" />
+    <Compile Include="SceneNormalXML.cs" />
+    <Compile Include="TestProgram.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

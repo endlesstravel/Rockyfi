@@ -272,28 +272,28 @@ namespace Rockyfi
 
 
         /// <summary>
-        /// xxxxx {{ xxxxx }} xxxxxx yyyyyy
+        /// xxxxx {{ item.desc }} xxxxxx yyyyyy
         /// </summary>
-        class TextDataBindExpress
+        internal class TextDataBindExpress
         {
             private TextDataBindExpress(LinkedList<TextToken> list) { this.tokensList = list; }
             readonly LinkedList<TextToken> tokensList;
             struct TextToken
             {
-                bool isText;
-                ObjectDataBindExpress express;
-                string text;
+                internal readonly bool IsText;
+                internal readonly ObjectDataBindExpress Express;
+                internal readonly string Text;
                 public TextToken(string text)
                 {
-                    isText = true;
-                    this.express = null;
-                    this.text = text;
+                    IsText = true;
+                    this.Express = null;
+                    this.Text = text;
                 }
                 public TextToken(ObjectDataBindExpress express)
                 {
-                    isText = true;
-                    this.express = express;
-                    this.text = null;
+                    IsText = true;
+                    this.Express = express;
+                    this.Text = null;
                 }
             }
 
@@ -318,11 +318,17 @@ namespace Rockyfi
                 }
                 return list;
             }
-            static TextDataBindExpress Parser(string text)
+            public static bool TryParse(string text, out TextDataBindExpress textDataBindExpress)
             {
                 LinkedList<TextToken> tokensList = new LinkedList<TextToken>();
+                var splitList = MatchIndex(text);
+                if (splitList.Count == 0)
+                {
+                    textDataBindExpress = null;
+                    return false;
+                }
                 int index = 0;
-                foreach (var pos in MatchIndex(text))
+                foreach (var pos in splitList)
                 {
                     tokensList.AddLast(new TextToken(text.Substring(index, pos.index - index)));
                     if (ObjectDataBindExpress.TryParse(pos.value, out var express))
@@ -334,17 +340,31 @@ namespace Rockyfi
                 if (index < text.Length)
                     tokensList.AddLast(new TextToken(text.Substring(index, text.Length - index)));
 
-                var tdbe = new TextDataBindExpress(tokensList);
-                return tdbe;
+
+                textDataBindExpress = new TextDataBindExpress(tokensList);
+                return true;
+            }
+
+            public string Evaluate(ContextStack contextStack)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (var token in tokensList)
+                {
+                    if (token.IsText)
+                        sb.Append(token.Text);
+                    else if (token.Express.TryEvaluate(contextStack, out var result) && result != null)
+                        sb.Append(result.ToString());
+                }
+
+                return sb.ToString();
             }
         }
-
 
         /// <summary>
         /// item as id
         /// item.color as color
         /// </summary>
-        class AttributeDataBindExpress
+        internal class AttributeDataBindExpress
         {
             string express;
             public string TargetName { get; private set; }
@@ -376,7 +396,7 @@ namespace Rockyfi
         /// false: boolean
         /// xxx.bc.fd: object value
         /// </summary>
-        class ObjectDataBindExpress
+        internal class ObjectDataBindExpress
         {
             enum ObjectDataBindType
             {
@@ -454,7 +474,7 @@ namespace Rockyfi
         /// item in aa.bb.c
         /// item in list
         /// </summary>
-        class ForDataBindExpress
+        internal class ForDataBindExpress
         {
             string express;
 
@@ -506,7 +526,7 @@ namespace Rockyfi
         ///    number is 0 ?
         /// case 2:
         /// </summary>
-        class IfDataBindExpress
+        internal class IfDataBindExpress
         {
             string express;
             bool isJustObjectExpress; // a == b ? or a ?

@@ -6,55 +6,37 @@ namespace Rockyfi
 {
     public partial class Factory
     {
-        class VirtualNode
-        {
-            bool IsDirty = true; // is this node need to re-calculate/render ?
-            IfDataBindExpress ifExpress = null;
-            ForDataBindExpress forExpress = null;
-        }
-
-
         #region DataBind
-        public DataBindContext CreateDataContext(object obj)
+        public class NodeAttribute
         {
-            var dbc = new DataBindContext();
-            dbc.Data = obj;
-            return dbc;
+            internal Node parentNode;
+            internal Node node;
+            internal bool IsDirty = true; // is this node need to re-calculate/render ?
+            internal IfDataBindExpress ifExpress = null;
+            internal ForDataBindExpress forExpress = null;
+            internal TextDataBindExpress textDataBindExpress = null;
+            internal readonly LinkedList<AttributeDataBindExpress> attributeDataBindExpressList = new LinkedList<AttributeDataBindExpress>();
+            internal readonly Dictionary<string, object> attributes = new Dictionary<string, object>();
+            internal readonly List<Node> nodes = new List<Node>();
         }
 
-        public class DataBindContext
+        NodeAttribute GetNodeCustomAttribute(Node node)
         {
-            object data;
-            public object Data
+            NodeAttribute attr = node.Context as NodeAttribute;
+            if (attr == null)
             {
-                get { return data; }
-
-                set
-                {
-                    if (data != null)
-                    {
-                        if (!data.Equals(value))
-                        {
-                            IsDirty = true;
-                        }
-                    }
-                    else
-                    {
-                        if (value != null)
-                        {
-                            this.IsDirty = true;
-                        }
-                    }
-
-                    data = value;
-                }
+                attr = new NodeAttribute();
+                attr.node = node;
+                node.Context = attr;
             }
-            public bool IsDirty { internal get; set; }
-            public bool GetAsBool() { return (bool)data; }
-            public IEnumerable<object> GetAsEnumerable() { return data as IEnumerable<object>; }
-            readonly internal List<Node> nodes = new List<Node>();
+            return attr;
         }
-        readonly Dictionary<string, DataBindContext> effectBind = new Dictionary<string, DataBindContext>();
+
+        class DataBind
+        {
+
+        }
+        readonly Dictionary<string, NodeAttribute> effectBind = new Dictionary<string, NodeAttribute>();
 
         /// <summary>
         /// insert child
@@ -94,12 +76,12 @@ namespace Rockyfi
                 //}
             }
 
-            foreach (var bind in effectBind.Values)
-            {
-                if (bind.IsDirty)
-                {
-                }
-            }
+            //foreach (var bind in effectBind.Values)
+            //{
+            //    if (bind.IsDirty)
+            //    {
+            //    }
+            //}
         }
 
 
@@ -136,10 +118,10 @@ namespace Rockyfi
         /// <param name="data"></param>
         public void SetData(string key, object data)
         {
-            if (effectBind.TryGetValue(key, out DataBindContext bind))
-            {
-                bind.Data = data;
-            }
+            //if (effectBind.TryGetValue(key, out DataBindContext bind))
+            //{
+            //    bind.Data = data;
+            //}
             //else // no need to update
             //{
             //    var newBind = new DataBind();
@@ -155,7 +137,8 @@ namespace Rockyfi
         /// <returns></returns>
         public object GetData(string key)
         {
-            return effectBind.TryGetValue(key, out DataBindContext data) ? data.Data : null;
+            //return effectBind.TryGetValue(key, out DataBindContext data) ? data.Data : null;
+            return null;
         }
 
         #endregion

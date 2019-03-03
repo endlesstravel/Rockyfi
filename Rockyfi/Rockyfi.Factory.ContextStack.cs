@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Rockyfi
 {
     public partial class Factory
     {
-        class ContextStack
+        internal class ContextStack
         {
             // TODO : we can do more optimization here !
             // Sparse linked list access.
@@ -17,15 +16,10 @@ namespace Rockyfi
 
             }
 
-            readonly LinkedList<Dictionary<string, DataBindContext>> contextStack = new LinkedList<Dictionary<string, DataBindContext>>();
-            public ContextStack(Dictionary<string, DataBindContext> topContext)
+            readonly LinkedList<Dictionary<string, object>> contextStack = new LinkedList<Dictionary<string, object>>();
+            public ContextStack(Dictionary<string, object> topContext)
             {
-                contextStack.AddLast(topContext);
-            }
-
-            public ContextStack()
-            {
-                contextStack.AddLast(new Dictionary<string, DataBindContext>());
+                contextStack.AddLast(topContext != null ? topContext : new Dictionary<string, object>());
             }
 
             public bool TryGetFromPath(string[] objPath, out object outObj)
@@ -35,25 +29,25 @@ namespace Rockyfi
                 {
                     return false;
                 }
-                if (TryGet(objPath[0], out var dataBind))
+                if (TryGet(objPath[0], out var bindContext))
                 {
-                    return TryGetObjectPath(objPath, 0, dataBind.Data, out outObj);
+                    return TryGetObjectPath(objPath, 0, bindContext, out outObj);
                 }
                 return false;
             }
 
-            public bool TryGet(string name, out DataBindContext bindContext)
+            public bool TryGet(string name, out object bindContext)
             {
                 return (bindContext = Get(name)) != null;
             }
 
-            public DataBindContext Get(string name)
+            public object Get(string name)
             {
                 var node = contextStack.Last;
                 while (node != null)
                 {
                     var dictionary = node.Value;
-                    if (dictionary.TryGetValue(name, out DataBindContext value))
+                    if (dictionary.TryGetValue(name, out object value))
                         return value;
 
                     node = node.Previous;
@@ -61,12 +55,12 @@ namespace Rockyfi
                 return null;
             }
 
-            public void Set(string name, DataBindContext value)
+            public void Set(string name, object value)
             {
                 contextStack.Last.Value[name] = value;
             }
 
-            public Dictionary<string, DataBindContext> LeaveScope()
+            public Dictionary<string, object> LeaveScope()
             {
                 var last = contextStack.Last != null ? contextStack.Last.Value : null;
                 contextStack.RemoveLast();
@@ -75,7 +69,7 @@ namespace Rockyfi
 
             public void EnterScope()
             {
-                contextStack.AddLast(new Dictionary<string, DataBindContext>());
+                contextStack.AddLast(new Dictionary<string, object>());
             }
 
             static bool TryGetObjectPath(string[] objPath, int index, object input, out object obj)
