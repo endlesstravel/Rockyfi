@@ -111,6 +111,12 @@ namespace Rockyfi
 
         }
 
+        void BindTextExpressWithNode(XmlNode element, TextDataBindExpress express, Node node, Node parentNode)
+        {
+            // TODO:
+
+        }
+
         /// <summary>
         /// update data in value
         /// </summary>

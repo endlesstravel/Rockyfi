@@ -11,14 +11,14 @@ namespace FlexCs
 
         public override void Load()
         {
-            string tmpXML3 = @"<root>
+            string tmpXML3 = @"
 <div el-bind:padding-top=""pt"" 
     el-bind:width=""w"" 
     el-bind:height=""styleObj.StyleHeight""
     flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" >
-    <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin-top=""mt"" el-bind:id=""item"" width=""100px"" height=""100px""/>
+    <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin=""mt"" el-bind:id=""item"" width=""100px"" height=""100px""/>
 </div>
-</root>";
+";
             factory = new Rockyfi.Factory();
             factory.LoadFromString(tmpXML3, new Dictionary<string, object>()
             {

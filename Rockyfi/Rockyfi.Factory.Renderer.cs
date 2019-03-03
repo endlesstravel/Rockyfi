@@ -377,35 +377,43 @@ namespace Rockyfi
             }
         }
 
-        bool TryRenderNodeProcessForEL(XmlNode element, ContextStack contextStack, out ForDataBindExpress forExpress)
+        bool RenderNodeProcessInnerText(XmlNode element, ContextStack contextStack, out TextDataBindExpress textDataBindExpress)
+        {
+            return TextDataBindExpress.TryParse(element.InnerText, out textDataBindExpress);
+        }
+
+        ForDataBindExpress RenderNodeProcessForEL(XmlNode element, ContextStack contextStack)
         {
             foreach (XmlAttribute attr in element.Attributes)
             {
                 if (ForELAttributeName.Equals(attr.Name))
                 {
-                    return ForDataBindExpress.TryParse(attr.Value, out forExpress);
+                    if (ForDataBindExpress.TryParse(attr.Value, out var forExpress))
+                        return forExpress;
+
+                    return null;
                 }
             }
-            forExpress = null;
-            return false;
+            return null;
         }
 
-        bool TryRenderNodeProcessIfEL(XmlNode element, ContextStack contextStack, out IfDataBindExpress ifExpress)
+        IfDataBindExpress RenderNodeProcessIfEL(XmlNode element, ContextStack contextStack)
         {
             foreach (XmlAttribute attr in element.Attributes)
             {
                 if (IfELAttributeName.Equals(attr.Name)) // process el-if
                 {
-                    return IfDataBindExpress.TryParse(attr.Value, out ifExpress);
+                    if (IfDataBindExpress.TryParse(attr.Value, out var ifExpress))
+                        return ifExpress;
+                    return null;
                 }
             }
-            ifExpress = null;
-            return false;
+            return null;
         }
 
-        bool TryRenderNodeProcessBindEL(XmlNode element, ContextStack contextStack, out LinkedList<AttributeDataBindExpress> objectExpressesList)
+        LinkedList<AttributeDataBindExpress> RenderNodeProcessBindEL(XmlNode element, ContextStack contextStack)
         {
-            objectExpressesList = new LinkedList<AttributeDataBindExpress>();
+            var objectExpressesList = new LinkedList<AttributeDataBindExpress>();
             foreach (XmlAttribute attr in element.Attributes)
             {
                 if (BindELAttributePrefix.Equals(attr.Prefix))
@@ -416,66 +424,43 @@ namespace Rockyfi
                     }
                 }
             }
-            return objectExpressesList.Count != 0;
+            return objectExpressesList;
         }
 
-        LinkedList<Node> RenderNode(XmlNode element, ContextStack contextStack, bool processForEL, Node parentNode)
+        LinkedList<Node> RenderNode(XmlNode element, ContextStack contextStack, Node parentNode)
         {
             LinkedList<Node> nodeList = new LinkedList<Node>();
-            bool isIfElExist = TryRenderNodeProcessIfEL(element, contextStack, out var ifExpress);
-            bool isBindElExist = TryRenderNodeProcessBindEL(element, contextStack, out var attributeExpressList);
-            bool isForElExist = false;
-            ForDataBindExpress forExpress = null;
-            if (processForEL && (isForElExist = TryRenderNodeProcessForEL(element, contextStack, out forExpress)))
-            {// expand with for list
+            IfDataBindExpress ifExpress = RenderNodeProcessIfEL(element, contextStack);
+            ForDataBindExpress forExpress = RenderNodeProcessForEL(element, contextStack);
+            if (forExpress != null) // expand with for list
+            {
                 if (forExpress.TryEvaluate(contextStack, out var forList))
                 {
+                    contextStack.EnterScope();
                     foreach (object forContext in forList)
                     {
-
-                        contextStack.EnterScope();
                         contextStack.Set(forExpress.IteratorName, forContext);
-
-                        bool skipElement = (isIfElExist
+                        bool skipElement = (ifExpress != null
                             && ifExpress.TryEvaluate(contextStack, out var ifCondition)
                             && ifCondition == false);
                         if (!skipElement)
                         {
-                            if (isBindElExist)
-                            {
-                                foreach (var objExpress in attributeExpressList)
-                                {
-                                    if (objExpress.TryEvaluate(contextStack, out var objExpressResult))
-                                        contextStack.Set(objExpress.TargetName, objExpressResult);
-                                }
-                            }
-                            foreach (var forSiblingNode in RenderNode(element, contextStack, false, parentNode))
-                            {
-                                nodeList.AddLast(forSiblingNode);
-                            }
+                            nodeList.AddLast(RenderTree(element, contextStack, parentNode));
                         }
-                        contextStack.LeaveScope();
                     }
+                    contextStack.LeaveScope();
                 }
             }
             else
             {
-                bool skipElement = (isIfElExist
+                bool skipElement = (ifExpress != null
                     && ifExpress.TryEvaluate(contextStack, out var ifCondition)
                     && ifCondition == false);
 
                 if (!skipElement)
                 {
                     contextStack.EnterScope();
-                    if (isBindElExist)
-                    {
-                        foreach (var objExpress in attributeExpressList)
-                        {
-                            if (objExpress.TryEvaluate(contextStack, out var objExpressResult))
-                                contextStack.Set(objExpress.TargetName, objExpressResult);
-                        }
-                    }
-                    var node = RenderTree(element, contextStack);
+                    var node = RenderTree(element, contextStack, parentNode);
                     nodeList.AddLast(node);
                     contextStack.LeaveScope();
                 }
@@ -484,31 +469,47 @@ namespace Rockyfi
             // bind express <=> node
             if (nodeList.Count == 0)
             {
-                BindIfExpressWithNode(element, isIfElExist ? ifExpress : null, null, parentNode);
-                BindForExpressWithNode(element, (processForEL && isForElExist) ? forExpress : null, null, parentNode);
+                BindIfExpressWithNode(element, ifExpress, null, parentNode);
+                BindForExpressWithNode(element, forExpress, null, parentNode);
             }
             else
             {
                 foreach (var node in nodeList)
                 {
-                    BindIfExpressWithNode(element, isIfElExist ? ifExpress : null, node, parentNode);
-                    BindForExpressWithNode(element, (processForEL && isForElExist) ? forExpress : null, node, parentNode);
-                    foreach (var objExpress in attributeExpressList)
-                    {
-                        BindAttributeExpressWithNode(element, objExpress, node, parentNode);
-                    }
+                    BindIfExpressWithNode(element, ifExpress, node, parentNode);
+                    BindForExpressWithNode(element, forExpress, node, parentNode);
                 }
             }
             return nodeList;
         }
 
-        Node RenderTree(XmlNode element, ContextStack contextStack)
+        Node RenderTree(XmlNode element, ContextStack contextStack, Node parentNode)
         {
             var treeRootNode = Rockyfi.CreateDefaultNode();
+
+            // process el-bind
+            var attributeExpressList = RenderNodeProcessBindEL(element, contextStack);
+            foreach (var objExpress in attributeExpressList)
+            {
+                BindAttributeExpressWithNode(element, objExpress, treeRootNode, parentNode);
+                if (objExpress.TryEvaluate(contextStack, out var objExpressResult))
+                    contextStack.Set(objExpress.TargetName, objExpressResult);
+            }
+
+            // process style
             RenderNodeProcessStyle(treeRootNode, element, contextStack);
+
+            // process inner text
+            if (RenderNodeProcessInnerText(element, contextStack, out var textDataBindExpress))
+            {
+                GetNodeCustomAttribute(treeRootNode).textDataBindExpress = textDataBindExpress;
+                BindTextExpressWithNode(element, textDataBindExpress, treeRootNode, parentNode);
+            }
+
+            // render children
             foreach (XmlNode ele in element.ChildNodes)
             {
-                foreach (var childNode in RenderNode(ele, contextStack, true, treeRootNode))
+                foreach (var childNode in RenderNode(ele, contextStack, treeRootNode))
                 {
                     treeRootNode.AddChild(childNode);
                 }
@@ -573,15 +574,7 @@ namespace Rockyfi
                 if (rootElement.Attributes.GetNamedItem(ForELAttributeName) != null)
                     throw new Exception("root element should not contains 'el-if' attribute !");
 
-
-                foreach (XmlAttribute attr in rootElement.Attributes)
-                {
-                    if (BindELAttributePrefix.Equals(attr.Prefix))
-                        throw new Exception("root element should not contains 'el-bind' attribute ! --> " 
-                            + attr.Name + " = " + attr.Value);
-                }
-
-                root = RenderTree(rootElement, new ContextStack(contextDictionary));
+                root = RenderTree(rootElement, new ContextStack(contextDictionary), null);
                 Console.WriteLine(NodePrinter.PrintToString(root));
             }
         }
