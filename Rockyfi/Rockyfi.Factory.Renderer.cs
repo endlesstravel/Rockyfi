@@ -590,12 +590,7 @@ namespace Rockyfi
                 }
                 root = RenderTree(rootElement, new ContextStack(dataBindContext));
 
-
-                var writer = new System.Text.StringBuilder();
-                var printer = new NodePrinter(writer, true, true, true);
-                printer.Print(root);
-                var got = writer.ToString();
-                Console.WriteLine(got);
+                Console.WriteLine(NodePrinter.PrintToString(root));
             }
         }
     }

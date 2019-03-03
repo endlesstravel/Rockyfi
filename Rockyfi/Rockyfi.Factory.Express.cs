@@ -270,6 +270,76 @@ namespace Rockyfi
                     || value is decimal;
         }
 
+
+        /// <summary>
+        /// xxxxx {{ xxxxx }} xxxxxx yyyyyy
+        /// </summary>
+        class TextDataBindExpress
+        {
+            private TextDataBindExpress(LinkedList<TextToken> list) { this.tokensList = list; }
+            readonly LinkedList<TextToken> tokensList;
+            struct TextToken
+            {
+                bool isText;
+                ObjectDataBindExpress express;
+                string text;
+                public TextToken(string text)
+                {
+                    isText = true;
+                    this.express = null;
+                    this.text = text;
+                }
+                public TextToken(ObjectDataBindExpress express)
+                {
+                    isText = true;
+                    this.express = express;
+                    this.text = null;
+                }
+            }
+
+            struct BracesPos
+            {
+                public readonly int index;
+                public readonly int lenght;
+                public readonly string value;
+                public BracesPos(int p, int l, string v) { this.index = p; this.lenght = l;  value = v; }
+            }
+
+            // TODO: improve performance without regex
+            static Regex bindTextRegex = new Regex(@"(?<!\{)\{\{\s*(([_a-zA-Z][_\w]*)(\.([_a-zA-Z][_\w]*))*)\s*\}\}(?!\})");
+            static LinkedList<BracesPos> MatchIndex(string input)
+            {
+                var list = new LinkedList<BracesPos>();
+                var m = bindTextRegex.Match(input);
+                while (m.Success)
+                {
+                    list.AddLast(new BracesPos(m.Index, m.Length, m.Groups[2].Value));
+                    m = m.NextMatch();
+                }
+                return list;
+            }
+            static TextDataBindExpress Parser(string text)
+            {
+                LinkedList<TextToken> tokensList = new LinkedList<TextToken>();
+                int index = 0;
+                foreach (var pos in MatchIndex(text))
+                {
+                    tokensList.AddLast(new TextToken(text.Substring(index, pos.index - index)));
+                    if (ObjectDataBindExpress.TryParse(pos.value, out var express))
+                    {
+                        tokensList.AddLast(new TextToken(express));
+                    }
+                    index = pos.index + pos.lenght;
+                }
+                if (index < text.Length)
+                    tokensList.AddLast(new TextToken(text.Substring(index, text.Length - index)));
+
+                var tdbe = new TextDataBindExpress(tokensList);
+                return tdbe;
+            }
+        }
+
+
         /// <summary>
         /// item as id
         /// item.color as color
@@ -278,6 +348,7 @@ namespace Rockyfi
         {
             string express;
             public string TargetName { get; private set; }
+            public string TargetKey => objectExpress.TargetKey;
             ObjectDataBindExpress objectExpress = null;
 
             public static bool TryParse(string express, string targetName, out AttributeDataBindExpress attributeExpress)
@@ -323,7 +394,7 @@ namespace Rockyfi
                 get; private set;
             }
 
-            public string TargetKeys => IsEffectedByContext && value != null ? (value as string[])[0] : null;
+            public string TargetKey => IsEffectedByContext && value != null ? (value as string[])[0] : null;
             public bool IsEffectedByContext => type == ObjectDataBindType.ObjectSymbol;
 
             /// <summary>
@@ -449,17 +520,17 @@ namespace Rockyfi
                 {
                     if (isJustObjectExpress)
                     {
-                        return leftExpress.TargetKeys != null ? new string[] { leftExpress.TargetKeys } : null;
+                        return leftExpress.TargetKey != null ? new string[] { leftExpress.TargetKey } : null;
                     }
-                    else if (leftExpress.TargetKeys != null && rightExpress.TargetKeys == null)
+                    else if (leftExpress.TargetKey != null && rightExpress.TargetKey == null)
                     {
-                        return leftExpress.TargetKeys != null ? new string[] { leftExpress.TargetKeys } : null;
+                        return leftExpress.TargetKey != null ? new string[] { leftExpress.TargetKey } : null;
                     }
-                    else if (leftExpress.TargetKeys == null && rightExpress.TargetKeys != null)
+                    else if (leftExpress.TargetKey == null && rightExpress.TargetKey != null)
                     {
-                        return rightExpress.TargetKeys != null ? new string[] { rightExpress.TargetKeys } : null;
+                        return rightExpress.TargetKey != null ? new string[] { rightExpress.TargetKey } : null;
                     }
-                    return new string[] { leftExpress.TargetKeys, rightExpress.TargetKeys };
+                    return new string[] { leftExpress.TargetKey, rightExpress.TargetKey };
                 }
             }
 

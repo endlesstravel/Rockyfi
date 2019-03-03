@@ -7,6 +7,14 @@ namespace Rockyfi
 {
     public class NodePrinter
     {
+        public static string PrintToString(Node root)
+        {
+            var writer = new StringBuilder();
+            var printer = new NodePrinter(writer, true, true, true);
+            printer.Print(root);
+            return writer.ToString();
+        }
+
         public NodePrinter(StringBuilder writer, bool PrintOptionsLayout,bool PrintOptionsStyle,bool PrintOptionsChildren)
         {
             this.writer = writer;
