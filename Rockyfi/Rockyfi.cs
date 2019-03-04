@@ -3,6 +3,11 @@ namespace Rockyfi
 {
     public partial class Node
     {
+        public void MarkAsDirty()
+        {
+            Rockyfi.nodeMarkDirtyInternal(this);
+        }
+
         #region Style
         // StyleSetWidth sets width
         public void StyleSetWidth(float width) {

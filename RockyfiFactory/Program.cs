@@ -7,7 +7,7 @@ namespace FlexCs
 {
     class Program : Scene
     {
-        Rockyfi.Factory factory;
+        Rockyfi.Factory factory = new Rockyfi.Factory();
 
         public override void Load()
         {
@@ -22,7 +22,6 @@ namespace FlexCs
     </div>
 </div>
 ";
-            factory = new Rockyfi.Factory();
             factory.LoadFromString(tmpXML3, new Dictionary<string, object>()
             {
                 { "styleObj", this},
@@ -52,6 +51,7 @@ namespace FlexCs
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, h + y - Graphics.GetFont().GetHeight());
                 Graphics.Printf(text, x, y, w, AlignMode.Center);
             });
+
         }
 
         static void Main(string[] args)

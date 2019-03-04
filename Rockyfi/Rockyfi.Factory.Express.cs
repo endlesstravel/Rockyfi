@@ -276,8 +276,19 @@ namespace Rockyfi
         /// </summary>
         internal class TextDataBindExpress
         {
-            private TextDataBindExpress(LinkedList<TextToken> list) { this.tokensList = list; }
+            private TextDataBindExpress(LinkedList<TextToken> list)
+            {
+                this.tokensList = list;
+                TargetKeys = new List<string>();
+
+                foreach (var tk in list)
+                {
+                    if (!tk.IsText && tk.Express.TargetKey != null)
+                        TargetKeys.Add(tk.Express.TargetKey);
+                }
+            }
             readonly LinkedList<TextToken> tokensList;
+            internal readonly List<string> TargetKeys;
             struct TextToken
             {
                 internal readonly bool IsText;
@@ -361,13 +372,20 @@ namespace Rockyfi
         }
 
         /// <summary>
-        /// item as id
-        /// item.color as color
+        /// el-bind:width="item.width"
         /// </summary>
         internal class AttributeDataBindExpress
         {
             string express;
+
+            /// <summary>
+            /// el-bind:xxxx="yyy.width" ---> xxxx
+            /// </summary>
             public string TargetName { get; private set; }
+
+            /// <summary>
+            /// el-bind:xxxx="yyy.width" ---> yyyy
+            /// </summary>
             public string TargetKey => objectExpress.TargetKey;
             ObjectDataBindExpress objectExpress = null;
 
@@ -480,7 +498,11 @@ namespace Rockyfi
 
             public string IteratorName { get; private set; }
             public string[] DataSourceName => dataSourceName;
-            public string TargetKeys => dataSourceName != null ? dataSourceName[0] : null;
+
+            /// <summary>
+            /// el-for="list.box" ---> list
+            /// </summary>
+            public string TargetKey => dataSourceName != null ? dataSourceName[0] : null;
             public bool IsEffectedByContext => true;
 
             string[] dataSourceName;

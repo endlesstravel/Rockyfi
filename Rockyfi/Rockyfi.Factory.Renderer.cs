@@ -124,6 +124,7 @@ namespace Rockyfi
 
         static Regex styleValueRegex = new Regex(@"-?(\d*\.)?(\d+)(px|%)");
 
+        ContextStack contextStack;
         XmlDocument xmlDocument;
         Node root;
 
@@ -436,6 +437,7 @@ namespace Rockyfi
             {
                 if (forExpress.TryEvaluate(contextStack, out var forList))
                 {
+                    GetNodeCustomAttribute(parentNode).forExpressCurrentValue = forList;
                     contextStack.EnterScope();
                     foreach (object forContext in forList)
                     {
@@ -483,6 +485,7 @@ namespace Rockyfi
             return nodeList;
         }
 
+
         Node RenderTree(XmlNode element, ContextStack contextStack, Node parentNode)
         {
             var treeRootNode = Rockyfi.CreateDefaultNode();
@@ -499,7 +502,6 @@ namespace Rockyfi
             // process style
             RenderNodeProcessStyle(treeRootNode, element, contextStack);
 
-
             // render children
             foreach (XmlNode ele in element.ChildNodes)
             {
@@ -507,6 +509,7 @@ namespace Rockyfi
                 {
                     foreach (var childNode in RenderNode(ele, contextStack, treeRootNode))
                     {
+                        AddRangeElementList(ele, childNode, parentNode);
                         treeRootNode.AddChild(childNode);
                     }
                 }
@@ -565,6 +568,7 @@ namespace Rockyfi
         {
             LoadFromString(xml, null);
         }
+
         public void LoadFromString(string xml, Dictionary<string, object> contextDictionary)
         {
             using (StringReader stringReader = new StringReader(xml))
@@ -589,9 +593,17 @@ namespace Rockyfi
                 if (rootElement.Attributes.GetNamedItem(ForELAttributeName) != null)
                     throw new Exception("root element should not contains 'el-if' attribute !");
 
-                root = RenderTree(rootElement, new ContextStack(contextDictionary), null);
-                Console.WriteLine(NodePrinter.PrintToString(root));
+                contextStack = new ContextStack(contextDictionary);
+                root = RenderTree(rootElement, contextStack, null);
+
+                //this.contextDictionary = contextDictionary;
+                // Console.WriteLine(NodePrinter.PrintToString(root));
             }
+        }
+
+        public void SetData()
+        {
+
         }
     }
 }
