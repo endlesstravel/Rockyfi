@@ -7,7 +7,7 @@ namespace Rockyfi
     public partial class Factory
     {
         #region DataBind
-        internal class VirtualNode
+        internal class TemplateRendererNode
         {
             internal Node node;
             internal IfDataBindExpress ifExpress = null;
@@ -17,24 +17,20 @@ namespace Rockyfi
             internal TextDataBindExpress textDataBindExpress = null;
             internal string textDataBindExpressCurrentValue = null;
             internal readonly LinkedList<AttributeDataBindExpress> attributeDataBindExpressList = new LinkedList<AttributeDataBindExpress>();
-            internal readonly List<VirtualNode> nodes = new List<VirtualNode>();
+            internal readonly Style nodeStyle = new Style();
+            internal readonly List<TemplateRendererNode> Children = new List<TemplateRendererNode>();
         }
 
-        internal class NodeAttribute
+        internal class RuntimeNodeAttribute
         {
             internal Node node;
-            internal XmlNode element; // where you come from ?
-            internal bool IsDirty = true; // is this node need to re-calculate/render ?
-            internal IfDataBindExpress ifExpress = null;
+            internal TemplateRendererNode templateRendererNode; // where you come from ?
+
+
             internal bool ifExpressCachedValue = false;
-            internal ForDataBindExpress forExpress = null;
             internal IEnumerable<object> forExpressCurrentValue = null;
-            internal TextDataBindExpress textDataBindExpress = null;
             internal string textDataBindExpressCurrentValue = null;
-            internal readonly LinkedList<AttributeDataBindExpress> attributeDataBindExpressList = new LinkedList<AttributeDataBindExpress>();
             internal readonly Dictionary<string, object> attributes = new Dictionary<string, object>();
-            internal readonly List<Node> nodes = new List<Node>();
-            internal readonly List<NodeElemetRange> childernNodeElemetRangeList = new List<NodeElemetRange>();
         }
 
         internal class NodeElemetRange
@@ -57,12 +53,12 @@ namespace Rockyfi
             GetNodeCustomAttribute(parentNode).childernNodeElemetRangeList.Add(rr);
         }
 
-        NodeAttribute GetNodeCustomAttribute(Node node)
+        RuntimeNodeAttribute GetNodeCustomAttribute(Node node)
         {
-            NodeAttribute attr = node.Context as NodeAttribute;
+            RuntimeNodeAttribute attr = node.Context as RuntimeNodeAttribute;
             if (attr == null)
             {
-                attr = new NodeAttribute();
+                attr = new RuntimeNodeAttribute();
                 attr.node = node;
                 node.Context = attr;
             }
@@ -73,10 +69,10 @@ namespace Rockyfi
         {
 
         }
-        readonly Dictionary<string, LinkedList<NodeAttribute>> textEffectBind = new Dictionary<string, LinkedList<NodeAttribute>>();
-        readonly Dictionary<string, LinkedList<NodeAttribute>> attributeEffectBind = new Dictionary<string, LinkedList<NodeAttribute>>();
-        readonly Dictionary<string, LinkedList<NodeAttribute>> ifExpressEffectBind = new Dictionary<string, LinkedList<NodeAttribute>>();
-        readonly Dictionary<string, LinkedList<NodeAttribute>> forExpressEffectBind = new Dictionary<string, LinkedList<NodeAttribute>>();
+        readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> textEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
+        readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> attributeEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
+        readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> ifExpressEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
+        readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> forExpressEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
 
         ///// <summary>
         ///// insert child
@@ -153,7 +149,7 @@ namespace Rockyfi
             // TODO:
             if (!forExpressEffectBind.TryGetValue(express.TargetKey, out var list))
             {
-                list = new LinkedList<NodeAttribute>();
+                list = new LinkedList<RuntimeNodeAttribute>();
                 forExpressEffectBind.Add(express.TargetKey, list);
             }
 
@@ -170,7 +166,7 @@ namespace Rockyfi
             // TODO:
             if (!attributeEffectBind.TryGetValue(express.TargetKey, out var list))
             {
-                list = new LinkedList<NodeAttribute>();
+                list = new LinkedList<RuntimeNodeAttribute>();
                 forExpressEffectBind.Add(express.TargetKey, list);
             }
 
@@ -193,7 +189,7 @@ namespace Rockyfi
 
                 if (!attributeEffectBind.TryGetValue(tkey, out var list))
                 {
-                    list = new LinkedList<NodeAttribute>();
+                    list = new LinkedList<RuntimeNodeAttribute>();
                     forExpressEffectBind.Add(tkey, list);
                 }
 
@@ -212,10 +208,10 @@ namespace Rockyfi
             if (key == null)
                 return;
 
-            LinkedList<NodeAttribute> nodeAttributeList;
+            LinkedList<RuntimeNodeAttribute> nodeAttributeList;
             if (attributeEffectBind.TryGetValue(key, out nodeAttributeList))
             {
-                foreach (NodeAttribute nodeAttribute in nodeAttributeList)
+                foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
                 {
                     foreach (var attrExp in nodeAttribute.attributeDataBindExpressList)
                     {
@@ -223,7 +219,7 @@ namespace Rockyfi
                         {
                             object result = attrExp.TryEvaluate(contextStack, out object value) ? value : null;
                             nodeAttribute.attributes[key] = result;
-                            RenderNodeProcessStyleAttribute(nodeAttribute.node, attrExp.TargetName, value != null ? value.ToString() : "");
+                            ProcessNodeStyle(nodeAttribute.node, attrExp.TargetName, value != null ? value.ToString() : "");
                             return;
                         }
                     }
@@ -231,14 +227,14 @@ namespace Rockyfi
             }
             else if (textEffectBind.TryGetValue(key, out nodeAttributeList))
             {
-                foreach (NodeAttribute nodeAttribute in nodeAttributeList)
+                foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
                 {
                     nodeAttribute.textDataBindExpressCurrentValue = nodeAttribute.textDataBindExpress.Evaluate(contextStack);
                 }
             }
             else if (forExpressEffectBind.TryGetValue(key, out nodeAttributeList))
             {
-                foreach (NodeAttribute childNodeAttribute in nodeAttributeList)
+                foreach (RuntimeNodeAttribute childNodeAttribute in nodeAttributeList)
                 {
                     // remove old child
                     var parentNode = childNodeAttribute.node.Parent;

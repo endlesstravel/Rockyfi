@@ -127,6 +127,7 @@ namespace Rockyfi
         ContextStack contextStack;
         XmlDocument xmlDocument;
         Node root;
+        TemplateRendererNode templateRendererRoot;
 
         Value ParseValueFromString(string text)
         {
@@ -160,6 +161,12 @@ namespace Rockyfi
 
             return res;
         }
+
+        /// <summary>
+        /// margin="2px" | margin="12px 13px" | margin="12px 13px 1px" | margin="1px 2px 3px 4px"
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         Value[] ParseFourValueFromString(string text)
         {
             // Edge.Left  = 0;
@@ -226,7 +233,9 @@ namespace Rockyfi
 
         }
 
-        void RenderNodeProcessStyleAttribute(Node node, string attrKey, string attrValue)
+
+        #region render virtual node to real node
+        void ProcessNodeStyle(Node node, string attrKey, string attrValue)
         {
             switch (attrKey)
             {
@@ -349,105 +358,22 @@ namespace Rockyfi
                     break;
             }
         }
-
-        void RenderNodeProcessStyle(Node node, XmlNode ele, ContextStack contextStack)
-        {
-            var bindedAttr = new LinkedList<XmlAttribute>();
-            foreach (XmlAttribute attr in ele.Attributes)
-            {
-                if (BindELAttributePrefix.Equals(attr.Prefix))
-                {
-                    bindedAttr.AddLast(attr);
-                     continue;
-                }
-
-                string attrKey = attr.Name;
-                string attrValue = attr.Value;
-                RenderNodeProcessStyleAttribute(node, attrKey, attrValue);
-                GetNodeCustomAttribute(node).attributes[attrKey] = attrValue;
-            }
-
-            foreach (XmlAttribute attr in bindedAttr)
-            {
-                string attrKey = attr.LocalName;
-                if (contextStack.TryGet(attrKey, out var bindContext))
-                {
-                    GetNodeCustomAttribute(node).attributes[attrKey] = bindContext;
-                }
-                RenderNodeProcessStyleAttribute(node, attrKey, (bindContext != null) ? bindContext.ToString() : "");
-            }
-        }
-
-        bool RenderNodeProcessInnerText(XmlNode element, ContextStack contextStack, out TextDataBindExpress textDataBindExpress)
-        {
-            return TextDataBindExpress.TryParse(element.InnerText, out textDataBindExpress);
-        }
-
-        ForDataBindExpress RenderNodeProcessForEL(XmlNode element, ContextStack contextStack)
-        {
-            foreach (XmlAttribute attr in element.Attributes)
-            {
-                if (ForELAttributeName.Equals(attr.Name))
-                {
-                    if (ForDataBindExpress.TryParse(attr.Value, out var forExpress))
-                        return forExpress;
-
-                    return null;
-                }
-            }
-            return null;
-        }
-
-        IfDataBindExpress RenderNodeProcessIfEL(XmlNode element, ContextStack contextStack)
-        {
-            foreach (XmlAttribute attr in element.Attributes)
-            {
-                if (IfELAttributeName.Equals(attr.Name)) // process el-if
-                {
-                    if (IfDataBindExpress.TryParse(attr.Value, out var ifExpress))
-                        return ifExpress;
-                    return null;
-                }
-            }
-            return null;
-        }
-
-        LinkedList<AttributeDataBindExpress> RenderNodeProcessBindEL(XmlNode element, ContextStack contextStack)
-        {
-            var objectExpressesList = new LinkedList<AttributeDataBindExpress>();
-            foreach (XmlAttribute attr in element.Attributes)
-            {
-                if (BindELAttributePrefix.Equals(attr.Prefix))
-                {
-                    if (AttributeDataBindExpress.TryParse(attr.Value, attr.LocalName, out var bindExpress))
-                    {
-                        objectExpressesList.AddLast(bindExpress);
-                    }
-                }
-            }
-            return objectExpressesList;
-        }
-
-        LinkedList<Node> RenderNode(XmlNode element, ContextStack contextStack, Node parentNode)
+        LinkedList<Node> TemplateRendererNodeExpand(TemplateRendererNode vnode, ContextStack contextStack)
         {
             LinkedList<Node> nodeList = new LinkedList<Node>();
-            IfDataBindExpress ifExpress = RenderNodeProcessIfEL(element, contextStack);
-            ForDataBindExpress forExpress = RenderNodeProcessForEL(element, contextStack);
-            if (forExpress != null) // expand with for list
+            if (vnode.forExpress != null)
             {
-                if (forExpress.TryEvaluate(contextStack, out var forList))
+                if (vnode.forExpress.TryEvaluate(contextStack, out var forList))
                 {
-                    GetNodeCustomAttribute(parentNode).forExpressCurrentValue = forList;
                     contextStack.EnterScope();
                     foreach (object forContext in forList)
                     {
-                        contextStack.Set(forExpress.IteratorName, forContext);
-                        bool skipElement = (ifExpress != null
-                            && ifExpress.TryEvaluate(contextStack, out var ifCondition)
-                            && ifCondition == false);
-                        if (!skipElement)
+                        contextStack.Set(vnode.forExpress.IteratorName, forContext);
+                        if (!(vnode.ifExpress != null
+                            && vnode.ifExpress.TryEvaluate(contextStack, out var ifCondition)
+                            && ifCondition == false))
                         {
-                            nodeList.AddLast(RenderTree(element, contextStack, parentNode));
+                            nodeList.AddLast(TemplateRendererNodeRender(vnode, contextStack));
                         }
                     }
                     contextStack.LeaveScope();
@@ -455,83 +381,235 @@ namespace Rockyfi
             }
             else
             {
-                bool skipElement = (ifExpress != null
-                    && ifExpress.TryEvaluate(contextStack, out var ifCondition)
-                    && ifCondition == false);
-
-                if (!skipElement)
+                contextStack.EnterScope();
+                if (!(vnode.ifExpress != null
+                    && vnode.ifExpress.TryEvaluate(contextStack, out var ifCondition)
+                    && ifCondition == false))
                 {
-                    contextStack.EnterScope();
-                    var node = RenderTree(element, contextStack, parentNode);
-                    nodeList.AddLast(node);
-                    contextStack.LeaveScope();
+                    nodeList.AddLast(TemplateRendererNodeRender(vnode, contextStack));
                 }
+                contextStack.LeaveScope();
             }
 
-            // bind express <=> node
-            if (nodeList.Count == 0)
-            {
-                BindIfExpressWithNode(element, ifExpress, null, parentNode);
-                BindForExpressWithNode(element, forExpress, null, parentNode);
-            }
-            else
-            {
-                foreach (var node in nodeList)
-                {
-                    BindIfExpressWithNode(element, ifExpress, node, parentNode);
-                    BindForExpressWithNode(element, forExpress, node, parentNode);
-                }
-            }
             return nodeList;
         }
-
-
-        Node RenderTree(XmlNode element, ContextStack contextStack, Node parentNode)
+        Node TemplateRendererNodeRender(TemplateRendererNode vnode, ContextStack contextStack)
         {
-            var treeRootNode = Rockyfi.CreateDefaultNode();
+            Node node = Rockyfi.CreateDefaultNode();
 
-            // process el-bind
-            var attributeExpressList = RenderNodeProcessBindEL(element, contextStack);
-            foreach (var objExpress in attributeExpressList)
+            // copy style
+            Style.Copy(node.nodeStyle, vnode.nodeStyle);
+
+            // process binded style
+            foreach (var attr in vnode.attributeDataBindExpressList)
             {
-                BindAttributeExpressWithNode(element, objExpress, treeRootNode, parentNode);
-                if (objExpress.TryEvaluate(contextStack, out var objExpressResult))
-                    contextStack.Set(objExpress.TargetName, objExpressResult);
+                var ca = GetNodeCustomAttribute(node);
+                if (attr.TryEvaluate(contextStack, out var attrValue))
+                {
+                    ProcessNodeStyle(node, attr.TargetName, attrValue != null ? attrValue.ToString() : "");
+                    ca.attributes.Add(attr.TargetKey, attrValue);
+                }
+                else
+                {
+                    ca.attributes.Add(attr.TargetKey, null);
+                }
             }
 
-            // process style
-            RenderNodeProcessStyle(treeRootNode, element, contextStack);
+            // render children
+            foreach (var vchild in vnode.Children)
+            {
+                foreach (var child in TemplateRendererNodeExpand(vchild, contextStack))
+                {
+                    node.AddChild(child);
+                }
+            }
 
+            return node;
+        }
+        #endregion
+
+        #region render xml to virtual node
+        void ProcessTemplateStyle(Style style, string attrKey, string attrValue)
+        {
+            switch (attrKey)
+            {
+                case "direction":
+                    if (Rockyfi.StringToDirection(attrValue, out Direction direction))
+                    {
+                        style.Direction = direction;
+                    }
+                    break;
+                case "flex-direction":
+                    if (Rockyfi.StringToFlexDirection(attrValue, out FlexDirection flexDirection))
+                    {
+                        style.FlexDirection = flexDirection;
+                    }
+                    break;
+                case "justify-content":
+                    if (Rockyfi.StringToJustify(attrValue, out Justify justifyContent))
+                    {
+                        style.JustifyContent = justifyContent;
+                    }
+                    break;
+                case "align-content":
+                    if (Rockyfi.StringToAlign(attrValue, out Align alignContent))
+                    {
+                        style.AlignContent = alignContent;
+                    }
+                    break;
+                case "align-items":
+                    if (Rockyfi.StringToAlign(attrValue, out Align alignItem))
+                    {
+                        style.AlignItems = alignItem;
+                    }
+                    break;
+                case "align-self":
+                    if (Rockyfi.StringToAlign(attrValue, out Align alignSelf))
+                    {
+                        style.AlignSelf = alignSelf;
+                    }
+                    break;
+                case "flex-wrap":
+                    if (Rockyfi.StringToWrap(attrValue, out Wrap flexWrap))
+                    {
+                        style.FlexWrap = flexWrap;
+                    }
+                    break;
+                case "overflow":
+                    if (Rockyfi.StringToOverflow(attrValue, out Overflow overflow))
+                    {
+                        style.Overflow = overflow;
+                    }
+                    break;
+                case "display":
+                    if (Rockyfi.StringToDisplay(attrValue, out Display display))
+                    {
+                        style.Display = display;
+                    }
+                    break;
+                case "flex":
+                    if (float.TryParse(attrValue, out float flex))
+                    {
+                        style.Flex = flex;
+                    }
+                    break;
+                case "flex-grow":
+                    if (float.TryParse(attrValue, out float flexGrow))
+                    {
+                        style.FlexGrow = flexGrow;
+                    }
+                    break;
+                case "flex-shrink":
+                    if (float.TryParse(attrValue, out float flexShrink))
+                    {
+                        style.FlexShrink = flexShrink;
+                    }
+                    break;
+                case "flex-basis":
+                    style.FlexBasis = ParseValueFromString(attrValue);
+                    break;
+                case "position":
+                    if (Rockyfi.StringToPositionType(attrValue, out PositionType position))
+                    {
+                        style.PositionType = position;
+                    }
+                    break;
+                case "width":
+                    style.Dimensions[(int)Dimension.Width] = ParseValueFromString(attrValue);
+                    break;
+                case "height":
+                    style.Dimensions[(int)Dimension.Height] = ParseValueFromString(attrValue);
+                    break;
+                case "min-width":
+                    style.MinDimensions[(int)Dimension.Width] = ParseValueFromString(attrValue);
+                    break;
+                case "min-height":
+                    style.MinDimensions[(int)Dimension.Height] = ParseValueFromString(attrValue);
+                    break;
+                case "max-width":
+                    style.MaxDimensions[(int)Dimension.Width] = ParseValueFromString(attrValue);
+                    break;
+                case "max-height":
+                    style.MaxDimensions[(int)Dimension.Height] = ParseValueFromString(attrValue);
+                    break;
+                default:
+                    // parse [margin|padding|border]-[Edgexxxx]
+                    if (ParseBreakWork(attrKey, out string head, out string tail))
+                    {
+                        Value[] valuesToSet = null;
+                        switch (head)
+                        {
+                            case "margin": valuesToSet = style.Margin; break;
+                            case "padding": valuesToSet = style.Padding; break;
+                            case "border": valuesToSet = style.Border; break;
+                        }
+                        if (valuesToSet == null)
+                            break;
+
+                        if (tail == "")
+                        {
+                            var valueArray = ParseFourValueFromString(attrValue);
+                            if (valueArray != null)
+                            {
+                                for (int i = 0; i < valueArray.Length; i++)
+                                {
+                                    valuesToSet[i] = valueArray[i];
+                                }
+                            }
+                        }
+                        else if (Rockyfi.StringToEdge(tail, out Edge edge))
+                        {
+                            valuesToSet[(int)edge] = ParseValueFromString(attrValue);
+                        }
+                    }
+                    break;
+            }
+        }
+        TemplateRendererNode ConvertXmlTreeToRendererTree(XmlNode element)
+        {
+            TemplateRendererNode renderTreeNode = new TemplateRendererNode();
+            foreach (XmlAttribute attr in element.Attributes)
+            {
+                if (ForELAttributeName.Equals(attr.Name)) // process el-for
+                {
+                    renderTreeNode.forExpress = ForDataBindExpress.Parse(attr.Value);
+                }
+                else if (IfELAttributeName.Equals(attr.Name)) // process el-if
+                {
+                    renderTreeNode.ifExpress = IfDataBindExpress.Parse(attr.Value);
+                }
+                else if (BindELAttributePrefix.Equals(attr.Prefix)) // process el-bind:width="item.width"
+                {
+                    var attrExpress = AttributeDataBindExpress.Parse(attr.Value, attr.LocalName);
+                    if (attrExpress != null)
+                    {
+                        renderTreeNode.attributeDataBindExpressList.AddLast(attrExpress);
+                    }
+                }
+                else
+                {
+                    // try process style
+                    ProcessTemplateStyle(renderTreeNode.nodeStyle, attr.Name, attr.Value);
+                }
+            }
+
+            // process children
             // render children
             foreach (XmlNode ele in element.ChildNodes)
             {
                 if (XmlNodeType.Element == ele.NodeType)
                 {
-                    foreach (var childNode in RenderNode(ele, contextStack, treeRootNode))
-                    {
-                        AddRangeElementList(ele, childNode, parentNode);
-                        treeRootNode.AddChild(childNode);
-                    }
+                    renderTreeNode.Children.Add(ConvertXmlTreeToRendererTree(ele));
                 }
                 else if (XmlNodeType.Text == ele.NodeType)
                 {
-                    // process inner text
-                    if (RenderNodeProcessInnerText(element, contextStack, out var textDataBindExpress))
-                    {
-                        var ca = GetNodeCustomAttribute(treeRootNode);
-                        ca.textDataBindExpress = textDataBindExpress;
-                        ca.textDataBindExpressCurrentValue = textDataBindExpress.Evaluate(contextStack).Trim();
-                        BindTextExpressWithNode(element, textDataBindExpress, treeRootNode, parentNode);
-                    }
-                    else
-                    {
-                        var ca = GetNodeCustomAttribute(treeRootNode);
-                        ca.textDataBindExpressCurrentValue = element.InnerText;
-                    }
+                    renderTreeNode.textDataBindExpress = TextDataBindExpress.Parse(ele.Value);
                 }
             }
-            return treeRootNode;
+
+            return renderTreeNode;
         }
+        #endregion
 
         public Direction Direction = Direction.LTR;
         public float MaxWidth = float.NaN;
@@ -593,8 +671,12 @@ namespace Rockyfi
                 if (rootElement.Attributes.GetNamedItem(ForELAttributeName) != null)
                     throw new Exception("root element should not contains 'el-if' attribute !");
 
+                // convert to tree
+                templateRendererRoot = ConvertXmlTreeToRendererTree(rootElement);
+
+                // start render
                 contextStack = new ContextStack(contextDictionary);
-                root = RenderTree(rootElement, contextStack, null);
+                root = TemplateRendererNodeRender(templateRendererRoot, contextStack);
 
                 //this.contextDictionary = contextDictionary;
                 // Console.WriteLine(NodePrinter.PrintToString(root));

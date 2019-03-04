@@ -329,31 +329,38 @@ namespace Rockyfi
                 }
                 return list;
             }
-            public static bool TryParse(string text, out TextDataBindExpress textDataBindExpress)
+
+            /// <summary>
+            /// fail return null
+            /// </summary>
+            /// <returns></returns>
+            public static TextDataBindExpress Parse(string text)
             {
                 LinkedList<TextToken> tokensList = new LinkedList<TextToken>();
                 var splitList = MatchIndex(text);
                 if (splitList.Count == 0)
                 {
-                    textDataBindExpress = null;
-                    return false;
+                    return null;
                 }
                 int index = 0;
                 foreach (var pos in splitList)
                 {
                     tokensList.AddLast(new TextToken(text.Substring(index, pos.index - index)));
-                    if (ObjectDataBindExpress.TryParse(pos.value, out var express))
+                    var objExpress = ObjectDataBindExpress.Parse(pos.value);
+                    if (objExpress != null)
                     {
-                        tokensList.AddLast(new TextToken(express));
+                        tokensList.AddLast(new TextToken(objExpress));
+                    }
+                    else
+                    {
+                        tokensList.AddLast(new TextToken($"{{{pos.value}}}"));
                     }
                     index = pos.index + pos.lenght;
                 }
                 if (index < text.Length)
                     tokensList.AddLast(new TextToken(text.Substring(index, text.Length - index)));
 
-
-                textDataBindExpress = new TextDataBindExpress(tokensList);
-                return true;
+                return new TextDataBindExpress(tokensList);
             }
 
             public string Evaluate(ContextStack contextStack)
@@ -389,16 +396,21 @@ namespace Rockyfi
             public string TargetKey => objectExpress.TargetKey;
             ObjectDataBindExpress objectExpress = null;
 
-            public static bool TryParse(string express, string targetName, out AttributeDataBindExpress attributeExpress)
-            {
-                attributeExpress = null;
-                if ("".Equals(targetName))
-                    return false;
 
-                attributeExpress = new AttributeDataBindExpress();
+            /// <summary>
+            /// fail return null
+            /// </summary>
+            /// <returns></returns>
+            public static AttributeDataBindExpress Parse(string express, string targetName)
+            {
+                if ("".Equals(targetName))
+                    return null;
+
+                var attributeExpress = new AttributeDataBindExpress();
                 attributeExpress.TargetName = targetName;
                 attributeExpress.express = express;
-                return ObjectDataBindExpress.TryParse(express, out attributeExpress.objectExpress);
+                attributeExpress.objectExpress = ObjectDataBindExpress.Parse(express);
+                return attributeExpress.objectExpress != null ? attributeExpress : null;
             }
 
             public bool TryEvaluate(ContextStack contextStack, out object result)
@@ -440,7 +452,7 @@ namespace Rockyfi
             /// </summary>
             /// <param name="express"></param>
             /// <returns></returns>
-            public static bool TryParse(string express, out ObjectDataBindExpress bindExpress)
+            public static ObjectDataBindExpress Parse(string express)
             {
                 express = express.Trim();
 
@@ -468,9 +480,9 @@ namespace Rockyfi
                     dboe.type = ObjectDataBindType.String;
                 }
 
-                bindExpress = dboe.type != ObjectDataBindType.Unknow ? dboe : null;
-                return dboe.type != ObjectDataBindType.Unknow;
+                return dboe.type != ObjectDataBindType.Unknow ? dboe : null;
             }
+
 
             public bool TryEvaluate(ContextStack contextStack, out object result)
             {
@@ -512,20 +524,20 @@ namespace Rockyfi
             /// </summary>
             /// <param name="express"></param>
             /// <returns></returns>
-            public static bool TryParse(string express, out ForDataBindExpress bindForExpress)
+            public static ForDataBindExpress Parse(string express)
             {
                 express = express.Trim();
                 Match match = forRegex.Match(express);
                 if (match.Success)
                 {
-                    var result = new ForDataBindExpress();
-                    result.IteratorName = match.Groups[1].Value.Trim();
-                    TryParseDotValue(match.Groups[2].Value.Trim(), out result.dataSourceName);
-                    bindForExpress = TryParseDotValue(match.Groups[2].Value.Trim(), out result.dataSourceName) ? result : null;
-                    return bindForExpress != null;
+                    var forExp = new ForDataBindExpress();
+                    forExp.IteratorName = match.Groups[1].Value.Trim();
+                    TryParseDotValue(match.Groups[2].Value.Trim(), out forExp.dataSourceName);
+
+                    if (TryParseDotValue(match.Groups[2].Value.Trim(), out forExp.dataSourceName))
+                        return forExp;
                 }
-                bindForExpress = null;
-                return false;
+                return null;
             }
 
             public bool TryEvaluate(ContextStack contextStack, out IEnumerable<object> result)
@@ -591,14 +603,16 @@ namespace Rockyfi
                     if (match.Groups.Count == 2)
                     {
                         isJustObjectExpress = true;
-                        return ObjectDataBindExpress.TryParse(match.Groups[1].Value, out leftExpress);
+                        leftExpress = ObjectDataBindExpress.Parse(match.Groups[1].Value);
+                        return leftExpress != null;
                     }
                     else if (match.Groups.Count == 5)
                     {
                         isJustObjectExpress = false;
                         isEqualOpt = "==".Equals(match.Groups[3].Value.Trim());
-                        return ObjectDataBindExpress.TryParse(match.Groups[1].Value, out leftExpress)
-                            && ObjectDataBindExpress.TryParse(match.Groups[4].Value, out rightExpress);
+                        leftExpress = ObjectDataBindExpress.Parse(match.Groups[1].Value);
+                        rightExpress = ObjectDataBindExpress.Parse(match.Groups[4].Value);
+                        return leftExpress != null && rightExpress != null;
                     }
                 }
 
@@ -610,13 +624,12 @@ namespace Rockyfi
             /// </summary>
             /// <param name="express"></param>
             /// <returns></returns>
-            public static bool TryParse(string exp, out IfDataBindExpress bindIfExpress)
+            public static IfDataBindExpress Parse(string exp)
             {
                 exp = exp.Trim();
                 var ifExp = new IfDataBindExpress();
                 ifExp.express = exp;
-                bindIfExpress = ifExp.ParseExpress(ifExp.express) ? ifExp : null;
-                return bindIfExpress != null;
+                return ifExp.ParseExpress(ifExp.express) ? ifExp : null;
             }
 
             public bool TryEvaluate(ContextStack contextStack, out bool result)
