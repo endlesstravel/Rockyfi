@@ -233,7 +233,6 @@ namespace Rockyfi
 
         }
 
-
         #region render virtual node to real node
         void ProcessNodeStyle(Node node, string attrKey, string attrValue)
         {
@@ -592,6 +591,8 @@ namespace Rockyfi
                     // try process style
                     ProcessTemplateStyle(renderTreeNode.nodeStyle, attr.Name, attr.Value);
                 }
+
+                renderTreeNode.attributes[attr.Name] = attr.Value;
             }
 
             // process children
@@ -621,7 +622,7 @@ namespace Rockyfi
             root.CalculateLayout(MaxWidth, MaxHeight, Direction);
         }
 
-        public delegate void DrawNodeFunc(float x, float y, float width, float height, string text, Dictionary<string, object> node);
+        public delegate void DrawNodeFunc(float x, float y, float width, float height, string text, Dictionary<string, object> attribute);
         public void Draw(DrawNodeFunc drawFunc)
         {
             Queue<Node> queue = new Queue<Node>();
@@ -630,11 +631,29 @@ namespace Rockyfi
             {
                 var node = queue.Dequeue();
                 var contextAttr = GetNodeRuntimeAttribute(node);
+
+                
+                var nc = node.Context; // protected node.Context
+
+                var attributes = new Dictionary<string, object>(contextAttr.attributes.Count 
+                    + contextAttr.templateRendererNode.attributes.Count);
+
+                foreach (var kv in contextAttr.templateRendererNode.attributes)
+                    attributes[kv.Key] = kv.Value;
+                foreach (var kv in contextAttr.attributes)
+                    attributes[kv.Key] = kv.Value;
+
                 drawFunc(node.LayoutGetLeft(), node.LayoutGetTop(),
                     node.LayoutGetWidth(), node.LayoutGetHeight(),
                     contextAttr.textDataBindExpressCurrentValue,
-                    contextAttr.attributes
+                    attributes // contextAttr.attributes ???
                     );
+                if (!(nc == null && node.Context == null) && nc != node.Context)
+                {
+                    throw new Exception("cant change node.Context !");
+                }
+                node.Context = nc; // protected node.Context
+
 
                 foreach (var child in node.Children)
                 {

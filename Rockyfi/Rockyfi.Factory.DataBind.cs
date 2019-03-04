@@ -15,6 +15,7 @@ namespace Rockyfi
             internal TextDataBindExpress textDataBindExpress = null;
             internal readonly LinkedList<AttributeDataBindExpress> attributeDataBindExpressList = new LinkedList<AttributeDataBindExpress>();
             internal readonly Style nodeStyle = new Style();
+            internal readonly Dictionary<string, string> attributes = new Dictionary<string, string>();
             internal readonly List<TemplateRendererNode> Children = new List<TemplateRendererNode>();
         }
 
