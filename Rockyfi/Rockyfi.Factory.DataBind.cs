@@ -11,58 +11,38 @@ namespace Rockyfi
         {
             internal Node node;
             internal IfDataBindExpress ifExpress = null;
-            internal bool ifExpressCachedValue = false;
             internal ForDataBindExpress forExpress = null;
-            internal IEnumerable<object> forExpressCurrentValue = null;
             internal TextDataBindExpress textDataBindExpress = null;
-            internal string textDataBindExpressCurrentValue = null;
             internal readonly LinkedList<AttributeDataBindExpress> attributeDataBindExpressList = new LinkedList<AttributeDataBindExpress>();
             internal readonly Style nodeStyle = new Style();
             internal readonly List<TemplateRendererNode> Children = new List<TemplateRendererNode>();
         }
 
-        internal class RuntimeNodeAttribute
+        class RuntimeNodeAttribute
         {
-            internal Node node;
-            internal TemplateRendererNode templateRendererNode; // where you come from ?
+            internal readonly TemplateRendererNode templateRendererNode; // where node come from
 
+            public RuntimeNodeAttribute(Node node, TemplateRendererNode templateRendererNode)
+            {
+                templateRendererNode.node = node;
+                this.templateRendererNode = templateRendererNode;
+            }
 
-            internal bool ifExpressCachedValue = false;
             internal IEnumerable<object> forExpressCurrentValue = null;
             internal string textDataBindExpressCurrentValue = null;
             internal readonly Dictionary<string, object> attributes = new Dictionary<string, object>();
         }
 
-        internal class NodeElemetRange
+        RuntimeNodeAttribute CreateRuntimeNodeAttribute(Node node, TemplateRendererNode templateRendererNode)
         {
-            internal XmlNode element; // where you come from ?
-            internal readonly LinkedList<Node> nodes = new LinkedList<Node>();
-        }
-        /// <summary>
-        /// for the for...element ...
-        /// 
-        /// </summary>
-        void AddRangeElementList(XmlNode element, Node node, Node parentNode)
-        {
-            var ca = GetNodeCustomAttribute(node);
-            ca.element = element;
-
-            NodeElemetRange rr = new NodeElemetRange();
-            rr.element = element;
-            rr.nodes.AddLast(node);
-            GetNodeCustomAttribute(parentNode).childernNodeElemetRangeList.Add(rr);
+            var ra = new RuntimeNodeAttribute(node, templateRendererNode);
+            node.Context = ra;
+            return ra;
         }
 
-        RuntimeNodeAttribute GetNodeCustomAttribute(Node node)
+        RuntimeNodeAttribute GetNodeRuntimeAttribute(Node node)
         {
-            RuntimeNodeAttribute attr = node.Context as RuntimeNodeAttribute;
-            if (attr == null)
-            {
-                attr = new RuntimeNodeAttribute();
-                attr.node = node;
-                node.Context = attr;
-            }
-            return attr;
+            return node.Context as RuntimeNodeAttribute;
         }
 
         class DataBind
@@ -126,76 +106,76 @@ namespace Rockyfi
         //    AddRangeElementList();
         //}
 
-        void BindIfExpressWithNode(XmlNode element, IfDataBindExpress express, Node node, Node parentNode)
+        void BindIfExpressWithNode(TemplateRendererNode tnode, IfDataBindExpress express, Node node, Node parentNode)
         {
-            if (express == null || node == null)
-                return;
+            //if (express == null || node == null)
+            //    return;
 
-            if (!express.IsEffectedByContext && express.TargetKeys != null)
-            {
-                // TODO:
-                //if (effectBind.TryGetValue(key, out DataBindContext bind))
-                //{
-                //    bind.Data = "";
-                //}
-            }
+            //if (!express.IsEffectedByContext && express.TargetKeys != null)
+            //{
+            //    // TODO:
+            //    //if (effectBind.TryGetValue(key, out DataBindContext bind))
+            //    //{
+            //    //    bind.Data = "";
+            //    //}
+            //}
         }
 
-        void BindForExpressWithNode(XmlNode element, ForDataBindExpress express, Node node, Node parentNode)
+        void BindForExpressWithNode(TemplateRendererNode tnode, ForDataBindExpress express, Node node, Node parentNode)
         {
-            if (express == null)
-                return;
+            //if (express == null)
+            //    return;
 
-            // TODO:
-            if (!forExpressEffectBind.TryGetValue(express.TargetKey, out var list))
-            {
-                list = new LinkedList<RuntimeNodeAttribute>();
-                forExpressEffectBind.Add(express.TargetKey, list);
-            }
+            //// TODO:
+            //if (!forExpressEffectBind.TryGetValue(express.TargetKey, out var list))
+            //{
+            //    list = new LinkedList<RuntimeNodeAttribute>();
+            //    forExpressEffectBind.Add(express.TargetKey, list);
+            //}
 
-            var ca = GetNodeCustomAttribute(parentNode);
-            ca.forExpress = express;
-            list.AddLast(GetNodeCustomAttribute(node));
+            //var ca = GetNodeRuntimeAttribute(parentNode);
+            //ca.forExpress = express;
+            //list.AddLast(GetNodeRuntimeAttribute(node));
         }
 
-        void BindAttributeExpressWithNode(XmlNode element, AttributeDataBindExpress express, Node node, Node parentNode)
+        void BindAttributeExpressWithNode(TemplateRendererNode tnode, AttributeDataBindExpress express, Node node, Node parentNode)
         {
-            if (express == null)
-                return;
+            //if (express == null)
+            //    return;
 
-            // TODO:
-            if (!attributeEffectBind.TryGetValue(express.TargetKey, out var list))
-            {
-                list = new LinkedList<RuntimeNodeAttribute>();
-                forExpressEffectBind.Add(express.TargetKey, list);
-            }
+            //// TODO:
+            //if (!attributeEffectBind.TryGetValue(express.TargetKey, out var list))
+            //{
+            //    list = new LinkedList<RuntimeNodeAttribute>();
+            //    forExpressEffectBind.Add(express.TargetKey, list);
+            //}
 
 
-            var ca = GetNodeCustomAttribute(node);
-            ca.attributeDataBindExpressList.AddLast(express);
-            list.AddLast(ca);
+            //var ca = GetNodeRuntimeAttribute(node);
+            //ca.attributeDataBindExpressList.AddLast(express);
+            //list.AddLast(ca);
         }
 
-        void BindTextExpressWithNode(XmlNode element, TextDataBindExpress express, Node node, Node parentNode)
+        void BindTextExpressWithNode(TemplateRendererNode tnode, TextDataBindExpress express, Node node, Node parentNode)
         {
-            if (express == null)
-                return;
+            //if (express == null)
+            //    return;
 
-            // TODO:
+            //// TODO:
 
-            var ca = GetNodeCustomAttribute(node);
-            foreach (var tkey in express.TargetKeys)
-            {
+            //var ca = GetNodeRuntimeAttribute(node);
+            //foreach (var tkey in express.TargetKeys)
+            //{
 
-                if (!attributeEffectBind.TryGetValue(tkey, out var list))
-                {
-                    list = new LinkedList<RuntimeNodeAttribute>();
-                    forExpressEffectBind.Add(tkey, list);
-                }
+            //    if (!attributeEffectBind.TryGetValue(tkey, out var list))
+            //    {
+            //        list = new LinkedList<RuntimeNodeAttribute>();
+            //        forExpressEffectBind.Add(tkey, list);
+            //    }
 
-                list.AddLast(ca);
-            }
-            ca.textDataBindExpress = express;
+            //    list.AddLast(ca);
+            //}
+            //ca.textDataBindExpress = express;
         }
 
         /// <summary>
@@ -208,58 +188,58 @@ namespace Rockyfi
             if (key == null)
                 return;
 
-            LinkedList<RuntimeNodeAttribute> nodeAttributeList;
-            if (attributeEffectBind.TryGetValue(key, out nodeAttributeList))
-            {
-                foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
-                {
-                    foreach (var attrExp in nodeAttribute.attributeDataBindExpressList)
-                    {
-                        if (key.Equals(attrExp.TargetKey))
-                        {
-                            object result = attrExp.TryEvaluate(contextStack, out object value) ? value : null;
-                            nodeAttribute.attributes[key] = result;
-                            ProcessNodeStyle(nodeAttribute.node, attrExp.TargetName, value != null ? value.ToString() : "");
-                            return;
-                        }
-                    }
-                }
-            }
-            else if (textEffectBind.TryGetValue(key, out nodeAttributeList))
-            {
-                foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
-                {
-                    nodeAttribute.textDataBindExpressCurrentValue = nodeAttribute.textDataBindExpress.Evaluate(contextStack);
-                }
-            }
-            else if (forExpressEffectBind.TryGetValue(key, out nodeAttributeList))
-            {
-                foreach (RuntimeNodeAttribute childNodeAttribute in nodeAttributeList)
-                {
-                    // remove old child
-                    var parentNode = childNodeAttribute.node.Parent;
-                    var parentNodeAttribute = GetNodeCustomAttribute(parentNode);
+            //LinkedList<RuntimeNodeAttribute> nodeAttributeList;
+            //if (attributeEffectBind.TryGetValue(key, out nodeAttributeList))
+            //{
+            //    foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
+            //    {
+            //        foreach (var attrExp in nodeAttribute.attributeDataBindExpressList)
+            //        {
+            //            if (key.Equals(attrExp.TargetKey))
+            //            {
+            //                object result = attrExp.TryEvaluate(contextStack, out object value) ? value : null;
+            //                nodeAttribute.attributes[key] = result;
+            //                ProcessNodeStyle(nodeAttribute.node, attrExp.TargetName, value != null ? value.ToString() : "");
+            //                return;
+            //            }
+            //        }
+            //    }
+            //}
+            //else if (textEffectBind.TryGetValue(key, out nodeAttributeList))
+            //{
+            //    foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
+            //    {
+            //        nodeAttribute.textDataBindExpressCurrentValue = nodeAttribute.textDataBindExpress.Evaluate(contextStack);
+            //    }
+            //}
+            //else if (forExpressEffectBind.TryGetValue(key, out nodeAttributeList))
+            //{
+            //    foreach (RuntimeNodeAttribute childNodeAttribute in nodeAttributeList)
+            //    {
+            //        // remove old child
+            //        var parentNode = childNodeAttribute.node.Parent;
+            //        var parentNodeAttribute = GetNodeRuntimeAttribute(parentNode);
 
-                    foreach (var range in parentNodeAttribute.childernNodeElemetRangeList)
-                    {
-                        var testEle = range.element;
-                        foreach (var eledChildNode in range.nodes)
-                        {
-                            if (testEle == childNodeAttribute.element)
-                            {
-                                parentNode.RemoveChild(eledChildNode);
-                            }
-                        }
-                    }
+            //        foreach (var range in parentNodeAttribute.childernNodeElemetRangeList)
+            //        {
+            //            var testEle = range.element;
+            //            foreach (var eledChildNode in range.nodes)
+            //            {
+            //                if (testEle == childNodeAttribute.element)
+            //                {
+            //                    parentNode.RemoveChild(eledChildNode);
+            //                }
+            //            }
+            //        }
 
-                    // evaluate the value
-                    parentNodeAttribute.textDataBindExpressCurrentValue = parentNodeAttribute.textDataBindExpress.Evaluate(contextStack);
+            //        // evaluate the value
+            //        parentNodeAttribute.textDataBindExpressCurrentValue = parentNodeAttribute.textDataBindExpress.Evaluate(contextStack);
 
 
-                    // add to the ...
+            //        // add to the ...
 
-                }
-            }
+            //    }
+            //}
         }
 
         /// <summary>

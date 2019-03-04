@@ -531,6 +531,7 @@ namespace Rockyfi
                 if (match.Success)
                 {
                     var forExp = new ForDataBindExpress();
+                    forExp.express = express;
                     forExp.IteratorName = match.Groups[1].Value.Trim();
                     TryParseDotValue(match.Groups[2].Value.Trim(), out forExp.dataSourceName);
 
@@ -540,14 +541,17 @@ namespace Rockyfi
                 return null;
             }
 
-            public bool TryEvaluate(ContextStack contextStack, out IEnumerable<object> result)
+            /// <summary>
+            /// faild parse return null, otherwise return IEnumerable<object>
+            /// </summary>
+            /// <returns></returns>
+            public IEnumerable<object> Evaluate(ContextStack contextStack)
             {
-                result = null;
                 if (dataSourceName != null && contextStack.TryGetFromPath(dataSourceName, out var resultObject))
                 {
-                    result = resultObject as IEnumerable<object>;
+                    return resultObject as IEnumerable<object>;
                 }
-                return result != null;
+                return null;
             }
         }
 

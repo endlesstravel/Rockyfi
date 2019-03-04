@@ -358,73 +358,74 @@ namespace Rockyfi
                     break;
             }
         }
-        LinkedList<Node> TemplateRendererNodeExpand(TemplateRendererNode vnode, ContextStack contextStack)
-        {
-            LinkedList<Node> nodeList = new LinkedList<Node>();
-            if (vnode.forExpress != null)
-            {
-                if (vnode.forExpress.TryEvaluate(contextStack, out var forList))
-                {
-                    contextStack.EnterScope();
-                    foreach (object forContext in forList)
-                    {
-                        contextStack.Set(vnode.forExpress.IteratorName, forContext);
-                        if (!(vnode.ifExpress != null
-                            && vnode.ifExpress.TryEvaluate(contextStack, out var ifCondition)
-                            && ifCondition == false))
-                        {
-                            nodeList.AddLast(TemplateRendererNodeRender(vnode, contextStack));
-                        }
-                    }
-                    contextStack.LeaveScope();
-                }
-            }
-            else
-            {
-                contextStack.EnterScope();
-                if (!(vnode.ifExpress != null
-                    && vnode.ifExpress.TryEvaluate(contextStack, out var ifCondition)
-                    && ifCondition == false))
-                {
-                    nodeList.AddLast(TemplateRendererNodeRender(vnode, contextStack));
-                }
-                contextStack.LeaveScope();
-            }
-
-            return nodeList;
-        }
-        Node TemplateRendererNodeRender(TemplateRendererNode vnode, ContextStack contextStack)
+        Node TemplateRendererNodeRender(TemplateRendererNode tnode, ContextStack contextStack, IEnumerable<object> forList)
         {
             Node node = Rockyfi.CreateDefaultNode();
+            var ra = CreateRuntimeNodeAttribute(node, tnode);
 
-            // copy style
-            Style.Copy(node.nodeStyle, vnode.nodeStyle);
+            // set el-for value
+            ra.forExpressCurrentValue = forList;
 
-            // process binded style
-            foreach (var attr in vnode.attributeDataBindExpressList)
+            // set style
+            Style.Copy(node.nodeStyle, tnode.nodeStyle);
+
+            // set el-bind binded style
+            foreach (var attr in tnode.attributeDataBindExpressList)
             {
-                var ca = GetNodeCustomAttribute(node);
                 if (attr.TryEvaluate(contextStack, out var attrValue))
                 {
                     ProcessNodeStyle(node, attr.TargetName, attrValue != null ? attrValue.ToString() : "");
-                    ca.attributes.Add(attr.TargetKey, attrValue);
+                    ra.attributes[attr.TargetKey] = attrValue;
                 }
                 else
                 {
-                    ca.attributes.Add(attr.TargetKey, null);
+                    ra.attributes[attr.TargetKey] = null;
                 }
             }
 
-            // render children
-            foreach (var vchild in vnode.Children)
+            // process innerText
+            if (tnode.textDataBindExpress != null)
             {
-                foreach (var child in TemplateRendererNodeExpand(vchild, contextStack))
+                ra.textDataBindExpressCurrentValue = tnode.textDataBindExpress.Evaluate(contextStack);
+            }
+
+            // render children
+            foreach (var vchild in tnode.Children)
+            {
+                foreach (var child in TemplateRendererNodeRenderToTree(vchild, contextStack))
                 {
                     node.AddChild(child);
                 }
             }
 
             return node;
+        }
+        LinkedList<Node> TemplateRendererNodeRenderToTree(TemplateRendererNode tnode, ContextStack contextStack)
+        {
+            LinkedList<Node> nodeList = new LinkedList<Node>();
+            bool useFor = tnode.forExpress != null;
+            IEnumerable<object> forList = useFor ? tnode.forExpress.Evaluate(contextStack) : new List<object> { 0 };
+            foreach (object forContext in forList)
+            {
+                if (useFor)
+                {
+                    contextStack.EnterScope();
+                    contextStack.Set(tnode.forExpress.IteratorName, forContext);
+                }
+                if (!(tnode.ifExpress != null
+                    && tnode.ifExpress.TryEvaluate(contextStack, out var ifCondition)
+                    && ifCondition == false))
+                {
+                    var node = TemplateRendererNodeRender(tnode, contextStack, useFor ? forList : null);
+                    nodeList.AddLast(node);
+                }
+                if (useFor)
+                {
+                    contextStack.LeaveScope();
+                }
+            }
+
+            return nodeList;
         }
         #endregion
 
@@ -628,7 +629,7 @@ namespace Rockyfi
             while (queue.Count != 0)
             {
                 var node = queue.Dequeue();
-                var contextAttr = GetNodeCustomAttribute(node);
+                var contextAttr = GetNodeRuntimeAttribute(node);
                 drawFunc(node.LayoutGetLeft(), node.LayoutGetTop(),
                     node.LayoutGetWidth(), node.LayoutGetHeight(),
                     contextAttr.textDataBindExpressCurrentValue,
@@ -676,7 +677,7 @@ namespace Rockyfi
 
                 // start render
                 contextStack = new ContextStack(contextDictionary);
-                root = TemplateRendererNodeRender(templateRendererRoot, contextStack);
+                root = TemplateRendererNodeRenderToTree(templateRendererRoot, contextStack).First.Value;
 
                 //this.contextDictionary = contextDictionary;
                 // Console.WriteLine(NodePrinter.PrintToString(root));
