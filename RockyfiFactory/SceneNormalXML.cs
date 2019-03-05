@@ -21,7 +21,7 @@ namespace RockyfiFactory
     <div width=""150px"" height=""100px"" id=""child-4""/>
 </div>
 ";
-            factory.LoadFromString(tmpXML);
+            factory.Load(tmpXML);
         }
 
         public override void Update(float dt)

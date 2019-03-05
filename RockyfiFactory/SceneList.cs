@@ -18,7 +18,7 @@ namespace RockyfiFactory
 </div>
 </root>";
             factory = new Rockyfi.Factory();
-            factory.LoadFromString(tmpXML3List, new Dictionary<string, object>()
+            factory.Load(tmpXML3List, new Dictionary<string, object>()
             {
                 { "styleObj", this},
                 { "w", "620px" },

@@ -46,14 +46,10 @@ namespace Rockyfi
             return node.Context as RuntimeNodeAttribute;
         }
 
-        class DataBind
-        {
-
-        }
-        readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> textEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
-        readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> attributeEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
-        readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> ifExpressEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
-        readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> forExpressEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
+        //readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> textEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
+        //readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> attributeEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
+        //readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> ifExpressEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
+        //readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> forExpressEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
 
         ///// <summary>
         ///// insert child
@@ -71,35 +67,35 @@ namespace Rockyfi
         //    Rockyfi.RemoveChild(node, child);
         //}
 
-        /// <summary>
-        /// update and re-render page node
-        /// </summary>
-        public void CommitDataChange()
-        {
-            // 寻找那些最大的子树然后重新渲染
-            // 广度优先遍历树
-            List<Node> nodesNeedToReRender = new List<Node>();
-            //Dictionary<Node, bool> nodeDirty = new Dictionary<Node, bool>(); // HashSet ???? not avaliable in .Net 2.0
-            Queue<Node> queue = new Queue<Node>();
-            queue.Enqueue(root);
+        ///// <summary>
+        ///// update and re-render page node
+        ///// </summary>
+        //public void CommitDataChange()
+        //{
+        //    // 寻找那些最大的子树然后重新渲染
+        //    // 广度优先遍历树
+        //    List<Node> nodesNeedToReRender = new List<Node>();
+        //    //Dictionary<Node, bool> nodeDirty = new Dictionary<Node, bool>(); // HashSet ???? not avaliable in .Net 2.0
+        //    Queue<Node> queue = new Queue<Node>();
+        //    queue.Enqueue(root);
 
 
-            while (queue.Count > 0)
-            {
-                var node = queue.Dequeue();
-                //if (nodeDirty.ContainsKey())
-                //{
+        //    while (queue.Count > 0)
+        //    {
+        //        var node = queue.Dequeue();
+        //        //if (nodeDirty.ContainsKey())
+        //        //{
 
-                //}
-            }
+        //        //}
+        //    }
 
-            //foreach (var bind in effectBind.Values)
-            //{
-            //    if (bind.IsDirty)
-            //    {
-            //    }
-            //}
-        }
+        //    //foreach (var bind in effectBind.Values)
+        //    //{
+        //    //    if (bind.IsDirty)
+        //    //    {
+        //    //    }
+        //    //}
+        //}
 
 
         //void BindXMLNodeWithNode(XmlNode element, Node node, Node parentNode)
@@ -179,8 +175,85 @@ namespace Rockyfi
             //ca.textDataBindExpress = express;
         }
 
+        ///// <summary>
+        ///// update data in value
+        ///// </summary>
+        ///// <param name="key"></param>
+        ///// <param name="data"></param>
+        //public void SetData(string key, object data)
+        //{
+        //    if (key == null)
+        //        return;
+
+        //    //LinkedList<RuntimeNodeAttribute> nodeAttributeList;
+        //    //if (attributeEffectBind.TryGetValue(key, out nodeAttributeList))
+        //    //{
+        //    //    foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
+        //    //    {
+        //    //        foreach (var attrExp in nodeAttribute.attributeDataBindExpressList)
+        //    //        {
+        //    //            if (key.Equals(attrExp.TargetKey))
+        //    //            {
+        //    //                object result = attrExp.TryEvaluate(contextStack, out object value) ? value : null;
+        //    //                nodeAttribute.attributes[key] = result;
+        //    //                ProcessNodeStyle(nodeAttribute.node, attrExp.TargetName, value != null ? value.ToString() : "");
+        //    //                return;
+        //    //            }
+        //    //        }
+        //    //    }
+        //    //}
+        //    //else if (textEffectBind.TryGetValue(key, out nodeAttributeList))
+        //    //{
+        //    //    foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
+        //    //    {
+        //    //        nodeAttribute.textDataBindExpressCurrentValue = nodeAttribute.textDataBindExpress.Evaluate(contextStack);
+        //    //    }
+        //    //}
+        //    //else if (forExpressEffectBind.TryGetValue(key, out nodeAttributeList))
+        //    //{
+        //    //    foreach (RuntimeNodeAttribute childNodeAttribute in nodeAttributeList)
+        //    //    {
+        //    //        // remove old child
+        //    //        var parentNode = childNodeAttribute.node.Parent;
+        //    //        var parentNodeAttribute = GetNodeRuntimeAttribute(parentNode);
+
+        //    //        foreach (var range in parentNodeAttribute.childernNodeElemetRangeList)
+        //    //        {
+        //    //            var testEle = range.element;
+        //    //            foreach (var eledChildNode in range.nodes)
+        //    //            {
+        //    //                if (testEle == childNodeAttribute.element)
+        //    //                {
+        //    //                    parentNode.RemoveChild(eledChildNode);
+        //    //                }
+        //    //            }
+        //    //        }
+
+        //    //        // evaluate the value
+        //    //        parentNodeAttribute.textDataBindExpressCurrentValue = parentNodeAttribute.textDataBindExpress.Evaluate(contextStack);
+
+
+        //    //        // add to the ...
+
+        //    //    }
+        //    //}
+        //}
+
+        public void ResetData(Dictionary<string, object> contextDictionary)
+        {
+            runtimeContext.Clear();
+            if (contextDictionary != null)
+            {
+                foreach (var kv in contextDictionary)
+                {
+                    runtimeContext[kv.Key] = kv.Value;
+                }
+            }
+        }
+
+
         /// <summary>
-        /// update data in value
+        /// update data in value, if the value different then before then re-renderer the tree
         /// </summary>
         /// <param name="key"></param>
         /// <param name="data"></param>
@@ -189,58 +262,15 @@ namespace Rockyfi
             if (key == null)
                 return;
 
-            //LinkedList<RuntimeNodeAttribute> nodeAttributeList;
-            //if (attributeEffectBind.TryGetValue(key, out nodeAttributeList))
-            //{
-            //    foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
-            //    {
-            //        foreach (var attrExp in nodeAttribute.attributeDataBindExpressList)
-            //        {
-            //            if (key.Equals(attrExp.TargetKey))
-            //            {
-            //                object result = attrExp.TryEvaluate(contextStack, out object value) ? value : null;
-            //                nodeAttribute.attributes[key] = result;
-            //                ProcessNodeStyle(nodeAttribute.node, attrExp.TargetName, value != null ? value.ToString() : "");
-            //                return;
-            //            }
-            //        }
-            //    }
-            //}
-            //else if (textEffectBind.TryGetValue(key, out nodeAttributeList))
-            //{
-            //    foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
-            //    {
-            //        nodeAttribute.textDataBindExpressCurrentValue = nodeAttribute.textDataBindExpress.Evaluate(contextStack);
-            //    }
-            //}
-            //else if (forExpressEffectBind.TryGetValue(key, out nodeAttributeList))
-            //{
-            //    foreach (RuntimeNodeAttribute childNodeAttribute in nodeAttributeList)
-            //    {
-            //        // remove old child
-            //        var parentNode = childNodeAttribute.node.Parent;
-            //        var parentNodeAttribute = GetNodeRuntimeAttribute(parentNode);
+            if (runtimeContext.TryGetValue(key, out var oldData) && data != null && oldData != null)
+            {
+                if (data != null && data.Equals(oldData)
+                    || oldData != null && oldData.Equals(data))
+                    return;
 
-            //        foreach (var range in parentNodeAttribute.childernNodeElemetRangeList)
-            //        {
-            //            var testEle = range.element;
-            //            foreach (var eledChildNode in range.nodes)
-            //            {
-            //                if (testEle == childNodeAttribute.element)
-            //                {
-            //                    parentNode.RemoveChild(eledChildNode);
-            //                }
-            //            }
-            //        }
+            }
 
-            //        // evaluate the value
-            //        parentNodeAttribute.textDataBindExpressCurrentValue = parentNodeAttribute.textDataBindExpress.Evaluate(contextStack);
-
-
-            //        // add to the ...
-
-            //    }
-            //}
+            runtimeContext[key] = data;
         }
 
         /// <summary>
@@ -250,8 +280,7 @@ namespace Rockyfi
         /// <returns></returns>
         public object GetData(string key)
         {
-            //return effectBind.TryGetValue(key, out DataBindContext data) ? data.Data : null;
-            return null;
+            return runtimeContext.TryGetValue(key, out var obj) ? obj : null;
         }
 
         #endregion

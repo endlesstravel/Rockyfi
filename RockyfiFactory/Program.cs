@@ -22,7 +22,7 @@ namespace FlexCs
     </div>
 </div>
 ";
-            factory.LoadFromString(tmpXML3, new Dictionary<string, object>()
+            factory.Load(tmpXML3, new Dictionary<string, object>()
             {
                 { "styleObj", this},
                 { "w", "620px" },
@@ -36,22 +36,31 @@ namespace FlexCs
 
         public override void Update(float dt)
         {
-            factory.CalculateLayout();
             Love.Misc.FPSGraph.FPSGraph.Update(dt);
+            for (int i = 0; i < 100; i++)
+            {
+                factory.SetData("list", new List<object> { 2222 });
+                factory.ReRender();
+            }
         }
 
         public override void Draw()
         {
+            Graphics.SetBackgroundColor(85 / 255f, 77 / 255f, 216 / 255f);
             Love.Misc.FPSGraph.FPSGraph.Draw();
+
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
             factory.Draw((x, y, w, h, text, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, h + y - Graphics.GetFont().GetHeight());
-                Graphics.Printf(text, x, y, w, AlignMode.Center);
-            });
 
+                if (text != null)
+                {
+                    Graphics.Printf(text.Trim(), x, y, w, AlignMode.Center);
+                }
+            });
         }
 
         static void Main(string[] args)

@@ -124,7 +124,7 @@ namespace Rockyfi
 
         static Regex styleValueRegex = new Regex(@"-?(\d*\.)?(\d+)(px|%)");
 
-        ContextStack contextStack;
+        readonly Dictionary<string, object> runtimeContext = new Dictionary<string, object>();
         XmlDocument xmlDocument;
         Node root;
         TemplateRendererNode templateRendererRoot;
@@ -404,26 +404,28 @@ namespace Rockyfi
             LinkedList<Node> nodeList = new LinkedList<Node>();
             bool useFor = tnode.forExpress != null;
             IEnumerable<object> forList = useFor ? tnode.forExpress.Evaluate(contextStack) : new List<object> { 0 };
-            foreach (object forContext in forList)
+            if (forList != null)
             {
-                if (useFor)
+                foreach (object forContext in forList)
                 {
-                    contextStack.EnterScope();
-                    contextStack.Set(tnode.forExpress.IteratorName, forContext);
-                }
-                if (!(tnode.ifExpress != null
-                    && tnode.ifExpress.TryEvaluate(contextStack, out var ifCondition)
-                    && ifCondition == false))
-                {
-                    var node = TemplateRendererNodeRender(tnode, contextStack, useFor ? forList : null);
-                    nodeList.AddLast(node);
-                }
-                if (useFor)
-                {
-                    contextStack.LeaveScope();
+                    if (useFor)
+                    {
+                        contextStack.EnterScope();
+                        contextStack.Set(tnode.forExpress.IteratorName, forContext);
+                    }
+                    if (!(tnode.ifExpress != null
+                        && tnode.ifExpress.TryEvaluate(contextStack, out var ifCondition)
+                        && ifCondition == false))
+                    {
+                        var node = TemplateRendererNodeRender(tnode, contextStack, useFor ? forList : null);
+                        nodeList.AddLast(node);
+                    }
+                    if (useFor)
+                    {
+                        contextStack.LeaveScope();
+                    }
                 }
             }
-
             return nodeList;
         }
         #endregion
@@ -662,12 +664,19 @@ namespace Rockyfi
             }
         }
 
-        public void LoadFromString(string xml)
+        public void ReRender()
         {
-            LoadFromString(xml, null);
+            // start render
+            root = TemplateRendererNodeRenderToTree(templateRendererRoot, new ContextStack(runtimeContext)).First.Value;
+            CalculateLayout();
         }
 
-        public void LoadFromString(string xml, Dictionary<string, object> contextDictionary)
+        public void Load(string xml)
+        {
+            Load(xml, null);
+        }
+
+        public void Load(string xml, Dictionary<string, object> contextDictionary)
         {
             using (StringReader stringReader = new StringReader(xml))
             {
@@ -694,18 +703,15 @@ namespace Rockyfi
                 // convert to tree
                 templateRendererRoot = ConvertXmlTreeToRendererTree(rootElement);
 
-                // start render
-                contextStack = new ContextStack(contextDictionary);
-                root = TemplateRendererNodeRenderToTree(templateRendererRoot, contextStack).First.Value;
+                // add init data into the context
+                ResetData(contextDictionary);
 
-                //this.contextDictionary = contextDictionary;
+                // re-render
+                ReRender();
+
+
                 // Console.WriteLine(NodePrinter.PrintToString(root));
             }
-        }
-
-        public void SetData()
-        {
-
         }
     }
 }
