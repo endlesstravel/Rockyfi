@@ -112,22 +112,56 @@ namespace Rockyfi
                 else StyleSetBorder(edge, float.NaN);
             }
         }
+
+        internal void Helper_ResetChildList(LinkedList<Node> list, bool isIfLeadDirty)
+        {
+            bool isDirty = isIfLeadDirty;
+            if (list.Count != ChildrenCount)
+            {
+                isDirty = true;
+            }
+
+            if (isDirty == false)
+            {
+                var listIter = list.GetEnumerator();
+                foreach (var child in list)
+                {
+                    if (!listIter.MoveNext() || listIter.Current != child)
+                    {
+                        isDirty = true;
+                        break;
+                    }
+                }
+            }
+
+            Children.Clear();
+            foreach (var child in list)
+            {
+                child.Parent = null;
+                AddChild(child);
+            }
+
+            if (isDirty)
+            {
+                MarkAsDirty();
+            }
+        }
     }
 
-    public partial class Factory
+    public partial class LightCard
     {
+        public LightCard() { }
+
         const string ForELAttributeName = "el-for";
         const string IfELAttributeName = "el-if";
         const string BindELAttributePrefix = "el-bind";
         const string RootTagName = "div";
         const string ElementTagName = "div";
 
-        static Regex styleValueRegex = new Regex(@"-?(\d*\.)?(\d+)(px|%)");
-
         readonly Dictionary<string, object> runtimeContext = new Dictionary<string, object>();
         XmlDocument xmlDocument;
         Node root;
-        TemplateRendererNode templateRendererRoot;
+        TemplateNode templateRendererRoot;
 
         Value ParseValueFromString(string text)
         {
@@ -137,26 +171,27 @@ namespace Rockyfi
             }
 
             var res = Value.UndefinedValue;
-            if (styleValueRegex.IsMatch(text))
+            string dig = text;
+            Unit uu = Unit.Undefined;
+
+            if (text.EndsWith("%"))
             {
-                string dig = text;
-                Unit uu = Unit.Undefined;
+                dig = text.Substring(0, text.Length - 1);
+                uu = Unit.Percent;
+            }
+            else if (text.EndsWith("px"))
+            {
+                dig = text.Substring(0, text.Length - 2);
+                uu = Unit.Point;
+            }
 
-                if (text.EndsWith("%"))
-                {
-                    dig = text.Substring(0, text.Length - 1);
-                    uu = Unit.Percent;
-                }
-                else if (text.EndsWith("px"))
-                {
-                    dig = text.Substring(0, text.Length - 2);
-                    uu = Unit.Point;
-                }
-
-                if (float.TryParse(dig, out res.value))
-                {
-                    res.unit = uu;
-                }
+            if (float.TryParse(dig, out res.value))
+            {
+                res.unit = uu;
+            }
+            else
+            {
+                res.unit = Unit.Undefined;
             }
 
             return res;
@@ -169,7 +204,7 @@ namespace Rockyfi
         /// <returns></returns>
         Value[] ParseFourValueFromString(string text)
         {
-            // Edge.Left  = 0;
+            // Edge.Left = 0;
             // Edge.Top = 1;
             // Edge.Right = 2;
             // Edge.Bottom = 3;
@@ -357,18 +392,13 @@ namespace Rockyfi
                     break;
             }
         }
-        Node TemplateRendererNodeRender(TemplateRendererNode tnode, ContextStack contextStack, IEnumerable<object> forList)
+        void ProcessNodeBindStyleAndText(Node node, ContextStack contextStack)
         {
-            Node node = Rockyfi.CreateDefaultNode();
-            var ra = CreateRuntimeNodeAttribute(node, tnode);
-
-            // set el-for value
-            ra.forExpressCurrentValue = forList;
-
-            // set style
-            Style.Copy(node.nodeStyle, tnode.nodeStyle);
+            var ra = GetNodeRuntimeAttribute(node);
+            var tnode = ra.templateRendererNode;
 
             // set el-bind binded style
+            ra.attributes.Clear();
             foreach (var attr in tnode.attributeDataBindExpressList)
             {
                 if (attr.TryEvaluate(contextStack, out var attrValue))
@@ -387,6 +417,20 @@ namespace Rockyfi
             {
                 ra.textDataBindExpressCurrentValue = tnode.textDataBindExpress.Evaluate(contextStack);
             }
+        }
+        Node TemplateRendererNodeRender(TemplateNode tnode, ContextStack contextStack, object forContext)
+        {
+            Node node = Rockyfi.CreateDefaultNode();
+            var ra = CreateRuntimeNodeAttribute(node, tnode);
+
+            // set el-for value
+            ra.forExpressItemCurrentValue = forContext;
+
+            // copy style
+            Style.Copy(node.nodeStyle, tnode.nodeStyle);
+
+            // process node el-bind
+            ProcessNodeBindStyleAndText(node, contextStack);
 
             // render children
             foreach (var vchild in tnode.Children)
@@ -399,7 +443,7 @@ namespace Rockyfi
 
             return node;
         }
-        LinkedList<Node> TemplateRendererNodeRenderToTree(TemplateRendererNode tnode, ContextStack contextStack)
+        LinkedList<Node> TemplateRendererNodeRenderToTree(TemplateNode tnode, ContextStack contextStack)
         {
             LinkedList<Node> nodeList = new LinkedList<Node>();
             bool useFor = tnode.forExpress != null;
@@ -413,11 +457,9 @@ namespace Rockyfi
                         contextStack.EnterScope();
                         contextStack.Set(tnode.forExpress.IteratorName, forContext);
                     }
-                    if (!(tnode.ifExpress != null
-                        && tnode.ifExpress.TryEvaluate(contextStack, out var ifCondition)
-                        && ifCondition == false))
+                    if (!IsNeedSkip(tnode, contextStack))
                     {
-                        var node = TemplateRendererNodeRender(tnode, contextStack, useFor ? forList : null);
+                        var node = TemplateRendererNodeRender(tnode, contextStack, useFor ? forContext : null);
                         nodeList.AddLast(node);
                     }
                     if (useFor)
@@ -567,9 +609,9 @@ namespace Rockyfi
                     break;
             }
         }
-        TemplateRendererNode ConvertXmlTreeToRendererTree(XmlNode element)
+        TemplateNode ConvertXmlTreeToRendererTree(XmlNode element)
         {
-            TemplateRendererNode renderTreeNode = new TemplateRendererNode();
+            TemplateNode renderTreeNode = new TemplateNode();
             foreach (XmlAttribute attr in element.Attributes)
             {
                 if (ForELAttributeName.Equals(attr.Name)) // process el-for
@@ -603,7 +645,9 @@ namespace Rockyfi
             {
                 if (XmlNodeType.Element == ele.NodeType)
                 {
-                    renderTreeNode.Children.Add(ConvertXmlTreeToRendererTree(ele));
+                    var trn = ConvertXmlTreeToRendererTree(ele);
+                    trn.Parent = renderTreeNode;
+                    renderTreeNode.Children.Add(trn);
                 }
                 else if (XmlNodeType.Text == ele.NodeType)
                 {
@@ -619,10 +663,137 @@ namespace Rockyfi
         public float MaxWidth = float.NaN;
         public float MaxHeight = float.NaN;
 
-        public void CalculateLayout()
+        public void ReCalculateLayout()
         {
             root.CalculateLayout(MaxWidth, MaxHeight, Direction);
         }
+
+        #region re-build the tree
+        LinkedList<KeyValuePair<TemplateNode, LinkedList<Node>>> GetNodeTemplateGroupList(Node node)
+        {
+            var list = new LinkedList<KeyValuePair<TemplateNode, LinkedList<Node>>>();
+            TemplateNode currentTemplate = null;
+            LinkedList<Node> currentList = null;
+            foreach (var child in node.Children)
+            {
+                var childTemplate = GetNodeRuntimeAttribute(child).templateRendererNode;
+                if (currentTemplate != childTemplate)
+                {
+                    currentTemplate = childTemplate;
+                    currentList = new LinkedList<Node>();
+                    list.AddLast(new KeyValuePair<TemplateNode, LinkedList<Node>>(currentTemplate, currentList));
+                }
+                currentList.AddLast(child);
+            }
+            return list;
+        }
+        bool IsNeedSkip(TemplateNode tnode, ContextStack contextStack)
+        {
+            if(tnode.ifExpress != null && tnode.ifExpress.TryEvaluate(contextStack, out var result))
+            {
+                if (result == false)
+                    return true;
+            }
+
+            return false;
+        }
+        void ReRenderTemplateNodeToTree(Node node, ContextStack contextStack)
+        {
+            var ra = GetNodeRuntimeAttribute(node);
+            ProcessNodeBindStyleAndText(node, contextStack);
+
+            var templateNodeGroup = GetNodeTemplateGroupList(node);
+            var finalChildList = new LinkedList<Node>();
+            bool isIfLeadDirty = false;
+            foreach (var kv in templateNodeGroup)
+            {
+                var template = kv.Key;
+                var childGroup = kv.Value;
+
+                if (template.forExpress == null)
+                {
+                    foreach (var child in childGroup)
+                    {
+                        if (!IsNeedSkip(template, contextStack))
+                        {
+                            ReRenderTemplateNodeToTree(child, contextStack);
+                            finalChildList.AddLast(child);
+                        }
+                        else
+                        {
+                            isIfLeadDirty = true;
+                        }
+                    }
+                }
+                else 
+                {
+                    var newForList = template.forExpress.Evaluate(contextStack);
+                    var newForListIterator = newForList != null ? newForList.GetEnumerator() : new LinkedList<object>().GetEnumerator();
+                    var oldChildListIterator = childGroup.GetEnumerator();
+
+                    while (newForListIterator.MoveNext())
+                    {
+                        object forContext = newForListIterator.Current;
+                        object oldObj = oldChildListIterator.MoveNext() ?
+                            GetNodeRuntimeAttribute(oldChildListIterator.Current).forExpressItemCurrentValue : null;
+                        if (oldObj != forContext)
+                        {
+                            if (!IsNeedSkip(template, contextStack))
+                            {
+                                contextStack.EnterScope();
+                                contextStack.Set(template.forExpress.IteratorName, forContext);
+                                finalChildList.AddLast(TemplateRendererNodeRender(template, contextStack, forContext));
+                                contextStack.LeaveScope();
+                            }
+                        }
+                        else
+                        {
+                            if (!IsNeedSkip(template, contextStack))
+                            {
+                                ReRenderTemplateNodeToTree(oldChildListIterator.Current, contextStack);
+                                finalChildList.AddLast(oldChildListIterator.Current);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            if (isIfLeadDirty)
+                node.Helper_ResetChildList(finalChildList, isIfLeadDirty);
+        }
+
+        void ReRenderTemplateNodeToTreeStyle(Node node, ContextStack contextStack)
+        {
+            ProcessNodeBindStyleAndText(node, contextStack);
+            var templateNodeGroup = GetNodeTemplateGroupList(node);
+            foreach (var chid in node.Children)
+            {
+                var ra = GetNodeRuntimeAttribute(chid);
+                if (ra.templateRendererNode.forExpress != null)
+                {
+                    contextStack.EnterScope();
+                    contextStack.Set(ra.templateRendererNode.forExpress.IteratorName, ra.forExpressItemCurrentValue);
+                    ReRenderTemplateNodeToTreeStyle(chid, contextStack);
+                    contextStack.LeaveScope();
+                }
+                else
+                {
+                    ReRenderTemplateNodeToTreeStyle(chid, contextStack);
+                }
+            }
+        }
+
+        /// <summary>
+        /// update the tree
+        /// </summary>
+        public void Update()
+        {
+            ReRenderTemplateNodeToTree(root, new ContextStack(runtimeContext));
+            ReCalculateLayout();
+        }
+        #endregion
+
 
         public delegate void DrawNodeFunc(float x, float y, float width, float height, string text, Dictionary<string, object> attribute);
         public void Draw(DrawNodeFunc drawFunc)
@@ -668,7 +839,7 @@ namespace Rockyfi
         {
             // start render
             root = TemplateRendererNodeRenderToTree(templateRendererRoot, new ContextStack(runtimeContext)).First.Value;
-            CalculateLayout();
+            ReCalculateLayout();
         }
 
         public void Load(string xml)
@@ -710,8 +881,18 @@ namespace Rockyfi
                 ReRender();
 
 
-                // Console.WriteLine(NodePrinter.PrintToString(root));
+                Console.WriteLine(NodePrinter.PrintToString(root));
             }
+        }
+        public static LightCard BuildFactory(string xml)
+        {
+            return BuildFactory(null);
+        }
+        public static LightCard BuildFactory(string xml, Dictionary<string, object> contextDictionary)
+        {
+            var factory = new LightCard();
+            factory.Load(xml, contextDictionary);
+            return factory;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace RockyfiFactory
 {
     class SceneNormalXML: Scene
     {
-        Rockyfi.Factory factory = new Rockyfi.Factory();
+        Rockyfi.LightCard factory = new Rockyfi.LightCard();
         public override void Load()
         {
             string tmpXML = @"
@@ -26,7 +26,7 @@ namespace RockyfiFactory
 
         public override void Update(float dt)
         {
-            factory.CalculateLayout();
+            factory.ReCalculateLayout();
         }
 
         public override void Draw()

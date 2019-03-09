@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Rockyfi
 {
-    public partial class Factory
+    public partial class LightCard
     {
         internal class ContextStack
         {
@@ -13,7 +13,7 @@ namespace Rockyfi
             // Artificial/Real statc
             class ContextRealNode
             {
-
+                
             }
 
             readonly LinkedList<Dictionary<string, object>> contextStack = new LinkedList<Dictionary<string, object>>();
@@ -101,27 +101,20 @@ namespace Rockyfi
 
                 // reflection
                 Type t = input.GetType();
-                System.Reflection.PropertyInfo[] properties = t.GetProperties();
-                System.Reflection.FieldInfo[] fieldInfos = t.GetFields();
-
-                foreach (var p in properties)
+                var property = t.GetProperty(nextKey);
+                if (property != null)
                 {
-                    if (p.Name == nextKey)
+                    var m = property.GetGetMethod();
+                    if (m == null)
                     {
-                        var m = p.GetGetMethod();
-                        if (m == null)
-                        {
-                            return false;
-                        }
-                        return TryGetObjectPath(objPath, index + 1, m.Invoke(input, null), out obj);
+                        return false;
                     }
+                    return TryGetObjectPath(objPath, index + 1, m.Invoke(input, null), out obj);
                 }
-                foreach (var f in fieldInfos)
+                var field = t.GetField(nextKey);
+                if (field != null)
                 {
-                    if (f.Name == nextKey)
-                    {
-                        return TryGetObjectPath(objPath, index + 1, f.GetValue(input), out obj);
-                    }
+                    return TryGetObjectPath(objPath, index + 1, field.GetValue(input), out obj);
                 }
 
                 return false;

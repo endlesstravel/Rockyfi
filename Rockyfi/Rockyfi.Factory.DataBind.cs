@@ -4,37 +4,39 @@ using System.Xml;
 
 namespace Rockyfi
 {
-    public partial class Factory
+    public partial class LightCard
     {
         #region DataBind
-        internal class TemplateRendererNode
+        internal class TemplateNode
         {
-            internal Node node;
+            internal TemplateNode Parent;
             internal IfDataBindExpress ifExpress = null;
             internal ForDataBindExpress forExpress = null;
             internal TextDataBindExpress textDataBindExpress = null;
             internal readonly LinkedList<AttributeDataBindExpress> attributeDataBindExpressList = new LinkedList<AttributeDataBindExpress>();
             internal readonly Style nodeStyle = new Style();
             internal readonly Dictionary<string, string> attributes = new Dictionary<string, string>();
-            internal readonly List<TemplateRendererNode> Children = new List<TemplateRendererNode>();
+            internal readonly List<TemplateNode> Children = new List<TemplateNode>();
         }
 
         class RuntimeNodeAttribute
         {
-            internal readonly TemplateRendererNode templateRendererNode; // where node come from
+            internal Node node;
+            internal readonly TemplateNode templateRendererNode; // where node come from
 
-            public RuntimeNodeAttribute(Node node, TemplateRendererNode templateRendererNode)
+            public RuntimeNodeAttribute(Node node, TemplateNode templateRendererNode)
             {
-                templateRendererNode.node = node;
+                this.node = node;
                 this.templateRendererNode = templateRendererNode;
             }
 
-            internal IEnumerable<object> forExpressCurrentValue = null;
+            public bool IsDirty = false;
+            internal object forExpressItemCurrentValue = null;
             internal string textDataBindExpressCurrentValue = null;
             internal readonly Dictionary<string, object> attributes = new Dictionary<string, object>();
         }
 
-        RuntimeNodeAttribute CreateRuntimeNodeAttribute(Node node, TemplateRendererNode templateRendererNode)
+        RuntimeNodeAttribute CreateRuntimeNodeAttribute(Node node, TemplateNode templateRendererNode)
         {
             var ra = new RuntimeNodeAttribute(node, templateRendererNode);
             node.Context = ra;
@@ -45,6 +47,36 @@ namespace Rockyfi
         {
             return node.Context as RuntimeNodeAttribute;
         }
+
+        interface DataWatcher
+        {
+            void DataChanged(object newValue, object oldValue);
+        }
+
+        class ExpressBind
+        {
+            ExpressBind parent;
+
+        }
+
+        class DataBind
+        {
+            readonly Dictionary<string, ForDataBindExpress> forExpressBind = new Dictionary<string, ForDataBindExpress>();
+            readonly Dictionary<string, IfDataBindExpress> ifExpressBind = new Dictionary<string, IfDataBindExpress>();
+            readonly Dictionary<string, AttributeDataBindExpress> attrExpressBind = new Dictionary<string, AttributeDataBindExpress>();
+
+            readonly Dictionary<string, ExpressBind> expressBind = new Dictionary<string, ExpressBind>();
+
+            public void SetExpress(ForDataBindExpress x)
+            {
+
+            }
+
+        }
+
+
+        readonly Dictionary<string, ForDataBindExpress> topDomain = new Dictionary<string, ForDataBindExpress>();
+
 
         //readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> textEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
         //readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> attributeEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
@@ -103,7 +135,7 @@ namespace Rockyfi
         //    AddRangeElementList();
         //}
 
-        void BindIfExpressWithNode(TemplateRendererNode tnode, IfDataBindExpress express, Node node, Node parentNode)
+        void BindIfExpressWithNode(TemplateNode tnode, IfDataBindExpress express, Node node, Node parentNode)
         {
             //if (express == null || node == null)
             //    return;
@@ -118,7 +150,7 @@ namespace Rockyfi
             //}
         }
 
-        void BindForExpressWithNode(TemplateRendererNode tnode, ForDataBindExpress express, Node node, Node parentNode)
+        void BindForExpressWithNode(TemplateNode tnode, ForDataBindExpress express, Node node, Node parentNode)
         {
             //if (express == null)
             //    return;
@@ -135,7 +167,7 @@ namespace Rockyfi
             //list.AddLast(GetNodeRuntimeAttribute(node));
         }
 
-        void BindAttributeExpressWithNode(TemplateRendererNode tnode, AttributeDataBindExpress express, Node node, Node parentNode)
+        void BindAttributeExpressWithNode(TemplateNode tnode, AttributeDataBindExpress express, Node node, Node parentNode)
         {
             //if (express == null)
             //    return;
@@ -153,7 +185,7 @@ namespace Rockyfi
             //list.AddLast(ca);
         }
 
-        void BindTextExpressWithNode(TemplateRendererNode tnode, TextDataBindExpress express, Node node, Node parentNode)
+        void BindTextExpressWithNode(TemplateNode tnode, TextDataBindExpress express, Node node, Node parentNode)
         {
             //if (express == null)
             //    return;

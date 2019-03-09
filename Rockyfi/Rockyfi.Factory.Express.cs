@@ -219,7 +219,7 @@ namespace Rockyfi
 
     // TODO : write test ......
 
-    public partial class Factory
+    public partial class LightCard
     {
         #region Abstract syntax tree
         // The Regex class itself is thread safe and immutable(read-only). That is,
