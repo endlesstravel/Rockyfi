@@ -17,10 +17,16 @@ namespace FlexCs
     flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" >
     <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin=""mt"" el-bind:id=""item"" width=""100px"" height=""100px"">
         my id is {{item}}
-        <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin=""mt"" el-bind:id=""item"" width=""100px"" height=""100px"">
+        <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin=""mt"" el-bind:id=""item"" width=""50px"" height=""50px"">
             my id is {{item}}
-            <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin=""mt"" el-bind:id=""item"" width=""100px"" height=""100px"">
+            <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin=""mt"" el-bind:id=""item"" width=""20px"" height=""20px"">
                 my id is {{item}}
+                <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin=""mt"" el-bind:id=""item"" width=""10px"" height=""10px"">
+                    my id is {{item}}
+                    <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin=""mt"" el-bind:id=""item"" width=""10px"" height=""10px"">
+                        my id is {{item}}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -39,12 +45,12 @@ namespace FlexCs
 ";
 
             var list = new List<string> { "1", "2", "3", "4", "5" };
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1; i++)
             {
-                list.Add("xx" + i);
+                // list.Add("xx" + i);
             }
 
-            card.Load(tmpXML4, new Dictionary<string, object>()
+            card.Load(tmpXML3, new Dictionary<string, object>()
             {
                 { "styleObj", this},
                 { "w", "620px" },
@@ -56,15 +62,20 @@ namespace FlexCs
 
         public string StyleHeight => "200px";
 
+        float delta = 0;
+
         public override void Update(float dt)
         {
             Love.Misc.FPSGraph.FPSGraph.Update(dt);
+
+            var startTIme = Timer.GetTime();
             for (int i = 0; i < 1; i++)
             {
                 //card.SetData("list", new List<object> { 2222 });
                 //card.ReRender();
-                // card.Update();
+                card.Update();
             }
+            delta = Timer.GetTime() - startTIme;
         }
 
         public override void Draw()

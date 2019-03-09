@@ -728,32 +728,35 @@ namespace Rockyfi
                 else 
                 {
                     var newForList = template.forExpress.Evaluate(contextStack);
-                    var newForListIterator = newForList != null ? newForList.GetEnumerator() : new LinkedList<object>().GetEnumerator();
-                    var oldChildListIterator = childGroup.GetEnumerator();
 
-                    while (newForListIterator.MoveNext())
+                    Dictionary<object, Node> nodeDictionary = new Dictionary<object, Node>();
+                    foreach (var child in childGroup)
                     {
-                        object forContext = newForListIterator.Current;
-                        object oldObj = oldChildListIterator.MoveNext() ?
-                            GetNodeRuntimeAttribute(oldChildListIterator.Current).forExpressItemCurrentValue : null;
-                        if (oldObj != forContext)
+                        var v = GetNodeRuntimeAttribute(child).forExpressItemCurrentValue;
+                        if (v != null)
                         {
-                            if (!IsNeedSkip(template, contextStack))
+                            nodeDictionary[v] = child;
+                        }
+                    }
+
+
+                    foreach (object forContext in newForList)
+                    {
+                        contextStack.EnterScope();
+                        contextStack.Set(template.forExpress.IteratorName, forContext);
+                        if (!IsNeedSkip(template, contextStack))
+                        {
+                            if (nodeDictionary.TryGetValue(forContext, out Node oldNode))
                             {
-                                contextStack.EnterScope();
-                                contextStack.Set(template.forExpress.IteratorName, forContext);
+                                ReRenderTemplateNodeToTree(oldNode, contextStack);
+                                finalChildList.AddLast(oldNode);
+                            }
+                            else
+                            {
                                 finalChildList.AddLast(TemplateRendererNodeRender(template, contextStack, forContext));
-                                contextStack.LeaveScope();
                             }
                         }
-                        else
-                        {
-                            if (!IsNeedSkip(template, contextStack))
-                            {
-                                ReRenderTemplateNodeToTree(oldChildListIterator.Current, contextStack);
-                                finalChildList.AddLast(oldChildListIterator.Current);
-                            }
-                        }
+                        contextStack.LeaveScope();
                     }
 
                 }
@@ -881,7 +884,7 @@ namespace Rockyfi
                 ReRender();
 
 
-                Console.WriteLine(NodePrinter.PrintToString(root));
+                // Console.WriteLine(NodePrinter.PrintToString(root));
             }
         }
         public static LightCard BuildFactory(string xml)
