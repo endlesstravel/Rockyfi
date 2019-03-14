@@ -6,6 +6,10 @@ C# implementation of [flexbox CSS](https://www.w3.org/TR/css-flexbox-1/) layout 
 
 Thanks [kjk/flex](https://github.com/kjk/flex), there is no such project without him.
 
+Nuget Package [Rockyfi](https://www.nuget.org/packages/Rockyfi/) :
+
+ `Install-Package Rockyfi`
+
 ## Status
 
 * The implementation of flexlayout has been completed, all the test is passed.
