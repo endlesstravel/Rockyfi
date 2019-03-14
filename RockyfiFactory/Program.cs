@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Love;
 
-namespace FlexCs
+namespace RockyfiFactory
 {
     class Program : Scene
     {
-        Rockyfi.LightCard card = new Rockyfi.LightCard();
+        Rockyfi.ShadowPlay userInterface = new Rockyfi.ShadowPlay();
 
         public override void Load()
         {
@@ -50,7 +50,7 @@ namespace FlexCs
                 // list.Add("xx" + i);
             }
 
-            card.Load(tmpXML3, new Dictionary<string, object>()
+            userInterface.Load(tmpXML3, new Dictionary<string, object>()
             {
                 { "styleObj", this},
                 { "w", "620px" },
@@ -62,20 +62,26 @@ namespace FlexCs
 
         public string StyleHeight => "200px";
 
-        float delta = 0;
-
         public override void Update(float dt)
         {
             Love.Misc.FPSGraph.FPSGraph.Update(dt);
 
-            var startTIme = Timer.GetTime();
+            var stopWatch = new System.Diagnostics.Stopwatch();
+            double startTime = Timer.GetTime();
+            var now = System.DateTime.Now; // <-- Value is copied into local
+            stopWatch.Start();
             for (int i = 0; i < 1; i++)
             {
                 //card.SetData("list", new List<object> { 2222 });
                 //card.ReRender();
-                card.Update();
+                userInterface.Update();
             }
-            delta = Timer.GetTime() - startTIme;
+            stopWatch.Stop();
+            long delta = stopWatch.ElapsedMilliseconds;
+            System.Console.WriteLine("" + stopWatch.ElapsedMilliseconds / 1000.0f
+                + "   \t" + (Timer.GetTime() - startTime)
+                + "   \t" + (System.DateTime.Now.Ticks - now.Ticks) / (float)System.TimeSpan.TicksPerSecond
+                );
         }
 
         public override void Draw()
@@ -85,7 +91,7 @@ namespace FlexCs
 
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
-            card.Draw((x, y, w, h, text, attr) =>
+            userInterface.Draw((x, y, w, h, text, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, h + y - Graphics.GetFont().GetHeight());
@@ -97,13 +103,13 @@ namespace FlexCs
             });
         }
 
-        static void Main(string[] args)
-        {
-            Boot.Init(new BootConfig
-            {
+        //static void Main(string[] args)
+        //{
+        //    Boot.Init(new BootConfig
+        //    {
 
-            });
-            Boot.Run(new Program());
-        }
+        //    });
+        //    Boot.Run(new Program());
+        //}
     }
 }

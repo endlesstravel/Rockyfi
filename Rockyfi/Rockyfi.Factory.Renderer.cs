@@ -148,9 +148,13 @@ namespace Rockyfi
         }
     }
 
-    public partial class LightCard
+
+    /// <summary>
+    /// Provide a convenient way to render tree
+    /// </summary>
+    public partial class ShadowPlay
     {
-        public LightCard() { }
+        public ShadowPlay() { }
 
         const string ForELAttributeName = "el-for";
         const string IfELAttributeName = "el-if";
@@ -158,16 +162,23 @@ namespace Rockyfi
         const string RootTagName = "div";
         const string ElementTagName = "div";
 
-        readonly Dictionary<string, object> runtimeContext = new Dictionary<string, object>();
+        readonly DataBind dataBind = new DataBind();
         XmlDocument xmlDocument;
         Node root;
         TemplateNode templateRendererRoot;
+
+        readonly Dictionary<string, Value> valueDictionaryCache = new Dictionary<string, Value>();
 
         Value ParseValueFromString(string text)
         {
             if (text == "auto")
             {
                 return new Value(0, Unit.Auto);
+            }
+
+            if (valueDictionaryCache.TryGetValue(text, out var cachedValue))
+            {
+                return cachedValue;
             }
 
             var res = Value.UndefinedValue;
@@ -194,6 +205,7 @@ namespace Rockyfi
                 res.unit = Unit.Undefined;
             }
 
+            valueDictionaryCache.Add(text, res);
             return res;
         }
 
@@ -395,7 +407,7 @@ namespace Rockyfi
         void ProcessNodeBindStyleAndText(Node node, ContextStack contextStack)
         {
             var ra = GetNodeRuntimeAttribute(node);
-            var tnode = ra.templateRendererNode;
+            var tnode = ra.template;
 
             // set el-bind binded style
             ra.attributes.Clear();
@@ -404,11 +416,11 @@ namespace Rockyfi
                 if (attr.TryEvaluate(contextStack, out var attrValue))
                 {
                     ProcessNodeStyle(node, attr.TargetName, attrValue != null ? attrValue.ToString() : "");
-                    ra.attributes[attr.TargetKey] = attrValue;
+                    ra.attributes[attr] = attrValue;
                 }
                 else
                 {
-                    ra.attributes[attr.TargetKey] = null;
+                    ra.attributes[attr] = null;
                 }
             }
 
@@ -609,9 +621,9 @@ namespace Rockyfi
                     break;
             }
         }
-        TemplateNode ConvertXmlTreeToRendererTree(XmlNode element)
+        TemplateNode ConvertXmlToTemplateTree(XmlNode element)
         {
-            TemplateNode renderTreeNode = new TemplateNode();
+            TemplateNode renderTreeNode = new TemplateNode(element.Name);
             foreach (XmlAttribute attr in element.Attributes)
             {
                 if (ForELAttributeName.Equals(attr.Name)) // process el-for
@@ -645,7 +657,7 @@ namespace Rockyfi
             {
                 if (XmlNodeType.Element == ele.NodeType)
                 {
-                    var trn = ConvertXmlTreeToRendererTree(ele);
+                    var trn = ConvertXmlToTemplateTree(ele);
                     trn.Parent = renderTreeNode;
                     renderTreeNode.Children.Add(trn);
                 }
@@ -656,6 +668,50 @@ namespace Rockyfi
             }
 
             return renderTreeNode;
+        }
+        void BuildTopTargetKeys(TemplateNode tnode)
+        {
+            // deal el-for
+            if (tnode.forExpress != null)
+            {
+                dataBind.TryAddTopTargetKey(tnode.forExpress.TargetKey, tnode);
+            }
+
+            // deal el-if
+            if (tnode.ifExpress != null)
+            {
+                foreach(var k in tnode.ifExpress.TargetKeys)
+                {
+                    dataBind.TryAddTopTargetKey(tnode.forExpress.TargetKey, tnode);
+                }
+            }
+
+            // deal el-bind
+            foreach (var attr in tnode.attributeDataBindExpressList)
+            {
+                dataBind.TryAddTopTargetKey(attr.TargetKey, tnode);
+            }
+
+            // deal el-text
+            if (tnode.textDataBindExpress != null)
+            {
+                foreach (var targetKey in tnode.textDataBindExpress.TargetKeys)
+                {
+                    dataBind.TryAddTopTargetKey(targetKey, tnode);
+                }
+            }
+
+            foreach (var ctnode in tnode.Children)
+            {
+                BuildTopTargetKeys(ctnode);
+            }
+        }
+        TemplateNode ConvertXmlToTemplate(XmlNode element)
+        {
+            var template = ConvertXmlToTemplateTree(element);
+            dataBind.ResetTopTargets();
+            BuildTopTargetKeys(template);
+            return template;
         }
         #endregion
 
@@ -676,7 +732,7 @@ namespace Rockyfi
             LinkedList<Node> currentList = null;
             foreach (var child in node.Children)
             {
-                var childTemplate = GetNodeRuntimeAttribute(child).templateRendererNode;
+                var childTemplate = GetNodeRuntimeAttribute(child).template;
                 if (currentTemplate != childTemplate)
                 {
                     currentTemplate = childTemplate;
@@ -697,6 +753,47 @@ namespace Rockyfi
 
             return false;
         }
+
+        bool IsDirty(Node node, ContextStack contextStack, object forContext)
+        {
+            var ra = GetNodeRuntimeAttribute(node);
+            var template = ra.template;
+
+            // is for-item changed ?
+            if (template.forExpress != null)
+            {
+                if (ra.forExpressItemCurrentValue != null && forContext != null)
+                {
+                    if (!forContext.Equals(ra.forExpressItemCurrentValue))
+                        return true;
+                }
+                else if (ra.forExpressItemCurrentValue == null || forContext == null)
+                {
+                    return true;
+                }
+            }
+
+            // is el-bind changed ?
+            foreach (var attr in template.attributeDataBindExpressList)
+            {
+
+
+
+                if (ra.attributes.TryGetValue(attr, out var oldValue))
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+
+            // is text ?
+
+            return false;
+        }
+
         void ReRenderTemplateNodeToTree(Node node, ContextStack contextStack)
         {
             var ra = GetNodeRuntimeAttribute(node);
@@ -773,10 +870,10 @@ namespace Rockyfi
             foreach (var chid in node.Children)
             {
                 var ra = GetNodeRuntimeAttribute(chid);
-                if (ra.templateRendererNode.forExpress != null)
+                if (ra.template.forExpress != null)
                 {
                     contextStack.EnterScope();
-                    contextStack.Set(ra.templateRendererNode.forExpress.IteratorName, ra.forExpressItemCurrentValue);
+                    contextStack.Set(ra.template.forExpress.IteratorName, ra.forExpressItemCurrentValue);
                     ReRenderTemplateNodeToTreeStyle(chid, contextStack);
                     contextStack.LeaveScope();
                 }
@@ -788,18 +885,24 @@ namespace Rockyfi
         }
 
         /// <summary>
-        /// update the tree
+        /// Update and re-renderer the tree, according the data.
         /// </summary>
         public void Update()
         {
-            ReRenderTemplateNodeToTree(root, new ContextStack(runtimeContext));
+            ReRenderTemplateNodeToTree(root, dataBind.GenerateContextStack());
             ReCalculateLayout();
         }
         #endregion
 
+        #region Draw Region
 
         public delegate void DrawNodeFunc(float x, float y, float width, float height, string text, Dictionary<string, object> attribute);
-        public void Draw(DrawNodeFunc drawFunc)
+
+        /// <summary>
+        /// Draw the three with the give draw function
+        /// </summary>
+        /// <param name="defaultDrawFunc">default draw function, draw the component when specify tage draw function not exists</param>
+        public void Draw(DrawNodeFunc defaultDrawFunc = null)
         {
             Queue<Node> queue = new Queue<Node>();
             queue.Enqueue(root);
@@ -807,29 +910,31 @@ namespace Rockyfi
             {
                 var node = queue.Dequeue();
                 var contextAttr = GetNodeRuntimeAttribute(node);
+                var drawFunc = themeDictionary.TryGetValue(contextAttr.template.TagName, out var specifyDrawFunc) ? specifyDrawFunc : defaultDrawFunc;
 
-                
-                var nc = node.Context; // protected node.Context
-
-                var attributes = new Dictionary<string, object>(contextAttr.attributes.Count 
-                    + contextAttr.templateRendererNode.attributes.Count);
-
-                foreach (var kv in contextAttr.templateRendererNode.attributes)
-                    attributes[kv.Key] = kv.Value;
-                foreach (var kv in contextAttr.attributes)
-                    attributes[kv.Key] = kv.Value;
-
-                drawFunc(node.LayoutGetLeft(), node.LayoutGetTop(),
-                    node.LayoutGetWidth(), node.LayoutGetHeight(),
-                    contextAttr.textDataBindExpressCurrentValue,
-                    attributes // contextAttr.attributes ???
-                    );
-                if (!(nc == null && node.Context == null) && nc != node.Context)
+                if (drawFunc != null)
                 {
-                    throw new Exception("cant change node.Context !");
-                }
-                node.Context = nc; // protected node.Context
+                    var nc = node.Context; // protected node.Context
 
+                    var attributes = new Dictionary<string, object>(contextAttr.attributes.Count
+                        + contextAttr.template.attributes.Count);
+
+                    foreach (var kv in contextAttr.template.attributes)
+                        attributes[kv.Key] = kv.Value;
+                    foreach (var kv in contextAttr.attributes)
+                        attributes[kv.Key.TargetName] = kv.Value;
+
+                    defaultDrawFunc(node.LayoutGetLeft(), node.LayoutGetTop(),
+                        node.LayoutGetWidth(), node.LayoutGetHeight(),
+                        contextAttr.textDataBindExpressCurrentValue,
+                        attributes // contextAttr.attributes ???
+                        );
+                    if (!(nc == null && node.Context == null) && nc != node.Context)
+                    {
+                        throw new Exception("cant change node.Context !");
+                    }
+                    node.Context = nc; // protected node.Context
+                }
 
                 foreach (var child in node.Children)
                 {
@@ -838,10 +943,20 @@ namespace Rockyfi
             }
         }
 
+        readonly Dictionary<string, DrawNodeFunc> themeDictionary = new Dictionary<string, DrawNodeFunc>();
+        public void SetTheme(Dictionary<string, DrawNodeFunc> theme)
+        {
+            foreach (var kv in theme)
+            {
+                themeDictionary[kv.Key] = kv.Value;
+            }
+        }
+
+        #endregion
         public void ReRender()
         {
             // start render
-            root = TemplateRendererNodeRenderToTree(templateRendererRoot, new ContextStack(runtimeContext)).First.Value;
+            root = TemplateRendererNodeRenderToTree(templateRendererRoot, dataBind.GenerateContextStack()).First.Value;
             ReCalculateLayout();
         }
 
@@ -856,7 +971,7 @@ namespace Rockyfi
             {
                 XmlReaderSettings settings = new XmlReaderSettings { NameTable = new NameTable() };
                 XmlNamespaceManager xmlns = new XmlNamespaceManager(settings.NameTable);
-                xmlns.AddNamespace("el-bind", "Rockyfi.Factory");
+                xmlns.AddNamespace("el-bind", "Rockyfi.LiteCard");
                 XmlParserContext context = new XmlParserContext(null, xmlns, "", XmlSpace.Default);
                 XmlReader reader = XmlReader.Create(stringReader, settings, context);
                 xmlDocument = new XmlDocument();
@@ -875,10 +990,13 @@ namespace Rockyfi
                     throw new Exception("root element should not contains 'el-if' attribute !");
 
                 // convert to tree
-                templateRendererRoot = ConvertXmlTreeToRendererTree(rootElement);
+                templateRendererRoot = ConvertXmlToTemplate(rootElement);
 
                 // add init data into the context
-                ResetData(contextDictionary);
+                if (contextDictionary != null)
+                {
+                    dataBind.ResetData(contextDictionary);
+                }
 
                 // re-render
                 ReRender();
@@ -887,13 +1005,17 @@ namespace Rockyfi
                 // Console.WriteLine(NodePrinter.PrintToString(root));
             }
         }
-        public static LightCard BuildFactory(string xml)
+        public string Print()
+        {
+            return (NodePrinter.PrintToString(root));
+        }
+        public static ShadowPlay BuildFactory(string xml)
         {
             return BuildFactory(null);
         }
-        public static LightCard BuildFactory(string xml, Dictionary<string, object> contextDictionary)
+        public static ShadowPlay BuildFactory(string xml, Dictionary<string, object> contextDictionary)
         {
-            var factory = new LightCard();
+            var factory = new ShadowPlay();
             factory.Load(xml, contextDictionary);
             return factory;
         }

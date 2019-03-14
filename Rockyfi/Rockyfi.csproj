@@ -36,6 +36,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Rockyfi.CardData.cs" />
     <Compile Include="Rockyfi.cs" />
     <Compile Include="Rockyfi.Enum.cs" />
     <Compile Include="Rockyfi.Factory.ContextStack.cs" />
@@ -47,6 +48,7 @@
     <Compile Include="Rockyfi.Print.cs" />
     <Compile Include="Rockyfi.Public.cs" />
     <Compile Include="Rockyfi.Struct.cs" />
+    <Compile Include="Rockyfi.Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

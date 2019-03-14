@@ -4,11 +4,19 @@ using System.Xml;
 
 namespace Rockyfi
 {
-    public partial class LightCard
+
+    public partial class ShadowPlay
     {
         #region DataBind
         internal class TemplateNode
         {
+            public TemplateNode(string tagName)
+            {
+                TagName = tagName;
+            }
+
+            public readonly string TagName;
+
             internal TemplateNode Parent;
             internal IfDataBindExpress ifExpress = null;
             internal ForDataBindExpress forExpress = null;
@@ -22,18 +30,36 @@ namespace Rockyfi
         class RuntimeNodeAttribute
         {
             internal Node node;
-            internal readonly TemplateNode templateRendererNode; // where node come from
+            internal readonly TemplateNode template; // where node come from
+            internal CardData dataSource;
+            internal CardData dataSourceParent;
+            internal bool isListMember = false;
+            internal int indexAtDataSourceParent;
+            internal string nameAtDataSourceParent;
 
             public RuntimeNodeAttribute(Node node, TemplateNode templateRendererNode)
             {
                 this.node = node;
-                this.templateRendererNode = templateRendererNode;
+                this.template = templateRendererNode;
             }
 
             public bool IsDirty = false;
             internal object forExpressItemCurrentValue = null;
             internal string textDataBindExpressCurrentValue = null;
-            internal readonly Dictionary<string, object> attributes = new Dictionary<string, object>();
+            internal readonly Dictionary<AttributeDataBindExpress, object> attributes = new Dictionary<AttributeDataBindExpress, object>();
+
+            internal class ChildGroup
+            {
+                public readonly TemplateNode Template;
+                public readonly LinkedList<Node> NodeList = new LinkedList<Node>();
+
+                public ChildGroup(TemplateNode tnode)
+                {
+                    Template = tnode;
+                }
+            }
+
+            internal readonly LinkedList<ChildGroup> Children = new LinkedList<ChildGroup>();
         }
 
         RuntimeNodeAttribute CreateRuntimeNodeAttribute(Node node, TemplateNode templateRendererNode)
@@ -48,34 +74,133 @@ namespace Rockyfi
             return node.Context as RuntimeNodeAttribute;
         }
 
-        interface DataWatcher
+        interface IDataBindWatcher
         {
             void DataChanged(object newValue, object oldValue);
         }
 
-        class ExpressBind
-        {
-            ExpressBind parent;
-
-        }
+        //class ExpressBind
+        //{
+        //    ExpressBind parent;
+        //}
 
         class DataBind
         {
-            readonly Dictionary<string, ForDataBindExpress> forExpressBind = new Dictionary<string, ForDataBindExpress>();
-            readonly Dictionary<string, IfDataBindExpress> ifExpressBind = new Dictionary<string, IfDataBindExpress>();
-            readonly Dictionary<string, AttributeDataBindExpress> attrExpressBind = new Dictionary<string, AttributeDataBindExpress>();
+            //readonly Dictionary<string, ForDataBindExpress> forExpressBind = new Dictionary<string, ForDataBindExpress>();
+            //readonly Dictionary<string, IfDataBindExpress> ifExpressBind = new Dictionary<string, IfDataBindExpress>();
+            //readonly Dictionary<string, AttributeDataBindExpress> attrExpressBind = new Dictionary<string, AttributeDataBindExpress>();
 
-            readonly Dictionary<string, ExpressBind> expressBind = new Dictionary<string, ExpressBind>();
+            //readonly Dictionary<string, ExpressBind> expressBind = new Dictionary<string, ExpressBind>();
 
-            public void SetExpress(ForDataBindExpress x)
+            //public void SetExpress(ForDataBindExpress x)
+            //{
+
+            //}
+
+            readonly Dictionary<string, object> runtimeContext = new Dictionary<string, object>();
+            readonly LiteSet<string> TopTargetKeys = new LiteSet<string>();
+
+            public void ResetTopTargets()
             {
-
+                TopTargetKeys.Clear();
             }
 
+            public string GetTopTarget(string targetItem, TemplateNode templateNode)
+            {
+                string currentTarget = targetItem;
+                var tnode = templateNode;
+                while (tnode != null && !TopTargetKeys.Contains(currentTarget))
+                {
+                    if (tnode.forExpress != null)
+                    {
+                        currentTarget = tnode.forExpress.TargetKey;
+                    }
+                    tnode = tnode.Parent;
+                }
+
+                return currentTarget;
+            }
+
+            public bool TryAddTopTargetKey(string targetItem, TemplateNode templateNode)
+            {
+                var keyStr = GetTopTarget(targetItem, templateNode);
+                if (keyStr != null)
+                {
+                    TopTargetKeys.Add(keyStr);
+                    return true;
+                }
+                return false;
+            }
+
+            public ContextStack GenerateContextStack()
+            {
+                return new ContextStack(runtimeContext);
+            }
+
+            public void ResetData(Dictionary<string, object> contextDictionary)
+            {
+                runtimeContext.Clear();
+                if (contextDictionary != null)
+                {
+                    foreach (var kv in contextDictionary)
+                    {
+                        runtimeContext[kv.Key] = kv.Value;
+                    }
+                }
+            }
+
+            /// <summary>
+            /// update data in value, if the value different then before then re-renderer the tree
+            /// </summary>
+            /// <param name="key"></param>
+            /// <param name="data"></param>
+            public void SetData(string key, object data)
+            {
+                if (key == null)
+                    return;
+
+                if (runtimeContext.TryGetValue(key, out var oldData) && data != null && oldData != null)
+                {
+                    if (data != null && data.Equals(oldData)
+                        || oldData != null && oldData.Equals(data))
+                        return;
+
+                }
+
+                runtimeContext[key] = data;
+            }
+
+            /// <summary>
+            /// return null is no key on ...
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
+            public object GetData(string key)
+            {
+                return runtimeContext.TryGetValue(key, out var obj) ? obj : null;
+            }
         }
 
 
-        readonly Dictionary<string, ForDataBindExpress> topDomain = new Dictionary<string, ForDataBindExpress>();
+        /// <summary>
+        /// update data in value, if the value different then before then re-renderer the tree
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="data"></param>
+        public void SetData(string key, object data)
+        {
+            dataBind.SetData(key, data);
+        }
+
+        /// <summary>
+        /// return null is no key on ...
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public object GetData(string key)
+        {
+            return dataBind.GetData(key);
+        }
 
 
         //readonly Dictionary<string, LinkedList<RuntimeNodeAttribute>> textEffectBind = new Dictionary<string, LinkedList<RuntimeNodeAttribute>>();
@@ -129,190 +254,20 @@ namespace Rockyfi
         //    //}
         //}
 
-
-        //void BindXMLNodeWithNode(XmlNode element, Node node, Node parentNode)
-        //{
-        //    AddRangeElementList();
-        //}
-
-        void BindIfExpressWithNode(TemplateNode tnode, IfDataBindExpress express, Node node, Node parentNode)
+        void BindAttributeExpress(AttributeDataBindExpress attributeDataBindExpress, Node node, ContextStackData contextStackData)
         {
-            //if (express == null || node == null)
-            //    return;
-
-            //if (!express.IsEffectedByContext && express.TargetKeys != null)
-            //{
-            //    // TODO:
-            //    //if (effectBind.TryGetValue(key, out DataBindContext bind))
-            //    //{
-            //    //    bind.Data = "";
-            //    //}
-            //}
-        }
-
-        void BindForExpressWithNode(TemplateNode tnode, ForDataBindExpress express, Node node, Node parentNode)
-        {
-            //if (express == null)
-            //    return;
-
-            //// TODO:
-            //if (!forExpressEffectBind.TryGetValue(express.TargetKey, out var list))
-            //{
-            //    list = new LinkedList<RuntimeNodeAttribute>();
-            //    forExpressEffectBind.Add(express.TargetKey, list);
-            //}
-
-            //var ca = GetNodeRuntimeAttribute(parentNode);
-            //ca.forExpress = express;
-            //list.AddLast(GetNodeRuntimeAttribute(node));
-        }
-
-        void BindAttributeExpressWithNode(TemplateNode tnode, AttributeDataBindExpress express, Node node, Node parentNode)
-        {
-            //if (express == null)
-            //    return;
-
-            //// TODO:
-            //if (!attributeEffectBind.TryGetValue(express.TargetKey, out var list))
-            //{
-            //    list = new LinkedList<RuntimeNodeAttribute>();
-            //    forExpressEffectBind.Add(express.TargetKey, list);
-            //}
-
-
-            //var ca = GetNodeRuntimeAttribute(node);
-            //ca.attributeDataBindExpressList.AddLast(express);
-            //list.AddLast(ca);
+            var ra = GetNodeRuntimeAttribute(node);
+            ra.dataSource.AddDataChangedWatcher((string name, object newValue, object oldValue) =>
+            {
+                // change it style
+                ProcessNodeStyle(node, name, newValue != null ? newValue.ToString() : "");
+                ra.attributes[attributeDataBindExpress] = newValue;
+            });
         }
 
         void BindTextExpressWithNode(TemplateNode tnode, TextDataBindExpress express, Node node, Node parentNode)
         {
-            //if (express == null)
-            //    return;
 
-            //// TODO:
-
-            //var ca = GetNodeRuntimeAttribute(node);
-            //foreach (var tkey in express.TargetKeys)
-            //{
-
-            //    if (!attributeEffectBind.TryGetValue(tkey, out var list))
-            //    {
-            //        list = new LinkedList<RuntimeNodeAttribute>();
-            //        forExpressEffectBind.Add(tkey, list);
-            //    }
-
-            //    list.AddLast(ca);
-            //}
-            //ca.textDataBindExpress = express;
-        }
-
-        ///// <summary>
-        ///// update data in value
-        ///// </summary>
-        ///// <param name="key"></param>
-        ///// <param name="data"></param>
-        //public void SetData(string key, object data)
-        //{
-        //    if (key == null)
-        //        return;
-
-        //    //LinkedList<RuntimeNodeAttribute> nodeAttributeList;
-        //    //if (attributeEffectBind.TryGetValue(key, out nodeAttributeList))
-        //    //{
-        //    //    foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
-        //    //    {
-        //    //        foreach (var attrExp in nodeAttribute.attributeDataBindExpressList)
-        //    //        {
-        //    //            if (key.Equals(attrExp.TargetKey))
-        //    //            {
-        //    //                object result = attrExp.TryEvaluate(contextStack, out object value) ? value : null;
-        //    //                nodeAttribute.attributes[key] = result;
-        //    //                ProcessNodeStyle(nodeAttribute.node, attrExp.TargetName, value != null ? value.ToString() : "");
-        //    //                return;
-        //    //            }
-        //    //        }
-        //    //    }
-        //    //}
-        //    //else if (textEffectBind.TryGetValue(key, out nodeAttributeList))
-        //    //{
-        //    //    foreach (RuntimeNodeAttribute nodeAttribute in nodeAttributeList)
-        //    //    {
-        //    //        nodeAttribute.textDataBindExpressCurrentValue = nodeAttribute.textDataBindExpress.Evaluate(contextStack);
-        //    //    }
-        //    //}
-        //    //else if (forExpressEffectBind.TryGetValue(key, out nodeAttributeList))
-        //    //{
-        //    //    foreach (RuntimeNodeAttribute childNodeAttribute in nodeAttributeList)
-        //    //    {
-        //    //        // remove old child
-        //    //        var parentNode = childNodeAttribute.node.Parent;
-        //    //        var parentNodeAttribute = GetNodeRuntimeAttribute(parentNode);
-
-        //    //        foreach (var range in parentNodeAttribute.childernNodeElemetRangeList)
-        //    //        {
-        //    //            var testEle = range.element;
-        //    //            foreach (var eledChildNode in range.nodes)
-        //    //            {
-        //    //                if (testEle == childNodeAttribute.element)
-        //    //                {
-        //    //                    parentNode.RemoveChild(eledChildNode);
-        //    //                }
-        //    //            }
-        //    //        }
-
-        //    //        // evaluate the value
-        //    //        parentNodeAttribute.textDataBindExpressCurrentValue = parentNodeAttribute.textDataBindExpress.Evaluate(contextStack);
-
-
-        //    //        // add to the ...
-
-        //    //    }
-        //    //}
-        //}
-
-        public void ResetData(Dictionary<string, object> contextDictionary)
-        {
-            runtimeContext.Clear();
-            if (contextDictionary != null)
-            {
-                foreach (var kv in contextDictionary)
-                {
-                    runtimeContext[kv.Key] = kv.Value;
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// update data in value, if the value different then before then re-renderer the tree
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="data"></param>
-        public void SetData(string key, object data)
-        {
-            if (key == null)
-                return;
-
-            if (runtimeContext.TryGetValue(key, out var oldData) && data != null && oldData != null)
-            {
-                if (data != null && data.Equals(oldData)
-                    || oldData != null && oldData.Equals(data))
-                    return;
-
-            }
-
-            runtimeContext[key] = data;
-        }
-
-        /// <summary>
-        /// return null is no key on ...
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public object GetData(string key)
-        {
-            return runtimeContext.TryGetValue(key, out var obj) ? obj : null;
         }
 
         #endregion

@@ -9,7 +9,7 @@ namespace RockyfiFactory
 {
     class SceneList: Scene
     {
-        Rockyfi.LightCard factory = new Rockyfi.LightCard();
+        Rockyfi.ShadowPlay factory = new Rockyfi.ShadowPlay();
         public override void Load()
         {
             string tmpXML3List = @"<root>
@@ -17,7 +17,7 @@ namespace RockyfiFactory
     <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin-top=""mt"" el-bind:id=""item"" width=""100px"" height=""100px""/>
 </div>
 </root>";
-            factory = new Rockyfi.LightCard();
+            factory = new Rockyfi.ShadowPlay();
             factory.Load(tmpXML3List, new Dictionary<string, object>()
             {
                 { "styleObj", this},

@@ -141,7 +141,7 @@ namespace Rockyfi
             var s = currentValue as string[];
             if (s != null)
             {
-                return "[obj symbol]" + string.Join(".", s);
+                return "[object symbol]" + string.Join(".", s);
             }
             return currentValue != null ? currentValue.ToString() : null;
         }
@@ -219,7 +219,7 @@ namespace Rockyfi
 
     // TODO : write test ......
 
-    public partial class LightCard
+    public partial class ShadowPlay
     {
         #region Abstract syntax tree
         // The Regex class itself is thread safe and immutable(read-only). That is,
