@@ -38,7 +38,6 @@ namespace Rockyfi
 
 
         public object Context;
-        public readonly Dictionary<string, object> Atrribute = new Dictionary<string, object>();
 
         public void CalculateLayout(float parentWidth, float parentHeight, Direction parentDirection)
         {

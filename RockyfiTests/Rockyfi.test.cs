@@ -14674,10 +14674,7 @@ namespace Rockyfi
 
             Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
-            StringBuilder writer = new StringBuilder();
-            var printer = new NodePrinter(writer, true, true, true);
-            printer.Print(root);
-            var got = writer.ToString();
+            var got = NodePrinter.PrintToString(root);
             var exp = @"<div layout=""width: 40; height: 40; top: 0; left: 0;"" style=""height: 100%; "">
   <div layout=""width: 40; height: 40; top: 0; left: 0;"" style=""padding: 20px; ""></div>
 </div>".Replace("\r\n", "\n");

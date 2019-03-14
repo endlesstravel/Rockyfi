@@ -3,6 +3,11 @@ namespace Rockyfi
 {
     public partial class Node
     {
+        public void MarkAsDirty()
+        {
+            Rockyfi.nodeMarkDirtyInternal(this);
+        }
+
         #region Style
         // StyleSetWidth sets width
         public void StyleSetWidth(float width) {
@@ -696,6 +701,10 @@ namespace Rockyfi
         public Node GetChild(int idx)
         {
             return Rockyfi.GetChild(this, idx);
+        }
+        public void AddChild(Node child)
+        {
+            Rockyfi.InsertChild(this, child, ChildrenCount);
         }
         public void InsertChild(Node child, int idx)
         {
