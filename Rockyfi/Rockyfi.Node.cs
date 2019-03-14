@@ -5,7 +5,7 @@ namespace Rockyfi
     public partial class Node
     {
         readonly internal Style nodeStyle = new Style();
-        readonly internal Rockyfi.Layout nodeLayout = new Rockyfi.Layout();
+        readonly internal Flex.Layout nodeLayout = new Flex.Layout();
         internal int lineIndex;
 
         internal Node Parent = null;
@@ -33,7 +33,7 @@ namespace Rockyfi
         internal bool hasNewLayout = true;
         internal NodeType NodeType = NodeType.Default;
 
-        internal readonly Value[] resolvedDimensions = new Value[2] { Rockyfi.ValueUndefined, Rockyfi.ValueUndefined };
+        internal readonly Value[] resolvedDimensions = new Value[2] { Flex.ValueUndefined, Flex.ValueUndefined };
 
 
 
@@ -41,7 +41,7 @@ namespace Rockyfi
 
         public void CalculateLayout(float parentWidth, float parentHeight, Direction parentDirection)
         {
-            Rockyfi.CalculateLayout(this, parentWidth, parentHeight, parentDirection);
+            Flex.CalculateLayout(this, parentWidth, parentHeight, parentDirection);
         }
     }
 

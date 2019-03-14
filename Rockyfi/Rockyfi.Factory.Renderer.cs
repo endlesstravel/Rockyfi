@@ -286,37 +286,37 @@ namespace Rockyfi
             switch (attrKey)
             {
                 case "position":
-                    if (Rockyfi.StringToPositionType(attrValue, out PositionType position))
+                    if (Flex.StringToPositionType(attrValue, out PositionType position))
                     {
                         node.StyleSetPositionType(position);
                     }
                     break;
                 case "align-content":
-                    if (Rockyfi.StringToAlign(attrValue, out Align alignContent))
+                    if (Flex.StringToAlign(attrValue, out Align alignContent))
                     {
                         node.StyleSetAlignContent(alignContent);
                     }
                     break;
                 case "align-items":
-                    if (Rockyfi.StringToAlign(attrValue, out Align alignItem))
+                    if (Flex.StringToAlign(attrValue, out Align alignItem))
                     {
                         node.StyleSetAlignItems(alignItem);
                     }
                     break;
                 case "align-self":
-                    if (Rockyfi.StringToAlign(attrValue, out Align alignSelf))
+                    if (Flex.StringToAlign(attrValue, out Align alignSelf))
                     {
                         node.StyleSetAlignSelf(alignSelf);
                     }
                     break;
                 case "flex-direction":
-                    if (Rockyfi.StringToFlexDirection(attrValue, out FlexDirection flexDirection))
+                    if (Flex.StringToFlexDirection(attrValue, out FlexDirection flexDirection))
                     {
                         node.StyleSetFlexDirection(flexDirection);
                     }
                     break;
                 case "flex-wrap":
-                    if (Rockyfi.StringToWrap(attrValue, out Wrap flexWrap))
+                    if (Flex.StringToWrap(attrValue, out Wrap flexWrap))
                     {
                         node.StyleSetFlexWrap(flexWrap);
                     }
@@ -349,13 +349,13 @@ namespace Rockyfi
                     }
                     break;
                 case "justify-content":
-                    if (Rockyfi.StringToJustify(attrValue, out Justify justifyContent))
+                    if (Flex.StringToJustify(attrValue, out Justify justifyContent))
                     {
                         node.StyleSetJustifyContent(justifyContent);
                     }
                     break;
                 case "direction":
-                    if (Rockyfi.StringToDirection(attrValue, out Direction direction))
+                    if (Flex.StringToDirection(attrValue, out Direction direction))
                     {
                         node.StyleSetDirection(direction);
                     }
@@ -395,7 +395,7 @@ namespace Rockyfi
                                     }
                                 }
                             }
-                            else if (Rockyfi.StringToEdge(tail, out Edge edge))
+                            else if (Flex.StringToEdge(tail, out Edge edge))
                             {
                                 node.Helper_SetMarginPaddingBorder(head, edge, ParseValueFromString(attrValue));
                             }
@@ -432,7 +432,7 @@ namespace Rockyfi
         }
         Node TemplateRendererNodeRender(TemplateNode tnode, ContextStack contextStack, object forContext)
         {
-            Node node = Rockyfi.CreateDefaultNode();
+            Node node = Flex.CreateDefaultNode();
             var ra = CreateRuntimeNodeAttribute(node, tnode);
 
             // set el-for value
@@ -490,55 +490,55 @@ namespace Rockyfi
             switch (attrKey)
             {
                 case "direction":
-                    if (Rockyfi.StringToDirection(attrValue, out Direction direction))
+                    if (Flex.StringToDirection(attrValue, out Direction direction))
                     {
                         style.Direction = direction;
                     }
                     break;
                 case "flex-direction":
-                    if (Rockyfi.StringToFlexDirection(attrValue, out FlexDirection flexDirection))
+                    if (Flex.StringToFlexDirection(attrValue, out FlexDirection flexDirection))
                     {
                         style.FlexDirection = flexDirection;
                     }
                     break;
                 case "justify-content":
-                    if (Rockyfi.StringToJustify(attrValue, out Justify justifyContent))
+                    if (Flex.StringToJustify(attrValue, out Justify justifyContent))
                     {
                         style.JustifyContent = justifyContent;
                     }
                     break;
                 case "align-content":
-                    if (Rockyfi.StringToAlign(attrValue, out Align alignContent))
+                    if (Flex.StringToAlign(attrValue, out Align alignContent))
                     {
                         style.AlignContent = alignContent;
                     }
                     break;
                 case "align-items":
-                    if (Rockyfi.StringToAlign(attrValue, out Align alignItem))
+                    if (Flex.StringToAlign(attrValue, out Align alignItem))
                     {
                         style.AlignItems = alignItem;
                     }
                     break;
                 case "align-self":
-                    if (Rockyfi.StringToAlign(attrValue, out Align alignSelf))
+                    if (Flex.StringToAlign(attrValue, out Align alignSelf))
                     {
                         style.AlignSelf = alignSelf;
                     }
                     break;
                 case "flex-wrap":
-                    if (Rockyfi.StringToWrap(attrValue, out Wrap flexWrap))
+                    if (Flex.StringToWrap(attrValue, out Wrap flexWrap))
                     {
                         style.FlexWrap = flexWrap;
                     }
                     break;
                 case "overflow":
-                    if (Rockyfi.StringToOverflow(attrValue, out Overflow overflow))
+                    if (Flex.StringToOverflow(attrValue, out Overflow overflow))
                     {
                         style.Overflow = overflow;
                     }
                     break;
                 case "display":
-                    if (Rockyfi.StringToDisplay(attrValue, out Display display))
+                    if (Flex.StringToDisplay(attrValue, out Display display))
                     {
                         style.Display = display;
                     }
@@ -565,7 +565,7 @@ namespace Rockyfi
                     style.FlexBasis = ParseValueFromString(attrValue);
                     break;
                 case "position":
-                    if (Rockyfi.StringToPositionType(attrValue, out PositionType position))
+                    if (Flex.StringToPositionType(attrValue, out PositionType position))
                     {
                         style.PositionType = position;
                     }
@@ -613,7 +613,7 @@ namespace Rockyfi
                                 }
                             }
                         }
-                        else if (Rockyfi.StringToEdge(tail, out Edge edge))
+                        else if (Flex.StringToEdge(tail, out Edge edge))
                         {
                             valuesToSet[(int)edge] = ParseValueFromString(attrValue);
                         }

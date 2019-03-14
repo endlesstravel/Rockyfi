@@ -55,19 +55,19 @@ namespace Rockyfi
             if (PrintOptionsStyle) {
                 printer.printf("style=\"");
                 if (node.nodeStyle.FlexDirection != Constant.nodeDefaults.nodeStyle.FlexDirection) {
-                    printer.printf($"flex-direction: {Rockyfi.FlexDirectionToString(node.nodeStyle.FlexDirection)}; ");
+                    printer.printf($"flex-direction: {Flex.FlexDirectionToString(node.nodeStyle.FlexDirection)}; ");
                 }
                 if (node.nodeStyle.JustifyContent != Constant.nodeDefaults.nodeStyle.JustifyContent) {
-                    printer.printf($"justify-content: {Rockyfi.JustifyToString(node.nodeStyle.JustifyContent)}; ");
+                    printer.printf($"justify-content: {Flex.JustifyToString(node.nodeStyle.JustifyContent)}; ");
                 }
                 if (node.nodeStyle.AlignItems != Constant.nodeDefaults.nodeStyle.AlignItems) {
-                    printer.printf($"align-items: {Rockyfi.AlignToString(node.nodeStyle.AlignItems)}; ");
+                    printer.printf($"align-items: {Flex.AlignToString(node.nodeStyle.AlignItems)}; ");
                 }
                 if (node.nodeStyle.AlignContent != Constant.nodeDefaults.nodeStyle.AlignContent) {
-                    printer.printf($"align-content: {Rockyfi.AlignToString(node.nodeStyle.AlignContent)}; ");
+                    printer.printf($"align-content: {Flex.AlignToString(node.nodeStyle.AlignContent)}; ");
                 }
                 if (node.nodeStyle.AlignSelf != Constant.nodeDefaults.nodeStyle.AlignSelf) {
-                    printer.printf($"align-self: {Rockyfi.AlignToString(node.nodeStyle.AlignSelf)}; ");
+                    printer.printf($"align-self: {Flex.AlignToString(node.nodeStyle.AlignSelf)}; ");
                 }
 
                 printer.printFloatIfNotUndefined(node, "flex-grow", node.nodeStyle.FlexGrow);
@@ -76,15 +76,15 @@ namespace Rockyfi
                 printer.printFloatIfNotUndefined(node, "flex", node.nodeStyle.Flex);
 
                 if (node.nodeStyle.FlexWrap != Constant.nodeDefaults.nodeStyle.FlexWrap) {
-                    printer.printf($"flexWrap: {Rockyfi.WrapToString(node.nodeStyle.FlexWrap)}; ");
+                    printer.printf($"flexWrap: {Flex.WrapToString(node.nodeStyle.FlexWrap)}; ");
                 }
 
                 if (node.nodeStyle.Overflow != Constant.nodeDefaults.nodeStyle.Overflow) {
-                    printer.printf($"overflow: {Rockyfi.OverflowToString(node.nodeStyle.Overflow)}; ");
+                    printer.printf($"overflow: {Flex.OverflowToString(node.nodeStyle.Overflow)}; ");
                 }
 
                 if (node.nodeStyle.Display != Constant.nodeDefaults.nodeStyle.Display) {
-                    printer.printf($"display: {Rockyfi.DisplayToString(node.nodeStyle.Display)}; ");
+                    printer.printf($"display: {Flex.DisplayToString(node.nodeStyle.Display)}; ");
                 }
 
                 printer.printEdges(node, "margin", node.nodeStyle.Margin);
@@ -99,7 +99,7 @@ namespace Rockyfi
                 printer.printNumberIfNotAuto(node, "min-height", node.nodeStyle.MinDimensions[(int)Dimension.Height]);
 
                 if (node.nodeStyle.PositionType != Constant.nodeDefaults.nodeStyle.PositionType) {
-                    printer.printf($"position: {Rockyfi.PositionTypeToString(node.nodeStyle.PositionType)}; ");
+                    printer.printf($"position: {Flex.PositionTypeToString(node.nodeStyle.PositionType)}; ");
                 }
 
                 printer.printEdgeIfNotUndefined(node, "left", node.nodeStyle.Position, Edge.Left);
@@ -142,14 +142,14 @@ namespace Rockyfi
                 printNumberIfNotZero(node, str, edges[(int)Edge.All]);
             } else {
                 for (var edge = (int)Edge.Left; edge < Constant.EdgeCount; edge++) {
-                    var buf = $"{str}-{Rockyfi.EdgeToString((Edge)edge)}";
+                    var buf = $"{str}-{Flex.EdgeToString((Edge)edge)}";
                     printNumberIfNotZero(node, buf, edges[edge]);
                 }
             }
         }
 
         void printEdgeIfNotUndefined(Node node, string str, Value[] edges, Edge edge) {
-            printNumberIfNotUndefined(node, str, Rockyfi.computedEdgeValue(edges, edge, Value.UndefinedValue));
+            printNumberIfNotUndefined(node, str, Flex.computedEdgeValue(edges, edge, Value.UndefinedValue));
         }
 
         void printFloatIfNotUndefined(Node node, string str, float number) {
@@ -180,7 +180,7 @@ namespace Rockyfi
         }
 
         void printNumberIfNotZero(Node node, string str, Value number) {
-            if (!Rockyfi.FloatsEqual(number.value, 0)) {
+            if (!Flex.FloatsEqual(number.value, 0)) {
                 printNumberIfNotUndefined(node, str, number);
             }
         }
@@ -195,8 +195,8 @@ namespace Rockyfi
         }
 
         bool fourValuesEqual(Value[] four) {
-            return Rockyfi.ValueEqual(four[0], four[1]) && Rockyfi.ValueEqual(four[0], four[2]) &&
-                Rockyfi.ValueEqual(four[0], four[3]);
+            return Flex.ValueEqual(four[0], four[1]) && Flex.ValueEqual(four[0], four[2]) &&
+                Flex.ValueEqual(four[0], four[3]);
         }
 
     }

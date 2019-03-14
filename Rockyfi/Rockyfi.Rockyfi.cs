@@ -51,8 +51,8 @@ namespace Rockyfi
 
 
 
-        internal readonly static Node nodeDefaults = Rockyfi.CreateDefaultNode();
-        internal readonly static Config configDefaults = Rockyfi.CreateDefaultConfig();
+        internal readonly static Node nodeDefaults = Flex.CreateDefaultNode();
+        internal readonly static Config configDefaults = Flex.CreateDefaultConfig();
 
 
 
@@ -137,7 +137,7 @@ namespace Rockyfi
         }
     }
 
-    public partial class Rockyfi
+    public partial class Flex
     {
         internal class CachedMeasurement
         {
@@ -375,7 +375,7 @@ namespace Rockyfi
                 // TODO: t18095186 Move nodeType to opt-in function and mark appropriate places in Litho
                 node.NodeType = NodeType.Default;
             } else {
-                Rockyfi.assertWithNode(
+                Flex.assertWithNode(
                     node,
                     node.Children.Count == 0,
                     "Cannot set measure function: Nodes with measure functions cannot have children.");
@@ -388,8 +388,8 @@ namespace Rockyfi
         // InsertChild inserts a child
         internal static void InsertChild(Node node, Node child, int idx)
         {
-            Rockyfi.assertWithNode(node, child.Parent == null, "Child already has a parent, it must be removed first.");
-            Rockyfi.assertWithNode(node, node.measureFunc == null, "Cannot add child: Nodes with measure functions cannot have children.");
+            Flex.assertWithNode(node, child.Parent == null, "Child already has a parent, it must be removed first.");
+            Flex.assertWithNode(node, node.measureFunc == null, "Cannot add child: Nodes with measure functions cannot have children.");
 
             node.Children.Insert(idx, child);
             child.Parent = node;
@@ -415,7 +415,7 @@ namespace Rockyfi
 
         // MarkDirty marks node as dirty
         internal static void MarkDirty(Node node) {
-            Rockyfi.assertWithNode(node, node.measureFunc != null,
+            Flex.assertWithNode(node, node.measureFunc != null,
                 "Only leaf nodes with custom measure functions should manually mark themselves as dirty");
             nodeMarkDirtyInternal(node);
         }
@@ -667,7 +667,7 @@ namespace Rockyfi
         internal static float Baseline(Node node) {
             if (node.baselineFunc != null) {
                 var baseline = node.baselineFunc(node, node.nodeLayout.measuredDimensions[(int)Dimension.Width], node.nodeLayout.measuredDimensions[(int)Dimension.Height]);
-                Rockyfi.assertWithNode(node, !FloatIsUndefined(baseline), "Expect custom baseline function to not return NaN");
+                Flex.assertWithNode(node, !FloatIsUndefined(baseline), "Expect custom baseline function to not return NaN");
                 return baseline;
             }
             else
@@ -1218,7 +1218,7 @@ namespace Rockyfi
 
         // nodeWithMeasureFuncSetMeasuredDimensions sets measure dimensions for node with measure func
         internal static void nodeWithMeasureFuncSetMeasuredDimensions(Node node, float availableWidth, float availableHeight, MeasureMode widthMeasureMode, MeasureMode heightMeasureMode, float parentWidth, float parentHeight) {
-            Rockyfi.assertWithNode(node, node.measureFunc != null, "Expected node to have custom measure function");
+            Flex.assertWithNode(node, node.measureFunc != null, "Expected node to have custom measure function");
 
             var paddingAndBorderAxisRow = nodePaddingAndBorderForAxis(node, FlexDirection.Row, availableWidth);
             var paddingAndBorderAxisColumn = nodePaddingAndBorderForAxis(node, FlexDirection.Column, availableWidth);
@@ -2626,10 +2626,10 @@ namespace Rockyfi
             var effectiveLastHeight = lastHeight;
 
             if (useRoundedComparison ) {
-                effectiveWidth = Rockyfi.RoundValueToPixelGrid(width, config.PointScaleFactor, false, false);
-                effectiveHeight = Rockyfi.RoundValueToPixelGrid(height, config.PointScaleFactor, false, false);
-                effectiveLastWidth = Rockyfi.RoundValueToPixelGrid(lastWidth, config.PointScaleFactor, false, false);
-                effectiveLastHeight = Rockyfi.RoundValueToPixelGrid(lastHeight, config.PointScaleFactor, false, false);
+                effectiveWidth = Flex.RoundValueToPixelGrid(width, config.PointScaleFactor, false, false);
+                effectiveHeight = Flex.RoundValueToPixelGrid(height, config.PointScaleFactor, false, false);
+                effectiveLastWidth = Flex.RoundValueToPixelGrid(lastWidth, config.PointScaleFactor, false, false);
+                effectiveLastHeight = Flex.RoundValueToPixelGrid(lastHeight, config.PointScaleFactor, false, false);
             }
 
             var hasSameWidthSpec = lastWidthMode == widthMode && FloatsEqual(effectiveLastWidth, effectiveWidth);
@@ -2917,8 +2917,8 @@ namespace Rockyfi
             // lead to unwanted text truncation.
             var textRounding = node.NodeType == NodeType.Text;
 
-            node.nodeLayout.Position[(int)Edge.Left] = Rockyfi.RoundValueToPixelGrid(nodeLeft, pointScaleFactor, false, textRounding);
-            node.nodeLayout.Position[(int)Edge.Top] = Rockyfi.RoundValueToPixelGrid(nodeTop, pointScaleFactor, false, textRounding);
+            node.nodeLayout.Position[(int)Edge.Left] = Flex.RoundValueToPixelGrid(nodeLeft, pointScaleFactor, false, textRounding);
+            node.nodeLayout.Position[(int)Edge.Top] = Flex.RoundValueToPixelGrid(nodeTop, pointScaleFactor, false, textRounding);
 
             // We multiply dimension by scale factor and if the result is close to the whole number, we don't have any fraction
             // To verify if the result is close to whole number we want to check both floor and ceil numbers
@@ -2928,19 +2928,19 @@ namespace Rockyfi
                 !FloatsEqual(fmodf(nodeHeight*pointScaleFactor, 1), 1);
 
             node.nodeLayout.Dimensions[(int)Dimension.Width] =
-                Rockyfi.RoundValueToPixelGrid(
+                Flex.RoundValueToPixelGrid(
                     absoluteNodeRight,
                     pointScaleFactor,
                     (textRounding && hasFractionalWidth),
                     (textRounding && !hasFractionalWidth)) -
-                    Rockyfi.RoundValueToPixelGrid(absoluteNodeLeft, pointScaleFactor, false, textRounding);
+                    Flex.RoundValueToPixelGrid(absoluteNodeLeft, pointScaleFactor, false, textRounding);
             node.nodeLayout.Dimensions[(int)Dimension.Height] =
-                Rockyfi.RoundValueToPixelGrid(
+                Flex.RoundValueToPixelGrid(
                     absoluteNodeBottom,
                     pointScaleFactor,
                     (textRounding && hasFractionalHeight),
                     (textRounding && !hasFractionalHeight)) -
-                    Rockyfi.RoundValueToPixelGrid(absoluteNodeTop, pointScaleFactor, false, textRounding);
+                    Flex.RoundValueToPixelGrid(absoluteNodeTop, pointScaleFactor, false, textRounding);
 
             foreach (var child in node.Children) {
                 roundToPixelGrid(child, pointScaleFactor, absoluteNodeLeft, absoluteNodeTop);

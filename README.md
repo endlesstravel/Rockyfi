@@ -19,18 +19,18 @@ more example please check [test file](RockyfiTests/Rockyfi.test.cs)
 
 
 ```C#
-var root = Rockyfi.CreateDefaultNode();
+var root = Flex.CreateDefaultNode();
 root.StyleSetWidth(100);
 root.StyleSetHeight(100);
 
-var rootChild0 = Rockyfi.CreateDefaultNode();
+var rootChild0 = Flex.CreateDefaultNode();
 rootChild0.StyleSetPositionType(PositionType.Absolute);
 rootChild0.StyleSetPosition(Edge.Start, 10);
 rootChild0.StyleSetPosition(Edge.Top, 10);
 rootChild0.StyleSetWidth(10);
 rootChild0.StyleSetHeight(10);
 root.InsertChild(rootChild0, 0);
-Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
 assertFloatEqual(0, root.LayoutGetLeft());
 assertFloatEqual(0, root.LayoutGetTop());

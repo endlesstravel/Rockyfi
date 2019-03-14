@@ -57,18 +57,18 @@ namespace Rockyfi
         #region absolute
         [Test] public void TestAbsoluteLayoutWidthHeightStartTop()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Start, 10);
             rootChild0.StyleSetPosition(Edge.Top, 10);
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -80,7 +80,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -97,18 +97,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Start, 10);
             rootChild0.StyleSetPosition(Edge.Top, 10);
             rootChild0.StyleSetPosition(Edge.End, 10);
             rootChild0.StyleSetPosition(Edge.Bottom, 10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -120,7 +120,7 @@ namespace Rockyfi
             assertFloatEqual(80, rootChild0.LayoutGetWidth());
             assertFloatEqual(80, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -137,11 +137,11 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Start, 10);
             rootChild0.StyleSetPosition(Edge.Top, 10);
@@ -150,7 +150,7 @@ namespace Rockyfi
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -162,7 +162,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -179,23 +179,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetOverflow(Overflow.Hidden);
             root.StyleSetWidth(50);
             root.StyleSetHeight(50);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Start, 0);
             rootChild0.StyleSetPosition(Edge.Top, 0);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(100);
             rootChild0Child0.StyleSetHeight(100);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -212,7 +212,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -234,7 +234,7 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetMargin(Edge.Left, 10);
             root.StyleSetMargin(Edge.Top, 10);
             root.StyleSetMargin(Edge.Right, 10);
@@ -250,7 +250,7 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Left, 0);
             rootChild0.StyleSetPosition(Edge.Top, 0);
@@ -258,7 +258,7 @@ namespace Rockyfi
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetPositionType(PositionType.Absolute);
             rootChild1.StyleSetPosition(Edge.Right, 0);
             rootChild1.StyleSetPosition(Edge.Bottom, 0);
@@ -266,7 +266,7 @@ namespace Rockyfi
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetPositionType(PositionType.Absolute);
             rootChild2.StyleSetPosition(Edge.Left, 0);
             rootChild2.StyleSetPosition(Edge.Top, 0);
@@ -278,7 +278,7 @@ namespace Rockyfi
             rootChild2.StyleSetHeight(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetPositionType(PositionType.Absolute);
             rootChild3.StyleSetPosition(Edge.Right, 0);
             rootChild3.StyleSetPosition(Edge.Bottom, 0);
@@ -289,7 +289,7 @@ namespace Rockyfi
             rootChild3.StyleSetWidth(50);
             rootChild3.StyleSetHeight(50);
             root.InsertChild(rootChild3, 3);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(10, root.LayoutGetLeft());
             assertFloatEqual(10, root.LayoutGetTop());
@@ -316,7 +316,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild3.LayoutGetWidth());
             assertFloatEqual(50, rootChild3.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(10, root.LayoutGetLeft());
             assertFloatEqual(10, root.LayoutGetTop());
@@ -348,19 +348,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetFlexGrow(1);
             root.StyleSetWidth(110);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(40);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -372,7 +372,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -389,19 +389,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.FlexEnd);
             root.StyleSetAlignItems(Align.FlexEnd);
             root.StyleSetFlexGrow(1);
             root.StyleSetWidth(110);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(40);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -413,7 +413,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -430,18 +430,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetFlexGrow(1);
             root.StyleSetWidth(110);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(40);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -453,7 +453,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -470,18 +470,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetFlexGrow(1);
             root.StyleSetWidth(110);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(40);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -493,7 +493,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -510,18 +510,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexGrow(1);
             root.StyleSetWidth(110);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAlignSelf(Align.Center);
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(40);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -533,7 +533,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -550,20 +550,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetFlexGrow(1);
             root.StyleSetWidth(110);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Top, 10);
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(40);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -575,7 +575,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -592,20 +592,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetFlexGrow(1);
             root.StyleSetWidth(110);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Bottom, 10);
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(40);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -617,7 +617,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -634,20 +634,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetFlexGrow(1);
             root.StyleSetWidth(110);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Left, 5);
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(40);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -659,7 +659,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -676,20 +676,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetFlexGrow(1);
             root.StyleSetWidth(110);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Right, 5);
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(40);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -701,7 +701,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -718,18 +718,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetPosition(Edge.Left, 72);
             root.StyleSetWidth(52);
             root.StyleSetHeight(52);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(72, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
             assertFloatEqual(52, root.LayoutGetWidth());
             assertFloatEqual(52, root.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(72, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -741,31 +741,31 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPositionPercent(Edge.Top, 50);
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetPositionType(PositionType.Absolute);
             rootChild1.StyleSetPositionPercent(Edge.Bottom, 50);
             rootChild1.StyleSetWidth(10);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetPositionType(PositionType.Absolute);
             rootChild2.StyleSetPositionPercent(Edge.Top, 10);
             rootChild2.StyleSetPositionPercent(Edge.Bottom, 10);
             rootChild2.StyleSetWidth(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -787,7 +787,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild2.LayoutGetWidth());
             assertFloatEqual(160, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -814,17 +814,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexWrap(Wrap.WrapReverse);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetWidth(20);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -836,7 +836,7 @@ namespace Rockyfi
             assertFloatEqual(20, rootChild0.LayoutGetWidth());
             assertFloatEqual(20, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -853,18 +853,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetFlexWrap(Wrap.WrapReverse);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetWidth(20);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -876,7 +876,7 @@ namespace Rockyfi
             assertFloatEqual(20, rootChild0.LayoutGetWidth());
             assertFloatEqual(20, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -893,18 +893,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexWrap(Wrap.WrapReverse);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAlignSelf(Align.FlexEnd);
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetWidth(20);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -916,7 +916,7 @@ namespace Rockyfi
             assertFloatEqual(20, rootChild0.LayoutGetWidth());
             assertFloatEqual(20, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -933,19 +933,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetFlexWrap(Wrap.WrapReverse);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAlignSelf(Align.FlexEnd);
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetWidth(20);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -957,7 +957,7 @@ namespace Rockyfi
             assertFloatEqual(20, rootChild0.LayoutGetWidth());
             assertFloatEqual(20, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -976,37 +976,37 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(130);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             rootChild3.StyleSetHeight(10);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             rootChild4.StyleSetHeight(10);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1038,7 +1038,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(10, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1076,33 +1076,33 @@ namespace Rockyfi
 
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             rootChild3.StyleSetHeight(10);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1134,7 +1134,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(0, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1171,39 +1171,39 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(100);
             root.StyleSetHeight(120);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasisPercent(0);
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetFlexBasisPercent(0);
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetFlexGrow(1);
             rootChild3.StyleSetFlexShrink(1);
             rootChild3.StyleSetFlexBasisPercent(0);
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1235,7 +1235,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(0, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1272,37 +1272,37 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignContent(Align.FlexEnd);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             rootChild3.StyleSetHeight(10);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             rootChild4.StyleSetHeight(10);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1334,7 +1334,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(10, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1371,32 +1371,32 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1428,7 +1428,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(0, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1465,38 +1465,38 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.SpaceBetween);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(130);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             rootChild3.StyleSetHeight(10);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             rootChild4.StyleSetHeight(10);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1528,7 +1528,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(10, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1567,38 +1567,38 @@ namespace Rockyfi
 
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.SpaceAround);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(140);
             root.StyleSetHeight(120);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             rootChild3.StyleSetHeight(10);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             rootChild4.StyleSetHeight(10);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1630,7 +1630,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(10, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1667,33 +1667,33 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1725,7 +1725,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1762,39 +1762,39 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexGrow(1);
             rootChild0Child0.StyleSetFlexShrink(1);
             rootChild0Child0.StyleSetFlexBasisPercent(0);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1831,7 +1831,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1873,39 +1873,39 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetFlexShrink(1);
             rootChild1.StyleSetFlexBasisPercent(0);
             rootChild1.StyleSetWidth(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetFlexGrow(1);
             rootChild3.StyleSetFlexShrink(1);
             rootChild3.StyleSetFlexBasisPercent(0);
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1937,7 +1937,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(100, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -1974,38 +1974,38 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetFlexShrink(1);
             rootChild1.StyleSetFlexBasisPercent(0);
             rootChild1.StyleSetWidth(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetFlexGrow(1);
             rootChild3.StyleSetFlexBasisPercent(0);
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2037,7 +2037,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(100, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2074,18 +2074,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetMargin(Edge.Left, 10);
             rootChild1.StyleSetMargin(Edge.Top, 10);
             rootChild1.StyleSetMargin(Edge.Right, 10);
@@ -2093,11 +2093,11 @@ namespace Rockyfi
             rootChild1.StyleSetWidth(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetMargin(Edge.Left, 10);
             rootChild3.StyleSetMargin(Edge.Top, 10);
             rootChild3.StyleSetMargin(Edge.Right, 10);
@@ -2105,10 +2105,10 @@ namespace Rockyfi
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2140,7 +2140,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(20, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2177,18 +2177,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetPadding(Edge.Left, 10);
             rootChild1.StyleSetPadding(Edge.Top, 10);
             rootChild1.StyleSetPadding(Edge.Right, 10);
@@ -2196,11 +2196,11 @@ namespace Rockyfi
             rootChild1.StyleSetWidth(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetPadding(Edge.Left, 10);
             rootChild3.StyleSetPadding(Edge.Top, 10);
             rootChild3.StyleSetPadding(Edge.Right, 10);
@@ -2208,10 +2208,10 @@ namespace Rockyfi
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2243,7 +2243,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2280,21 +2280,21 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2311,7 +2311,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2333,34 +2333,34 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(60);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2392,7 +2392,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(20, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2429,34 +2429,34 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetMaxHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2488,7 +2488,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2525,34 +2525,34 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetMinHeight(80);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2584,7 +2584,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(10, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2621,41 +2621,41 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(100);
             root.StyleSetHeight(150);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexGrow(1);
             rootChild0Child0.StyleSetFlexShrink(1);
             rootChild0Child0.StyleSetFlexBasisPercent(0);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetFlexShrink(1);
             rootChild1.StyleSetFlexBasisPercent(0);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetHeight(50);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetHeight(50);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetHeight(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2692,7 +2692,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2734,10 +2734,10 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignContent(Align.Stretch);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetAlignContent(Align.Stretch);
             rootChild0.StyleSetAlignItems(Align.Center);
@@ -2745,12 +2745,12 @@ namespace Rockyfi
             rootChild0.StyleSetHeight(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetAlignContent(Align.Stretch);
             rootChild0Child0.StyleSetWidth(10);
             rootChild0Child0.StyleSetHeight(10);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2767,7 +2767,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2791,16 +2791,16 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAlignSelf(Align.Center);
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2812,7 +2812,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2829,16 +2829,16 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAlignSelf(Align.FlexEnd);
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2850,7 +2850,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2867,16 +2867,16 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAlignSelf(Align.FlexStart);
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2888,7 +2888,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2905,17 +2905,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAlignSelf(Align.FlexEnd);
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2927,7 +2927,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2944,28 +2944,28 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAlignSelf(Align.Baseline);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetAlignSelf(Align.Baseline);
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild1child0 = Rockyfi.CreateDefaultNode();
+            var rootChild1child0 = Flex.CreateDefaultNode();
             rootChild1child0.StyleSetWidth(50);
             rootChild1child0.StyleSetHeight(10);
             rootChild1.InsertChild(rootChild1child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -2987,7 +2987,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1child0.LayoutGetWidth());
             assertFloatEqual(10, rootChild1child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -3029,17 +3029,17 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_cross_defined()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3049,17 +3049,17 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_main_defined()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3069,19 +3069,19 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_both_dimensions_defined_row()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(100);
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3091,18 +3091,18 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_both_dimensions_defined_column()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(100);
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3112,15 +3112,15 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_align_stretch()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3130,18 +3130,18 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_flex_grow()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3151,18 +3151,18 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_flex_shrink()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(150);
             rootChild0.StyleSetFlexShrink(1);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3172,17 +3172,17 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_basis()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexBasis(50);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3192,11 +3192,11 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_absolute_layout_width_defined()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Left, 0);
             rootChild0.StyleSetPosition(Edge.Top, 0);
@@ -3204,7 +3204,7 @@ namespace Rockyfi
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3214,11 +3214,11 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_absolute_layout_height_defined()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Left, 0);
             rootChild0.StyleSetPosition(Edge.Top, 0);
@@ -3226,7 +3226,7 @@ namespace Rockyfi
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3236,18 +3236,18 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_with_max_cross_defined()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetMaxWidth(40);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3257,18 +3257,18 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_with_max_main_defined()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetMaxHeight(40);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3278,18 +3278,18 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_with_min_cross_defined()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(30);
             rootChild0.StyleSetMinWidth(40);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3299,18 +3299,18 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_with_min_main_defined()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetMinHeight(40);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3320,17 +3320,17 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_double_cross()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetAspectRatio(2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3340,17 +3340,17 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_half_cross()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(100);
             rootChild0.StyleSetAspectRatio(0.5f);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3360,17 +3360,17 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_double_main()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetAspectRatio(0.5f);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3380,17 +3380,17 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_half_main()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(100);
             rootChild0.StyleSetAspectRatio(2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3400,17 +3400,17 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_with_measure_func()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_measure);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3420,20 +3420,20 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_width_height_flex_grow_row()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3443,19 +3443,19 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_width_height_flex_grow_column()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(200);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3465,25 +3465,25 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_height_as_flex_basis()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(100);
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetAspectRatio(1);
             root.InsertChild(rootChild1, 1);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3498,24 +3498,24 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_width_as_flex_basis()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(100);
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetAspectRatio(1);
             root.InsertChild(rootChild1, 1);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3530,19 +3530,19 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_overrides_flex_grow_row()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetAspectRatio(0.5f);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3552,18 +3552,18 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_overrides_flex_grow_column()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetAspectRatio(2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3573,11 +3573,11 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_left_right_absolute()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Left, 10);
             rootChild0.StyleSetPosition(Edge.Top, 10);
@@ -3585,7 +3585,7 @@ namespace Rockyfi
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(10, rootChild0.LayoutGetLeft());
             assertFloatEqual(10, rootChild0.LayoutGetTop());
@@ -3595,11 +3595,11 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_top_bottom_absolute()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPosition(Edge.Left, 10);
             rootChild0.StyleSetPosition(Edge.Top, 10);
@@ -3607,7 +3607,7 @@ namespace Rockyfi
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(10, rootChild0.LayoutGetLeft());
             assertFloatEqual(10, rootChild0.LayoutGetTop());
@@ -3617,17 +3617,17 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_width_overrides_align_stretch_row()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3637,16 +3637,16 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_height_overrides_align_stretch_column()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetAspectRatio(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -3656,16 +3656,16 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_allow_child_overflow_parent_size()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetAspectRatio(4);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(100, root.LayoutGetWidth());
             assertFloatEqual(50, root.LayoutGetHeight());
@@ -3676,20 +3676,20 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_defined_main_with_margin()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(50);
             rootChild0.StyleSetAspectRatio(1);
             rootChild0.StyleSetMargin(Edge.Left, 10);
             rootChild0.StyleSetMargin(Edge.Right, 10);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(100, root.LayoutGetWidth());
             assertFloatEqual(100, root.LayoutGetHeight());
@@ -3700,20 +3700,20 @@ namespace Rockyfi
 
         [Test] public void TestAspect_ratio_defined_cross_with_margin()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetAspectRatio(1);
             rootChild0.StyleSetMargin(Edge.Left, 10);
             rootChild0.StyleSetMargin(Edge.Right, 10);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(100, root.LayoutGetWidth());
             assertFloatEqual(100, root.LayoutGetHeight());
@@ -3730,30 +3730,30 @@ namespace Rockyfi
         }
 
         [Test] public void TestAlign_baseline_customer_func() {
-	        var root = Rockyfi.CreateDefaultNode();
+	        var root = Flex.CreateDefaultNode();
 	        root.StyleSetFlexDirection(FlexDirection.Row);
 	        root.StyleSetAlignItems(Align.Baseline);
 	        root.StyleSetWidth(100);
 	        root.StyleSetHeight(100);
 
-	        var rootChild0 = Rockyfi.CreateDefaultNode();
+	        var rootChild0 = Flex.CreateDefaultNode();
 	        rootChild0.StyleSetWidth(50);
 	        rootChild0.StyleSetHeight(50);
 	        root.InsertChild(rootChild0, 0);
 
-	        var rootChild1 = Rockyfi.CreateDefaultNode();
+	        var rootChild1 = Flex.CreateDefaultNode();
 	        rootChild1.StyleSetWidth(50);
 	        rootChild1.StyleSetHeight(20);
 	        root.InsertChild(rootChild1, 1);
 
 	        float baselineValue = 10;
-	        var rootChild1child0 = Rockyfi.CreateDefaultNode();
+	        var rootChild1child0 = Flex.CreateDefaultNode();
             rootChild1child0.Context = baselineValue;
 	        rootChild1child0.StyleSetWidth(50);
             rootChild1child0.SetBaselineFunc(baselineFunc);
 	        rootChild1child0.StyleSetHeight(20);
 	        rootChild1.InsertChild(rootChild1child0, 0);
-	        Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+	        Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
 	        assertFloatEqual(0, root.LayoutGetLeft());
 	        assertFloatEqual(0, root.LayoutGetTop());
@@ -3782,19 +3782,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetBorder(Edge.Left, 10);
             root.StyleSetBorder(Edge.Top, 10);
             root.StyleSetBorder(Edge.Right, 10);
             root.StyleSetBorder(Edge.Bottom, 10);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
             assertFloatEqual(20, root.LayoutGetWidth());
             assertFloatEqual(20, root.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -3806,17 +3806,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetBorder(Edge.Left, 10);
             root.StyleSetBorder(Edge.Top, 10);
             root.StyleSetBorder(Edge.Right, 10);
             root.StyleSetBorder(Edge.Bottom, 10);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -3828,7 +3828,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -3845,7 +3845,7 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetBorder(Edge.Left, 10);
             root.StyleSetBorder(Edge.Top, 10);
             root.StyleSetBorder(Edge.Right, 10);
@@ -3853,11 +3853,11 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -3869,7 +3869,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(80, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -3886,7 +3886,7 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetBorder(Edge.Left, 10);
             root.StyleSetBorder(Edge.Top, 10);
             root.StyleSetBorder(Edge.Right, 10);
@@ -3894,10 +3894,10 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -3909,7 +3909,7 @@ namespace Rockyfi
             assertFloatEqual(80, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -3926,7 +3926,7 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetBorder(Edge.Start, 10);
@@ -3935,11 +3935,11 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -3951,7 +3951,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -3969,17 +3969,17 @@ namespace Rockyfi
         #region compute_margin_test.go
         [Test] public void TestComputed_layout_margin()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
             root.StyleSetMarginPercent(Edge.Start, 10);
 
-            Rockyfi.CalculateLayout(root, 100, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 100, 100, Direction.LTR);
 
             assertFloatEqual(10, root.LayoutGetMargin(Edge.Left));
             assertFloatEqual(0, root.LayoutGetMargin(Edge.Right));
 
-            Rockyfi.CalculateLayout(root, 100, 100, Direction.RTL);
+            Flex.CalculateLayout(root, 100, 100, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetMargin(Edge.Left));
             assertFloatEqual(10, root.LayoutGetMargin(Edge.Right));
@@ -3991,17 +3991,17 @@ namespace Rockyfi
 
         [Test] public void TestComputed_layout_padding()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
             root.StyleSetPaddingPercent(Edge.Start, 10);
 
-            Rockyfi.CalculateLayout(root, 100, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 100, 100, Direction.LTR);
 
             assertFloatEqual(10, root.LayoutGetPadding(Edge.Left));
             assertFloatEqual(0, root.LayoutGetPadding(Edge.Right));
 
-            Rockyfi.CalculateLayout(root, 100, 100, Direction.RTL);
+            Flex.CalculateLayout(root, 100, 100, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetPadding(Edge.Left));
             assertFloatEqual(10, root.LayoutGetPadding(Edge.Right));
@@ -4012,7 +4012,7 @@ namespace Rockyfi
         #region default_values_test.go
         [Test] public void TestAssert_default_values()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
 
             assertEqual(0, (root.ChildrenCount));
             Node nilNode = null;
@@ -4096,9 +4096,9 @@ namespace Rockyfi
         [Test] public void TestAssert_webdefault_values()
         {
 
-            var config = Rockyfi.CreateDefaultConfig();
+            var config = Flex.CreateDefaultConfig();
             config.UseWebDefaults = true;
-            var root = Rockyfi.CreateDefaultNode(config);
+            var root = Flex.CreateDefaultNode(config);
 
             assertEqual(FlexDirection.Row, root.StyleGetFlexDirection());
             assertEqual(Align.Stretch, root.StyleGetAlignContent());
@@ -4109,10 +4109,10 @@ namespace Rockyfi
         [Test] public void TestAssert_webdefault_values_reset()
         {
 
-            var config = Rockyfi.CreateDefaultConfig();
+            var config = Flex.CreateDefaultConfig();
             config.UseWebDefaults = true;
-            var root = Rockyfi.CreateDefaultNode(config);
-            Rockyfi.Reset(ref root);
+            var root = Flex.CreateDefaultNode(config);
+            Flex.Reset(ref root);
 
             assertEqual(FlexDirection.Row, root.StyleGetFlexDirection());
             assertEqual(Align.Stretch, root.StyleGetAlignContent());
@@ -4126,13 +4126,13 @@ namespace Rockyfi
         [Test] public void TestWrap_child()
         {
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(100);
             rootChild0.StyleSetHeight(100);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4144,7 +4144,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4161,16 +4161,16 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(100);
             rootChild0Child0.StyleSetHeight(100);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4187,7 +4187,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4210,22 +4210,22 @@ namespace Rockyfi
         #region dirty_marking_test.go
         [Test] public void TestDirty_propagation()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             rootChild0.StyleSetWidth(20);
 
@@ -4233,7 +4233,7 @@ namespace Rockyfi
             assertFalse(rootChild1.IsDirty);
             assertTrue(root.IsDirty);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFalse(rootChild0.IsDirty);
             assertFalse(rootChild1.IsDirty);
@@ -4243,22 +4243,22 @@ namespace Rockyfi
 
         [Test] public void TestDirty_propagation_only_if_prop_changed()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             rootChild0.StyleSetWidth(50);
 
@@ -4270,17 +4270,17 @@ namespace Rockyfi
 
         [Test] public void TestDirty_mark_all_children_as_dirty_when_display_changes()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetHeight(100);
 
-            var child0 = Rockyfi.CreateDefaultNode();
+            var child0 = Flex.CreateDefaultNode();
             child0.StyleSetFlexGrow(1);
-            var child1 = Rockyfi.CreateDefaultNode();
+            var child1 = Flex.CreateDefaultNode();
             child1.StyleSetFlexGrow(1);
 
-            var child1Child0 = Rockyfi.CreateDefaultNode();
-            var child1Child0Child0 = Rockyfi.CreateDefaultNode();
+            var child1Child0 = Flex.CreateDefaultNode();
+            var child1Child0Child0 = Flex.CreateDefaultNode();
             child1Child0Child0.StyleSetWidth(8);
             child1Child0Child0.StyleSetHeight(16);
 
@@ -4292,44 +4292,44 @@ namespace Rockyfi
 
             child0.StyleSetDisplay(Display.Flex);
             child1.StyleSetDisplay(Display.None);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(0, child1Child0Child0.LayoutGetWidth());
             assertFloatEqual(0, child1Child0Child0.LayoutGetHeight());
 
             child0.StyleSetDisplay(Display.None);
             child1.StyleSetDisplay(Display.Flex);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(8, child1Child0Child0.LayoutGetWidth());
             assertFloatEqual(16, child1Child0Child0.LayoutGetHeight());
 
             child0.StyleSetDisplay(Display.Flex);
             child1.StyleSetDisplay(Display.None);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(0, child1Child0Child0.LayoutGetWidth());
             assertFloatEqual(0, child1Child0Child0.LayoutGetHeight());
 
             child0.StyleSetDisplay(Display.None);
             child1.StyleSetDisplay(Display.Flex);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(8, child1Child0Child0.LayoutGetWidth());
             assertFloatEqual(16, child1Child0Child0.LayoutGetHeight());
         }
 
         [Test] public void TestDirty_node_only_if_children_are_actually_removed()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(50);
             root.StyleSetHeight(50);
 
-            var child0 = Rockyfi.CreateDefaultNode();
+            var child0 = Flex.CreateDefaultNode();
             child0.StyleSetWidth(50);
             child0.StyleSetHeight(25);
             root.InsertChild(child0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
-            var child1 = Rockyfi.CreateDefaultNode();
+            var child1 = Flex.CreateDefaultNode();
             root.RemoveChild(child1);
             assertFalse(root.IsDirty);
 
@@ -4344,20 +4344,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetDisplay(Display.None);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4374,7 +4374,7 @@ namespace Rockyfi
             assertFloatEqual(0, rootChild1.LayoutGetWidth());
             assertFloatEqual(0, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4396,21 +4396,21 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(20);
             rootChild1.StyleSetHeight(20);
             rootChild1.StyleSetDisplay(Display.None);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4427,7 +4427,7 @@ namespace Rockyfi
             assertFloatEqual(0, rootChild1.LayoutGetWidth());
             assertFloatEqual(0, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4449,12 +4449,12 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMargin(Edge.Left, 10);
             rootChild0.StyleSetMargin(Edge.Top, 10);
             rootChild0.StyleSetMargin(Edge.Right, 10);
@@ -4464,10 +4464,10 @@ namespace Rockyfi
             rootChild0.StyleSetDisplay(Display.None);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4484,7 +4484,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild1.LayoutGetWidth());
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4506,25 +4506,25 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexShrink(1);
             rootChild0.StyleSetFlexBasisPercent(0);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetFlexShrink(1);
             rootChild1.StyleSetFlexBasisPercent(0);
             rootChild1.StyleSetDisplay(Display.None);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild1child0 = Rockyfi.CreateDefaultNode();
+            var rootChild1child0 = Flex.CreateDefaultNode();
             rootChild1child0.StyleSetFlexGrow(1);
             rootChild1child0.StyleSetFlexShrink(1);
             rootChild1child0.StyleSetFlexBasisPercent(0);
@@ -4533,12 +4533,12 @@ namespace Rockyfi
             rootChild1child0.StyleSetMinHeight(0);
             rootChild1.InsertChild(rootChild1child0, 0);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             rootChild2.StyleSetFlexShrink(1);
             rootChild2.StyleSetFlexBasisPercent(0);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4565,7 +4565,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild2.LayoutGetWidth());
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4597,21 +4597,21 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetPosition(Edge.Top, 10);
             rootChild1.StyleSetDisplay(Display.None);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4628,7 +4628,7 @@ namespace Rockyfi
             assertFloatEqual(0, rootChild1.LayoutGetWidth());
             assertFloatEqual(0, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4651,100 +4651,100 @@ namespace Rockyfi
         #region edge_test.go
         [Test] public void TestStart_overrides()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Start, 10);
             rootChild0.StyleSetMargin(Edge.Left, 20);
             rootChild0.StyleSetMargin(Edge.Right, 20);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(10, rootChild0.LayoutGetLeft());
             assertFloatEqual(20, rootChild0.LayoutGetRight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
             assertFloatEqual(20, rootChild0.LayoutGetLeft());
             assertFloatEqual(10, rootChild0.LayoutGetRight());
         }
 
         [Test] public void TestEnd_overrides()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.End, 10);
             rootChild0.StyleSetMargin(Edge.Left, 20);
             rootChild0.StyleSetMargin(Edge.Right, 20);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(20, rootChild0.LayoutGetLeft());
             assertFloatEqual(10, rootChild0.LayoutGetRight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
             assertFloatEqual(10, rootChild0.LayoutGetLeft());
             assertFloatEqual(20, rootChild0.LayoutGetRight());
         }
 
         [Test] public void TestHorizontal_overridden()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Horizontal, 10);
             rootChild0.StyleSetMargin(Edge.Left, 20);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(20, rootChild0.LayoutGetLeft());
             assertFloatEqual(10, rootChild0.LayoutGetRight());
         }
 
         [Test] public void TestVertical_overridden()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Column);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Vertical, 10);
             rootChild0.StyleSetMargin(Edge.Top, 20);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(20, rootChild0.LayoutGetTop());
             assertFloatEqual(10, rootChild0.LayoutGetBottom());
         }
 
         [Test] public void TestHorizontal_overrides_all()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Column);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Horizontal, 10);
             rootChild0.StyleSetMargin(Edge.All, 20);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(10, rootChild0.LayoutGetLeft());
             assertFloatEqual(20, rootChild0.LayoutGetTop());
             assertFloatEqual(10, rootChild0.LayoutGetRight());
@@ -4753,18 +4753,18 @@ namespace Rockyfi
 
         [Test] public void TestVertical_overrides_all()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Column);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Vertical, 10);
             rootChild0.StyleSetMargin(Edge.All, 20);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(20, rootChild0.LayoutGetLeft());
             assertFloatEqual(10, rootChild0.LayoutGetTop());
             assertFloatEqual(20, rootChild0.LayoutGetRight());
@@ -4773,12 +4773,12 @@ namespace Rockyfi
 
         [Test] public void TestAll_overridden()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Column);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Left, 10);
             rootChild0.StyleSetMargin(Edge.Top, 10);
@@ -4787,7 +4787,7 @@ namespace Rockyfi
             rootChild0.StyleSetMargin(Edge.All, 20);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(10, rootChild0.LayoutGetLeft());
             assertFloatEqual(10, rootChild0.LayoutGetTop());
             assertFloatEqual(10, rootChild0.LayoutGetRight());
@@ -4800,21 +4800,21 @@ namespace Rockyfi
         [Test] public void TestFlex_direction_column_no_height()
         {
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4836,7 +4836,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4863,22 +4863,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4900,7 +4900,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild2.LayoutGetWidth());
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4927,22 +4927,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4964,7 +4964,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -4991,23 +4991,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5029,7 +5029,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild2.LayoutGetWidth());
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5056,23 +5056,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.ColumnReverse);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5094,7 +5094,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5121,23 +5121,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.RowReverse);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5159,7 +5159,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild2.LayoutGetWidth());
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5189,19 +5189,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5218,7 +5218,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild1.LayoutGetWidth());
             assertFloatEqual(25, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5240,20 +5240,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5270,7 +5270,7 @@ namespace Rockyfi
             assertFloatEqual(25, rootChild1.LayoutGetWidth());
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5292,19 +5292,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexShrink(1);
             rootChild0.StyleSetFlexBasis(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexBasis(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5321,7 +5321,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5343,20 +5343,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexShrink(1);
             rootChild0.StyleSetFlexBasis(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexBasis(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5373,7 +5373,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5395,25 +5395,25 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetHeight(75);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexShrink(1);
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             rootChild2.StyleSetHeight(50);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5435,7 +5435,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild2.LayoutGetWidth());
             assertFloatEqual(50, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5462,26 +5462,26 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(50);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5503,7 +5503,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(20, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5530,18 +5530,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexGrow(1);
             rootChild0Child0.StyleSetFlexShrink(1);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5558,7 +5558,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(0, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5580,23 +5580,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(500);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(0.2f);
             rootChild0.StyleSetFlexBasis(40);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(0.2f);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(0.4f);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5618,7 +5618,7 @@ namespace Rockyfi
             assertFloatEqual(200, rootChild2.LayoutGetWidth());
             assertFloatEqual(184, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5648,30 +5648,30 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetHeight(30);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(30);
             rootChild1.StyleSetHeight(30);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(30);
             rootChild2.StyleSetHeight(30);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(30);
             rootChild3.StyleSetHeight(30);
             root.InsertChild(rootChild3, 3);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5698,7 +5698,7 @@ namespace Rockyfi
             assertFloatEqual(30, rootChild3.LayoutGetWidth());
             assertFloatEqual(30, rootChild3.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5730,31 +5730,31 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetHeight(30);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(30);
             rootChild1.StyleSetHeight(30);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(30);
             rootChild2.StyleSetHeight(30);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(30);
             rootChild3.StyleSetHeight(30);
             root.InsertChild(rootChild3, 3);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5781,7 +5781,7 @@ namespace Rockyfi
             assertFloatEqual(30, rootChild3.LayoutGetWidth());
             assertFloatEqual(30, rootChild3.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5813,32 +5813,32 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignItems(Align.FlexEnd);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(30);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(30);
             rootChild2.StyleSetHeight(30);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(30);
             rootChild3.StyleSetHeight(30);
             root.InsertChild(rootChild3, 3);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5865,7 +5865,7 @@ namespace Rockyfi
             assertFloatEqual(30, rootChild3.LayoutGetWidth());
             assertFloatEqual(30, rootChild3.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5897,32 +5897,32 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(30);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(30);
             rootChild2.StyleSetHeight(30);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(30);
             rootChild3.StyleSetHeight(30);
             root.InsertChild(rootChild3, 3);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5949,7 +5949,7 @@ namespace Rockyfi
             assertFloatEqual(30, rootChild3.LayoutGetWidth());
             assertFloatEqual(30, rootChild3.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -5981,23 +5981,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexBasis(50);
             rootChild0.StyleSetMinWidth(55);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexBasis(50);
             rootChild1.StyleSetMinWidth(55);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6014,7 +6014,7 @@ namespace Rockyfi
             assertFloatEqual(55, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6036,28 +6036,28 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetAlignItems(Align.FlexStart);
             rootChild0.StyleSetFlexWrap(Wrap.Wrap);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(100);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0Child0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0Child0.StyleSetWidth(100);
             rootChild0Child0Child0.StyleSetHeight(100);
             rootChild0Child0.InsertChild(rootChild0Child0Child0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(100);
             rootChild1.StyleSetHeight(100);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6084,7 +6084,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild1.LayoutGetWidth());
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6116,20 +6116,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetFlexWrap(Wrap.Wrap);
             root.StyleSetWidth(150);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6146,7 +6146,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6168,36 +6168,36 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetFlexWrap(Wrap.WrapReverse);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(30);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(30);
             rootChild2.StyleSetHeight(30);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(30);
             rootChild3.StyleSetHeight(40);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(30);
             rootChild4.StyleSetHeight(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6229,7 +6229,7 @@ namespace Rockyfi
             assertFloatEqual(30, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6266,37 +6266,37 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Center);
             root.StyleSetFlexWrap(Wrap.WrapReverse);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(30);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(30);
             rootChild2.StyleSetHeight(30);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(30);
             rootChild3.StyleSetHeight(40);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(30);
             rootChild4.StyleSetHeight(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6328,7 +6328,7 @@ namespace Rockyfi
             assertFloatEqual(30, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6365,36 +6365,36 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetFlexWrap(Wrap.WrapReverse);
             root.StyleSetWidth(300);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(30);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(30);
             rootChild2.StyleSetHeight(30);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(30);
             rootChild3.StyleSetHeight(40);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(30);
             rootChild4.StyleSetHeight(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6426,7 +6426,7 @@ namespace Rockyfi
             assertFloatEqual(30, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6463,37 +6463,37 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.Stretch);
             root.StyleSetFlexWrap(Wrap.WrapReverse);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(30);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(30);
             rootChild2.StyleSetHeight(30);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(30);
             rootChild3.StyleSetHeight(40);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(30);
             rootChild4.StyleSetHeight(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6525,7 +6525,7 @@ namespace Rockyfi
             assertFloatEqual(30, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6562,37 +6562,37 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignContent(Align.SpaceAround);
             root.StyleSetFlexWrap(Wrap.WrapReverse);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(30);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(30);
             rootChild2.StyleSetHeight(30);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(30);
             rootChild3.StyleSetHeight(40);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(30);
             rootChild4.StyleSetHeight(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6624,7 +6624,7 @@ namespace Rockyfi
             assertFloatEqual(30, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6661,37 +6661,37 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetFlexWrap(Wrap.WrapReverse);
             root.StyleSetWidth(200);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(30);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(30);
             rootChild1.StyleSetHeight(20);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(30);
             rootChild2.StyleSetHeight(30);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetWidth(30);
             rootChild3.StyleSetHeight(40);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetWidth(30);
             rootChild4.StyleSetHeight(50);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6723,7 +6723,7 @@ namespace Rockyfi
             assertFloatEqual(30, rootChild4.LayoutGetWidth());
             assertFloatEqual(50, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6760,26 +6760,26 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetFlexWrap(Wrap.Wrap);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(150);
             rootChild0Child0.StyleSetHeight(80);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1 = Flex.CreateDefaultNode();
             rootChild0child1.StyleSetWidth(80);
             rootChild0child1.StyleSetHeight(80);
             rootChild0.InsertChild(rootChild0child1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6801,7 +6801,7 @@ namespace Rockyfi
             assertFloatEqual(80, rootChild0child1.LayoutGetWidth());
             assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6828,26 +6828,26 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetFlexWrap(Wrap.Wrap);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(150);
             rootChild0Child0.StyleSetHeight(80);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1 = Flex.CreateDefaultNode();
             rootChild0child1.StyleSetWidth(80);
             rootChild0child1.StyleSetHeight(80);
             rootChild0.InsertChild(rootChild0child1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6869,7 +6869,7 @@ namespace Rockyfi
             assertFloatEqual(80, rootChild0child1.LayoutGetWidth());
             assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6896,26 +6896,26 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexEnd);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetFlexWrap(Wrap.Wrap);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(150);
             rootChild0Child0.StyleSetHeight(80);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1 = Flex.CreateDefaultNode();
             rootChild0child1.StyleSetWidth(80);
             rootChild0child1.StyleSetHeight(80);
             rootChild0.InsertChild(rootChild0child1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6937,7 +6937,7 @@ namespace Rockyfi
             assertFloatEqual(80, rootChild0child1.LayoutGetWidth());
             assertFloatEqual(80, rootChild0child1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -6964,7 +6964,7 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetAlignContent(Align.Center);
             root.StyleSetAlignItems(Align.Center);
@@ -6972,13 +6972,13 @@ namespace Rockyfi
             root.StyleSetWidth(700);
             root.StyleSetHeight(500);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(100);
             rootChild0.StyleSetHeight(500);
             rootChild0.StyleSetMaxHeight(200);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetMargin(Edge.Left, 20);
             rootChild1.StyleSetMargin(Edge.Top, 20);
             rootChild1.StyleSetMargin(Edge.Right, 20);
@@ -6987,11 +6987,11 @@ namespace Rockyfi
             rootChild1.StyleSetHeight(200);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(100);
             rootChild2.StyleSetHeight(100);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7013,7 +7013,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7040,7 +7040,7 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetAlignContent(Align.Center);
             root.StyleSetAlignItems(Align.Center);
@@ -7048,7 +7048,7 @@ namespace Rockyfi
             root.StyleSetWidth(700);
             root.StyleSetHeight(500);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexShrink(1);
             rootChild0.StyleSetFlexBasisPercent(0);
@@ -7057,7 +7057,7 @@ namespace Rockyfi
             rootChild0.StyleSetMaxHeight(200);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetFlexShrink(1);
             rootChild1.StyleSetFlexBasisPercent(0);
@@ -7069,11 +7069,11 @@ namespace Rockyfi
             rootChild1.StyleSetHeight(200);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(100);
             rootChild2.StyleSetHeight(100);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7095,7 +7095,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7122,33 +7122,33 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(500);
             root.StyleSetHeight(500);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetFlexWrap(Wrap.Wrap);
             rootChild0.StyleSetWidth(85);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0Child0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0Child0.StyleSetWidth(40);
             rootChild0Child0Child0.StyleSetHeight(40);
             rootChild0Child0.InsertChild(rootChild0Child0Child0, 0);
 
-            var rootChild0child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1 = Flex.CreateDefaultNode();
             rootChild0child1.StyleSetMargin(Edge.Right, 10);
             rootChild0.InsertChild(rootChild0child1, 1);
 
-            var rootChild0child1Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1Child0 = Flex.CreateDefaultNode();
             rootChild0child1Child0.StyleSetWidth(40);
             rootChild0child1Child0.StyleSetHeight(40);
             rootChild0child1.InsertChild(rootChild0child1Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7180,7 +7180,7 @@ namespace Rockyfi
             assertFloatEqual(40, rootChild0child1Child0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0child1Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7217,33 +7217,33 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(500);
             root.StyleSetHeight(500);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetFlexWrap(Wrap.Wrap);
             rootChild0.StyleSetWidth(70);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0Child0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0Child0.StyleSetWidth(40);
             rootChild0Child0Child0.StyleSetHeight(40);
             rootChild0Child0.InsertChild(rootChild0Child0Child0, 0);
 
-            var rootChild0child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1 = Flex.CreateDefaultNode();
             rootChild0child1.StyleSetMargin(Edge.Top, 10);
             rootChild0.InsertChild(rootChild0child1, 1);
 
-            var rootChild0child1Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1Child0 = Flex.CreateDefaultNode();
             rootChild0child1Child0.StyleSetWidth(40);
             rootChild0child1Child0.StyleSetHeight(40);
             rootChild0child1.InsertChild(rootChild0child1Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7275,7 +7275,7 @@ namespace Rockyfi
             assertFloatEqual(40, rootChild0child1Child0.LayoutGetWidth());
             assertFloatEqual(40, rootChild0child1Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7313,8 +7313,8 @@ namespace Rockyfi
         #region had_overflow_test.go
         static void newHadOverflowTests(out Config outConfig, out Node outNode)
         {
-            var config = Rockyfi.CreateDefaultConfig();
-            var root = Rockyfi.CreateDefaultNode(config);
+            var config = Flex.CreateDefaultConfig();
+            var root = Flex.CreateDefaultNode(config);
             root.StyleSetWidth(200);
             root.StyleSetHeight(100);
             root.StyleSetFlexDirection(FlexDirection.Column);
@@ -7326,19 +7326,19 @@ namespace Rockyfi
         [Test] public void TestChildren_overflow_no_wrap_and_no_flex_children()
         {
             newHadOverflowTests(out Config config, out Node root);
-            var child0 = Rockyfi.CreateDefaultNode();
+            var child0 = Flex.CreateDefaultNode();
             child0.StyleSetWidth(80);
             child0.StyleSetHeight(40);
             child0.StyleSetMargin(Edge.Top, 10);
             child0.StyleSetMargin(Edge.Bottom, 15);
             root.InsertChild(child0, 0);
-            var child1 = Rockyfi.CreateDefaultNode();
+            var child1 = Flex.CreateDefaultNode();
             child1.StyleSetWidth(80);
             child1.StyleSetHeight(40);
             child1.StyleSetMargin(Edge.Bottom, 5);
             root.InsertChild(child1, 1);
 
-            Rockyfi.CalculateLayout(root, 200, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 200, 100, Direction.LTR);
 
             assertTrue(root.LayoutGetHadOverflow());
         }
@@ -7346,19 +7346,19 @@ namespace Rockyfi
         [Test] public void TestSpacing_overflow_no_wrap_and_no_flex_children()
         {
             newHadOverflowTests(out Config config, out Node root);
-            var child0 = Rockyfi.CreateDefaultNode();
+            var child0 = Flex.CreateDefaultNode();
             child0.StyleSetWidth(80);
             child0.StyleSetHeight(40);
             child0.StyleSetMargin(Edge.Top, 10);
             child0.StyleSetMargin(Edge.Bottom, 10);
             root.InsertChild(child0, 0);
-            var child1 = Rockyfi.CreateDefaultNode();
+            var child1 = Flex.CreateDefaultNode();
             child1.StyleSetWidth(80);
             child1.StyleSetHeight(40);
             child1.StyleSetMargin(Edge.Bottom, 5);
             root.InsertChild(child1, 1);
 
-            Rockyfi.CalculateLayout(root, 200, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 200, 100, Direction.LTR);
 
             assertTrue(root.LayoutGetHadOverflow());
         }
@@ -7366,20 +7366,20 @@ namespace Rockyfi
         [Test] public void TestNo_overflow_no_wrap_and_flex_children()
         {
             newHadOverflowTests(out Config config, out Node root);
-            var child0 = Rockyfi.CreateDefaultNode();
+            var child0 = Flex.CreateDefaultNode();
             child0.StyleSetWidth(80);
             child0.StyleSetHeight(40);
             child0.StyleSetMargin(Edge.Top, 10);
             child0.StyleSetMargin(Edge.Bottom, 10);
             root.InsertChild(child0, 0);
-            var child1 = Rockyfi.CreateDefaultNode();
+            var child1 = Flex.CreateDefaultNode();
             child1.StyleSetWidth(80);
             child1.StyleSetHeight(40);
             child1.StyleSetMargin(Edge.Bottom, 5);
             child1.StyleSetFlexShrink(1);
             root.InsertChild(child1, 1);
 
-            Rockyfi.CalculateLayout(root, 200, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 200, 100, Direction.LTR);
 
             assertFalse(root.LayoutGetHadOverflow());
         }
@@ -7387,25 +7387,25 @@ namespace Rockyfi
         [Test] public void TestHadOverflow_gets_reset_if_not_logger_valid()
         {
             newHadOverflowTests(out Config config, out Node root);
-            var child0 = Rockyfi.CreateDefaultNode();
+            var child0 = Flex.CreateDefaultNode();
             child0.StyleSetWidth(80);
             child0.StyleSetHeight(40);
             child0.StyleSetMargin(Edge.Top, 10);
             child0.StyleSetMargin(Edge.Bottom, 10);
             root.InsertChild(child0, 0);
-            var child1 = Rockyfi.CreateDefaultNode();
+            var child1 = Flex.CreateDefaultNode();
             child1.StyleSetWidth(80);
             child1.StyleSetHeight(40);
             child1.StyleSetMargin(Edge.Bottom, 5);
             root.InsertChild(child1, 1);
 
-            Rockyfi.CalculateLayout(root, 200, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 200, 100, Direction.LTR);
 
             assertTrue(root.LayoutGetHadOverflow());
 
             child1.StyleSetFlexShrink(1);
 
-            Rockyfi.CalculateLayout(root, 200, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 200, 100, Direction.LTR);
 
             assertFalse(root.LayoutGetHadOverflow());
         }
@@ -7413,23 +7413,23 @@ namespace Rockyfi
         [Test] public void TestSpacing_overflow_in_nested_nodes()
         {
             newHadOverflowTests(out Config config, out Node root);
-            var child0 = Rockyfi.CreateDefaultNode();
+            var child0 = Flex.CreateDefaultNode();
             child0.StyleSetWidth(80);
             child0.StyleSetHeight(40);
             child0.StyleSetMargin(Edge.Top, 10);
             child0.StyleSetMargin(Edge.Bottom, 10);
             root.InsertChild(child0, 0);
-            var child1 = Rockyfi.CreateDefaultNode();
+            var child1 = Flex.CreateDefaultNode();
             child1.StyleSetWidth(80);
             child1.StyleSetHeight(40);
             root.InsertChild(child1, 1);
-            var child1_1 = Rockyfi.CreateDefaultNode();
+            var child1_1 = Flex.CreateDefaultNode();
             child1_1.StyleSetWidth(80);
             child1_1.StyleSetHeight(40);
             child1_1.StyleSetMargin(Edge.Bottom, 5);
             child1.InsertChild(child1_1, 0);
 
-            Rockyfi.CalculateLayout(root, 200, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 200, 100, Direction.LTR);
 
             assertTrue(root.LayoutGetHadOverflow());
         }
@@ -7441,23 +7441,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(102);
             root.StyleSetHeight(102);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7479,7 +7479,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild2.LayoutGetWidth());
             assertFloatEqual(102, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7506,24 +7506,24 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetJustifyContent(Justify.FlexEnd);
             root.StyleSetWidth(102);
             root.StyleSetHeight(102);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7545,7 +7545,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild2.LayoutGetWidth());
             assertFloatEqual(102, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7572,24 +7572,24 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetWidth(102);
             root.StyleSetHeight(102);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7611,7 +7611,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild2.LayoutGetWidth());
             assertFloatEqual(102, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7638,24 +7638,24 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetJustifyContent(Justify.SpaceBetween);
             root.StyleSetWidth(102);
             root.StyleSetHeight(102);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7677,7 +7677,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild2.LayoutGetWidth());
             assertFloatEqual(102, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7704,24 +7704,24 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetJustifyContent(Justify.SpaceAround);
             root.StyleSetWidth(102);
             root.StyleSetHeight(102);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7743,7 +7743,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild2.LayoutGetWidth());
             assertFloatEqual(102, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7770,21 +7770,21 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(102);
             root.StyleSetHeight(102);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7806,7 +7806,7 @@ namespace Rockyfi
             assertFloatEqual(102, rootChild2.LayoutGetWidth());
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7833,23 +7833,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.FlexEnd);
             root.StyleSetWidth(102);
             root.StyleSetHeight(102);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7871,7 +7871,7 @@ namespace Rockyfi
             assertFloatEqual(102, rootChild2.LayoutGetWidth());
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7898,23 +7898,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetWidth(102);
             root.StyleSetHeight(102);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7936,7 +7936,7 @@ namespace Rockyfi
             assertFloatEqual(102, rootChild2.LayoutGetWidth());
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -7963,23 +7963,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.SpaceBetween);
             root.StyleSetWidth(102);
             root.StyleSetHeight(102);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8001,7 +8001,7 @@ namespace Rockyfi
             assertFloatEqual(102, rootChild2.LayoutGetWidth());
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8028,23 +8028,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.SpaceAround);
             root.StyleSetWidth(102);
             root.StyleSetHeight(102);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8066,7 +8066,7 @@ namespace Rockyfi
             assertFloatEqual(102, rootChild2.LayoutGetWidth());
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8096,16 +8096,16 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMargin(Edge.Start, 10);
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8117,7 +8117,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8135,15 +8135,15 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMargin(Edge.Top, 10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8155,7 +8155,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8173,17 +8173,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetJustifyContent(Justify.FlexEnd);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMargin(Edge.End, 10);
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8195,7 +8195,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8213,16 +8213,16 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.FlexEnd);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMargin(Edge.Bottom, 10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8234,7 +8234,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8252,17 +8252,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Start, 10);
             rootChild0.StyleSetMargin(Edge.End, 10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8274,7 +8274,7 @@ namespace Rockyfi
             assertFloatEqual(80, rootChild0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8292,16 +8292,16 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Top, 10);
             rootChild0.StyleSetMargin(Edge.Bottom, 10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8313,7 +8313,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0.LayoutGetWidth());
             assertFloatEqual(80, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8331,17 +8331,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Top, 10);
             rootChild0.StyleSetMargin(Edge.Bottom, 10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8353,7 +8353,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0.LayoutGetWidth());
             assertFloatEqual(80, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8371,16 +8371,16 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Start, 10);
             rootChild0.StyleSetMargin(Edge.End, 10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8392,7 +8392,7 @@ namespace Rockyfi
             assertFloatEqual(80, rootChild0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8410,20 +8410,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.End, 10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8440,7 +8440,7 @@ namespace Rockyfi
             assertFloatEqual(45, rootChild1.LayoutGetWidth());
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8463,19 +8463,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMargin(Edge.Bottom, 10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8492,7 +8492,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild1.LayoutGetWidth());
             assertFloatEqual(45, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8515,22 +8515,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Bottom);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8547,7 +8547,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8570,22 +8570,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Top);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8602,7 +8602,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8625,23 +8625,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Top);
             rootChild0.StyleSetMarginAuto(Edge.Bottom);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8658,7 +8658,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8681,23 +8681,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Top);
             rootChild0.StyleSetMarginAuto(Edge.Bottom);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8714,7 +8714,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8737,28 +8737,28 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Top);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetMarginAuto(Edge.Top);
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             rootChild2.StyleSetHeight(50);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8780,7 +8780,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild2.LayoutGetWidth());
             assertFloatEqual(50, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8808,29 +8808,29 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Right);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetMarginAuto(Edge.Right);
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             rootChild2.StyleSetHeight(50);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8852,7 +8852,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild2.LayoutGetWidth());
             assertFloatEqual(50, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8880,24 +8880,24 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Left);
             rootChild0.StyleSetMarginAuto(Edge.Right);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8914,7 +8914,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8937,22 +8937,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Left);
             rootChild0.StyleSetMarginAuto(Edge.Right);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8969,7 +8969,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -8992,24 +8992,24 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Start);
             rootChild0.StyleSetMarginAuto(Edge.End);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9026,7 +9026,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9049,22 +9049,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Start);
             rootChild0.StyleSetMarginAuto(Edge.End);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9081,7 +9081,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9104,23 +9104,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Left);
             rootChild0.StyleSetMarginAuto(Edge.Right);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9137,7 +9137,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9160,22 +9160,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Left);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9192,7 +9192,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9215,22 +9215,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Right);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9247,7 +9247,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9270,23 +9270,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Left);
             rootChild0.StyleSetMarginAuto(Edge.Right);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9303,7 +9303,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9326,22 +9326,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Top);
             rootChild0.StyleSetMarginAuto(Edge.Bottom);
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9358,7 +9358,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9381,17 +9381,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(250);
             root.StyleSetHeight(250);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMargin(Edge.Top, 20);
             rootChild0.StyleSetWidth(100);
             rootChild0.StyleSetHeight(100);
             rootChild0.StyleSetMaxHeight(100);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9403,7 +9403,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9421,17 +9421,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(250);
             root.StyleSetHeight(250);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMargin(Edge.Left, 20);
             rootChild0.StyleSetWidth(100);
             rootChild0.StyleSetMaxWidth(100);
             rootChild0.StyleSetHeight(100);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9443,7 +9443,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9461,18 +9461,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetWidth(52);
             root.StyleSetHeight(52);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Left);
             rootChild0.StyleSetMarginAuto(Edge.Right);
             rootChild0.StyleSetWidth(72);
             rootChild0.StyleSetHeight(72);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9484,7 +9484,7 @@ namespace Rockyfi
             assertFloatEqual(72, rootChild0.LayoutGetWidth());
             assertFloatEqual(72, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9502,17 +9502,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetWidth(52);
             root.StyleSetHeight(52);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Left);
             rootChild0.StyleSetWidth(72);
             rootChild0.StyleSetHeight(72);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9524,7 +9524,7 @@ namespace Rockyfi
             assertFloatEqual(72, rootChild0.LayoutGetWidth());
             assertFloatEqual(72, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9542,18 +9542,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetWidth(52);
             root.StyleSetHeight(52);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMargin(Edge.Left, 10);
             rootChild0.StyleSetMarginAuto(Edge.Right);
             rootChild0.StyleSetWidth(72);
             rootChild0.StyleSetHeight(72);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9565,7 +9565,7 @@ namespace Rockyfi
             assertFloatEqual(72, rootChild0.LayoutGetWidth());
             assertFloatEqual(72, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9583,18 +9583,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetWidth(52);
             root.StyleSetHeight(52);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMarginAuto(Edge.Left);
             rootChild0.StyleSetMargin(Edge.Right, 10);
             rootChild0.StyleSetWidth(72);
             rootChild0.StyleSetHeight(72);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9606,7 +9606,7 @@ namespace Rockyfi
             assertFloatEqual(72, rootChild0.LayoutGetWidth());
             assertFloatEqual(72, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -9670,20 +9670,20 @@ namespace Rockyfi
 
         [Test] public void TestMeasure_once_single_flexible_child()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             int measureCount = 0;
             rootChild0.Context = measureCount;
             rootChild0.SetMeasureFunc(measureMax);
             rootChild0.StyleSetFlexGrow(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             measureCount = (int)rootChild0.Context;
             assertEqual(1, measureCount);
@@ -9692,16 +9692,16 @@ namespace Rockyfi
 
         [Test] public void TestRemeasure_with_same_exact_width_larger_than_needed_height()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             int measureCount = 0;
             rootChild0.Context = measureCount;
             rootChild0.SetMeasureFunc(measureMin);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, 100, 100, Direction.LTR);
-            Rockyfi.CalculateLayout(root, 100, 50, Direction.LTR);
+            Flex.CalculateLayout(root, 100, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 100, 50, Direction.LTR);
 
             measureCount = (int)rootChild0.Context;
             assertEqual(1, measureCount);
@@ -9710,17 +9710,17 @@ namespace Rockyfi
 
         [Test] public void TestRemeasure_with_same_atmost_width_larger_than_needed_height()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             int measureCount = 0;
             rootChild0.Context = measureCount;
             rootChild0.SetMeasureFunc(measureMin);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, 100, 100, Direction.LTR);
-            Rockyfi.CalculateLayout(root, 100, 50, Direction.LTR);
+            Flex.CalculateLayout(root, 100, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 100, 50, Direction.LTR);
 
             measureCount = (int)rootChild0.Context;
             assertEqual(1, measureCount);
@@ -9729,18 +9729,18 @@ namespace Rockyfi
 
         [Test] public void TestRemeasure_with_computed_width_larger_than_needed_height()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             int measureCount = 0;
             rootChild0.Context = measureCount;
             rootChild0.SetMeasureFunc(measureMin);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, 100, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 100, 100, Direction.LTR);
             root.StyleSetAlignItems(Align.Stretch);
-            Rockyfi.CalculateLayout(root, 10, 50, Direction.LTR);
+            Flex.CalculateLayout(root, 10, 50, Direction.LTR);
 
             measureCount = (int)rootChild0.Context;
             assertEqual(1, measureCount);
@@ -9749,17 +9749,17 @@ namespace Rockyfi
 
         [Test] public void TestRemeasure_with_atmost_computed_width_undefined_height()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             int measureCount = 0;
             rootChild0.Context = measureCount;
             rootChild0.SetMeasureFunc(measureMin);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, 100, float.NaN, Direction.LTR);
-            Rockyfi.CalculateLayout(root, 10, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, 100, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, 10, float.NaN, Direction.LTR);
 
             measureCount = (int)rootChild0.Context;
             assertEqual(1, measureCount);
@@ -9769,22 +9769,22 @@ namespace Rockyfi
         {
             int measureCount = 0;
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(288);
             root.StyleSetHeight(288);
             root.StyleSetFlexDirection(FlexDirection.Row);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPadding(Edge.All, 2.88f);
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.Context = measureCount;
             rootChild0Child0.SetMeasureFunc(measure8449);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             measureCount = (int)rootChild0Child0.Context;
             assertEqual(1, measureCount);
@@ -9838,16 +9838,16 @@ namespace Rockyfi
         {
             var constraintList = CreateMeasureConstraintList(10);
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = constraintList;
             rootChild0.SetMeasureFunc(_measure2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(1, constraintList.Count);
 
@@ -9859,17 +9859,17 @@ namespace Rockyfi
         {
             var constraintList = CreateMeasureConstraintList(10);
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = constraintList;
             rootChild0.SetMeasureFunc(_measure2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(1, constraintList.Count);
 
@@ -9881,16 +9881,16 @@ namespace Rockyfi
         {
             var constraintList = CreateMeasureConstraintList(10);
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = constraintList;
             rootChild0.SetMeasureFunc(_measure2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(1, constraintList.Count);
 
@@ -9902,17 +9902,17 @@ namespace Rockyfi
         {
             var constraintList = CreateMeasureConstraintList(10);
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = constraintList;
             rootChild0.SetMeasureFunc(_measure2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(1, constraintList.Count);
 
@@ -9924,17 +9924,17 @@ namespace Rockyfi
         {
             var constraintList = CreateMeasureConstraintList(10);
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = constraintList;
             rootChild0.SetMeasureFunc(_measure2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(1, constraintList.Count);
 
@@ -9946,18 +9946,18 @@ namespace Rockyfi
         {
             var constraintList = CreateMeasureConstraintList(10);
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = constraintList;
             rootChild0.SetMeasureFunc(_measure2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(1, constraintList.Count);
 
@@ -9969,16 +9969,16 @@ namespace Rockyfi
         {
             var constraintList = CreateMeasureConstraintList(10);
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.Context = constraintList;
             rootChild0.SetMeasureFunc(_measure2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(2, constraintList.Count);
 
@@ -9993,17 +9993,17 @@ namespace Rockyfi
         {
             var constraintList = CreateMeasureConstraintList(10);
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(0);
             rootChild0.Context = constraintList;
             rootChild0.SetMeasureFunc(_measure2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(1, constraintList.Count);
 
@@ -10015,18 +10015,18 @@ namespace Rockyfi
         {
             var constraintList = CreateMeasureConstraintList(10);
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetOverflow(Overflow.Scroll);
             root.StyleSetHeight(100);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = constraintList;
             rootChild0.SetMeasureFunc(_measure2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(1, constraintList.Count);
 
@@ -10041,19 +10041,19 @@ namespace Rockyfi
         {
             var constraintList = CreateMeasureConstraintList(10);
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetOverflow(Overflow.Scroll);
             root.StyleSetHeight(100);
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = constraintList;
             rootChild0.SetMeasureFunc(_measure2);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(1, constraintList.Count);
 
@@ -10071,15 +10071,15 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMaxWidth(50);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10091,7 +10091,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10109,16 +10109,16 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetMaxHeight(50);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10130,7 +10130,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(50, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10148,19 +10148,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMinHeight(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10177,7 +10177,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild1.LayoutGetWidth());
             assertFloatEqual(20, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10200,20 +10200,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMinWidth(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10230,7 +10230,7 @@ namespace Rockyfi
             assertFloatEqual(20, rootChild1.LayoutGetWidth());
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10253,17 +10253,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetWidth(100);
             root.StyleSetMinHeight(100);
             root.StyleSetMaxHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(60);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10275,7 +10275,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(60, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10293,17 +10293,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetMinWidth(100);
             root.StyleSetMaxWidth(200);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(60);
             rootChild0.StyleSetHeight(60);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10315,7 +10315,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(60, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10333,26 +10333,26 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetMinHeight(100);
             root.StyleSetMaxHeight(110);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(50);
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(50);
             rootChild2.StyleSetHeight(50);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10374,7 +10374,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild2.LayoutGetWidth());
             assertFloatEqual(50, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10402,20 +10402,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetMinHeight(100);
             root.StyleSetMaxHeight(500);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexShrink(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10432,7 +10432,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10455,21 +10455,21 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexGrow(1);
             rootChild0Child0.StyleSetFlexBasis(0);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10486,7 +10486,7 @@ namespace Rockyfi
             assertFloatEqual(0, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(0, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10509,15 +10509,15 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(0);
             rootChild0.StyleSetHeight(100);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10529,7 +10529,7 @@ namespace Rockyfi
             assertFloatEqual(0, rootChild0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10547,18 +10547,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetMinHeight(100);
             root.StyleSetMaxHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10575,7 +10575,7 @@ namespace Rockyfi
             assertFloatEqual(0, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10598,20 +10598,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetMaxWidth(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexGrow(1);
             rootChild0Child0.StyleSetHeight(20);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10628,7 +10628,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(20, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10651,20 +10651,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetMaxWidth(300);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexGrow(1);
             rootChild0Child0.StyleSetHeight(20);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10681,7 +10681,7 @@ namespace Rockyfi
             assertFloatEqual(200, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(20, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10704,21 +10704,21 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexGrow(1);
             root.StyleSetWidth(100);
             root.StyleSetMinHeight(100);
             root.StyleSetMaxHeight(500);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(200);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(100);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10735,7 +10735,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild1.LayoutGetWidth());
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10758,26 +10758,26 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetMinHeight(100);
             root.StyleSetMaxHeight(500);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMinHeight(100);
             rootChild0.StyleSetMaxHeight(500);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexGrow(1);
             rootChild0Child0.StyleSetFlexBasis(200);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1 = Flex.CreateDefaultNode();
             rootChild0child1.StyleSetHeight(100);
             rootChild0.InsertChild(rootChild0child1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10799,7 +10799,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0child1.LayoutGetWidth());
             assertFloatEqual(100, rootChild0child1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10827,25 +10827,25 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(500);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMinHeight(100);
             rootChild0.StyleSetMaxHeight(500);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexGrow(1);
             rootChild0Child0.StyleSetFlexBasis(200);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1 = Flex.CreateDefaultNode();
             rootChild0child1.StyleSetHeight(100);
             rootChild0.InsertChild(rootChild0child1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10867,7 +10867,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0child1.LayoutGetWidth());
             assertFloatEqual(100, rootChild0child1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10895,19 +10895,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetMinWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10924,7 +10924,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild1.LayoutGetWidth());
             assertFloatEqual(100, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10947,17 +10947,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetMinHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10974,7 +10974,7 @@ namespace Rockyfi
             assertFloatEqual(0, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -10997,24 +10997,24 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetMaxWidth(100);
             rootChild0.StyleSetHeight(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexShrink(1);
             rootChild0Child0.StyleSetFlexBasis(100);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1 = Flex.CreateDefaultNode();
             rootChild0child1.StyleSetWidth(50);
             rootChild0.InsertChild(rootChild0child1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11036,7 +11036,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild0child1.LayoutGetWidth());
             assertFloatEqual(100, rootChild0child1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11064,19 +11064,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetMaxHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexShrink(1);
             rootChild0.StyleSetFlexBasis(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetHeight(50);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11093,7 +11093,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11116,23 +11116,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(120);
             root.StyleSetHeight(50);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(0);
             rootChild0.StyleSetMinWidth(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetFlexBasisPercent(50);
             rootChild1.StyleSetMaxWidth(20);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11149,7 +11149,7 @@ namespace Rockyfi
             assertFloatEqual(20, rootChild1.LayoutGetWidth());
             assertFloatEqual(50, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11172,17 +11172,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(50);
             root.StyleSetMinWidth(100);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
             assertFloatEqual(100, root.LayoutGetWidth());
             assertFloatEqual(0, root.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11195,17 +11195,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetMaxWidth(100);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
             assertFloatEqual(100, root.LayoutGetWidth());
             assertFloatEqual(0, root.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11218,17 +11218,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetHeight(50);
             root.StyleSetMinHeight(100);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
             assertFloatEqual(0, root.LayoutGetWidth());
             assertFloatEqual(100, root.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11241,17 +11241,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetHeight(200);
             root.StyleSetMaxHeight(100);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
             assertFloatEqual(0, root.LayoutGetWidth());
             assertFloatEqual(100, root.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11264,18 +11264,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMinWidthPercent(10);
             rootChild0.StyleSetMaxWidthPercent(10);
             rootChild0.StyleSetMinHeightPercent(10);
             rootChild0.StyleSetMaxHeightPercent(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11287,7 +11287,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11305,14 +11305,14 @@ namespace Rockyfi
         #region node_child_test.go
         [Test] public void TestReset_layout_when_child_removed()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(100);
             rootChild0.StyleSetHeight(100);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -11334,19 +11334,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetPadding(Edge.Left, 10);
             root.StyleSetPadding(Edge.Top, 10);
             root.StyleSetPadding(Edge.Right, 10);
             root.StyleSetPadding(Edge.Bottom, 10);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
             assertFloatEqual(20, root.LayoutGetWidth());
             assertFloatEqual(20, root.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11358,17 +11358,17 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetPadding(Edge.Left, 10);
             root.StyleSetPadding(Edge.Top, 10);
             root.StyleSetPadding(Edge.Right, 10);
             root.StyleSetPadding(Edge.Bottom, 10);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11380,7 +11380,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11397,7 +11397,7 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetPadding(Edge.Left, 10);
             root.StyleSetPadding(Edge.Top, 10);
             root.StyleSetPadding(Edge.Right, 10);
@@ -11405,11 +11405,11 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11421,7 +11421,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(80, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11438,7 +11438,7 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetPadding(Edge.Left, 10);
             root.StyleSetPadding(Edge.Top, 10);
             root.StyleSetPadding(Edge.Right, 10);
@@ -11446,10 +11446,10 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11461,7 +11461,7 @@ namespace Rockyfi
             assertFloatEqual(80, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11478,7 +11478,7 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetPadding(Edge.Start, 10);
@@ -11487,11 +11487,11 @@ namespace Rockyfi
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11503,7 +11503,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11520,13 +11520,13 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.FlexEnd);
             root.StyleSetAlignItems(Align.FlexEnd);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPadding(Edge.Left, 20);
             rootChild0.StyleSetPadding(Edge.Top, 20);
             rootChild0.StyleSetPadding(Edge.Right, 20);
@@ -11534,7 +11534,7 @@ namespace Rockyfi
             rootChild0.StyleSetWidth(100);
             rootChild0.StyleSetHeight(100);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11546,7 +11546,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0.LayoutGetWidth());
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11566,16 +11566,16 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidthPercent(30);
             rootChild0.StyleSetHeightPercent(30);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11587,7 +11587,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0.LayoutGetWidth());
             assertFloatEqual(60, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11604,18 +11604,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(400);
             root.StyleSetHeight(400);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionPercent(Edge.Left, 10);
             rootChild0.StyleSetPositionPercent(Edge.Top, 20);
             rootChild0.StyleSetWidthPercent(45);
             rootChild0.StyleSetHeightPercent(55);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11627,7 +11627,7 @@ namespace Rockyfi
             assertFloatEqual(180, rootChild0.LayoutGetWidth());
             assertFloatEqual(220, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11644,18 +11644,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(500);
             root.StyleSetHeight(500);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionPercent(Edge.Right, 20);
             rootChild0.StyleSetPositionPercent(Edge.Bottom, 10);
             rootChild0.StyleSetWidthPercent(55);
             rootChild0.StyleSetHeightPercent(15);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11667,7 +11667,7 @@ namespace Rockyfi
             assertFloatEqual(275, rootChild0.LayoutGetWidth());
             assertFloatEqual(75, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11684,21 +11684,21 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasisPercent(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetFlexBasisPercent(25);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11715,7 +11715,7 @@ namespace Rockyfi
             assertFloatEqual(75, rootChild1.LayoutGetWidth());
             assertFloatEqual(200, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11737,20 +11737,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasisPercent(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetFlexBasisPercent(25);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11767,7 +11767,7 @@ namespace Rockyfi
             assertFloatEqual(200, rootChild1.LayoutGetWidth());
             assertFloatEqual(75, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11789,20 +11789,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMinHeightPercent(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(2);
             rootChild1.StyleSetMinHeightPercent(10);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11819,7 +11819,7 @@ namespace Rockyfi
             assertFloatEqual(200, rootChild1.LayoutGetWidth());
             assertFloatEqual(60, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11841,23 +11841,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasisPercent(10);
             rootChild0.StyleSetMaxHeightPercent(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(4);
             rootChild1.StyleSetFlexBasisPercent(10);
             rootChild1.StyleSetMaxHeightPercent(20);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11874,7 +11874,7 @@ namespace Rockyfi
             assertFloatEqual(148, rootChild1.LayoutGetWidth());
             assertFloatEqual(40, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11896,22 +11896,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasisPercent(10);
             rootChild0.StyleSetMaxHeightPercent(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(4);
             rootChild1.StyleSetFlexBasisPercent(10);
             rootChild1.StyleSetMaxHeightPercent(20);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11928,7 +11928,7 @@ namespace Rockyfi
             assertFloatEqual(200, rootChild1.LayoutGetWidth());
             assertFloatEqual(40, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11950,23 +11950,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasisPercent(15);
             rootChild0.StyleSetMaxWidthPercent(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(4);
             rootChild1.StyleSetFlexBasisPercent(10);
             rootChild1.StyleSetMaxWidthPercent(20);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -11983,7 +11983,7 @@ namespace Rockyfi
             assertFloatEqual(40, rootChild1.LayoutGetWidth());
             assertFloatEqual(200, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12005,22 +12005,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasisPercent(10);
             rootChild0.StyleSetMaxWidthPercent(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(4);
             rootChild1.StyleSetFlexBasisPercent(15);
             rootChild1.StyleSetMaxWidthPercent(20);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12037,7 +12037,7 @@ namespace Rockyfi
             assertFloatEqual(40, rootChild1.LayoutGetWidth());
             assertFloatEqual(150, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12059,23 +12059,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasisPercent(15);
             rootChild0.StyleSetMinWidthPercent(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(4);
             rootChild1.StyleSetFlexBasisPercent(10);
             rootChild1.StyleSetMinWidthPercent(20);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12092,7 +12092,7 @@ namespace Rockyfi
             assertFloatEqual(80, rootChild1.LayoutGetWidth());
             assertFloatEqual(200, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12114,22 +12114,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasisPercent(10);
             rootChild0.StyleSetMinWidthPercent(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(4);
             rootChild1.StyleSetFlexBasisPercent(15);
             rootChild1.StyleSetMinWidthPercent(20);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12146,7 +12146,7 @@ namespace Rockyfi
             assertFloatEqual(200, rootChild1.LayoutGetWidth());
             assertFloatEqual(150, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12168,11 +12168,11 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasisPercent(10);
             rootChild0.StyleSetMargin(Edge.Left, 5);
@@ -12186,7 +12186,7 @@ namespace Rockyfi
             rootChild0.StyleSetMinWidthPercent(60);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetMargin(Edge.Left, 5);
             rootChild0Child0.StyleSetMargin(Edge.Top, 5);
             rootChild0Child0.StyleSetMargin(Edge.Right, 5);
@@ -12198,7 +12198,7 @@ namespace Rockyfi
             rootChild0Child0.StyleSetWidthPercent(50);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0Child0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0Child0.StyleSetMarginPercent(Edge.Left, 5);
             rootChild0Child0Child0.StyleSetMarginPercent(Edge.Top, 5);
             rootChild0Child0Child0.StyleSetMarginPercent(Edge.Right, 5);
@@ -12210,12 +12210,12 @@ namespace Rockyfi
             rootChild0Child0Child0.StyleSetWidthPercent(45);
             rootChild0Child0.InsertChild(rootChild0Child0Child0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(4);
             rootChild1.StyleSetFlexBasisPercent(15);
             rootChild1.StyleSetMinWidthPercent(20);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12242,7 +12242,7 @@ namespace Rockyfi
             assertFloatEqual(200, rootChild1.LayoutGetWidth());
             assertFloatEqual(142, rootChild1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12274,11 +12274,11 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetMarginPercent(Edge.Left, 10);
             rootChild0.StyleSetMarginPercent(Edge.Top, 10);
@@ -12286,11 +12286,11 @@ namespace Rockyfi
             rootChild0.StyleSetMarginPercent(Edge.Bottom, 10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(10);
             rootChild0Child0.StyleSetHeight(10);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12307,7 +12307,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12329,11 +12329,11 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetPaddingPercent(Edge.Left, 10);
             rootChild0.StyleSetPaddingPercent(Edge.Top, 10);
@@ -12341,11 +12341,11 @@ namespace Rockyfi
             rootChild0.StyleSetPaddingPercent(Edge.Bottom, 10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(10);
             rootChild0Child0.StyleSetHeight(10);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12362,7 +12362,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12384,18 +12384,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(200);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPositionPercent(Edge.Left, 30);
             rootChild0.StyleSetPositionPercent(Edge.Top, 10);
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12407,7 +12407,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild0.LayoutGetWidth());
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12424,13 +12424,13 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidthPercent(50);
             rootChild0.StyleSetHeightPercent(50);
             root.InsertChild(rootChild0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12442,7 +12442,7 @@ namespace Rockyfi
             assertFloatEqual(0, rootChild0.LayoutGetWidth());
             assertFloatEqual(0, rootChild0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12459,27 +12459,27 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(350);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild1child0 = Rockyfi.CreateDefaultNode();
+            var rootChild1child0 = Flex.CreateDefaultNode();
             rootChild1child0.StyleSetWidthPercent(100);
             rootChild1.InsertChild(rootChild1child0, 0);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetWidth(100);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12506,7 +12506,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12538,31 +12538,31 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetJustifyContent(Justify.Center);
             root.StyleSetAlignItems(Align.Center);
             root.StyleSetWidth(200);
             root.StyleSetHeight(200);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0Child0.StyleSetJustifyContent(Justify.Center);
             rootChild0Child0.StyleSetWidthPercent(100);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0Child0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0Child0.StyleSetWidth(50);
             rootChild0Child0Child0.StyleSetHeight(50);
             rootChild0Child0.InsertChild(rootChild0Child0Child0, 0);
 
-            var rootChild0Child0_child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0_child1 = Flex.CreateDefaultNode();
             rootChild0Child0_child1.StyleSetWidth(50);
             rootChild0Child0_child1.StyleSetHeight(50);
             rootChild0Child0.InsertChild(rootChild0Child0_child1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12589,7 +12589,7 @@ namespace Rockyfi
             assertFloatEqual(50, rootChild0Child0_child1.LayoutGetWidth());
             assertFloatEqual(50, rootChild0Child0_child1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12621,11 +12621,11 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(60);
             root.StyleSetHeight(50);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Row);
             rootChild0.StyleSetPositionType(PositionType.Absolute);
             rootChild0.StyleSetPositionPercent(Edge.Left, 50);
@@ -12633,14 +12633,14 @@ namespace Rockyfi
             rootChild0.StyleSetHeight(50);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidthPercent(100);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1 = Flex.CreateDefaultNode();
             rootChild0child1.StyleSetWidthPercent(100);
             rootChild0.InsertChild(rootChild0child1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12662,7 +12662,7 @@ namespace Rockyfi
             assertFloatEqual(60, rootChild0child1.LayoutGetWidth());
             assertFloatEqual(50, rootChild0child1.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12690,37 +12690,37 @@ namespace Rockyfi
         #region relayout_test.go
         [Test] public void TestDont_cache_computed_flex_basis_between_layouts()
         {
-            var config = Rockyfi.CreateDefaultConfig();
+            var config = Flex.CreateDefaultConfig();
             config.SetExperimentalFeatureEnabled(ExperimentalFeature.WebFlexBasis, true);
 
-            var root = Rockyfi.CreateDefaultNode(config);
+            var root = Flex.CreateDefaultNode(config);
             root.StyleSetHeightPercent(100);
             root.StyleSetWidthPercent(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode(config);
+            var rootChild0 = Flex.CreateDefaultNode(config);
             rootChild0.StyleSetFlexBasisPercent(100);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, 100, float.NaN, Direction.LTR);
-            Rockyfi.CalculateLayout(root, 100, 100, Direction.LTR);
+            Flex.CalculateLayout(root, 100, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, 100, 100, Direction.LTR);
 
             assertFloatEqual(100, rootChild0.LayoutGetHeight());
         }
 
         [Test] public void TestRecalculate_resolvedDimonsion_onchange()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetMinHeight(10);
             rootChild0.StyleSetMaxHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
             assertFloatEqual(10, rootChild0.LayoutGetHeight());
 
             rootChild0.StyleSetMinHeight(float.NaN);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, rootChild0.LayoutGetHeight());
         }
@@ -12732,20 +12732,20 @@ namespace Rockyfi
         {
 
             // Test that whole numbers are rounded to whole despite ceil/floor flags
-            assertFloatEqual(6.0f, Rockyfi.RoundValueToPixelGrid(6.000001f, 2.0f, false, false));
-            assertFloatEqual(6.0f, Rockyfi.RoundValueToPixelGrid(6.000001f, 2.0f, true, false));
-            assertFloatEqual(6.0f, Rockyfi.RoundValueToPixelGrid(6.000001f, 2.0f, false, true));
-            assertFloatEqual(6.0f, Rockyfi.RoundValueToPixelGrid(5.999999f, 2.0f, false, false));
-            assertFloatEqual(6.0f, Rockyfi.RoundValueToPixelGrid(5.999999f, 2.0f, true, false));
-            assertFloatEqual(6.0f, Rockyfi.RoundValueToPixelGrid(5.999999f, 2.0f, false, true));
+            assertFloatEqual(6.0f, Flex.RoundValueToPixelGrid(6.000001f, 2.0f, false, false));
+            assertFloatEqual(6.0f, Flex.RoundValueToPixelGrid(6.000001f, 2.0f, true, false));
+            assertFloatEqual(6.0f, Flex.RoundValueToPixelGrid(6.000001f, 2.0f, false, true));
+            assertFloatEqual(6.0f, Flex.RoundValueToPixelGrid(5.999999f, 2.0f, false, false));
+            assertFloatEqual(6.0f, Flex.RoundValueToPixelGrid(5.999999f, 2.0f, true, false));
+            assertFloatEqual(6.0f, Flex.RoundValueToPixelGrid(5.999999f, 2.0f, false, true));
 
             // Test that numbers with fraction are rounded correctly accounting for ceil/floor flags
-            assertFloatEqual(6.0f, Rockyfi.RoundValueToPixelGrid(6.01f, 2.0f, false, false));
-            assertFloatEqual(6.5f, Rockyfi.RoundValueToPixelGrid(6.01f, 2.0f, true, false));
-            assertFloatEqual(6.0f, Rockyfi.RoundValueToPixelGrid(6.01f, 2.0f, false, true));
-            assertFloatEqual(6.0f, Rockyfi.RoundValueToPixelGrid(5.99f, 2.0f, false, false));
-            assertFloatEqual(6.0f, Rockyfi.RoundValueToPixelGrid(5.99f, 2.0f, true, false));
-            assertFloatEqual(5.5f, Rockyfi.RoundValueToPixelGrid(5.99f, 2.0f, false, true));
+            assertFloatEqual(6.0f, Flex.RoundValueToPixelGrid(6.01f, 2.0f, false, false));
+            assertFloatEqual(6.5f, Flex.RoundValueToPixelGrid(6.01f, 2.0f, true, false));
+            assertFloatEqual(6.0f, Flex.RoundValueToPixelGrid(6.01f, 2.0f, false, true));
+            assertFloatEqual(6.0f, Flex.RoundValueToPixelGrid(5.99f, 2.0f, false, false));
+            assertFloatEqual(6.0f, Flex.RoundValueToPixelGrid(5.99f, 2.0f, true, false));
+            assertFloatEqual(5.5f, Flex.RoundValueToPixelGrid(5.99f, 2.0f, false, true));
         }
 
         #endregion
@@ -12767,44 +12767,44 @@ namespace Rockyfi
         [Test] public void TestRounding_feature_with_custom_measure_func_floor()
         {
 
-            var config = Rockyfi.CreateDefaultConfig();
-            var root = Rockyfi.CreateDefaultNode(config);
+            var config = Flex.CreateDefaultConfig();
+            var root = Flex.CreateDefaultNode(config);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode(config);
+            var rootChild0 = Flex.CreateDefaultNode(config);
             rootChild0.SetMeasureFunc(_measureFloor);
             root.InsertChild(rootChild0, 0);
 
             config.SetPointScaleFactor(0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(10.2f, rootChild0.LayoutGetWidth());
             assertFloatEqual(10.2f, rootChild0.LayoutGetHeight());
 
             config.SetPointScaleFactor(1);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(11, rootChild0.LayoutGetWidth());
             assertFloatEqual(11, rootChild0.LayoutGetHeight());
 
             config.SetPointScaleFactor(2);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(10.5f, rootChild0.LayoutGetWidth());
             assertFloatEqual(10.5f, rootChild0.LayoutGetHeight());
 
             config.SetPointScaleFactor(4);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(10.25f, rootChild0.LayoutGetWidth());
             assertFloatEqual(10.25f, rootChild0.LayoutGetHeight());
 
             config.SetPointScaleFactor(1f / 3f);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(12.0f, rootChild0.LayoutGetWidth());
             assertFloatEqual(12.0f, rootChild0.LayoutGetHeight());
@@ -12813,16 +12813,16 @@ namespace Rockyfi
         [Test] public void TestRounding_feature_with_custom_measure_func_ceil()
         {
 
-            var config = Rockyfi.CreateDefaultConfig();
-            var root = Rockyfi.CreateDefaultNode(config);
+            var config = Flex.CreateDefaultConfig();
+            var root = Flex.CreateDefaultNode(config);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_measureCeil);
             root.InsertChild(rootChild0, 0);
 
             config.SetPointScaleFactor(1);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(11, rootChild0.LayoutGetWidth());
             assertFloatEqual(11, rootChild0.LayoutGetHeight());
@@ -12831,17 +12831,17 @@ namespace Rockyfi
         [Test] public void TestRounding_feature_with_custom_measure_and_fractial_matching_scale()
         {
 
-            var config = Rockyfi.CreateDefaultConfig();
-            var root = Rockyfi.CreateDefaultNode(config);
+            var config = Flex.CreateDefaultConfig();
+            var root = Flex.CreateDefaultNode(config);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetPosition(Edge.Left, 73.625f);
             rootChild0.SetMeasureFunc(_measureFractial);
             root.InsertChild(rootChild0, 0);
 
             config.SetPointScaleFactor(2);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0.5f, rootChild0.LayoutGetWidth());
             assertFloatEqual(0.5f, rootChild0.LayoutGetHeight());
@@ -12855,23 +12855,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12893,7 +12893,7 @@ namespace Rockyfi
             assertFloatEqual(33, rootChild2.LayoutGetWidth());
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12920,31 +12920,31 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(113);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             root.InsertChild(rootChild2, 2);
 
-            var rootChild3 = Rockyfi.CreateDefaultNode();
+            var rootChild3 = Flex.CreateDefaultNode();
             rootChild3.StyleSetFlexGrow(1);
             root.InsertChild(rootChild3, 3);
 
-            var rootChild4 = Rockyfi.CreateDefaultNode();
+            var rootChild4 = Flex.CreateDefaultNode();
             rootChild4.StyleSetFlexGrow(1);
             root.InsertChild(rootChild4, 4);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -12976,7 +12976,7 @@ namespace Rockyfi
             assertFloatEqual(23, rootChild4.LayoutGetWidth());
             assertFloatEqual(100, rootChild4.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13013,24 +13013,24 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(101);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexShrink(1);
             rootChild0.StyleSetFlexBasis(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexBasis(25);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexBasis(25);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13052,7 +13052,7 @@ namespace Rockyfi
             assertFloatEqual(25, rootChild2.LayoutGetWidth());
             assertFloatEqual(100, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13079,26 +13079,26 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(113);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(50);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13120,7 +13120,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(24, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13147,26 +13147,26 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(87.4f);
             root.StyleSetHeight(113.4f);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(0.7f);
             rootChild0.StyleSetFlexBasis(50.3f);
             rootChild0.StyleSetHeight(20.3f);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1.6f);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1.1f);
             rootChild2.StyleSetHeight(10.7f);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13188,7 +13188,7 @@ namespace Rockyfi
             assertFloatEqual(87, rootChild2.LayoutGetWidth());
             assertFloatEqual(24, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13215,40 +13215,40 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(87.4f);
             root.StyleSetHeight(113.4f);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(0.7f);
             rootChild0.StyleSetFlexBasis(50.3f);
             rootChild0.StyleSetHeight(20.3f);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetFlexGrow(1);
             rootChild0Child0.StyleSetFlexBasis(0.3f);
             rootChild0Child0.StyleSetPosition(Edge.Bottom, 13.3f);
             rootChild0Child0.StyleSetHeight(9.9f);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            var rootChild0child1 = Rockyfi.CreateDefaultNode();
+            var rootChild0child1 = Flex.CreateDefaultNode();
             rootChild0child1.StyleSetFlexGrow(4);
             rootChild0child1.StyleSetFlexBasis(0.3f);
             rootChild0child1.StyleSetPosition(Edge.Top, 13.3f);
             rootChild0child1.StyleSetHeight(1.1f);
             rootChild0.InsertChild(rootChild0child1, 1);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1.6f);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1.1f);
             rootChild2.StyleSetHeight(10.7f);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13280,7 +13280,7 @@ namespace Rockyfi
             assertFloatEqual(87, rootChild2.LayoutGetWidth());
             assertFloatEqual(24, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13317,26 +13317,26 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(113.4f);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(50);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13358,7 +13358,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(24, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13385,26 +13385,26 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(113.6f);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(50);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13426,7 +13426,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(25, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13453,27 +13453,27 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetPosition(Edge.Top, 0.3f);
             root.StyleSetWidth(100);
             root.StyleSetHeight(113.4f);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(50);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13495,7 +13495,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(25, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13522,27 +13522,27 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetPosition(Edge.Top, 0.7f);
             root.StyleSetWidth(100);
             root.StyleSetHeight(113.4f);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexBasis(50);
             rootChild0.StyleSetHeight(20);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(1, root.LayoutGetTop());
@@ -13564,7 +13564,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild2.LayoutGetWidth());
             assertFloatEqual(24, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(1, root.LayoutGetTop());
@@ -13591,30 +13591,30 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(320);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetHeight(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild1child0 = Rockyfi.CreateDefaultNode();
+            var rootChild1child0 = Flex.CreateDefaultNode();
             rootChild1child0.StyleSetFlexGrow(1);
             rootChild1child0.StyleSetHeight(10);
             rootChild1.InsertChild(rootChild1child0, 0);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             rootChild2.StyleSetHeight(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13641,7 +13641,7 @@ namespace Rockyfi
             assertFloatEqual(107, rootChild2.LayoutGetWidth());
             assertFloatEqual(10, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13673,29 +13673,29 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetHeight(320);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetWidth(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetWidth(10);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild1child0 = Rockyfi.CreateDefaultNode();
+            var rootChild1child0 = Flex.CreateDefaultNode();
             rootChild1child0.StyleSetFlexGrow(1);
             rootChild1child0.StyleSetWidth(10);
             rootChild1.InsertChild(rootChild1child0, 0);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             rootChild2.StyleSetWidth(10);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13722,7 +13722,7 @@ namespace Rockyfi
             assertFloatEqual(10, rootChild2.LayoutGetWidth());
             assertFloatEqual(107, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13754,46 +13754,46 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(640);
             root.StyleSetHeight(320);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetHeightPercent(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetFlexGrow(1);
             rootChild1.StyleSetHeightPercent(100);
             root.InsertChild(rootChild1, 1);
 
-            var rootChild1child0 = Rockyfi.CreateDefaultNode();
+            var rootChild1child0 = Flex.CreateDefaultNode();
             rootChild1child0.StyleSetFlexGrow(1);
             rootChild1child0.StyleSetWidthPercent(100);
             rootChild1.InsertChild(rootChild1child0, 0);
 
-            var rootChild1_child1 = Rockyfi.CreateDefaultNode();
+            var rootChild1_child1 = Flex.CreateDefaultNode();
             rootChild1_child1.StyleSetFlexGrow(1);
             rootChild1_child1.StyleSetWidthPercent(100);
             rootChild1.InsertChild(rootChild1_child1, 1);
 
-            var rootChild1_child1Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild1_child1Child0 = Flex.CreateDefaultNode();
             rootChild1_child1Child0.StyleSetFlexGrow(1);
             rootChild1_child1Child0.StyleSetWidthPercent(100);
             rootChild1_child1.InsertChild(rootChild1_child1Child0, 0);
 
-            var rootChild1_child2 = Rockyfi.CreateDefaultNode();
+            var rootChild1_child2 = Flex.CreateDefaultNode();
             rootChild1_child2.StyleSetFlexGrow(1);
             rootChild1_child2.StyleSetWidthPercent(100);
             rootChild1.InsertChild(rootChild1_child2, 2);
 
-            var rootChild2 = Rockyfi.CreateDefaultNode();
+            var rootChild2 = Flex.CreateDefaultNode();
             rootChild2.StyleSetFlexGrow(1);
             rootChild2.StyleSetHeightPercent(100);
             root.InsertChild(rootChild2, 2);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13835,7 +13835,7 @@ namespace Rockyfi
             assertFloatEqual(213, rootChild2.LayoutGetWidth());
             assertFloatEqual(320, rootChild2.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13885,18 +13885,18 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(200);
             rootChild0Child0.StyleSetHeight(200);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13913,7 +13913,7 @@ namespace Rockyfi
             assertFloatEqual(200, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(200, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13935,20 +13935,20 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(100);
             rootChild0.StyleSetHeight(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(200);
             rootChild0Child0.StyleSetHeight(200);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13965,7 +13965,7 @@ namespace Rockyfi
             assertFloatEqual(200, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(200, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -13987,19 +13987,19 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetWidth(100);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetWidth(100);
             rootChild0Child0.StyleSetHeight(200);
             rootChild0.InsertChild(rootChild0Child0, 0);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -14016,7 +14016,7 @@ namespace Rockyfi
             assertFloatEqual(100, rootChild0Child0.LayoutGetWidth());
             assertFloatEqual(200, rootChild0Child0.LayoutGetHeight());
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.RTL);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -14039,26 +14039,26 @@ namespace Rockyfi
         #region style_test.go
         [Test] public void TestCopy_style_same()
         {
-            var node0 = Rockyfi.CreateDefaultNode();
-            var node1 = Rockyfi.CreateDefaultNode();
+            var node0 = Flex.CreateDefaultNode();
+            var node1 = Flex.CreateDefaultNode();
             assertFalse(node0.IsDirty);
 
-            Rockyfi.NodeCopyStyle(node0, node1);
+            Flex.NodeCopyStyle(node0, node1);
             assertFalse(node0.IsDirty);
         }
 
         [Test] public void TestCopy_style_modified()
         {
-            var node0 = Rockyfi.CreateDefaultNode();
+            var node0 = Flex.CreateDefaultNode();
             assertFalse(node0.IsDirty);
             assertEqual(FlexDirection.Column, node0.StyleGetFlexDirection());
             assertFalse(node0.StyleGetMaxHeight().unit != Unit.Undefined);
 
-            var node1 = Rockyfi.CreateDefaultNode();
+            var node1 = Flex.CreateDefaultNode();
             node1.StyleSetFlexDirection(FlexDirection.Row);
             node1.StyleSetMaxHeight(10);
 
-            Rockyfi.NodeCopyStyle(node0, node1);
+            Flex.NodeCopyStyle(node0, node1);
             assertTrue(node0.IsDirty);
             assertEqual(FlexDirection.Row, node0.StyleGetFlexDirection());
             assertFloatEqual(10, node0.StyleGetMaxHeight().value);
@@ -14066,17 +14066,17 @@ namespace Rockyfi
 
         [Test] public void TestCopy_style_modified_same()
         {
-            var node0 = Rockyfi.CreateDefaultNode();
+            var node0 = Flex.CreateDefaultNode();
             node0.StyleSetFlexDirection(FlexDirection.Row);
             node0.StyleSetMaxHeight(10);
-            Rockyfi.CalculateLayout(node0, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(node0, float.NaN, float.NaN, Direction.LTR);
             assertFalse(node0.IsDirty);
 
-            var node1 = Rockyfi.CreateDefaultNode();
+            var node1 = Flex.CreateDefaultNode();
             node1.StyleSetFlexDirection(FlexDirection.Row);
             node1.StyleSetMaxHeight(10);
 
-            Rockyfi.NodeCopyStyle(node0, node1);
+            Flex.NodeCopyStyle(node0, node1);
             assertFalse(node0.IsDirty);
         }
         #endregion
@@ -14128,54 +14128,54 @@ namespace Rockyfi
 
         [Test] public void TestDont_measure_single_grow_shrink_child()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
             var measureIntegerCount = new TestInteger();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure);
             rootChild0.StyleSetFlexGrow(1);
             rootChild0.StyleSetFlexShrink(1);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(0, measureIntegerCount.Count);
         }
 
         [Test] public void TestMeasure_absolute_child_with_no_constraints()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             root.InsertChild(rootChild0, 0);
 
             var measureIntegerCount = new TestInteger();
 
-            var rootChild0Child0 = Rockyfi.CreateDefaultNode();
+            var rootChild0Child0 = Flex.CreateDefaultNode();
             rootChild0Child0.StyleSetPositionType(PositionType.Absolute);
             rootChild0Child0.Context = measureIntegerCount;
             rootChild0Child0.SetMeasureFunc(_measure3);
             rootChild0.InsertChild(rootChild0Child0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(1, measureIntegerCount.Count);
         }
 
         [Test] public void TestDont_measure_when_min_equals_max()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
             var measureIntegerCount = new TestInteger();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure3);
             rootChild0.StyleSetMinWidth(10);
@@ -14184,7 +14184,7 @@ namespace Rockyfi
             rootChild0.StyleSetMaxHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(0, measureIntegerCount.Count);
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
@@ -14195,14 +14195,14 @@ namespace Rockyfi
 
         [Test] public void TestDont_measure_when_min_equals_max_percentages()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
             var measureIntegerCount = new TestInteger();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure3);
             rootChild0.StyleSetMinWidthPercent(10);
@@ -14211,7 +14211,7 @@ namespace Rockyfi
             rootChild0.StyleSetMaxHeightPercent(10);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(0, measureIntegerCount.Count);
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
@@ -14222,14 +14222,14 @@ namespace Rockyfi
 
         [Test] public void TestDont_measure_when_min_equals_max_mixed_width_percent()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
             var measureIntegerCount = new TestInteger();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure3);
             rootChild0.StyleSetMinWidthPercent(10);
@@ -14238,7 +14238,7 @@ namespace Rockyfi
             rootChild0.StyleSetMaxHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(0, measureIntegerCount.Count);
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
@@ -14249,14 +14249,14 @@ namespace Rockyfi
 
         [Test] public void TestDont_measure_when_min_equals_max_mixed_height_percent()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetAlignItems(Align.FlexStart);
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
 
             var measureIntegerCount = new TestInteger();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.Context = measureIntegerCount;
             rootChild0.SetMeasureFunc(_measure3);
             rootChild0.StyleSetMinWidth(10);
@@ -14265,7 +14265,7 @@ namespace Rockyfi
             rootChild0.StyleSetMaxHeightPercent(10);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertEqual(0, measureIntegerCount.Count);
             assertFloatEqual(0, rootChild0.LayoutGetLeft());
@@ -14276,16 +14276,16 @@ namespace Rockyfi
 
         [Test] public void TestMeasure_enough_size_should_be_in_single_line()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAlignSelf(Align.FlexStart);
             rootChild0.SetMeasureFunc(_simulate_wrapping_text);
 
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(68, rootChild0.LayoutGetWidth());
             assertFloatEqual(16, rootChild0.LayoutGetHeight());
@@ -14293,16 +14293,16 @@ namespace Rockyfi
 
         [Test] public void TestMeasure_not_enough_size_should_wrap()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(55);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetAlignSelf(Align.FlexStart);
             rootChild0.SetMeasureFunc(_simulate_wrapping_text);
 
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(50, rootChild0.LayoutGetWidth());
             assertFloatEqual(32, rootChild0.LayoutGetHeight());
@@ -14310,14 +14310,14 @@ namespace Rockyfi
 
         [Test] public void TestMeasure_zero_space_should_grow()
         {
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetHeight(200);
             root.StyleSetFlexDirection(FlexDirection.Column);
             root.StyleSetFlexGrow(0);
 
             var measureIntegerCount = new TestInteger();
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.StyleSetFlexDirection(FlexDirection.Column);
             rootChild0.StyleSetPadding(Edge.All, 100);
             rootChild0.Context = measureIntegerCount;
@@ -14325,7 +14325,7 @@ namespace Rockyfi
 
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, 282, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, 282, float.NaN, Direction.LTR);
 
             assertFloatEqual(282, rootChild0.LayoutGetWidth());
             assertFloatEqual(0, rootChild0.LayoutGetTop());
@@ -14335,7 +14335,7 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetPadding(Edge.Left, 25);
             root.StyleSetPadding(Edge.Top, 25);
@@ -14344,15 +14344,15 @@ namespace Rockyfi
             root.StyleSetWidth(50);
             root.StyleSetHeight(50);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_simulate_wrapping_text);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(5);
             rootChild1.StyleSetHeight(5);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(0, root.LayoutGetTop());
@@ -14374,21 +14374,21 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetMargin(Edge.Top, 20);
             root.StyleSetPadding(Edge.All, 25);
             root.StyleSetWidth(50);
             root.StyleSetHeight(50);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_simulate_wrapping_text);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(5);
             rootChild1.StyleSetHeight(5);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(20, root.LayoutGetTop());
@@ -14410,21 +14410,21 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetMargin(Edge.Top, 20);
             root.StyleSetWidth(50);
             root.StyleSetHeight(50);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_simulate_wrapping_text);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(5);
             rootChild1.StyleSetHeight(5);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(20, root.LayoutGetTop());
@@ -14446,22 +14446,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetMargin(Edge.Top, 20);
             root.StyleSetWidth(50);
             root.StyleSetHeight(50);
             root.StyleSetAlignItems(Align.FlexStart);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_simulate_wrapping_text);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(5);
             rootChild1.StyleSetHeight(5);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(20, root.LayoutGetTop());
@@ -14483,23 +14483,23 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetMargin(Edge.Top, 20);
             root.StyleSetPadding(Edge.All, 25);
             root.StyleSetWidth(50);
             root.StyleSetHeight(50);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_simulate_wrapping_text);
             rootChild0.StyleSetWidth(10);
             rootChild0.StyleSetHeight(10);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(5);
             rootChild1.StyleSetHeight(5);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(20, root.LayoutGetTop());
@@ -14521,22 +14521,22 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetMargin(Edge.Top, 20);
             root.StyleSetPadding(Edge.All, 25);
             root.StyleSetWidth(50);
             root.StyleSetHeight(50);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_simulate_wrapping_text);
             rootChild0.StyleSetFlexShrink(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(5);
             rootChild1.StyleSetHeight(5);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(20, root.LayoutGetTop());
@@ -14558,21 +14558,21 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetMargin(Edge.Top, 20);
             root.StyleSetWidth(50);
             root.StyleSetHeight(50);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_simulate_wrapping_text);
             rootChild0.StyleSetFlexShrink(1);
             root.InsertChild(rootChild0, 0);
 
-            var rootChild1 = Rockyfi.CreateDefaultNode();
+            var rootChild1 = Flex.CreateDefaultNode();
             rootChild1.StyleSetWidth(5);
             rootChild1.StyleSetHeight(5);
             root.InsertChild(rootChild1, 1);
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             assertFloatEqual(0, root.LayoutGetLeft());
             assertFloatEqual(20, root.LayoutGetTop());
@@ -14615,8 +14615,8 @@ namespace Rockyfi
 
         [Test] public void TestCan_nullify_measure_func_on_any_node()
         {
-            var root = Rockyfi.CreateDefaultNode();
-            root.InsertChild(Rockyfi.CreateDefaultNode(), 0);
+            var root = Flex.CreateDefaultNode();
+            root.InsertChild(Flex.CreateDefaultNode(), 0);
 
             root.SetMeasureFunc(null);
             assertTrue(root.GetMeasureFunc() == null);
@@ -14626,53 +14626,53 @@ namespace Rockyfi
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Column);
             root.StyleSetWidth(50);
             root.StyleSetHeight(10);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_measure_assert_negative);
             rootChild0.StyleSetMargin(Edge.Top, 20);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
         }
 
         [Test] public void TestCant_call_negative_measure_horizontal()
         {
 
 
-            var root = Rockyfi.CreateDefaultNode();
+            var root = Flex.CreateDefaultNode();
             root.StyleSetFlexDirection(FlexDirection.Row);
             root.StyleSetWidth(10);
             root.StyleSetHeight(20);
 
-            var rootChild0 = Rockyfi.CreateDefaultNode();
+            var rootChild0 = Flex.CreateDefaultNode();
             rootChild0.SetMeasureFunc(_measure_assert_negative);
             rootChild0.StyleSetMargin(Edge.Start, 20);
             root.InsertChild(rootChild0, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
         }
 
         #endregion
 
         #region issue5
         [Test] public void TestIssue5() {
-            var config = Rockyfi.CreateDefaultConfig();
+            var config = Flex.CreateDefaultConfig();
             config.Context = "test";
 
             // check that "padding" set with EdgeAll is printed out
-            var root = Rockyfi.CreateDefaultNode(config);
+            var root = Flex.CreateDefaultNode(config);
             root.StyleSetFlexDirection(FlexDirection.Column);
             root.StyleSetHeightPercent(100);
 
-            var child = Rockyfi.CreateDefaultNode(config);
+            var child = Flex.CreateDefaultNode(config);
             child.StyleSetPadding(Edge.All, 20);
             root.InsertChild(child, 0);
 
-            Rockyfi.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
+            Flex.CalculateLayout(root, float.NaN, float.NaN, Direction.LTR);
 
             var got = NodePrinter.PrintToString(root);
             var exp = @"<div layout=""width: 40; height: 40; top: 0; left: 0;"" style=""height: 100%; "">

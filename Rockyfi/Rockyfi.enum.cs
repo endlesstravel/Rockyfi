@@ -140,7 +140,7 @@ namespace Rockyfi
         WrapReverse,
     }
 
-    public partial class Rockyfi
+    public partial class Flex
     {
 
         #region XXXX_ToSring

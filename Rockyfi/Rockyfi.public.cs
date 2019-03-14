@@ -128,7 +128,7 @@ namespace Rockyfi
         }
     }
 
-    public partial class Rockyfi
+    public partial class Flex
     {
         // FloatsEqual returns true if floats are approx. equal
         public static bool FloatsEqual(float a, float b)
@@ -189,8 +189,8 @@ namespace Rockyfi
         // // Reset resets a node
         public static void Reset(ref Node node)
         {
-            Rockyfi.assertWithNode(node, node.Children.Count == 0, "Cannot reset a node which still has children attached");
-            Rockyfi.assertWithNode(node, node.Parent == null, "Cannot reset a node still attached to a parent");
+            Flex.assertWithNode(node, node.Children.Count == 0, "Cannot reset a node which still has children attached");
+            Flex.assertWithNode(node, node.Parent == null, "Cannot reset a node still attached to a parent");
             node.Children.Clear();
 
             var config = node.config;
