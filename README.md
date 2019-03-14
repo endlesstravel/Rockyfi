@@ -4,7 +4,7 @@
 
 C# implementation of [flexbox CSS](https://www.w3.org/TR/css-flexbox-1/) layout algorithm. Adapt from https://github.com/kjk/flex
 
---------------------------
+Thanks [kjk/flex](https://github.com/kjk/flex), there is no such project without him.
 
 ## Status
 
@@ -15,7 +15,7 @@ C# implementation of [flexbox CSS](https://www.w3.org/TR/css-flexbox-1/) layout 
 
 ## Usage
 
-more example please check [test file](RockyfiTests\Rockyfi.test.cs)
+more example please check [test file](RockyfiTests/Rockyfi.test.cs)
 
 
 ```C#
@@ -154,6 +154,3 @@ support props, most attributes are covered in this [Guide](https://css-tricks.co
 
 
 This `shadow play` is not mean [Shadow Play](https://www.nvidia.com/en-us/geforce/geforce-experience/shadowplay/) but [Shadow Play](https://en.wikipedia.org/wiki/Shadow_play)
-
-------
-Thanks [kjk/flex](https://github.com/kjk/flex), there is no such project without him.
