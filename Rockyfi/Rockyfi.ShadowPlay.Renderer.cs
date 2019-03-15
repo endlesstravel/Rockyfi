@@ -134,16 +134,15 @@ namespace Rockyfi
                 }
             }
 
-            Children.Clear();
-            foreach (var child in list)
-            {
-                child.Parent = null;
-                AddChild(child);
-            }
-
             if (isDirty)
             {
-                MarkAsDirty();
+                Children.Clear();
+                foreach (var child in list)
+                {
+                    child.Parent = null;
+                    AddChild(child);
+                }
+                // MarkAsDirty();
             }
         }
     }
@@ -410,17 +409,25 @@ namespace Rockyfi
             var tnode = ra.template;
 
             // set el-bind binded style
-            ra.attributes.Clear();
+            var originalAttrs = ra.attributes;
             foreach (var attr in tnode.attributeDataBindExpressList)
             {
                 if (attr.TryEvaluate(contextStack, out var attrValue))
                 {
-                    ProcessNodeStyle(node, attr.TargetName, attrValue != null ? attrValue.ToString() : "");
-                    ra.attributes[attr] = attrValue;
+                    if (originalAttrs.TryGetValue(attr, out var oldValue) && oldValue == attrValue)
+                    {
+                        // equal and not 
+                        // Console.WriteLine("no need to process style");
+                    }
+                    else
+                    {
+                        ra.attributes[attr] = attrValue;
+                        ProcessNodeStyle(node, attr.TargetName, attrValue != null ? attrValue.ToString() : "");
+                    }
                 }
                 else
                 {
-                    ra.attributes[attr] = null;
+                    ra.attributes.Remove(attr);
                 }
             }
 
@@ -430,7 +437,8 @@ namespace Rockyfi
                 ra.textDataBindExpressCurrentValue = tnode.textDataBindExpress.Evaluate(contextStack);
             }
         }
-        Node TemplateRendererNodeRender(TemplateNode tnode, ContextStack contextStack, object forContext)
+
+        Node TemplateRendererCreateNode(TemplateNode tnode, ContextStack contextStack, object forContext)
         {
             Node node = Flex.CreateDefaultNode();
             var ra = CreateRuntimeNodeAttribute(node, tnode);
@@ -444,17 +452,9 @@ namespace Rockyfi
             // process node el-bind
             ProcessNodeBindStyleAndText(node, contextStack);
 
-            // render children
-            foreach (var vchild in tnode.Children)
-            {
-                foreach (var child in TemplateRendererNodeRenderToTree(vchild, contextStack))
-                {
-                    node.AddChild(child);
-                }
-            }
-
             return node;
         }
+
         LinkedList<Node> TemplateRendererNodeRenderToTree(TemplateNode tnode, ContextStack contextStack)
         {
             LinkedList<Node> nodeList = new LinkedList<Node>();
@@ -471,7 +471,18 @@ namespace Rockyfi
                     }
                     if (!IsNeedSkip(tnode, contextStack))
                     {
-                        var node = TemplateRendererNodeRender(tnode, contextStack, useFor ? forContext : null);
+                        var fc = useFor ? forContext : null;
+                        var node = TemplateRendererCreateNode(tnode, contextStack, fc);
+
+                        // render children
+                        foreach (var vchild in tnode.Children)
+                        {
+                            foreach (var child in TemplateRendererNodeRenderToTree(vchild, contextStack))
+                            {
+                                node.AddChild(child);
+                            }
+                        }
+
                         nodeList.AddLast(node);
                     }
                     if (useFor)
@@ -794,6 +805,48 @@ namespace Rockyfi
             return false;
         }
 
+        void DiffAttributes()
+        {
+
+        }
+
+        void DiffAndProcessNodeBindStyleAndText(Node node, ContextStack contextStack)
+        {
+            var ra = GetNodeRuntimeAttribute(node);
+            var tnode = ra.template;
+
+            // old attributes
+            var originalAttrs = ra.attributes;
+
+
+            // set el-bind binded style
+            foreach (var attr in tnode.attributeDataBindExpressList)
+            {
+                if (attr.TryEvaluate(contextStack, out var attrValue))
+                {
+                    if (originalAttrs.TryGetValue(attr, out var oldValue) && oldValue == attrValue)
+                    {
+                        // equal and not 
+                    }
+                    else
+                    {
+                        ra.attributes[attr] = attrValue;
+                        ProcessNodeStyle(node, attr.TargetName, attrValue != null ? attrValue.ToString() : "");
+                    }
+                }
+                else
+                {
+                    ra.attributes.Remove(attr);
+                }
+            }
+
+            // process innerText
+            if (tnode.textDataBindExpress != null)
+            {
+                ra.textDataBindExpressCurrentValue = tnode.textDataBindExpress.Evaluate(contextStack);
+            }
+        }
+
         void ReRenderTemplateNodeToTree(Node node, ContextStack contextStack)
         {
             var ra = GetNodeRuntimeAttribute(node);
@@ -825,32 +878,35 @@ namespace Rockyfi
                 else 
                 {
                     var newForList = template.forExpress.Evaluate(contextStack);
-
-                    Dictionary<object, Node> nodeDictionary = new Dictionary<object, Node>();
-                    foreach (var child in childGroup)
+                    if (newForList != null)
                     {
-                        var v = GetNodeRuntimeAttribute(child).forExpressItemCurrentValue;
-                        if (v != null)
-                        {
-                            nodeDictionary[v] = child;
-                        }
-                    }
-
-
-                    foreach (object forContext in newForList)
-                    {
+                        var oldChildIter = childGroup.GetEnumerator();
                         contextStack.EnterScope();
-                        contextStack.Set(template.forExpress.IteratorName, forContext);
-                        if (!IsNeedSkip(template, contextStack))
+                        foreach (object forContext in newForList)
                         {
-                            if (nodeDictionary.TryGetValue(forContext, out Node oldNode))
+                            contextStack.Set(template.forExpress.IteratorName, forContext);
+                            if (!IsNeedSkip(template, contextStack))
                             {
-                                ReRenderTemplateNodeToTree(oldNode, contextStack);
-                                finalChildList.AddLast(oldNode);
-                            }
-                            else
-                            {
-                                finalChildList.AddLast(TemplateRendererNodeRender(template, contextStack, forContext));
+                                Node oldChild = oldChildIter.MoveNext() ? oldChildIter.Current : null;
+                                object oldForContext = oldChild != null ?
+                                    GetNodeRuntimeAttribute(oldChild).forExpressItemCurrentValue : null;
+                                if (oldForContext == forContext)
+                                {
+                                    ReRenderTemplateNodeToTree(oldChild, contextStack);
+                                    finalChildList.AddLast(oldChildIter.Current);
+                                }
+                                else
+                                {
+                                    Node newChild = oldChild;
+                                    if (newChild == null)
+                                    {
+                                        newChild = Flex.CreateDefaultNode();
+                                        var newChildRA = CreateRuntimeNodeAttribute(newChild, template);
+                                        newChildRA.forExpressItemCurrentValue = forContext;
+                                    }
+                                    ReRenderTemplateNodeToTree(newChild, contextStack);
+                                    finalChildList.AddLast(newChild);
+                                }
                             }
                         }
                         contextStack.LeaveScope();
@@ -859,8 +915,7 @@ namespace Rockyfi
                 }
             }
 
-            if (isIfLeadDirty)
-                node.Helper_ResetChildList(finalChildList, isIfLeadDirty);
+            node.Helper_ResetChildList(finalChildList, isIfLeadDirty);
         }
 
         void ReRenderTemplateNodeToTreeStyle(Node node, ContextStack contextStack)
@@ -894,65 +949,6 @@ namespace Rockyfi
         }
         #endregion
 
-        #region Draw Region
-
-        public delegate void DrawNodeFunc(float x, float y, float width, float height, string text, Dictionary<string, object> attribute);
-
-        /// <summary>
-        /// Draw the three with the give draw function
-        /// </summary>
-        /// <param name="defaultDrawFunc">default draw function, draw the component when specify tage draw function not exists</param>
-        public void Draw(DrawNodeFunc defaultDrawFunc = null)
-        {
-            Queue<Node> queue = new Queue<Node>();
-            queue.Enqueue(root);
-            while (queue.Count != 0)
-            {
-                var node = queue.Dequeue();
-                var contextAttr = GetNodeRuntimeAttribute(node);
-                var drawFunc = themeDictionary.TryGetValue(contextAttr.template.TagName, out var specifyDrawFunc) ? specifyDrawFunc : defaultDrawFunc;
-
-                if (drawFunc != null)
-                {
-                    var nc = node.Context; // protected node.Context
-
-                    var attributes = new Dictionary<string, object>(contextAttr.attributes.Count
-                        + contextAttr.template.attributes.Count);
-
-                    foreach (var kv in contextAttr.template.attributes)
-                        attributes[kv.Key] = kv.Value;
-                    foreach (var kv in contextAttr.attributes)
-                        attributes[kv.Key.TargetName] = kv.Value;
-
-                    defaultDrawFunc(node.LayoutGetLeft(), node.LayoutGetTop(),
-                        node.LayoutGetWidth(), node.LayoutGetHeight(),
-                        contextAttr.textDataBindExpressCurrentValue,
-                        attributes // contextAttr.attributes ???
-                        );
-                    if (!(nc == null && node.Context == null) && nc != node.Context)
-                    {
-                        throw new Exception("cant change node.Context !");
-                    }
-                    node.Context = nc; // protected node.Context
-                }
-
-                foreach (var child in node.Children)
-                {
-                    queue.Enqueue(child);
-                }
-            }
-        }
-
-        readonly Dictionary<string, DrawNodeFunc> themeDictionary = new Dictionary<string, DrawNodeFunc>();
-        public void SetTheme(Dictionary<string, DrawNodeFunc> theme)
-        {
-            foreach (var kv in theme)
-            {
-                themeDictionary[kv.Key] = kv.Value;
-            }
-        }
-
-        #endregion
         public void ReRender()
         {
             // start render

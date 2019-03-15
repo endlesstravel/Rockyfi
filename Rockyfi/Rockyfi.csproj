@@ -50,6 +50,7 @@
     <Compile Include="Rockyfi.Public.cs" />
     <Compile Include="Rockyfi.Struct.cs" />
     <Compile Include="Rockyfi.Utils.cs" />
+    <Compile Include="Rockyfi.VirtualDOM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
