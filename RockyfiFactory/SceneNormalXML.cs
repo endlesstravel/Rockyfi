@@ -34,7 +34,7 @@ namespace RockyfiFactory
         {
             Graphics.Translate(100, 100);
             Graphics.SetColor(Color.White);
-            stage.Draw((x, y, w, h, text, attr) =>
+            stage.WalkDrawDirect((x, y, w, h, text, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, y);

@@ -39,7 +39,7 @@ namespace RockyfiFactory
         {
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
-            factory.Draw((x, y, w, h, text, attr) =>
+            factory.WalkDrawDirect((x, y, w, h, text, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, y);
