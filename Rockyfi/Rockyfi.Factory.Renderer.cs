@@ -724,7 +724,7 @@ namespace Rockyfi
             root.CalculateLayout(MaxWidth, MaxHeight, Direction);
         }
 
-        #region re-build the tree
+        #region diff and re-build the tree
         LinkedList<KeyValuePair<TemplateNode, LinkedList<Node>>> GetNodeTemplateGroupList(Node node)
         {
             var list = new LinkedList<KeyValuePair<TemplateNode, LinkedList<Node>>>();
@@ -754,31 +754,31 @@ namespace Rockyfi
             return false;
         }
 
+        /// <summary>
+        /// TODO:
+        /// </summary>
         bool IsDirty(Node node, ContextStack contextStack, object forContext)
         {
             var ra = GetNodeRuntimeAttribute(node);
             var template = ra.template;
 
-            // is for-item changed ?
-            if (template.forExpress != null)
-            {
-                if (ra.forExpressItemCurrentValue != null && forContext != null)
-                {
-                    if (!forContext.Equals(ra.forExpressItemCurrentValue))
-                        return true;
-                }
-                else if (ra.forExpressItemCurrentValue == null || forContext == null)
-                {
-                    return true;
-                }
-            }
+            //// is for-item changed ?
+            //if (template.forExpress != null)
+            //{
+            //    if (ra.forExpressItemCurrentValue != null && forContext != null)
+            //    {
+            //        if (!forContext.Equals(ra.forExpressItemCurrentValue))
+            //            return true;
+            //    }
+            //    else if (ra.forExpressItemCurrentValue == null || forContext == null)
+            //    {
+            //        return true;
+            //    }
+            //}
 
             // is el-bind changed ?
             foreach (var attr in template.attributeDataBindExpressList)
             {
-
-
-
                 if (ra.attributes.TryGetValue(attr, out var oldValue))
                 {
 

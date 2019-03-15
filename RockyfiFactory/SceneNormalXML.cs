@@ -41,13 +41,13 @@ namespace RockyfiFactory
             });
         }
 
-        static void Main(string[] args)
-        {
-            Boot.Init(new BootConfig
-            {
-                WindowResizable = true,
-            });
-            Boot.Run(new SceneNormalXML());
-        }
+        //static void Main(string[] args)
+        //{
+        //    Boot.Init(new BootConfig
+        //    {
+        //        WindowResizable = true,
+        //    });
+        //    Boot.Run(new SceneNormalXML());
+        //}
     }
 }

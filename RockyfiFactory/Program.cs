@@ -103,13 +103,13 @@ namespace RockyfiFactory
             });
         }
 
-        //static void Main(string[] args)
-        //{
-        //    Boot.Init(new BootConfig
-        //    {
+        static void Main(string[] args)
+        {
+            Boot.Init(new BootConfig
+            {
 
-        //    });
-        //    Boot.Run(new Program());
-        //}
+            });
+            Boot.Run(new Program());
+        }
     }
 }
