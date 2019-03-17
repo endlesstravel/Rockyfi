@@ -5,106 +5,107 @@ using Love;
 
 namespace RockyfiFactory
 {
-    public class LoveBridgeElement: ShadowPlay.BridgeElement
+
+    public class LoveBridge: Bridge<LoveBridge.Element>
     {
-        public List<ShadowPlay.BridgeElement> Children { get; } = new List<ShadowPlay.BridgeElement>();
-        public Dictionary<string, object> Attributes { get; } = new Dictionary<string, object>();
-
-        public LoveBridgeElement Parent { private set; get; } = null;
-        public override void OnChangeAttributes(string key, object value)
+        public class Element : BridgeElement<Element>
         {
-            if (key == null)
+            public List<Element> Children { get; } = new List<Element>();
+            public Dictionary<string, object> Attributes { get; } = new Dictionary<string, object>();
+
+            public Element Parent { private set; get; } = null;
+            public override void OnChangeAttributes(string key, object value)
             {
-                return;
+                if (key == null)
+                {
+                    return;
+                }
+                if (value == null)
+                {
+                    Attributes.Remove(key);
+                }
+                else
+                {
+                    Attributes[key] = value;
+                }
             }
-            if (value == null)
+
+            public override void OnInsertChild(int index, Element child)
             {
-                Attributes.Remove(key);
+                Children.Insert(index, child);
+                child.Parent = this;
             }
-            else
+
+            public override void OnRemove(Element child)
             {
-                Attributes[key] = value;
+                if (Children.Remove(child))
+                {
+                    child.Parent = null;
+                }
             }
-        }
 
-        public override void OnInsertChild(int index, ShadowPlay.BridgeElement child)
-        {
-            Children.Insert(index, child);
-            (child as LoveBridgeElement).Parent = this;
-        }
-
-        public override void OnRemove(ShadowPlay.BridgeElement child)
-        {
-            if(Children.Remove(child))
+            public override void OnRemoveAt(int index)
             {
-                (child as LoveBridgeElement).Parent = null;
+                if (0 <= index && index < Children.Count)
+                {
+                    (Children[index] as Element).Parent = null;
+                }
+                Children.RemoveAt(index);
             }
-        }
 
-        public override void OnRemoveAt(int index)
-        {
-            if (0 <= index && index < Children.Count)
+            public override void OnChangeText(string text)
             {
-                (Children[index] as LoveBridgeElement).Parent = null;
             }
-            Children.RemoveAt(index);
-        }
 
-        public override void OnChangeText(string text)
-        {
-        }
-
-        public override void OnAddChild(ShadowPlay.BridgeElement child)
-        {
-            Children.Add(child);
-            (child as LoveBridgeElement).Parent = this;
-        }
-
-        public override void OnReplaceChild(ShadowPlay.BridgeElement oldChild, ShadowPlay.BridgeElement child)
-        {
-            var index = Children.IndexOf(oldChild);
-            if (0 <= index && index < Children.Count)
+            public override void OnAddChild(Element child)
             {
-                Children[index] = child;
-                (child as LoveBridgeElement).Parent = this;
+                Children.Add(child);
+                child.Parent = this;
             }
-        }
 
-        public string ToString(int deep)
-        {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            string tab = "";
-            for (int i = 0; i < deep; i++) tab += "....";
-            sb.Append(tab);
-            sb.Append("<div");
-
-            foreach (var attr in Attributes)
+            public override void OnReplaceChild(Element oldChild, Element child)
             {
-                sb.Append(" " + attr.ToString());
+                var index = Children.IndexOf(oldChild);
+                if (0 <= index && index < Children.Count)
+                {
+                    Children[index] = child;
+                    child.Parent = this;
+                }
             }
-            sb.AppendLine(">");
-            System.Text.StringBuilder csb = new System.Text.StringBuilder();
-            foreach (var c in Children)
+
+            public string ToString(int deep)
             {
-                csb.Append((c as LoveBridgeElement).ToString(deep + 1));
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                string tab = "";
+                for (int i = 0; i < deep; i++) tab += "....";
+                sb.Append(tab);
+                sb.Append("<div");
+
+                foreach (var attr in Attributes)
+                {
+                    sb.Append(" " + attr.ToString());
+                }
+                sb.AppendLine(">");
+                System.Text.StringBuilder csb = new System.Text.StringBuilder();
+                foreach (var c in Children)
+                {
+                    csb.Append((c as Element).ToString(deep + 1));
+                }
+                sb.Append(string.Join("\n", csb));
+                sb.Append(tab);
+                sb.AppendLine("</div>");
+                return sb.ToString();
             }
-            sb.Append(string.Join("\n", csb));
-            sb.Append(tab);
-            sb.AppendLine("</div>");
-            return sb.ToString();
+
+            public override string ToString()
+            {
+                return ToString(0);
+            }
         }
 
-        public override string ToString()
+        public override Element CreateElement(string tagName, Dictionary<string, object> attr)
         {
-            return ToString(0);
-        }
-    }
-
-    public class LoveBridge: ShadowPlay.Bridge
-    {
-        public override ShadowPlay.BridgeElement CreateElement(string tagName, Dictionary<string, object> attr)
-        {
-            var ele = new LoveBridgeElement();
+            var ele = new Element();
             foreach (var kv in attr)
             {
                 ele.Attributes[kv.Key] = kv.Value;
@@ -112,10 +113,10 @@ namespace RockyfiFactory
             return ele;
         }
 
-        LoveBridgeElement root;
-        public override void OnSetRoot(ShadowPlay.BridgeElement root)
+        Element root;
+        public override void OnSetRoot(Element root)
         {
-            this.root = (LoveBridgeElement)root;
+            this.root = root;
         }
 
         public void DrawNode(float x, float y, float w, float h, string text, Dictionary<string, object> attr)
@@ -129,11 +130,11 @@ namespace RockyfiFactory
             }
         }
 
-        public void GetLeftTop(LoveBridgeElement e, out float x, out float y)
+        public void GetLeftTop(Element e, out float x, out float y)
         {
             x = e.LayoutGetLeft();
             y = e.LayoutGetTop();
-            LoveBridgeElement ele = e.Parent;
+            Element ele = e.Parent;
             while (ele != null)
             {
                 x += ele.LayoutGetLeft();
@@ -144,7 +145,7 @@ namespace RockyfiFactory
 
         public void Draw(float x, float y)
         {
-            Queue<LoveBridgeElement> queue = new Queue<LoveBridgeElement>();
+            Queue<Element> queue = new Queue<Element>();
             queue.Enqueue(root);
             while (queue.Count != 0)
             {
@@ -159,7 +160,7 @@ namespace RockyfiFactory
                         );
                     foreach (var child in ele.Children)
                     {
-                        queue.Enqueue(child as LoveBridgeElement);
+                        queue.Enqueue(child);
                     }
                 }
             }

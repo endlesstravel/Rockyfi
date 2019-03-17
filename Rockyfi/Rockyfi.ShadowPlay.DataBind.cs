@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 namespace Rockyfi
 {
-
-    public partial class ShadowPlay
+    public partial class ShadowPlay<T> where T: BridgeElement<T>
     {
         #region DataBind
         internal class TemplateNode
@@ -77,7 +76,7 @@ namespace Rockyfi
         {
             internal Node node;
             internal readonly TemplateNode template; // where node come from
-            internal BridgeElement element;
+            internal T element;
 
             public RuntimeAttribute(Node node, TemplateNode template)
             {

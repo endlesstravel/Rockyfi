@@ -9,7 +9,7 @@ namespace Rockyfi
     /// <summary>
     /// Provide a convenient way to render tree
     /// </summary>
-    public partial class ShadowPlay
+    public partial class ShadowPlay<T> where T: BridgeElement<T>
     {
         public ShadowPlay() { }
         const string ForELAttributeName = "el-for";
@@ -642,9 +642,9 @@ namespace Rockyfi
             return NodePrinter.PrintToString(root);
         }
 
-        public static ShadowPlay BuildStage(string xml, params string[] properties)
+        public static ShadowPlay<T> BuildStage(string xml, params string[] properties)
         {
-            var factory = new ShadowPlay();
+            var factory = new ShadowPlay<T>();
             factory.Build(xml, properties);
             return factory;
         }

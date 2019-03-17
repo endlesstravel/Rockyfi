@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Rockyfi.CardData.cs" />
     <Compile Include="Rockyfi.cs" />
+    <Compile Include="Rockyfi.ShadowPlay.cs" />
     <Compile Include="Rockyfi.ShadowPlay.Draw.cs" />
     <Compile Include="Rockyfi.Enum.cs" />
     <Compile Include="Rockyfi.ShadowPlay.ContextStack.cs" />

@@ -1,10 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Rockyfi
 {
-    public partial class ShadowPlay
+    public class EmptyBridgeElement : BridgeElement<EmptyBridgeElement>
+    {
+        public override void OnAddChild(EmptyBridgeElement child)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OnChangeAttributes(string key, object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OnChangeText(string text)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OnInsertChild(int index, EmptyBridgeElement child)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OnRemove(EmptyBridgeElement child)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OnRemoveAt(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OnReplaceChild(EmptyBridgeElement oldChild, EmptyBridgeElement child)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ShasowPlaySimpleBridge : Bridge<EmptyBridgeElement>
+    {
+        public override EmptyBridgeElement CreateElement(string tagName, Dictionary<string, object> attr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void OnSetRoot(EmptyBridgeElement root)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ShadowPlaySimple : ShadowPlay<EmptyBridgeElement>
+    {
+    }
+
+    public partial class ShadowPlay<T> where T: BridgeElement<T>
     {
         #region Draw Region
 
@@ -52,7 +106,7 @@ namespace Rockyfi
         /// Draw the three with the give draw function
         /// </summary>
         /// <param name="defaultDrawFunc">default draw function, draw the component when specify tage draw function not exists</param>
-        public void DrawTraversely(float x, float y, DrawNodeFunc defaultDrawFunc, Dictionary<string, DrawNodeFunc> themeDictionary = null)
+        public void Draw(float x, float y, DrawNodeFunc defaultDrawFunc, Dictionary<string, DrawNodeFunc> themeDictionary = null)
         {
             if (defaultDrawFunc == null && themeDictionary == null)
                 throw new ArgumentNullException("defaultDrawFunc");
@@ -60,25 +114,11 @@ namespace Rockyfi
             DrawRecursive(x, y, root, defaultDrawFunc, themeDictionary);
         }
 
-        public abstract class Bridge
-        {
-            public abstract BridgeElement CreateElement(string tagName, Dictionary<string, object> attr);
-            public abstract void OnSetRoot(BridgeElement root);
-
-            internal BridgeElement CreateElement(Node node, string tagName, Dictionary<string, object> attr)
-            {
-                var ele = CreateElement(tagName, attr);
-                ele.node = node;
-                return ele;
-            }
-
-        }
-
         /// <summary>
         /// Set element factory, null to unset.
         /// </summary>
         /// <param name="factory"></param>
-        public void SetBridge(Bridge factory)
+        public void SetBridge(Bridge<T> factory)
         {
             if (bridge != null)
             {
@@ -100,105 +140,119 @@ namespace Rockyfi
             bridge.OnSetRoot(eleRoot);
         }
 
-        Bridge bridge;
+        Bridge<T> bridge;
 
-        public abstract class BridgeElement
+        #endregion
+    }
+
+
+    public abstract class Bridge<T> where T : BridgeElement<T>
+    {
+        public abstract T CreateElement(string tagName, Dictionary<string, object> attr);
+        public abstract void OnSetRoot(T root);
+
+        internal T CreateElement(Node node, string tagName, Dictionary<string, object> attr)
         {
-            public abstract void OnChangeAttributes(string key, object value);
-            public abstract void OnChangeText(string text);
-            public abstract void OnInsertChild(int index, BridgeElement child);
-            public abstract void OnReplaceChild(BridgeElement oldChild, BridgeElement child);
-            public abstract void OnAddChild(BridgeElement child);
-            public abstract void OnRemoveAt(int index);
-            public abstract void OnRemove(BridgeElement child);
+            var ele = CreateElement(tagName, attr);
+            ele.node = node;
+            return ele;
+        }
 
-            #region other properties
+    }
 
-            /// <summary>
-            /// Return binded text, otherwies return nul.
-            /// </summary>
-            /// <returns></returns>
-            public string GetText()
-            {
-                return GetNodeRuntimeAttribute(node).textDataBindExpressCurrentValue;
-            }
-            #endregion
+    public abstract class BridgeElement<T> where T : BridgeElement<T>
+    {
+        public abstract void OnChangeAttributes(string key, object value);
+        public abstract void OnChangeText(string text);
+        public abstract void OnInsertChild(int index, T child);
+        public abstract void OnReplaceChild(T oldChild, T child);
+        public abstract void OnAddChild(T child);
+        public abstract void OnRemoveAt(int index);
+        public abstract void OnRemove(T child);
 
-            #region Style
-            internal Node node;
-            public Overflow StyleGetOverflow()
-            {
-                return node.StyleGetOverflow();
-            }
+        #region other properties
+        internal Node node;
+        /// <summary>
+        /// Return binded text, otherwies return nul.
+        /// </summary>
+        /// <returns></returns>
+        public string GetText()
+        {
+            return ShadowPlay<T>.GetNodeRuntimeAttribute(node).textDataBindExpressCurrentValue;
+        }
+        #endregion
 
-            public Display StyleGetDisplay()
-            {
-                return node.StyleGetDisplay();
-            }
+        #region Style
+        public Overflow StyleGetOverflow()
+        {
+            return node.StyleGetOverflow();
+        }
 
-            // LayoutGetLeft gets left
-            public float LayoutGetLeft()
-            {
-                return node.LayoutGetLeft();
-            }
+        public Display StyleGetDisplay()
+        {
+            return node.StyleGetDisplay();
+        }
 
-            // LayoutGetTop gets top
-            public float LayoutGetTop()
-            {
-                return node.LayoutGetTop();
-            }
+        // LayoutGetLeft gets left
+        public float LayoutGetLeft()
+        {
+            return node.LayoutGetLeft();
+        }
 
-            // LayoutGetRight gets right
-            public float LayoutGetRight()
-            {
-                return node.LayoutGetRight();
-            }
+        // LayoutGetTop gets top
+        public float LayoutGetTop()
+        {
+            return node.LayoutGetTop();
+        }
 
-            // LayoutGetBottom gets bottom
-            public float LayoutGetBottom()
-            {
-                return node.LayoutGetBottom();
-            }
+        // LayoutGetRight gets right
+        public float LayoutGetRight()
+        {
+            return node.LayoutGetRight();
+        }
 
-            // LayoutGetWidth gets width
-            public float LayoutGetWidth()
-            {
-                return node.LayoutGetWidth();
-            }
+        // LayoutGetBottom gets bottom
+        public float LayoutGetBottom()
+        {
+            return node.LayoutGetBottom();
+        }
 
-            // LayoutGetHeight gets height
-            public float LayoutGetHeight()
-            {
-                return node.LayoutGetHeight();
-            }
+        // LayoutGetWidth gets width
+        public float LayoutGetWidth()
+        {
+            return node.LayoutGetWidth();
+        }
 
-            // LayoutGetMargin gets margin
-            public float LayoutGetMargin(Edge edge)
-            {
-                return node.LayoutGetMargin(edge);
-            }
+        // LayoutGetHeight gets height
+        public float LayoutGetHeight()
+        {
+            return node.LayoutGetHeight();
+        }
 
-            // LayoutGetBorder gets border
-            public float LayoutGetBorder(Edge edge)
-            {
-                return node.LayoutGetBorder(edge);
-            }
+        // LayoutGetMargin gets margin
+        public float LayoutGetMargin(Edge edge)
+        {
+            return node.LayoutGetMargin(edge);
+        }
 
-            // LayoutGetPadding gets padding
-            public float LayoutGetPadding(Edge edge)
-            {
-                return node.LayoutGetPadding(edge);
-            }
+        // LayoutGetBorder gets border
+        public float LayoutGetBorder(Edge edge)
+        {
+            return node.LayoutGetBorder(edge);
+        }
 
-            public bool LayoutGetHadOverflow()
-            {
-                return node.LayoutGetHadOverflow();
-            }
+        // LayoutGetPadding gets padding
+        public float LayoutGetPadding(Edge edge)
+        {
+            return node.LayoutGetPadding(edge);
+        }
 
-            #endregion
-
+        public bool LayoutGetHadOverflow()
+        {
+            return node.LayoutGetHadOverflow();
         }
 
         #endregion
+
     }
 }

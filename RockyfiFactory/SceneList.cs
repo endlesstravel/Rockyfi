@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using Rockyfi;
 using Love;
 
 namespace RockyfiFactory
 {
     class SceneList: Scene
     {
-        Rockyfi.ShadowPlay stage = new Rockyfi.ShadowPlay();
+        ShadowPlaySimple stage = new ShadowPlaySimple();
         public override void Load()
         {
             string tmpXML3List = @"<root>
@@ -17,7 +17,7 @@ namespace RockyfiFactory
     <div el-for=""item in list"" el-if=""item != '2' "" el-bind:margin-top=""mt"" el-bind:id=""item"" width=""100px"" height=""100px""/>
 </div>
 </root>";
-            stage = new Rockyfi.ShadowPlay();
+            stage = new ShadowPlaySimple();
             stage.Build(tmpXML3List, "styleObj", "w", "mt", "pt", "list");
             stage.SetData(new Dictionary<string, object>()
             {
@@ -40,7 +40,7 @@ namespace RockyfiFactory
         {
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
-            stage.DrawTraversely(0, 0, (x, y, w, h, text, attr) =>
+            stage.Draw(0, 0, (x, y, w, h, text, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, y);

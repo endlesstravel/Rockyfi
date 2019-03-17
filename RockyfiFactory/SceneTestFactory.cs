@@ -7,7 +7,7 @@ namespace RockyfiFactory
 {
     class SceneTestFactory : Scene
     {
-        Rockyfi.ShadowPlay userInterface = new Rockyfi.ShadowPlay();
+        ShadowPlay<LoveBridge.Element> userInterface = new ShadowPlay<LoveBridge.Element>();
         LoveBridge fac = new LoveBridge();
 
         bool useFactory = true;
@@ -15,8 +15,8 @@ namespace RockyfiFactory
         public override void Load()
         {
             string tmpXML3 = @"
-<div el-bind:padding-top=""pt"" 
-    el-bind:width=""w"" 
+<div el-bind:padding-top=""pt""
+    el-bind:width=""w""
     el-bind:height=""styleObj.StyleHeight""
     id=""root""
     flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" >
@@ -120,7 +120,7 @@ namespace RockyfiFactory
             }
             else
             {
-                userInterface.DrawTraversely(100, 100, (float x, float y, float w, float h, string text, Dictionary<string, object> attr) =>
+                userInterface.Draw(100, 100, (float x, float y, float w, float h, string text, Dictionary<string, object> attr) =>
                 {
                     Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                     Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, h + y - Graphics.GetFont().GetHeight());

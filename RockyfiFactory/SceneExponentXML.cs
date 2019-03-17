@@ -6,14 +6,14 @@ namespace RockyfiFactory
 {
     class SceneExopnentXML : Scene
     {
-        Rockyfi.ShadowPlay userInterface = new Rockyfi.ShadowPlay();
+        ShadowPlay<LoveBridge.Element> userInterface = new ShadowPlay<LoveBridge.Element>();
         LoveBridge printer = new LoveBridge();
 
         public override void Load()
         {
             string tmpXML3 = @"
-<div el-bind:padding-top=""pt"" 
-    el-bind:width=""w"" 
+<div el-bind:padding-top=""pt""
+    el-bind:width=""w""
     el-bind:height=""styleObj.StyleHeight""
     id=""root""
     flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" >
@@ -85,7 +85,7 @@ namespace RockyfiFactory
 
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
-            userInterface.DrawTraversely(0, 0, (x, y, w, h, text, attr) =>
+            userInterface.Draw(0, 0, (x, y, w, h, text, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, h + y - Graphics.GetFont().GetHeight());

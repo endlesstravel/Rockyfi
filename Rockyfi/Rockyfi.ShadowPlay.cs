@@ -1,22 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml;
-using System.Text.RegularExpressions;
-using System.IO;
+using System.Text;
 
 namespace Rockyfi
 {
-    /// <summary>
-    /// Provide a convenient way to render tree
-    /// </summary>
-    public partial class ShadowPlay
+    public partial class ShadowPlay<T> where T: BridgeElement<T>
     {
-        class VNode
-        {
-
-        }
-
-        // render tree
-
     }
 }

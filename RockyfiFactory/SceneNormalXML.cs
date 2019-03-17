@@ -1,11 +1,12 @@
 ﻿using Love;
 using System.Collections.Generic;
+using Rockyfi;
 
 namespace RockyfiFactory
 {
     class SceneNormalXML: Scene
     {
-        Rockyfi.ShadowPlay stage = new Rockyfi.ShadowPlay();
+        ShadowPlaySimple stage = new ShadowPlaySimple();
         public override void Load()
         {
             string tmpXML = @"
@@ -34,7 +35,7 @@ namespace RockyfiFactory
         {
             Graphics.Translate(100, 100);
             Graphics.SetColor(Color.White);
-            stage.DrawTraversely(0, 0, (x, y, w, h, text, attr) =>
+            stage.Draw(0, 0, (x, y, w, h, text, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, y);

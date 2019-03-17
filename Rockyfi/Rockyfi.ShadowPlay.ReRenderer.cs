@@ -9,7 +9,7 @@
 //    /// <summary>
 //    /// Provide a convenient way to render tree
 //    /// </summary>
-//    public partial class ShadowPlay
+//    public partial class ShadowPlay<T> where T: BridgeElement<T><T> where T: Bridge<BridgeElement<T>>
 //    {
 
 

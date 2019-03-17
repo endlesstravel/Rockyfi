@@ -9,8 +9,8 @@ namespace RockyfiFactory
         static void Mainx(string[] args)
         {
             {
-                ShadowPlay userInterface = new ShadowPlay();
-                LoveBridge printer = new LoveBridge();
+                ShadowPlay<LoveBridge.Element> userInterface = new ShadowPlay<LoveBridge.Element>();
+                LoveBridge bridge = new LoveBridge();
                 string tmpXML = @"
 <div flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" el-bind:id="" 'root-id' "" >
     <div el-for=""item in list"" el-bind:id=""item"" width=""100px"" height=""100px"">
@@ -22,7 +22,7 @@ namespace RockyfiFactory
 </div>
 ";
                 userInterface.Build(tmpXML, "list");
-                userInterface.SetBridge(printer);
+                userInterface.SetBridge(bridge);
                 userInterface.SetData("list", new List<string> { "a3" });
                 userInterface.Update();
                 userInterface.Update();
