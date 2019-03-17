@@ -219,7 +219,7 @@ namespace Rockyfi
 
     // TODO : write test ......
 
-    public partial class ShadowPlay
+    public partial class ShadowPlay<T> where T: BridgeElement<T>
     {
         #region Abstract syntax tree
         // The Regex class itself is thread safe and immutable(read-only). That is,

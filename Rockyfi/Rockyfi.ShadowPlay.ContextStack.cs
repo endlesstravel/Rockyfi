@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Rockyfi
 {
-    public partial class ShadowPlay
+    public partial class ShadowPlay<T> where T: BridgeElement<T>
     {
         internal class ContextStack
         {
@@ -13,7 +13,7 @@ namespace Rockyfi
             // Artificial/Real statc
             class ContextRealNode
             {
-                
+
             }
 
             readonly LinkedList<Dictionary<string, object>> contextStack = new LinkedList<Dictionary<string, object>>();

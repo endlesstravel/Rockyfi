@@ -59,9 +59,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoveBridge.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="SceneExponentXML.cs" />
+    <Compile Include="SceneHugeList.cs" />
     <Compile Include="SceneList.cs" />
     <Compile Include="SceneNormalXML.cs" />
+    <Compile Include="SceneTestFactoryX.cs" />
+    <Compile Include="SceneTestFactory.cs" />
     <Compile Include="TestProgram.cs" />
   </ItemGroup>
   <ItemGroup>
