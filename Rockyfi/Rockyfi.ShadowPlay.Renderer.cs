@@ -134,7 +134,7 @@ namespace Rockyfi
         }
 
         #region render virtual node to real node
-        void ProcessNodeStyle(Node node, string attrKey, string attrValue)
+        internal void ProcessNodeStyle(Node node, string attrKey, string attrValue)
         {
             switch (attrKey)
             {
@@ -257,7 +257,7 @@ namespace Rockyfi
                     break;
             }
         }
-        Node RenderTemplateToSingleNode(TemplateNode tnode, ContextStack contextStack, object forContext)
+        Node RenderTemplateTree(TemplateNode tnode, ContextStack contextStack, object forContext)
         {
             Node node = Flex.CreateDefaultNode();
             var ra = CreateRuntimeNodeAttribute(node, tnode);
@@ -276,7 +276,7 @@ namespace Rockyfi
                 {
                     if (originalAttrs.TryGetValue(attr, out var oldValue) && oldValue == attrValue)
                     {
-                        // equal and not 
+                        // equal and not
                         // Console.WriteLine("no need to process style");
                     }
                     else
@@ -297,9 +297,21 @@ namespace Rockyfi
                 ra.textDataBindExpressCurrentValue = tnode.textDataBindExpress.Evaluate(contextStack);
             }
 
+            // render children
+            ra.ResetChildren((appendChild) =>
+            {
+                foreach (var vchild in tnode.Children)
+                {
+                    foreach (var child in RenderTemplateTreeExpand(vchild, contextStack))
+                    {
+                        node.AddChild(child);
+                        appendChild(vchild, child);
+                    }
+                }
+            });
             return node;
         }
-        LinkedList<Node> RenderTemplateTree(TemplateNode tnode, ContextStack contextStack)
+        LinkedList<Node> RenderTemplateTreeExpand(TemplateNode tnode, ContextStack contextStack)
         {
             LinkedList<Node> nodeList = new LinkedList<Node>();
             bool useFor = tnode.forExpress != null;
@@ -313,21 +325,15 @@ namespace Rockyfi
                         contextStack.EnterScope();
                         contextStack.Set(tnode.forExpress.IteratorName, forContext);
                     }
-                    bool skipElement = (tnode.ifExpress != null && tnode.ifExpress.TryEvaluate(contextStack, out var result));
+                    bool skipElement = (tnode.ifExpress != null
+                        && tnode.ifExpress.TryEvaluate(contextStack, out var result)
+                        && result == false);
                     if (!skipElement)
                     {
                         var fc = useFor ? forContext : null;
-                        var node = RenderTemplateToSingleNode(tnode, contextStack, fc);
-
-                        // render children
-                        foreach (var vchild in tnode.Children)
-                        {
-                            foreach (var child in RenderTemplateTree(vchild, contextStack))
-                            {
-                                node.AddChild(child);
-                            }
-                        }
-
+                        var node = RenderTemplateTree(tnode, contextStack, fc);
+                        var ra = GetNodeRuntimeAttribute(node);
+                        // ra.IsThunk = useFor;
                         nodeList.AddLast(node);
                     }
                     if (useFor)
@@ -344,7 +350,7 @@ namespace Rockyfi
                 throw new Exception("root element should not contains 'el-for' attribute !");
             if (tnode.ifExpress != null)
                 throw new Exception("root element should not contains 'el-if' attribute !");
-            return RenderTemplateTree(templateRoot, GenerateContextStack()).First.Value;
+            return RenderTemplateTree(templateRoot, GenerateContextStack(), null);
         }
         #endregion
 
@@ -538,13 +544,61 @@ namespace Rockyfi
         public float MaxWidth = float.NaN;
         public float MaxHeight = float.NaN;
 
+        void ProcessStyleBind(Node node, ContextStack contextStack)
+        {
+            var ra = GetNodeRuntimeAttribute(node);
+            var tnode = ra.template;
+
+            // copy style
+            Style.Copy(node.nodeStyle, tnode.nodeStyle);
+
+            // process node el-bind
+            var originalAttrs = ra.attributes;
+            foreach (var attr in tnode.attributeDataBindExpressList)
+            {
+                if (attr.TryEvaluate(contextStack, out var attrValue))
+                {
+                    if (originalAttrs.TryGetValue(attr, out var oldValue) && oldValue == attrValue)
+                    {
+                        // equal and not
+                        // Console.WriteLine("no need to process style");
+                    }
+                    else
+                    {
+                        ra.attributes[attr] = attrValue;
+                        ProcessNodeStyle(node, attr.TargetName, attrValue != null ? attrValue.ToString() : "");
+                    }
+                }
+                else
+                {
+                    ra.attributes.Remove(attr);
+                }
+            }
+
+            // process innerText
+            if (tnode.textDataBindExpress != null)
+            {
+                ra.textDataBindExpressCurrentValue = tnode.textDataBindExpress.Evaluate(contextStack);
+            }
+
+        }
+
         /// <summary>
         /// Update and re-renderer the tree, according the data.
         /// </summary>
         public void Update()
         {
-            // start render
-            root = RenderTemplateTreeRoot(templateRoot);
+            if (elementFactory != null)
+            {
+                var newRoot = RenderTemplateTreeRoot(templateRoot);
+                var patch = VirtualDom.Patch.Diff(GetNodeRuntimeAttribute(root), GetNodeRuntimeAttribute(newRoot));
+                patch.DoPatch(this, elementFactory);
+            }
+            else
+            {
+                root = RenderTemplateTreeRoot(templateRoot);
+            }
+
             CalculateLayout();
         }
 
@@ -580,9 +634,6 @@ namespace Rockyfi
 
                 // convert to tree
                 templateRoot = ConvertXmlToTemplate(rootElement);
-
-                // re-render
-                Update();
             }
         }
 

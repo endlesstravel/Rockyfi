@@ -1,96 +1,209 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using PropertyDictionary = System.Collections.Generic.Dictionary<string, object>;
+using static Rockyfi.ShadowPlay;
+using PropertyDictionary = System.Collections.Generic.Dictionary<Rockyfi.ShadowPlay.AttributeDataBindExpress, object>;
 
 namespace Rockyfi
 {
     class VirtualDom
     {
-        class VNode
+        static void PatchInsertChildRecursive(RuntimeAttribute attr, ElementFactory elementFactory)
         {
-            readonly internal string tagName;
-            readonly internal string key;
-            readonly internal List<VNode> Children = new List<VNode>();
-            readonly internal PropertyDictionary Properties = new PropertyDictionary();
+            Queue<RuntimeAttribute> queue = new Queue<RuntimeAttribute>();
 
-            bool thunk = false;
-            public static bool IsThunk(VNode vNode)
+            foreach (var child in attr.Children)
             {
-                return vNode != null && vNode.thunk;
+                queue.Enqueue(child);
+            }
+
+            while (queue.Count > 0)
+            {
+                var ra = queue.Dequeue();
+                var pra = ra.Parent;
+                ra.element = elementFactory.CreateElement(ra.node, ra.template.TagName, ra.StringAttr);
+                pra.element?.OnAddChild(ra.element);
+
+                foreach (var child in ra.Children)
+                {
+                    queue.Enqueue(child);
+                }
             }
         }
 
-        class PatchOperate
+        public abstract class PatchOperate
         {
-            public const int ChangeNode = 0;
-            public const int RemoveNode = 1;
-            public const int InsertNode = 2;
-            public const int PropertiesChange = 3;
-            public const int ReorderNode = 4;
-            public const int ThunkChangeNode = 5;
+            public abstract void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory);
+        }
 
-            readonly internal int Type;
-            readonly internal VNode vNode;
-            readonly internal VNode vPatch;
+        public class PatchOperateChange: PatchOperate
+        {
+            readonly internal RuntimeAttribute vNode;
+            readonly internal RuntimeAttribute vPatch;
+            public PatchOperateChange(RuntimeAttribute original, RuntimeAttribute newborn)
+            {
+                this.vNode = original;
+                this.vPatch = newborn;
+            }
+
+            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            {
+                if (vNode.node.Parent != null)
+                {
+                    var pchildren = vNode.node.Parent.Children;
+                    int index = pchildren.IndexOf(vNode.node);
+                    vPatch.node.Parent = vNode.node.Parent; // change parent
+                    pchildren[index] = vPatch.node; // change node
+                    vNode.node.Parent.MarkAsDirty();
+
+                    // template
+                    vNode.Parent.Children[index] = vPatch;
+
+                    // change child
+                    if (elementFactory != null)
+                    {
+                        var pra = GetNodeRuntimeAttribute(vNode.node.Parent);
+                        vPatch.element = elementFactory.CreateElement(vPatch.node, vPatch.template.TagName, vPatch.StringAttr);
+                        pra.element?.OnReplaceChild(vNode.element, vPatch.element);
+
+                        PatchInsertChildRecursive(vPatch, elementFactory);
+                    }
+                }
+            }
+        }
+
+        public class PatchOperateRemove : PatchOperate
+        {
+            readonly internal RuntimeAttribute vNode;
+            public PatchOperateRemove(RuntimeAttribute original)
+            {
+                this.vNode = original;
+            }
+
+            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            {
+                if (vNode.node.Parent != null)
+                {
+                    // flex remove
+                    vNode.node.Parent.RemoveChild(vNode.node);
+
+                    // runtime remove
+                    vNode.Parent.Children.Remove(vNode);
+
+                    // factory remove
+                    if (elementFactory != null)
+                    {
+                        var pra = vNode.Parent;
+                        pra.element?.OnRemove(vNode.element);
+                    }
+                }
+            }
+        }
+
+        public class PatchOperateInsert : PatchOperate
+        {
+            readonly internal RuntimeAttribute vNodePrent;
+            readonly internal RuntimeAttribute vPatch;
+            public PatchOperateInsert(RuntimeAttribute parent, RuntimeAttribute newborn)
+            {
+                this.vNodePrent = parent;
+                this.vPatch = newborn;
+            }
+
+            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            {
+                // flex add child
+                vPatch.node.Parent = null;
+                vNodePrent.node.AddChild(vPatch.node);
+
+                // runtime insert
+                vNodePrent.AppendChild(vPatch);
+
+                // factory add child
+                if (elementFactory != null)
+                {
+                    vPatch.element = elementFactory.CreateElement(vPatch.node, vPatch.template.TagName, vPatch.StringAttr);
+                    vNodePrent.element?.OnAddChild(vPatch.element);
+
+                    PatchInsertChildRecursive(vPatch, elementFactory);
+                }
+            }
+        }
+
+        public class PatchOperateProperties : PatchOperate
+        {
+            readonly internal RuntimeAttribute vNode;
             readonly internal PropertyDictionary PropertiesDiff;
+
+            public PatchOperateProperties(RuntimeAttribute original, PropertyDictionary pd)
+            {
+                this.vNode = original;
+                this.PropertiesDiff = pd;
+            }
+
+            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            {
+                var props = vNode.attributes;
+                foreach (var kv in PropertiesDiff)
+                {
+                    props[kv.Key] = kv.Value;
+                }
+
+                // chaneg attr
+                if (elementFactory != null)
+                {
+                    if (vNode.element != null)
+                    {
+                        foreach (var kv in PropertiesDiff)
+                        {
+                            vNode.element.OnChangeAttributes(kv.Key.TargetName, kv.Value);
+                            props[kv.Key] = kv.Value;
+
+                            // change style
+                            shadowPlay.ProcessNodeStyle(vNode.node, kv.Key.TargetName, kv.Value != null ? kv.ToString() : "");
+                        }
+                    }
+                }
+            }
+        }
+
+        public class PatchOperateReorder : PatchOperate
+        {
+            readonly internal RuntimeAttribute vNode;
+            readonly internal RuntimeAttribute vPatch;
+            public PatchOperateReorder(RuntimeAttribute original, RuntimeAttribute newborn)
+            {
+                this.vNode = original;
+                this.vPatch = newborn;
+            }
+
+            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            {
+                // TODO: ..................
+            }
+        }
+
+        public class PatchOperateThunk : PatchOperate
+        {
             readonly internal Patch vThunk;
 
-            private PatchOperate(int type, VNode original, VNode newborn)
+            public PatchOperateThunk(Patch patch)
             {
-                Type = type;
-                vNode = original;
-                vPatch = newborn;
-            }
-            private PatchOperate(int type, VNode original, VNode newborn, PropertyDictionary pd)
-            {
-                Type = type;
-                vNode = original;
-                PropertiesDiff = pd;
-            }
-            private PatchOperate(int type, VNode original, VNode newborn, PropertyDictionary pd, Patch patch)
-            {
-                Type = type;
-                vNode = original;
-                PropertiesDiff = pd;
-                vThunk = patch;
+                this.vThunk = patch;
             }
 
-            public static PatchOperate Change(VNode original, VNode newborn)
+            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
             {
-                return new PatchOperate(ChangeNode, original, newborn);
-            }
-
-            public static PatchOperate Remove(VNode original)
-            {
-                return new PatchOperate(RemoveNode, original, null);
-            }
-
-            public static PatchOperate Insert(VNode newborn)
-            {
-                return new PatchOperate(InsertNode, null, newborn);
-            }
-
-            public static PatchOperate Properties(VNode original, PropertyDictionary pd)
-            {
-                return new PatchOperate(PropertiesChange, original, null, pd);
-            }
-
-            public static PatchOperate Reorder(VNode original, VNode newborn)
-            {
-                return new PatchOperate(ReorderNode, original, newborn);
-            }
-
-            public static PatchOperate Thunk(Patch patch)
-            {
-                return new PatchOperate(ThunkChangeNode, null, null, null, patch);
+                // TODO: ..................
             }
         }
+
+
 
         class PatchGroup
         {
-            List<PatchOperate> list = null;
-            PatchOperate monoPatch = null;
+            internal List<PatchOperate> list = null;
+            internal PatchOperate monoPatch = null;
             public void Append(PatchOperate vPatch)
             {
                 if (list != null)
@@ -113,24 +226,41 @@ namespace Rockyfi
             public bool HasChange { get { return list != null || monoPatch != null; } }
         }
 
-        class Patch
+        public class Patch
         {
-            readonly VNode Original;
-            readonly VNode Newborn;
-            readonly internal LinkedList<PatchGroup> groupList = new LinkedList<PatchGroup>();
-            public Patch(VNode original)
+            readonly RuntimeAttribute Original;
+            readonly LinkedList<PatchGroup> groupList = new LinkedList<PatchGroup>();
+            public Patch(RuntimeAttribute original)
             {
                 Original = original;
             }
 
-            public static Patch Diff(VNode left, VNode right)
+            public void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            {
+                foreach (var group in groupList)
+                {
+                    if (group.list != null)
+                    {
+                        foreach (var p in group.list)
+                        {
+                            p.DoPatch(shadowPlay, elementFactory);
+                        }
+                    }
+                    else if(group.monoPatch != null)
+                    {
+                        group.monoPatch.DoPatch(shadowPlay, elementFactory);
+                    }
+                }
+            }
+
+            public static Patch Diff(RuntimeAttribute left, RuntimeAttribute right)
             {
                 var patch = new Patch(left);
                 patch.Walk(left, right);
                 return patch;
             }
 
-            void Walk(VNode a, VNode b)
+            void Walk(RuntimeAttribute a, RuntimeAttribute b)
             {
                 if (a == b)
                 {
@@ -139,30 +269,31 @@ namespace Rockyfi
 
                 var group = new PatchGroup();
 
-                if (VNode.IsThunk(a) && VNode.IsThunk(b)) // diff thunk
+                if (a != null && a.IsThunk && b != null && b.IsThunk) // diff thunk
                 {
-                    var patchDiff = Diff(a, b);
-                    if (patchDiff.HasPatch)
-                    {
-                        group.Append(PatchOperate.Thunk(patchDiff));
-                    }
+                    // TODO: ....
+                    //var patchDiff = Diff(a, b);
+                    //if (patchDiff.HasPatch)
+                    //{
+                    //    group.Append(new PatchOperateThunk(patchDiff));
+                    //}
                 }
                 else if (b == null)
                 {
-                    group.Append(PatchOperate.Remove(a));
+                    group.Append(new PatchOperateRemove(a));
                 }
-                else if (a.tagName == b.tagName && a.key == b.key)
+                else if (a.template.TagName == b.template.TagName && a.template.Key == b.template.Key)
                 {
-                    var propsPatch = DiffProperties(a.Properties, b.Properties);
+                    var propsPatch = DiffProperties(a.attributes, b.attributes);
                     if (propsPatch != null && propsPatch.Count > 0)
                     {
-                        group.Append(PatchOperate.Properties(a, propsPatch));
+                        group.Append(new PatchOperateProperties(a, propsPatch));
                     }
                     DiffChildren(a, b, group);
                 }
                 else
                 {
-                    group.Append(PatchOperate.Change(a, b));
+                    group.Append(new PatchOperateChange(a, b));
                 }
 
                 if (group.HasChange)
@@ -173,7 +304,7 @@ namespace Rockyfi
             bool HasPatch { get { return groupList.Count > 0; } }
 
 
-            void DiffChildren(VNode a, VNode b, PatchGroup group)
+            void DiffChildren(RuntimeAttribute a, RuntimeAttribute b, PatchGroup group)
             {
                 var aChildren = a.Children;
                 var bChildren = b.Children;
@@ -181,17 +312,19 @@ namespace Rockyfi
                 var bLen = bChildren.Count;
                 var len = aLen > bLen ? aLen : bLen;
 
+                var leftIter = aChildren.GetEnumerator();
+                var rightIter = bChildren.GetEnumerator();
                 for (int i = 0; i < len; i++)
                 {
-                    var leftNode = len < aChildren.Count ? aChildren[i] : null;
-                    var rightNode = len < bChildren.Count ? bChildren[i] : null;
+                    var leftNode = leftIter.MoveNext() ? leftIter.Current : null;
+                    var rightNode = rightIter.MoveNext() ? rightIter.Current : null;
 
                     if (leftNode == null)
                     {
                         if (rightNode != null)
                         {
                             // Excess nodes in b need to be added
-                            group.Append(PatchOperate.Insert(rightNode));
+                            group.Append(new PatchOperateInsert(a, rightNode));
                         }
                     }
                     else
@@ -221,9 +354,9 @@ namespace Rockyfi
                 {
                     diff[kv.Key] = null;
                 }
-                else if (newborn != kv.Value) // change it
+                else if (newbornValue != kv.Value) // change it
                 {
-                    diff[kv.Key] = newborn;
+                    diff[kv.Key] = newbornValue;
                 }
             }
 

@@ -49,6 +49,7 @@
     <Compile Include="Rockyfi.Node.cs" />
     <Compile Include="Rockyfi.Print.cs" />
     <Compile Include="Rockyfi.Public.cs" />
+    <Compile Include="Rockyfi.ShadowPlay.ReRenderer.cs" />
     <Compile Include="Rockyfi.ShadowPlay.Utils.cs" />
     <Compile Include="Rockyfi.ShadowPlay.VirtualDOM.cs" />
     <Compile Include="Rockyfi.Struct.cs" />

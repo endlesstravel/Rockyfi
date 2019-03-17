@@ -16,6 +16,7 @@ namespace Rockyfi
             }
 
             public readonly string TagName;
+            public readonly string Key;
             internal IfDataBindExpress ifExpress = null;
             internal ForDataBindExpress forExpress = null;
             internal TextDataBindExpress textDataBindExpress = null;
@@ -72,34 +73,87 @@ namespace Rockyfi
 
         }
 
-        internal class RuntimeNodeAttribute
+        internal class RuntimeAttribute
         {
             internal Node node;
             internal readonly TemplateNode template; // where node come from
+            internal Element element;
 
-            public RuntimeNodeAttribute(Node node, TemplateNode templateRendererNode)
+            public RuntimeAttribute(Node node, TemplateNode template)
             {
                 this.node = node;
-                this.template = templateRendererNode;
+                this.template = template;
             }
+
+            internal bool IsThunk = false;
 
             public bool IsDirty = false;
             internal object forExpressItemCurrentValue = null;
             internal string textDataBindExpressCurrentValue = null;
             internal readonly Dictionary<AttributeDataBindExpress, object> attributes = new Dictionary<AttributeDataBindExpress, object>();
-            internal readonly LinkedList<TemplateChildGroup> Children = new LinkedList<TemplateChildGroup>();
+            internal Dictionary<string, object> StringAttr
+            {
+                get
+                {
+                    Dictionary<string, object> dic = new Dictionary<string, object>();
+                    foreach (var kv in attributes)
+                    {
+                        dic[kv.Key.TargetName] = kv.Value;
+                    }
+                    return dic;
+                }
+            }
+            internal LinkedList<TemplateChildGroup> groupChildren = new LinkedList<TemplateChildGroup>();
+            internal RuntimeAttribute Parent;
+            internal List<RuntimeAttribute> Children = new List<RuntimeAttribute>();
+
+            public delegate void AppendChildMethod(TemplateNode template, Node node);
+            public void ResetChildren(Action<AppendChildMethod> builder)
+            {
+                TemplateNode currentTemplate = null;
+                TemplateChildGroup currentGroup = null;
+                builder((TemplateNode t, Node n) =>
+                {
+                    if (currentTemplate != t)
+                    {
+                        currentTemplate = t;
+                        currentGroup = new TemplateChildGroup(t);
+                        groupChildren.AddLast(currentGroup);
+                    }
+                    currentGroup.Append(n);
+
+                    var ra = GetNodeRuntimeAttribute(n);
+                    ra.Parent = this;
+                    Children.Add(ra);
+                });
+            }
+            public void AppendChild(RuntimeAttribute ra)
+            {
+                var currentGroup = groupChildren.Count > 0 ? groupChildren.Last.Value : null;
+                var currentTemplate = groupChildren.Count > 0 ? groupChildren.Last.Value.Template : null;
+
+                if (currentTemplate != ra.template)
+                {
+                    currentGroup = new TemplateChildGroup(ra.template);
+                }
+
+                currentGroup.Append(ra.node);
+
+                ra.Parent = this;
+                Children.Add(ra);
+            }
         }
 
-        RuntimeNodeAttribute CreateRuntimeNodeAttribute(Node node, TemplateNode templateRendererNode)
+        RuntimeAttribute CreateRuntimeNodeAttribute(Node node, TemplateNode tnode)
         {
-            var ra = new RuntimeNodeAttribute(node, templateRendererNode);
+            var ra = new RuntimeAttribute(node, tnode);
             node.Context = ra;
             return ra;
         }
 
-        internal static RuntimeNodeAttribute GetNodeRuntimeAttribute(Node node)
+        internal static RuntimeAttribute GetNodeRuntimeAttribute(Node node)
         {
-            return node.Context as RuntimeNodeAttribute;
+            return node.Context as RuntimeAttribute;
         }
 
         readonly Dictionary<string, object> runtimeContext = new Dictionary<string, object>();
@@ -126,7 +180,7 @@ namespace Rockyfi
         /// reset all data.
         /// </summary>
         /// <param name="contextDictionary"></param>
-        public void ResetData(Dictionary<string, object> contextDictionary)
+        public void SetData(Dictionary<string, object> contextDictionary)
         {
             runtimeContext.Clear();
             if (contextDictionary != null)

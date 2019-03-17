@@ -108,39 +108,6 @@ namespace Rockyfi
                 else StyleSetBorder(edge, float.NaN);
             }
         }
-
-        internal void Helper_ResetChildList(LinkedList<Node> list, bool isIfLeadDirty)
-        {
-            bool isDirty = isIfLeadDirty;
-            if (list.Count != ChildrenCount)
-            {
-                isDirty = true;
-            }
-
-            if (isDirty == false)
-            {
-                var listIter = list.GetEnumerator();
-                foreach (var child in list)
-                {
-                    if (!listIter.MoveNext() || listIter.Current != child)
-                    {
-                        isDirty = true;
-                        break;
-                    }
-                }
-            }
-
-            if (isDirty)
-            {
-                Children.Clear();
-                foreach (var child in list)
-                {
-                    child.Parent = null;
-                    AddChild(child);
-                }
-                // MarkAsDirty();
-            }
-        }
     }
 
 

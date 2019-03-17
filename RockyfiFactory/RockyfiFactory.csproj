@@ -65,6 +65,8 @@
     <Compile Include="SceneHugeList.cs" />
     <Compile Include="SceneList.cs" />
     <Compile Include="SceneNormalXML.cs" />
+    <Compile Include="SceneTestFactoryX.cs" />
+    <Compile Include="SceneTestFactory.cs" />
     <Compile Include="TestProgram.cs" />
   </ItemGroup>
   <ItemGroup>

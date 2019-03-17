@@ -62,7 +62,7 @@ namespace RockyfiFactory
                 for (int i = 0; i < 1; i++)
                 {
                     var list = new List<string> { "1", "2", "3", "4", "5", "6" };
-                    userInterface.ResetData(new Dictionary<string, object>
+                    userInterface.SetData(new Dictionary<string, object>
                     {
                         { "styleObj", this},
                         { "w", "620px" },
@@ -85,26 +85,16 @@ namespace RockyfiFactory
 
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
-            printer.Draw();
-            //userInterface.Draw((x, y, w, h, text, attr) =>
-            //{
-            //    Graphics.Rectangle(DrawMode.Line, x, y, w, h);
-            //    Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, h + y - Graphics.GetFont().GetHeight());
-
-            //    if (text != null)
-            //    {
-            //        Graphics.Printf(text.Trim(), x, y, w, AlignMode.Center);
-            //    }
-            //});
-        }
-
-        static void Main(string[] args)
-        {
-            Boot.Init(new BootConfig
+            userInterface.DrawTraversely(0, 0, (x, y, w, h, text, attr) =>
             {
+                Graphics.Rectangle(DrawMode.Line, x, y, w, h);
+                Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, h + y - Graphics.GetFont().GetHeight());
 
+                if (text != null)
+                {
+                    Graphics.Printf(text.Trim(), x, y, w, AlignMode.Center);
+                }
             });
-            Boot.Run(new SceneExopnentXML());
         }
     }
 }

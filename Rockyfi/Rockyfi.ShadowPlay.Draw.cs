@@ -10,58 +10,54 @@ namespace Rockyfi
 
         public delegate void DrawNodeFunc(float x, float y, float width, float height, string text, Dictionary<string, object> attribute);
 
+
+        void DrawRecursive(float x, float y, Node node, DrawNodeFunc defaultDrawFunc, Dictionary<string, DrawNodeFunc> themeDictionary)
+        {
+            var contextAttr = GetNodeRuntimeAttribute(node);
+            var drawFunc = themeDictionary != null
+                && themeDictionary.TryGetValue(contextAttr.template.TagName, out var specifyDrawFunc)
+                ? specifyDrawFunc : defaultDrawFunc;
+
+            if (drawFunc != null)
+            {
+                var nc = node.Context; // protected node.Context
+
+                var attributes = new Dictionary<string, object>(contextAttr.attributes.Count
+                    + contextAttr.template.attributes.Count);
+
+                foreach (var kv in contextAttr.template.attributes)
+                    attributes[kv.Key] = kv.Value;
+                foreach (var kv in contextAttr.attributes)
+                    attributes[kv.Key.TargetName] = kv.Value;
+
+                defaultDrawFunc(x + node.LayoutGetLeft(), y + node.LayoutGetTop(),
+                    node.LayoutGetWidth(), node.LayoutGetHeight(),
+                    contextAttr.textDataBindExpressCurrentValue,
+                    attributes // contextAttr.attributes ???
+                    );
+                if (!(nc == null && node.Context == null) && nc != node.Context)
+                {
+                    throw new Exception("cant change node.Context !");
+                }
+                node.Context = nc; // protected node.Context
+            }
+
+            foreach (var child in node.Children)
+            {
+                DrawRecursive(x + node.LayoutGetLeft(), y + node.LayoutGetTop(), child, defaultDrawFunc, themeDictionary);
+            }
+        }
+
         /// <summary>
         /// Draw the three with the give draw function
         /// </summary>
         /// <param name="defaultDrawFunc">default draw function, draw the component when specify tage draw function not exists</param>
-        public void DrawTraversely(DrawNodeFunc defaultDrawFunc = null)
+        public void DrawTraversely(float x, float y, DrawNodeFunc defaultDrawFunc, Dictionary<string, DrawNodeFunc> themeDictionary = null)
         {
-            Queue<Node> queue = new Queue<Node>();
-            queue.Enqueue(root);
-            while (queue.Count != 0)
-            {
-                var node = queue.Dequeue();
-                var contextAttr = GetNodeRuntimeAttribute(node);
-                var drawFunc = themeDictionary.TryGetValue(contextAttr.template.TagName, out var specifyDrawFunc) ? specifyDrawFunc : defaultDrawFunc;
+            if (defaultDrawFunc == null && themeDictionary == null)
+                throw new ArgumentNullException("defaultDrawFunc");
 
-                if (drawFunc != null)
-                {
-                    var nc = node.Context; // protected node.Context
-
-                    var attributes = new Dictionary<string, object>(contextAttr.attributes.Count
-                        + contextAttr.template.attributes.Count);
-
-                    foreach (var kv in contextAttr.template.attributes)
-                        attributes[kv.Key] = kv.Value;
-                    foreach (var kv in contextAttr.attributes)
-                        attributes[kv.Key.TargetName] = kv.Value;
-
-                    defaultDrawFunc(node.LayoutGetLeft(), node.LayoutGetTop(),
-                        node.LayoutGetWidth(), node.LayoutGetHeight(),
-                        contextAttr.textDataBindExpressCurrentValue,
-                        attributes // contextAttr.attributes ???
-                        );
-                    if (!(nc == null && node.Context == null) && nc != node.Context)
-                    {
-                        throw new Exception("cant change node.Context !");
-                    }
-                    node.Context = nc; // protected node.Context
-                }
-
-                foreach (var child in node.Children)
-                {
-                    queue.Enqueue(child);
-                }
-            }
-        }
-
-        readonly Dictionary<string, DrawNodeFunc> themeDictionary = new Dictionary<string, DrawNodeFunc>();
-        public void SetTheme(Dictionary<string, DrawNodeFunc> theme)
-        {
-            foreach (var kv in theme)
-            {
-                themeDictionary[kv.Key] = kv.Value;
-            }
+            DrawRecursive(x, y, root, defaultDrawFunc, themeDictionary);
         }
 
         public abstract class ElementFactory
@@ -84,8 +80,24 @@ namespace Rockyfi
         /// <param name="factory"></param>
         public void SetElementFactory(ElementFactory factory)
         {
+            if (elementFactory != null)
+            {
+                throw new Exception("can't change element factory");
+            }
             elementFactory = factory;
-            
+
+            // reset root
+            root = Flex.CreateDefaultNode();
+            var ra = CreateRuntimeNodeAttribute(root, templateRoot);
+
+            // copy style
+            ProcessStyleBind(root, GenerateContextStack());
+
+            var eleRoot = elementFactory.CreateElement(root,
+                templateRoot.TagName,
+                new Dictionary<string, object>());
+            ra.element = eleRoot;
+            elementFactory.SetRootElement(eleRoot);
         }
 
         ElementFactory elementFactory;
@@ -95,6 +107,7 @@ namespace Rockyfi
             public abstract void OnChangeAttributes(string key, object value);
             public abstract void OnChangeText(string text);
             public abstract void OnInsertChild(int index, Element child);
+            public abstract void OnReplaceChild(Element oldChild, Element child);
             public abstract void OnAddChild(Element child);
             public abstract void OnRemoveAt(int index);
             public abstract void OnRemove(Element child);
