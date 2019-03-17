@@ -8,7 +8,7 @@ namespace RockyfiFactory
     class SceneTestFactory : Scene
     {
         Rockyfi.ShadowPlay userInterface = new Rockyfi.ShadowPlay();
-        LovePrinter fac = new LovePrinter();
+        LoveBridge fac = new LoveBridge();
 
         bool useFactory = true;
 
@@ -50,7 +50,7 @@ namespace RockyfiFactory
 
             if (useFactory)
             {
-                userInterface.SetElementFactory(fac);
+                userInterface.SetBridge(fac);
             }
 
             userInterface.SetData("list", new List<string> { "a3" });

@@ -59,7 +59,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoveElementPrinter.cs" />
+    <Compile Include="LoveBridge.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="SceneExponentXML.cs" />
     <Compile Include="SceneHugeList.cs" />

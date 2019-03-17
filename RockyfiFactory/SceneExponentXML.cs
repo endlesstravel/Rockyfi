@@ -7,7 +7,7 @@ namespace RockyfiFactory
     class SceneExopnentXML : Scene
     {
         Rockyfi.ShadowPlay userInterface = new Rockyfi.ShadowPlay();
-        LovePrinter printer = new LovePrinter();
+        LoveBridge printer = new LoveBridge();
 
         public override void Load()
         {
@@ -35,7 +35,7 @@ namespace RockyfiFactory
 </div>
 ";
             userInterface.Build(tmpXML3, "styleObj", "w", "mt", "pt", "list");
-            userInterface.SetElementFactory(printer);
+            userInterface.SetBridge(printer);
         }
 
         public string StyleHeight => "200px";

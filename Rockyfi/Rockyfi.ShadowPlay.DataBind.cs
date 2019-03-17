@@ -77,7 +77,7 @@ namespace Rockyfi
         {
             internal Node node;
             internal readonly TemplateNode template; // where node come from
-            internal Element element;
+            internal BridgeElement element;
 
             public RuntimeAttribute(Node node, TemplateNode template)
             {

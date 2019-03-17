@@ -5,31 +5,12 @@ using Love;
 
 namespace RockyfiFactory
 {
-    class Util
+    public class LoveBridgeElement: ShadowPlay.BridgeElement
     {
-        static public float WatchTime(Action action)
-        {
-            var stopWatch = new System.Diagnostics.Stopwatch();
-            double startTime = Timer.GetTime();
-            var now = System.DateTime.Now; // <-- Value is copied into local
-            stopWatch.Start();
-            action();
-            stopWatch.Stop();
-            long delta = stopWatch.ElapsedMilliseconds;
-            System.Console.WriteLine("" + stopWatch.ElapsedMilliseconds / 1000.0f
-                + "   \t" + (Timer.GetTime() - startTime)
-                + "   \t" + (System.DateTime.Now.Ticks - now.Ticks) / (float)System.TimeSpan.TicksPerSecond
-                );
-            return (System.DateTime.Now.Ticks - now.Ticks) / (float)System.TimeSpan.TicksPerSecond;
-        }
-    }
-
-    internal class LovePrinterElement :Rockyfi.ShadowPlay.Element
-    {
-        public List<Rockyfi.ShadowPlay.Element> Children { get; } = new List<Rockyfi.ShadowPlay.Element>();
+        public List<ShadowPlay.BridgeElement> Children { get; } = new List<ShadowPlay.BridgeElement>();
         public Dictionary<string, object> Attributes { get; } = new Dictionary<string, object>();
 
-        public LovePrinterElement Parent { private set; get; } = null;
+        public LoveBridgeElement Parent { private set; get; } = null;
         public override void OnChangeAttributes(string key, object value)
         {
             if (key == null)
@@ -46,17 +27,17 @@ namespace RockyfiFactory
             }
         }
 
-        public override void OnInsertChild(int index, Rockyfi.ShadowPlay.Element child)
+        public override void OnInsertChild(int index, ShadowPlay.BridgeElement child)
         {
             Children.Insert(index, child);
-            (child as LovePrinterElement).Parent = this;
+            (child as LoveBridgeElement).Parent = this;
         }
 
-        public override void OnRemove(Rockyfi.ShadowPlay.Element child)
+        public override void OnRemove(ShadowPlay.BridgeElement child)
         {
             if(Children.Remove(child))
             {
-                (child as LovePrinterElement).Parent = null;
+                (child as LoveBridgeElement).Parent = null;
             }
         }
 
@@ -64,7 +45,7 @@ namespace RockyfiFactory
         {
             if (0 <= index && index < Children.Count)
             {
-                (Children[index] as LovePrinterElement).Parent = null;
+                (Children[index] as LoveBridgeElement).Parent = null;
             }
             Children.RemoveAt(index);
         }
@@ -73,19 +54,19 @@ namespace RockyfiFactory
         {
         }
 
-        public override void OnAddChild(Rockyfi.ShadowPlay.Element child)
+        public override void OnAddChild(ShadowPlay.BridgeElement child)
         {
             Children.Add(child);
-            (child as LovePrinterElement).Parent = this;
+            (child as LoveBridgeElement).Parent = this;
         }
 
-        public override void OnReplaceChild(ShadowPlay.Element oldChild, ShadowPlay.Element child)
+        public override void OnReplaceChild(ShadowPlay.BridgeElement oldChild, ShadowPlay.BridgeElement child)
         {
             var index = Children.IndexOf(oldChild);
             if (0 <= index && index < Children.Count)
             {
                 Children[index] = child;
-                (child as LovePrinterElement).Parent = this;
+                (child as LoveBridgeElement).Parent = this;
             }
         }
 
@@ -102,11 +83,12 @@ namespace RockyfiFactory
                 sb.Append(" " + attr.ToString());
             }
             sb.AppendLine(">");
+            System.Text.StringBuilder csb = new System.Text.StringBuilder();
             foreach (var c in Children)
             {
-                sb.Append(tab);
-                sb.AppendLine((c as LovePrinterElement).ToString(deep + 1));
+                csb.Append((c as LoveBridgeElement).ToString(deep + 1));
             }
+            sb.Append(string.Join("\n", csb));
             sb.Append(tab);
             sb.AppendLine("</div>");
             return sb.ToString();
@@ -118,11 +100,11 @@ namespace RockyfiFactory
         }
     }
 
-    internal class LovePrinter : Rockyfi.ShadowPlay.ElementFactory
+    public class LoveBridge: ShadowPlay.Bridge
     {
-        public override Rockyfi.ShadowPlay.Element CreateElement(string tagName, Dictionary<string, object> attr)
+        public override ShadowPlay.BridgeElement CreateElement(string tagName, Dictionary<string, object> attr)
         {
-            var ele = new LovePrinterElement();
+            var ele = new LoveBridgeElement();
             foreach (var kv in attr)
             {
                 ele.Attributes[kv.Key] = kv.Value;
@@ -130,10 +112,10 @@ namespace RockyfiFactory
             return ele;
         }
 
-        LovePrinterElement root;
-        public override void SetRootElement(Rockyfi.ShadowPlay.Element root)
+        LoveBridgeElement root;
+        public override void OnSetRoot(ShadowPlay.BridgeElement root)
         {
-            this.root = (LovePrinterElement)root;
+            this.root = (LoveBridgeElement)root;
         }
 
         public void DrawNode(float x, float y, float w, float h, string text, Dictionary<string, object> attr)
@@ -147,11 +129,11 @@ namespace RockyfiFactory
             }
         }
 
-        public void GetLeftTop(LovePrinterElement e, out float x, out float y)
+        public void GetLeftTop(LoveBridgeElement e, out float x, out float y)
         {
             x = e.LayoutGetLeft();
             y = e.LayoutGetTop();
-            LovePrinterElement ele = e.Parent;
+            LoveBridgeElement ele = e.Parent;
             while (ele != null)
             {
                 x += ele.LayoutGetLeft();
@@ -162,7 +144,7 @@ namespace RockyfiFactory
 
         public void Draw(float x, float y)
         {
-            Queue<LovePrinterElement> queue = new Queue<LovePrinterElement>();
+            Queue<LoveBridgeElement> queue = new Queue<LoveBridgeElement>();
             queue.Enqueue(root);
             while (queue.Count != 0)
             {
@@ -177,7 +159,7 @@ namespace RockyfiFactory
                         );
                     foreach (var child in ele.Children)
                     {
-                        queue.Enqueue(child as LovePrinterElement);
+                        queue.Enqueue(child as LoveBridgeElement);
                     }
                 }
             }

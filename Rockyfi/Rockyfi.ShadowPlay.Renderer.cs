@@ -588,11 +588,11 @@ namespace Rockyfi
         /// </summary>
         public void Update()
         {
-            if (elementFactory != null)
+            if (bridge != null)
             {
                 var newRoot = RenderTemplateTreeRoot(templateRoot);
                 var patch = VirtualDom.Patch.Diff(GetNodeRuntimeAttribute(root), GetNodeRuntimeAttribute(newRoot));
-                patch.DoPatch(this, elementFactory);
+                patch.DoPatch(this, bridge);
             }
             else
             {

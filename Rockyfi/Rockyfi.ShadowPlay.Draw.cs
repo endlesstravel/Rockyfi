@@ -60,12 +60,12 @@ namespace Rockyfi
             DrawRecursive(x, y, root, defaultDrawFunc, themeDictionary);
         }
 
-        public abstract class ElementFactory
+        public abstract class Bridge
         {
-            public abstract Element CreateElement(string tagName, Dictionary<string, object> attr);
-            public abstract void SetRootElement(Element root);
+            public abstract BridgeElement CreateElement(string tagName, Dictionary<string, object> attr);
+            public abstract void OnSetRoot(BridgeElement root);
 
-            internal Element CreateElement(Node node, string tagName, Dictionary<string, object> attr)
+            internal BridgeElement CreateElement(Node node, string tagName, Dictionary<string, object> attr)
             {
                 var ele = CreateElement(tagName, attr);
                 ele.node = node;
@@ -78,13 +78,13 @@ namespace Rockyfi
         /// Set element factory, null to unset.
         /// </summary>
         /// <param name="factory"></param>
-        public void SetElementFactory(ElementFactory factory)
+        public void SetBridge(Bridge factory)
         {
-            if (elementFactory != null)
+            if (bridge != null)
             {
                 throw new Exception("can't change element factory");
             }
-            elementFactory = factory;
+            bridge = factory;
 
             // reset root
             root = Flex.CreateDefaultNode();
@@ -93,24 +93,24 @@ namespace Rockyfi
             // copy style
             ProcessStyleBind(root, GenerateContextStack());
 
-            var eleRoot = elementFactory.CreateElement(root,
+            var eleRoot = bridge.CreateElement(root,
                 templateRoot.TagName,
                 new Dictionary<string, object>());
             ra.element = eleRoot;
-            elementFactory.SetRootElement(eleRoot);
+            bridge.OnSetRoot(eleRoot);
         }
 
-        ElementFactory elementFactory;
+        Bridge bridge;
 
-        public abstract class Element
+        public abstract class BridgeElement
         {
             public abstract void OnChangeAttributes(string key, object value);
             public abstract void OnChangeText(string text);
-            public abstract void OnInsertChild(int index, Element child);
-            public abstract void OnReplaceChild(Element oldChild, Element child);
-            public abstract void OnAddChild(Element child);
+            public abstract void OnInsertChild(int index, BridgeElement child);
+            public abstract void OnReplaceChild(BridgeElement oldChild, BridgeElement child);
+            public abstract void OnAddChild(BridgeElement child);
             public abstract void OnRemoveAt(int index);
-            public abstract void OnRemove(Element child);
+            public abstract void OnRemove(BridgeElement child);
 
             #region other properties
 
@@ -123,7 +123,6 @@ namespace Rockyfi
                 return GetNodeRuntimeAttribute(node).textDataBindExpressCurrentValue;
             }
             #endregion
-
 
             #region Style
             internal Node node;

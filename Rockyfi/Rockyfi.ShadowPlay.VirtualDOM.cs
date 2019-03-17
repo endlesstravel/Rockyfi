@@ -8,7 +8,7 @@ namespace Rockyfi
 {
     class VirtualDom
     {
-        static void PatchInsertChildRecursive(RuntimeAttribute attr, ElementFactory elementFactory)
+        static void PatchInsertChildRecursive(RuntimeAttribute attr, Bridge bridge)
         {
             Queue<RuntimeAttribute> queue = new Queue<RuntimeAttribute>();
 
@@ -21,7 +21,7 @@ namespace Rockyfi
             {
                 var ra = queue.Dequeue();
                 var pra = ra.Parent;
-                ra.element = elementFactory.CreateElement(ra.node, ra.template.TagName, ra.StringAttr);
+                ra.element = bridge.CreateElement(ra.node, ra.template.TagName, ra.StringAttr);
                 pra.element?.OnAddChild(ra.element);
 
                 foreach (var child in ra.Children)
@@ -33,7 +33,7 @@ namespace Rockyfi
 
         public abstract class PatchOperate
         {
-            public abstract void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory);
+            public abstract void DoPatch(ShadowPlay shadowPlay, Bridge bridge);
         }
 
         public class PatchOperateChange: PatchOperate
@@ -46,7 +46,7 @@ namespace Rockyfi
                 this.vPatch = newborn;
             }
 
-            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            public override void DoPatch(ShadowPlay shadowPlay, Bridge bridge)
             {
                 if (vNode.node.Parent != null)
                 {
@@ -60,13 +60,13 @@ namespace Rockyfi
                     vNode.Parent.Children[index] = vPatch;
 
                     // change child
-                    if (elementFactory != null)
+                    if (bridge != null)
                     {
                         var pra = GetNodeRuntimeAttribute(vNode.node.Parent);
-                        vPatch.element = elementFactory.CreateElement(vPatch.node, vPatch.template.TagName, vPatch.StringAttr);
+                        vPatch.element = bridge.CreateElement(vPatch.node, vPatch.template.TagName, vPatch.StringAttr);
                         pra.element?.OnReplaceChild(vNode.element, vPatch.element);
 
-                        PatchInsertChildRecursive(vPatch, elementFactory);
+                        PatchInsertChildRecursive(vPatch, bridge);
                     }
                 }
             }
@@ -80,7 +80,7 @@ namespace Rockyfi
                 this.vNode = original;
             }
 
-            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            public override void DoPatch(ShadowPlay shadowPlay, Bridge bridge)
             {
                 if (vNode.node.Parent != null)
                 {
@@ -91,7 +91,7 @@ namespace Rockyfi
                     vNode.Parent.Children.Remove(vNode);
 
                     // factory remove
-                    if (elementFactory != null)
+                    if (bridge != null)
                     {
                         var pra = vNode.Parent;
                         pra.element?.OnRemove(vNode.element);
@@ -110,7 +110,7 @@ namespace Rockyfi
                 this.vPatch = newborn;
             }
 
-            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            public override void DoPatch(ShadowPlay shadowPlay, Bridge bridge)
             {
                 // flex add child
                 vPatch.node.Parent = null;
@@ -120,12 +120,12 @@ namespace Rockyfi
                 vNodePrent.AppendChild(vPatch);
 
                 // factory add child
-                if (elementFactory != null)
+                if (bridge != null)
                 {
-                    vPatch.element = elementFactory.CreateElement(vPatch.node, vPatch.template.TagName, vPatch.StringAttr);
+                    vPatch.element = bridge.CreateElement(vPatch.node, vPatch.template.TagName, vPatch.StringAttr);
                     vNodePrent.element?.OnAddChild(vPatch.element);
 
-                    PatchInsertChildRecursive(vPatch, elementFactory);
+                    PatchInsertChildRecursive(vPatch, bridge);
                 }
             }
         }
@@ -141,7 +141,7 @@ namespace Rockyfi
                 this.PropertiesDiff = pd;
             }
 
-            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            public override void DoPatch(ShadowPlay shadowPlay, Bridge bridge)
             {
                 var props = vNode.attributes;
                 foreach (var kv in PropertiesDiff)
@@ -150,7 +150,7 @@ namespace Rockyfi
                 }
 
                 // chaneg attr
-                if (elementFactory != null)
+                if (bridge != null)
                 {
                     if (vNode.element != null)
                     {
@@ -177,7 +177,7 @@ namespace Rockyfi
                 this.vPatch = newborn;
             }
 
-            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            public override void DoPatch(ShadowPlay shadowPlay, Bridge bridge)
             {
                 // TODO: ..................
             }
@@ -192,7 +192,7 @@ namespace Rockyfi
                 this.vThunk = patch;
             }
 
-            public override void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            public override void DoPatch(ShadowPlay shadowPlay, Bridge bridge)
             {
                 // TODO: ..................
             }
@@ -235,7 +235,7 @@ namespace Rockyfi
                 Original = original;
             }
 
-            public void DoPatch(ShadowPlay shadowPlay, ElementFactory elementFactory)
+            public void DoPatch(ShadowPlay shadowPlay, Bridge bridge)
             {
                 foreach (var group in groupList)
                 {
@@ -243,12 +243,12 @@ namespace Rockyfi
                     {
                         foreach (var p in group.list)
                         {
-                            p.DoPatch(shadowPlay, elementFactory);
+                            p.DoPatch(shadowPlay, bridge);
                         }
                     }
                     else if(group.monoPatch != null)
                     {
-                        group.monoPatch.DoPatch(shadowPlay, elementFactory);
+                        group.monoPatch.DoPatch(shadowPlay, bridge);
                     }
                 }
             }
