@@ -19,8 +19,8 @@ namespace RockyfiFactory
             });
             stage.SetData("w", "320px");
             stage.SetData("h", "320px");
-            stage.Load(tmpXML);
-            System.Console.WriteLine(stage.Print());
+            stage.Build(tmpXML);
+            System.Console.WriteLine(stage.ToString());
         }
 
         public override void Update(float dt)
@@ -34,7 +34,7 @@ namespace RockyfiFactory
         {
             Graphics.Translate(100, 100);
             Graphics.SetColor(Color.White);
-            stage.WalkDrawDirect((x, y, w, h, text, attr) =>
+            stage.DrawTraversely((x, y, w, h, text, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, y);

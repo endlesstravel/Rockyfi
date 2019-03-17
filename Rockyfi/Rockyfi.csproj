@@ -39,18 +39,20 @@
   <ItemGroup>
     <Compile Include="Rockyfi.CardData.cs" />
     <Compile Include="Rockyfi.cs" />
+    <Compile Include="Rockyfi.ShadowPlay.Draw.cs" />
     <Compile Include="Rockyfi.Enum.cs" />
-    <Compile Include="Rockyfi.Factory.ContextStack.cs" />
-    <Compile Include="Rockyfi.Factory.Express.cs" />
-    <Compile Include="Rockyfi.Factory.Renderer.cs" />
-    <Compile Include="Rockyfi.Factory.DataBind.cs" />
+    <Compile Include="Rockyfi.ShadowPlay.ContextStack.cs" />
+    <Compile Include="Rockyfi.ShadowPlay.Express.cs" />
+    <Compile Include="Rockyfi.ShadowPlay.Renderer.cs" />
+    <Compile Include="Rockyfi.ShadowPlay.DataBind.cs" />
     <Compile Include="Rockyfi.Rockyfi.cs" />
     <Compile Include="Rockyfi.Node.cs" />
     <Compile Include="Rockyfi.Print.cs" />
     <Compile Include="Rockyfi.Public.cs" />
+    <Compile Include="Rockyfi.ShadowPlay.Utils.cs" />
+    <Compile Include="Rockyfi.ShadowPlay.VirtualDOM.cs" />
     <Compile Include="Rockyfi.Struct.cs" />
     <Compile Include="Rockyfi.Utils.cs" />
-    <Compile Include="Rockyfi.VirtualDOM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

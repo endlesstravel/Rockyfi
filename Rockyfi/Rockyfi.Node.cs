@@ -2,6 +2,10 @@ using System.Collections.Generic;
 
 namespace Rockyfi
 {
+    public class NodeWithoutContext
+    {
+
+    }
     public partial class Node
     {
         readonly internal Style nodeStyle = new Style();
@@ -38,7 +42,6 @@ namespace Rockyfi
 
 
         public object Context;
-
         public void CalculateLayout(float parentWidth, float parentHeight, Direction parentDirection)
         {
             Flex.CalculateLayout(this, parentWidth, parentHeight, parentDirection);

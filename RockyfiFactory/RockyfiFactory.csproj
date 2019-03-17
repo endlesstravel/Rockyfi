@@ -59,7 +59,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoveElementPrinter.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="SceneExponentXML.cs" />
+    <Compile Include="SceneHugeList.cs" />
     <Compile Include="SceneList.cs" />
     <Compile Include="SceneNormalXML.cs" />
     <Compile Include="TestProgram.cs" />

@@ -64,17 +64,18 @@ namespace Rockyfi
             }
         }
 
-        public abstract class Element<T> where T: Element<T>
+        public abstract class ElementFactory
         {
-            public abstract void ChangeAttributes(Dictionary<string, object> attributes);
-            public abstract void InsertChild(int index, T child);
-            public abstract void RemoveAt(int index);
-            public abstract void Remove(T child);
-            public abstract void Destory(T element);
-        }
-        public abstract class ElementFactory<T> where T : Element<T>
-        {
-            public abstract T CreateElement(string tagName, Dictionary<string, object> attr);
+            public abstract Element CreateElement(string tagName, Dictionary<string, object> attr);
+            public abstract void SetRootElement(Element root);
+
+            internal Element CreateElement(Node node, string tagName, Dictionary<string, object> attr)
+            {
+                var ele = CreateElement(tagName, attr);
+                ele.node = node;
+                return ele;
+            }
+
         }
 
         /// <summary>
@@ -84,9 +85,107 @@ namespace Rockyfi
         public void SetElementFactory(ElementFactory factory)
         {
             elementFactory = factory;
+            
         }
 
         ElementFactory elementFactory;
+
+        public abstract class Element
+        {
+            public abstract void OnChangeAttributes(string key, object value);
+            public abstract void OnChangeText(string text);
+            public abstract void OnInsertChild(int index, Element child);
+            public abstract void OnAddChild(Element child);
+            public abstract void OnRemoveAt(int index);
+            public abstract void OnRemove(Element child);
+
+            #region other properties
+
+            /// <summary>
+            /// Return binded text, otherwies return nul.
+            /// </summary>
+            /// <returns></returns>
+            public string GetText()
+            {
+                return GetNodeRuntimeAttribute(node).textDataBindExpressCurrentValue;
+            }
+            #endregion
+
+
+            #region Style
+            internal Node node;
+            public Overflow StyleGetOverflow()
+            {
+                return node.StyleGetOverflow();
+            }
+
+            public Display StyleGetDisplay()
+            {
+                return node.StyleGetDisplay();
+            }
+
+            // LayoutGetLeft gets left
+            public float LayoutGetLeft()
+            {
+                return node.LayoutGetLeft();
+            }
+
+            // LayoutGetTop gets top
+            public float LayoutGetTop()
+            {
+                return node.LayoutGetTop();
+            }
+
+            // LayoutGetRight gets right
+            public float LayoutGetRight()
+            {
+                return node.LayoutGetRight();
+            }
+
+            // LayoutGetBottom gets bottom
+            public float LayoutGetBottom()
+            {
+                return node.LayoutGetBottom();
+            }
+
+            // LayoutGetWidth gets width
+            public float LayoutGetWidth()
+            {
+                return node.LayoutGetWidth();
+            }
+
+            // LayoutGetHeight gets height
+            public float LayoutGetHeight()
+            {
+                return node.LayoutGetHeight();
+            }
+
+            // LayoutGetMargin gets margin
+            public float LayoutGetMargin(Edge edge)
+            {
+                return node.LayoutGetMargin(edge);
+            }
+
+            // LayoutGetBorder gets border
+            public float LayoutGetBorder(Edge edge)
+            {
+                return node.LayoutGetBorder(edge);
+            }
+
+            // LayoutGetPadding gets padding
+            public float LayoutGetPadding(Edge edge)
+            {
+                return node.LayoutGetPadding(edge);
+            }
+
+            public bool LayoutGetHadOverflow()
+            {
+                return node.LayoutGetHadOverflow();
+            }
+
+            #endregion
+
+        }
 
         #endregion
     }
