@@ -71,7 +71,7 @@ namespace RockyfiFactory
 {
     class SceneNormalXML: Scene
     {
-        Rockyfi.ShadowPlay stage = new Rockyfi.ShadowPlay();
+        ShadowPlaySimple stage = new ShadowPlaySimple();
         public override void Load()
         {
             string tmpXML = @"
@@ -79,14 +79,14 @@ namespace RockyfiFactory
     <div el-for=""itemId in listData"" width=""150px"" height=""100px"" el-bind:id=""itemId""/>
 </div>
 ";
-            stage.Build(tmpXML, "styleObj", "w", "mt", "pt", "listData");
             stage.SetData("listData", new List<string>
             {
                 "child-0", "child-1", "child-2", "child-3", "child-4",
             });
             stage.SetData("w", "320px");
             stage.SetData("h", "320px");
-            System.Console.WriteLine(stage.Print());
+            stage.Build(tmpXML);
+            System.Console.WriteLine(stage.ToString());
         }
 
         public override void Update(float dt)
@@ -100,7 +100,7 @@ namespace RockyfiFactory
         {
             Graphics.Translate(100, 100);
             Graphics.SetColor(Color.White);
-            stage.Draw((x, y, w, h, text, attr) =>
+            stage.Draw(0, 0, (x, y, w, h, text, attr) =>
             {
                 Graphics.Rectangle(DrawMode.Line, x, y, w, h);
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, y);
