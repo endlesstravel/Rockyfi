@@ -134,13 +134,13 @@ namespace RockyfiFactory
 
         }
 
-        static void Main(string[] args)
-        {
-            Boot.Init(new BootConfig
-            {
+        //static void Main(string[] args)
+        //{
+        //    Boot.Init(new BootConfig
+        //    {
 
-            });
-            Boot.Run(new SceneTestFactory());
-        }
+        //    });
+        //    Boot.Run(new SceneTestFactory());
+        //}
     }
 }
