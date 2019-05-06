@@ -67,6 +67,7 @@
     <Compile Include="SceneNormalXML.cs" />
     <Compile Include="SceneTestFactoryX.cs" />
     <Compile Include="SceneTestFactory.cs" />
+    <Compile Include="SceneTestLayourController.cs" />
     <Compile Include="TestProgram.cs" />
   </ItemGroup>
   <ItemGroup>

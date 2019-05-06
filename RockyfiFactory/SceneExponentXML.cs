@@ -42,7 +42,7 @@ namespace RockyfiFactory
 
         public override void Update(float dt)
         {
-            Love.Misc.FPSGraph.FPSGraph.Update(dt);
+            Love.Misc.FPSGraph.Update(dt);
 
             Util.WatchTime(() =>
             {
@@ -81,7 +81,7 @@ namespace RockyfiFactory
         public override void Draw()
         {
             Graphics.SetBackgroundColor(85 / 255f, 77 / 255f, 216 / 255f);
-            Love.Misc.FPSGraph.FPSGraph.Draw();
+            Love.Misc.FPSGraph.Draw();
 
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);

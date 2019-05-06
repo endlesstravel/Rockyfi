@@ -32,8 +32,18 @@ namespace RockyfiFactory
             {
                 WindowResizable = true,
             });
-            Boot.Run(new SceneHugeList());
+            Boot.Run(new SceneTestLayourController());
         }
+
+
+        //static void Main(string[] args)
+        //{
+        //    Boot.Init(new BootConfig
+        //    {
+        //        WindowResizable = true,
+        //    });
+        //    Boot.Run(new SceneHugeList());
+        //}
 
         //static void Main(string[] args)
         //{

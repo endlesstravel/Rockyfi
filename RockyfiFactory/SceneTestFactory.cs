@@ -93,7 +93,7 @@ namespace RockyfiFactory
 
         public override void Update(float dt)
         {
-            Love.Misc.FPSGraph.FPSGraph.Update(dt);
+            Love.Misc.FPSGraph.Update(dt);
 
             if (((int)(Timer.GetTime() * 1000)) % 2000 > 1000)
             {
@@ -110,7 +110,7 @@ namespace RockyfiFactory
         public override void Draw()
         {
             Graphics.SetBackgroundColor(85 / 255f, 77 / 255f, 216 / 255f);
-            Love.Misc.FPSGraph.FPSGraph.Draw();
+            Love.Misc.FPSGraph.Draw();
 
             Graphics.SetColor(Color.White);
 

@@ -5,7 +5,6 @@ using Love;
 
 namespace RockyfiFactory
 {
-
     public class LoveBridge: Bridge<LoveBridge.Element>
     {
         public class Element : BridgeElement<Element>
@@ -176,4 +175,79 @@ namespace RockyfiFactory
         }
     }
 
+    public abstract class ElementController
+    {
+
+    }
+
+    public abstract class LayoutController : ElementController
+    {
+        public abstract string DefineLayoutXml();
+        public abstract ElementController CreateElement(string tagName, Dictionary<string, object> attr);
+        public abstract Dictionary<string, object> DefineInitialData();
+
+        public virtual void SetRootParent(ElementController root)
+        {
+        }
+
+        ShadowPlay<LoveBridge.Element> shadowPlay;
+        LoveBridge bridge;
+
+        ElementController CreateElementCheck(string tagName, Dictionary<string, object> attr)
+        {
+            var ele = CreateElement(tagName, attr);
+            if (ele == null)
+                throw new System.Exception("CreateElement must return a new object!");
+            return ele;
+        }
+
+        public void SetData(string key, object data)
+        {
+            if (shadowPlay != null)
+            {
+                shadowPlay.SetData(key, data);
+            }
+        }
+
+        public virtual void Start()
+        {
+            shadowPlay = new ShadowPlay<LoveBridge.Element>();
+
+            var schema = DefineLayoutXml();
+            if (schema == null)
+                throw new System.Exception("DefineLayoutXml should return xml document string !");
+
+            var initData = DefineInitialData();
+            List<string> properties = new List<string>();
+            properties.AddRange(initData.Keys);
+            shadowPlay.Build(schema, properties.ToArray());
+            shadowPlay.SetData(initData);
+            bridge = new LoveBridge();
+            shadowPlay.SetBridge(bridge);
+        }
+
+        public virtual void Update()
+        {
+            if (shadowPlay != null && bridge != null)
+            {
+                shadowPlay.Update();
+            }
+        }
+
+
+        public virtual void Draw(float x, float y, ShadowPlay<LoveBridge.Element>.DrawNodeFunc defaultDrawFunc, Dictionary<string, ShadowPlay<LoveBridge.Element>.DrawNodeFunc> themeDictionary = null)
+        {
+            shadowPlay.Draw(x, y, defaultDrawFunc, themeDictionary);
+        }
+
+        public string GetRealXmlString()
+        {
+            return shadowPlay.ToString();
+        }
+
+        public string GetAttrbuteXmlString()
+        {
+            return bridge.ToString();
+        }
+    }
 }

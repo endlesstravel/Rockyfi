@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rockyfi;
 
-
 namespace RockyfiFactory
 {
     class SceneTestFactoryX

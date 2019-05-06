@@ -45,7 +45,7 @@ namespace RockyfiFactory
         {
             Util.WatchTime(() =>
             {
-                Love.Misc.FPSGraph.FPSGraph.Update(dt);
+                Love.Misc.FPSGraph.Update(dt);
 
                 try
                 {
@@ -60,7 +60,7 @@ namespace RockyfiFactory
 
         public override void Draw()
         {
-            Love.Misc.FPSGraph.FPSGraph.Draw();
+            Love.Misc.FPSGraph.Draw();
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
             stage.Draw(0, 0, (x, y, w, h, text, attr) =>
