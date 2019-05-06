@@ -101,6 +101,10 @@ namespace RockyfiFactory
             {
                 return ToString(0);
             }
+
+            public override void OnAfterCreated()
+            {
+            }
         }
 
         public override Element CreateElement(string tagName, Dictionary<string, object> attr)

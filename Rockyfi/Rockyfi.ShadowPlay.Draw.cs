@@ -10,6 +10,11 @@ namespace Rockyfi
             throw new NotImplementedException();
         }
 
+        public override void OnAfterCreated()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void OnChangeAttributes(string key, object value)
         {
             throw new NotImplementedException();
@@ -155,6 +160,7 @@ namespace Rockyfi
         {
             var ele = CreateElement(tagName, attr);
             ele.node = node;
+            ele.OnAfterCreated();
             return ele;
         }
 
@@ -169,6 +175,7 @@ namespace Rockyfi
         public abstract void OnAddChild(T child);
         public abstract void OnRemoveAt(int index);
         public abstract void OnRemove(T child);
+        public abstract void OnAfterCreated();
 
         #region other properties
         internal Node node;

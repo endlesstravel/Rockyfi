@@ -37,6 +37,42 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Jyc.Expr\BinaryHelper.cs" />
+    <Compile Include="Jyc.Expr\BinaryOp.cs" />
+    <Compile Include="Jyc.Expr\BinaryOps.cs" />
+    <Compile Include="Jyc.Expr\ConditionalOp.cs" />
+    <Compile Include="Jyc.Expr\Constant.cs" />
+    <Compile Include="Jyc.Expr\Context.cs" />
+    <Compile Include="Jyc.Expr\ConvertHelper.cs" />
+    <Compile Include="Jyc.Expr\Error.cs" />
+    <Compile Include="Jyc.Expr\ErrorFormator.cs" />
+    <Compile Include="Jyc.Expr\EvalException.cs" />
+    <Compile Include="Jyc.Expr\Evaluator.cs" />
+    <Compile Include="Jyc.Expr\Executor.cs" />
+    <Compile Include="Jyc.Expr\ExecutorContext.cs" />
+    <Compile Include="Jyc.Expr\Executors.cs" />
+    <Compile Include="Jyc.Expr\Expression.cs" />
+    <Compile Include="Jyc.Expr\Identifier.cs" />
+    <Compile Include="Jyc.Expr\IExecutor.cs" />
+    <Compile Include="Jyc.Expr\IndexerOp.cs" />
+    <Compile Include="Jyc.Expr\MemberId.cs" />
+    <Compile Include="Jyc.Expr\MemberOp.cs" />
+    <Compile Include="Jyc.Expr\Operand.cs" />
+    <Compile Include="Jyc.Expr\Operator.cs" />
+    <Compile Include="Jyc.Expr\OperatorPriority.cs" />
+    <Compile Include="Jyc.Expr\Parameter.cs" />
+    <Compile Include="Jyc.Expr\ParameterVariableHolder.cs" />
+    <Compile Include="Jyc.Expr\Parser.cs" />
+    <Compile Include="Jyc.Expr\ParserException.cs" />
+    <Compile Include="Jyc.Expr\REPL.cs" />
+    <Compile Include="Jyc.Expr\Scanner.cs" />
+    <Compile Include="Jyc.Expr\ScannerException.cs" />
+    <Compile Include="Jyc.Expr\SR.Designer.cs" />
+    <Compile Include="Jyc.Expr\StringToken.cs" />
+    <Compile Include="Jyc.Expr\Token.cs" />
+    <Compile Include="Jyc.Expr\Tree.cs" />
+    <Compile Include="Jyc.Expr\UnaryOp.cs" />
+    <Compile Include="Jyc.Expr\Variable.cs" />
     <Compile Include="Rockyfi.CardData.cs" />
     <Compile Include="Rockyfi.cs" />
     <Compile Include="Rockyfi.ShadowPlay.cs" />

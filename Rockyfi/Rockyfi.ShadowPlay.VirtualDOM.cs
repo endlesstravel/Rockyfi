@@ -147,6 +147,9 @@ namespace Rockyfi
                     foreach (var kv in PropertiesDiff)
                     {
                         props[kv.Key] = kv.Value;
+
+                        // try change style
+                        shadowPlay.ProcessNodeStyle(vNode.node, kv.Key.TargetName, kv.Value != null ? kv.Value.ToString() : "");
                     }
 
                     // chaneg attr
@@ -157,16 +160,36 @@ namespace Rockyfi
                             foreach (var kv in PropertiesDiff)
                             {
                                 vNode.element.OnChangeAttributes(kv.Key.TargetName, kv.Value);
-                                props[kv.Key] = kv.Value;
-
-                                // change style
-                                shadowPlay.ProcessNodeStyle(vNode.node, kv.Key.TargetName, kv.Value != null ? kv.ToString() : "");
                             }
                         }
                     }
                 }
             }
 
+            public class PatchOperateText : PatchOperate
+            {
+                readonly internal RuntimeAttribute vNode;
+                readonly internal string text;
+                public PatchOperateText(RuntimeAttribute vNode, string text)
+                {
+                    this.vNode = vNode;
+                    this.text = text;
+                }
+
+                public override void DoPatch(ShadowPlay<T> shadowPlay, Bridge<T> bridge)
+                {
+                    vNode.textDataBindExpressCurrentValue = text;
+
+                    // chaneg attr
+                    if (bridge != null)
+                    {
+                        if (vNode.element != null)
+                        {
+                            vNode.element.OnChangeText(text);
+                        }
+                    }
+                }
+            }
             public class PatchOperateReorder : PatchOperate
             {
                 readonly internal RuntimeAttribute vNode;
@@ -289,6 +312,10 @@ namespace Rockyfi
                         {
                             group.Append(new PatchOperateProperties(a, propsPatch));
                         }
+                        if (a.textDataBindExpressCurrentValue != b.textDataBindExpressCurrentValue)
+                        {
+                            group.Append(new PatchOperateText(a, b.textDataBindExpressCurrentValue));
+                        }
                         DiffChildren(a, b, group);
                     }
                     else
@@ -334,6 +361,7 @@ namespace Rockyfi
                     }
                 }
             }
+
 
             /// <summary>
             /// return null when there no different on vnode.
