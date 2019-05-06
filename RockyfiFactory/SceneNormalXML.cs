@@ -14,13 +14,14 @@ namespace RockyfiFactory
     <div el-for=""itemId in listData"" width=""150px"" height=""100px"" el-bind:id=""itemId""/>
 </div>
 ";
+            stage.Build(tmpXML, "listData", "w", "h");
             stage.SetData("listData", new List<string>
             {
                 "child-0", "child-1", "child-2", "child-3", "child-4",
             });
             stage.SetData("w", "320px");
             stage.SetData("h", "320px");
-            stage.Build(tmpXML);
+            stage.Update();
             System.Console.WriteLine(stage.ToString());
         }
 
@@ -42,13 +43,13 @@ namespace RockyfiFactory
             });
         }
 
-        //static void Main(string[] args)
-        //{
-        //    Boot.Init(new BootConfig
-        //    {
-        //        WindowResizable = true,
-        //    });
-        //    Boot.Run(new SceneNormalXML());
-        //}
+        static void Main(string[] args)
+        {
+            Boot.Init(new BootConfig
+            {
+                WindowResizable = true,
+            });
+            Boot.Run(new SceneNormalXML());
+        }
     }
 }
