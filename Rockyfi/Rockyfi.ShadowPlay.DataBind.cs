@@ -175,12 +175,15 @@ namespace Rockyfi
             return new ContextStack(runtimeContext);
         }
 
+        public bool IsDataDirty { get; set; }
+
         /// <summary>
         /// reset all data.
         /// </summary>
         /// <param name="contextDictionary"></param>
         public void SetData(Dictionary<string, object> contextDictionary)
         {
+            IsDataDirty = true;
             runtimeContext.Clear();
             if (contextDictionary != null)
             {
@@ -203,12 +206,14 @@ namespace Rockyfi
 
             if (runtimeContext.TryGetValue(key, out var oldData) && data != null && oldData != null)
             {
-                if (data != null && data.Equals(oldData)
-                    || oldData != null && oldData.Equals(data))
+                if (data != null && data.Equals(oldData) || oldData != null && oldData.Equals(data))
+                {
                     return;
+                }
 
             }
 
+            IsDataDirty = true;
             runtimeContext[key] = data;
         }
 

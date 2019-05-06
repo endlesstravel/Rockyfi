@@ -7,21 +7,21 @@ namespace Rockyfi.Expr {
 
         readonly static Dictionary<string, string> defaultDict = new Dictionary<string, string>()
         {
-            "ErrorFormat" = "{0} at {1},code {2}",
-            "InternalError" = "internal error",
-            "NoParenBefore" = "not has {0} Before,code {1}",
-            "NotHexChar" = "Not a hexadcimal Character",
-            "NotSupportGlobalFunction" = "not support global function",
-            "ParenNotMatch" = "{0} not Match,code{1}",
-            "UnrecogniseChar" = "unrecognise Character",
-            "VariableNotExist" = "Variable '{0}' not exist",
+            {"ErrorFormat", "{0} at {1},code {2}"},
+            {"InternalError", "internal error"},
+            {"NoParenBefore", "not has {0} Before,code {1}"},
+            {"NotHexChar", "Not a hexadcimal Character"},
+            {"NotSupportGlobalFunction", "not support global function"},
+            {"ParenNotMatch", "{0} not Match,code{1}"},
+            {"UnrecogniseChar", "unrecognise Character"},
+            {"VariableNotExist", "Variable '{0}' not exist"},
         };
 
         readonly static Dictionary<string, Dictionary<string, string>> localization = new Dictionary<string, Dictionary<string, string>>()
         {
-            "zh" = new Dictionary<string, string> {
+            {"zh", new Dictionary<string, string>{
 
-            }
+            }}
         };
 
         static Dictionary<string, string> currentLocalization;
@@ -41,7 +41,7 @@ namespace Rockyfi.Expr {
             return false;
         }
 
-        public string GetString(string key)
+        public static string GetString(string key)
         {
             if (currentLocalization != null && currentLocalization.TryGetValue(key, out string result))
                 return result;
@@ -51,8 +51,6 @@ namespace Rockyfi.Expr {
 
             return null;
         }
-
-        public
 
         internal static string ErrorFormat => GetString("ErrorFormat");
 

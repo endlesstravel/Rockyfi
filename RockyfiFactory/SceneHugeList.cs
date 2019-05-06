@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Love;
 using Rockyfi;
 
@@ -22,7 +23,7 @@ namespace RockyfiFactory
 ";
 
             var list = new List<string> { "1", "2", "3", "4", "5", "6" };
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 list.Add("xx" + i);
             }
@@ -42,11 +43,24 @@ namespace RockyfiFactory
 
         public override void Update(float dt)
         {
-            stage.Update();
+            Util.WatchTime(() =>
+            {
+                Love.Misc.FPSGraph.FPSGraph.Update(dt);
+
+                try
+                {
+                    stage.Update();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("e" + e);
+                }
+            });
         }
 
         public override void Draw()
         {
+            Love.Misc.FPSGraph.FPSGraph.Draw();
             Graphics.SetColor(Color.White);
             Graphics.Translate(100, 100);
             stage.Draw(0, 0, (x, y, w, h, text, attr) =>

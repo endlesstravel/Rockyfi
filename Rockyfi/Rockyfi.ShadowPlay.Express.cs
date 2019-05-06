@@ -232,6 +232,8 @@ namespace Rockyfi
         internal static Regex strRegex = new Regex(@"^'([^']*)'$");
         internal static Regex objRegex = new Regex(@"^(([_a-zA-Z][_\w]*)(\.([_a-zA-Z][_\w]*))*)$");
 
+        public const string forInToken = "in";
+
 
         // xxx.yy.zz -> [xxx, yy, zz]
         static bool TryParseDotValue(string input, out string[] result)
@@ -272,6 +274,54 @@ namespace Rockyfi
 
 
         /// <summary>
+        /// 11  : int
+        /// 11.11  : float
+        /// 'hello ?': string
+        /// true: boolean
+        /// false: boolean
+        /// xxx.bc.fd: object value
+        /// </summary>
+        internal class ObjectDataBindExpress
+        {
+            Expr.Tree ast;
+            string express;
+            public object value
+            {
+                get; private set;
+            }
+
+
+            /// <summary>
+            /// faild parse return null, otherwise return DataBindObjectExpress
+            /// </summary>
+            /// <param name="express"></param>
+            /// <returns></returns>
+            public static ObjectDataBindExpress Parse(string express)
+            {
+                try
+                {
+                    var dboe = new ObjectDataBindExpress();
+                    dboe.ast = new Expr.Parser().Parse(express);
+                    dboe.express = express;
+                    return dboe;
+                }
+                catch
+                {
+                }
+                return null;
+            }
+
+            public bool TryEvaluate(ContextStack contextStack, out object result)
+            {
+                var evaluater = new Expr.Evaluator();
+                evaluater.VariableHolder = contextStack;
+                result = evaluater.Eval(ast);
+                return true;
+            }
+        }
+
+
+        /// <summary>
         /// xxxxx {{ item.desc }} xxxxxx yyyyyy
         /// </summary>
         internal class TextDataBindExpress
@@ -279,16 +329,8 @@ namespace Rockyfi
             private TextDataBindExpress(LinkedList<TextToken> list)
             {
                 this.tokensList = list;
-                TargetKeys = new List<string>();
-
-                foreach (var tk in list)
-                {
-                    if (!tk.IsText && tk.Express.TargetKey != null)
-                        TargetKeys.Add(tk.Express.TargetKey);
-                }
             }
             readonly LinkedList<TextToken> tokensList;
-            internal readonly List<string> TargetKeys;
             struct TextToken
             {
                 internal readonly bool IsText;
@@ -390,10 +432,6 @@ namespace Rockyfi
             /// </summary>
             public string TargetName { get; private set; }
 
-            /// <summary>
-            /// el-bind:xxxx="yyy.width" ---> yyyy
-            /// </summary>
-            public string TargetKey => objectExpress.TargetKey;
             ObjectDataBindExpress objectExpress = null;
 
 
@@ -418,87 +456,6 @@ namespace Rockyfi
                 return objectExpress.TryEvaluate(contextStack, out result);
             }
         }
-        /// <summary>
-        /// 11  : int
-        /// 11.11  : float
-        /// 'hello ?': string
-        /// true: boolean
-        /// false: boolean
-        /// xxx.bc.fd: object value
-        /// </summary>
-        internal class ObjectDataBindExpress
-        {
-            enum ObjectDataBindType
-            {
-                Unknow,
-                Integer,
-                Float,
-                String,
-                ObjectSymbol,
-            }
-
-            string express;
-            ObjectDataBindType type = ObjectDataBindType.Unknow;
-            public object value
-            {
-                get; private set;
-            }
-
-            public string TargetKey => IsEffectedByContext && value != null ? (value as string[])[0] : null;
-            public bool IsEffectedByContext => type == ObjectDataBindType.ObjectSymbol;
-
-            /// <summary>
-            /// faild parse return null, otherwise return DataBindObjectExpress
-            /// </summary>
-            /// <param name="express"></param>
-            /// <returns></returns>
-            public static ObjectDataBindExpress Parse(string express)
-            {
-                express = express.Trim();
-
-                var dboe = new ObjectDataBindExpress();
-                dboe.express = express;
-                dboe.type = ObjectDataBindType.Unknow;
-                if (int.TryParse(express, out int intResult))
-                {
-                    dboe.value = intResult;
-                    dboe.type = ObjectDataBindType.Integer;
-                }
-                else if (float.TryParse(express, out float floatResult))
-                {
-                    dboe.value = floatResult;
-                    dboe.type = ObjectDataBindType.Float;
-                }
-                else if (TryParseDotValue(express, out string[] objResult))
-                {
-                    dboe.value = objResult;
-                    dboe.type = ObjectDataBindType.ObjectSymbol;
-                }
-                else if (TryParseStringValue(express, out string strResult))
-                {
-                    dboe.value = strResult;
-                    dboe.type = ObjectDataBindType.String;
-                }
-
-                return dboe.type != ObjectDataBindType.Unknow ? dboe : null;
-            }
-
-
-            public bool TryEvaluate(ContextStack contextStack, out object result)
-            {
-                result = null;
-                if (type == ObjectDataBindType.Unknow)
-                    return false;
-
-                if (type == ObjectDataBindType.ObjectSymbol)
-                {
-                    return contextStack.TryGetFromPath((string[])value, out result);
-                }
-
-                result = value;
-                return true;
-            }
-        }
 
         /// <summary>
         /// item in aa.bb.c
@@ -508,16 +465,11 @@ namespace Rockyfi
         {
             string express;
 
-            public string IteratorName { get; private set; }
-            public string[] DataSourceName => dataSourceName;
-
             /// <summary>
-            /// el-for="list.box" ---> list
+            /// el-for="item in list.box" ---> item
             /// </summary>
-            public string TargetKey => dataSourceName != null ? dataSourceName[0] : null;
-            public bool IsEffectedByContext => true;
-
-            string[] dataSourceName;
+            public string IteratorName { get; private set; }
+            ObjectDataBindExpress objectExpress = null;
 
             /// <summary>
             /// faild parse return null, otherwise return DataBindObjectExpress
@@ -526,19 +478,18 @@ namespace Rockyfi
             /// <returns></returns>
             public static ForDataBindExpress Parse(string express)
             {
-                express = express.Trim();
-                Match match = forRegex.Match(express);
-                if (match.Success)
-                {
-                    var forExp = new ForDataBindExpress();
-                    forExp.express = express;
-                    forExp.IteratorName = match.Groups[1].Value.Trim();
-                    TryParseDotValue(match.Groups[2].Value.Trim(), out forExp.dataSourceName);
+                if (express == null)
+                    return null;
 
-                    if (TryParseDotValue(match.Groups[2].Value.Trim(), out forExp.dataSourceName))
-                        return forExp;
-                }
-                return null;
+                express = express.Trim();
+                int index = express.IndexOf(forInToken);
+                if (index < 0)
+                    return null;
+                var forExp = new ForDataBindExpress();
+                forExp.express = express;
+                forExp.IteratorName = express.Substring(0, index).Trim(); 
+                forExp.objectExpress = ObjectDataBindExpress.Parse(express.Substring(index + 2).Trim());
+                return forExp.objectExpress != null ? forExp : null;
             }
 
             /// <summary>
@@ -547,11 +498,7 @@ namespace Rockyfi
             /// <returns></returns>
             public IEnumerable<object> Evaluate(ContextStack contextStack)
             {
-                if (dataSourceName != null && contextStack.TryGetFromPath(dataSourceName, out var resultObject))
-                {
-                    return resultObject as IEnumerable<object>;
-                }
-                return null;
+                return objectExpress.TryEvaluate(contextStack, out var result) ? (result as IEnumerable<object>) : null;
             }
         }
 
@@ -567,107 +514,28 @@ namespace Rockyfi
         internal class IfDataBindExpress
         {
             string express;
-            bool isJustObjectExpress; // a == b ? or a ?
-            bool isEqualOpt; //  a == b ? or a != b ?
-            ObjectDataBindExpress leftExpress;
-            ObjectDataBindExpress rightExpress;
-
-            public string[] TargetKeys
-            {
-                get
-                {
-                    if (isJustObjectExpress)
-                    {
-                        return leftExpress.TargetKey != null ? new string[] { leftExpress.TargetKey } : null;
-                    }
-                    else if (leftExpress.TargetKey != null && rightExpress.TargetKey == null)
-                    {
-                        return leftExpress.TargetKey != null ? new string[] { leftExpress.TargetKey } : null;
-                    }
-                    else if (leftExpress.TargetKey == null && rightExpress.TargetKey != null)
-                    {
-                        return rightExpress.TargetKey != null ? new string[] { rightExpress.TargetKey } : null;
-                    }
-                    return new string[] { leftExpress.TargetKey, rightExpress.TargetKey };
-                }
-            }
-
-            public bool IsEffectedByContext => isJustObjectExpress ? leftExpress.IsEffectedByContext
-                : leftExpress.IsEffectedByContext || rightExpress.IsEffectedByContext;
-
-            /// <summary>
-            /// true: parse success, false parse failed
-            /// </summary>
-            /// <returns></returns>
-            bool ParseExpress(string express)
-            {
-                Match match = ifRegex.Match(express);
-                if (match.Success)
-                {
-                    if (match.Groups.Count == 2)
-                    {
-                        isJustObjectExpress = true;
-                        leftExpress = ObjectDataBindExpress.Parse(match.Groups[1].Value);
-                        return leftExpress != null;
-                    }
-                    else if (match.Groups.Count == 5)
-                    {
-                        isJustObjectExpress = false;
-                        isEqualOpt = "==".Equals(match.Groups[3].Value.Trim());
-                        leftExpress = ObjectDataBindExpress.Parse(match.Groups[1].Value);
-                        rightExpress = ObjectDataBindExpress.Parse(match.Groups[4].Value);
-                        return leftExpress != null && rightExpress != null;
-                    }
-                }
-
-                return false;
-            }
+            ObjectDataBindExpress objectExpress = null;
 
             /// <summary>
             /// faild parse return null, otherwise return DataBindIfExpress
             /// </summary>
             /// <param name="express"></param>
             /// <returns></returns>
-            public static IfDataBindExpress Parse(string exp)
+            public static IfDataBindExpress Parse(string express)
             {
-                exp = exp.Trim();
                 var ifExp = new IfDataBindExpress();
-                ifExp.express = exp;
-                return ifExp.ParseExpress(ifExp.express) ? ifExp : null;
+                ifExp.express = express;
+                ifExp.objectExpress = ObjectDataBindExpress.Parse(express);
+                return ifExp.objectExpress != null ? ifExp : null;
             }
 
-            public bool TryEvaluate(ContextStack contextStack, out bool result)
+            public bool TryEvaluate(ContextStack contextStack, out bool boolResult)
             {
-                result = false;
-                if (isJustObjectExpress)
+                if(objectExpress.TryEvaluate(contextStack, out var result) && TryLossyBoolJudge(result, out boolResult))
                 {
-                    if (!leftExpress.TryEvaluate(contextStack, out var obj))
-                        return false;
-
-                    return TryLossyBoolJudge(obj, out result);
+                    return true;
                 }
-                else if (leftExpress.TryEvaluate(contextStack, out object leftObj)
-                    && rightExpress.TryEvaluate(contextStack, out object rightObj))
-                {
-                    if (IsNumber(leftObj) && IsNumber(rightObj)) // number equals .....
-                    {
-                        result = (double)leftObj == (double)rightObj;
-                        result = isEqualOpt ? result : !result;
-                        return true;
-                    }
-                    else if (leftObj is string && rightObj is string) // string equal .....
-                    {
-                        result = string.Equals(leftObj, rightObj);
-                        result = isEqualOpt ? result : !result;
-                        return true;
-                    }
-
-                    var leftTry = TryLossyBoolJudge(leftObj, out var leftResult);
-                    var rightTry = TryLossyBoolJudge(rightObj, out var RightResult);
-                    result = (leftTry ^ rightTry) ? false: leftResult == RightResult;
-                    result = isEqualOpt ? result : !result;
-                    return false;
-                }
+                boolResult = false;
                 return false;
             }
 

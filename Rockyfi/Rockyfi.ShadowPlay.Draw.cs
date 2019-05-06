@@ -72,6 +72,9 @@ namespace Rockyfi
 
         void DrawRecursive(float x, float y, Node node, DrawNodeFunc defaultDrawFunc, Dictionary<string, DrawNodeFunc> themeDictionary)
         {
+            if (node == null)
+                return;
+
             var contextAttr = GetNodeRuntimeAttribute(node);
             var drawFunc = themeDictionary != null
                 && themeDictionary.TryGetValue(contextAttr.template.TagName, out var specifyDrawFunc)

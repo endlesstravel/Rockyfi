@@ -1,6 +1,6 @@
 ﻿using System;
 using Love;
-
+using Rockyfi.Expr;
 namespace RockyfiFactory
 {
     class Util
@@ -20,6 +20,43 @@ namespace RockyfiFactory
                 );
             return (System.DateTime.Now.Ticks - now.Ticks) / (float)System.TimeSpan.TicksPerSecond;
         }
+    }
+    
+
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Boot.Init(new BootConfig
+            {
+                WindowResizable = true,
+            });
+            Boot.Run(new SceneHugeList());
+        }
+
+        //static void Main(string[] args)
+        //{
+        //    Boot.Init(new BootConfig
+        //    {
+        //        WindowResizable = true,
+        //    });
+        //    Boot.Run(new SceneNormalXML());
+        //}
+
+        //static void Main(string[] args)
+        //{
+        //    Boot.Init(new BootConfig
+        //    {
+
+        //    });
+        //    Boot.Run(new SceneTestFactory());
+        //}
+
+        //static void Main(string[] args)
+        //{
+        //    new TestProgram().Test();
+        //}
     }
 
 }

@@ -588,18 +588,31 @@ namespace Rockyfi
         /// </summary>
         public void Update()
         {
-            if (bridge != null)
+            if (IsDataDirty)
             {
-                var newRoot = RenderTemplateTreeRoot(templateRoot);
-                var patch = VirtualDom.Patch.Diff(GetNodeRuntimeAttribute(root), GetNodeRuntimeAttribute(newRoot));
-                patch.DoPatch(this, bridge);
-            }
-            else
-            {
-                root = RenderTemplateTreeRoot(templateRoot);
-            }
+                Node newRoot;
+                try
+                {
+                    newRoot = RenderTemplateTreeRoot(templateRoot);
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
 
-            CalculateLayout();
+                if (bridge != null)
+                {
+                    var patch = VirtualDom.Patch.Diff(GetNodeRuntimeAttribute(root), GetNodeRuntimeAttribute(newRoot));
+                    patch.DoPatch(this, bridge);
+                }
+                else
+                {
+                    root = newRoot;
+                }
+
+                CalculateLayout();
+                IsDataDirty = false;
+            }
         }
 
         /// <summary>

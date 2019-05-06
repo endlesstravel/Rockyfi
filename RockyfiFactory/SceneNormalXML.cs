@@ -42,14 +42,5 @@ namespace RockyfiFactory
                 Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, y);
             });
         }
-
-        static void Main(string[] args)
-        {
-            Boot.Init(new BootConfig
-            {
-                WindowResizable = true,
-            });
-            Boot.Run(new SceneNormalXML());
-        }
     }
 }

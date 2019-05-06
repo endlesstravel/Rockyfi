@@ -108,9 +108,5 @@ namespace RockyfiFactory
             Console.WriteLine("--------------");
         }
 
-        static void __Main(string[] args)
-        {
-            new TestProgram().Test();
-        }
     }
 }
