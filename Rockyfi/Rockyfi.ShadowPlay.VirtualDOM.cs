@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -52,12 +53,18 @@ namespace Rockyfi
                     {
                         var pchildren = vNode.node.Parent.Children;
                         int index = pchildren.IndexOf(vNode.node);
+                        // error dected
+                        if (index == -1)
+                        {
+                            UnityEngine.Debug.Log("");
+                        }
                         vPatch.node.Parent = vNode.node.Parent; // change parent
                         pchildren[index] = vPatch.node; // change node
                         vNode.node.Parent.MarkAsDirty();
 
-                        // template
+                        // runtime context
                         vNode.Parent.Children[index] = vPatch;
+                        vPatch.Parent = vNode.Parent;
 
                         // change child
                         if (bridge != null)
@@ -129,6 +136,38 @@ namespace Rockyfi
                     }
                 }
             }
+
+
+            //public class PatchOperateOnceFunc : PatchOperate
+            //{
+            //    readonly internal RuntimeAttribute vNode;
+            //    readonly internal IEnumerable<OnceDataBindExpress> needToExecute, newOnceRocord;
+
+            //    public PatchOperateOnceFunc(RuntimeAttribute original, IEnumerable<OnceDataBindExpress> needToExecute, IEnumerable<OnceDataBindExpress> newOnceRocord)
+            //    {
+            //        this.vNode = original;
+            //        this.needToExecute = needToExecute;
+            //        this.newOnceRocord = newOnceRocord;
+            //    }
+
+            //    public override void DoPatch(ShadowPlay<T> shadowPlay, Bridge<T> bridge)
+            //    {
+            //        // chaneg attr
+            //        if (bridge != null)
+            //        {
+            //            var ctx = new ContextStack(shadowPlay.runtimeContext);
+            //            ctx.Set("this", vNode.element.OnGetThisValue());
+            //            foreach (var onceExpress in needToExecute)
+            //            {
+            //                onceExpress.Evaluate(ctx);
+            //            }
+            //            foreach (var onceExpress in newOnceRocord)
+            //            {
+            //                vNode.onceExecuteFunc.Add(onceExpress);
+            //            }
+            //        }
+            //    }
+            //}
 
             public class PatchOperateProperties : PatchOperate
             {
@@ -307,6 +346,14 @@ namespace Rockyfi
                     }
                     else if (a.template.TagName == b.template.TagName && a.template.Key == b.template.Key)
                     {
+                        //// diff once function
+                        //var needToExecute = DiffOnceExpresstion(a.onceExecuteFunc, b.onceExecuteFunc);
+                        //if (needToExecute != null)
+                        //{
+                        //    group.Append(new PatchOperateOnceFunc(a, needToExecute, b.onceExecuteFunc));
+                        //}
+
+                        // diff properties
                         var propsPatch = DiffProperties(a.attributes, b.attributes);
                         if (propsPatch != null && propsPatch.Count > 0)
                         {
@@ -321,6 +368,10 @@ namespace Rockyfi
                     else
                     {
                         group.Append(new PatchOperateChange(a, b));
+
+                        //// change the a & b
+                        //// execute once function
+                        //group.Append(new PatchOperateOnceFunc(b, b.template.onceExpressList, b.onceExecuteFunc));
                     }
 
                     if (group.HasChange)
@@ -352,6 +403,9 @@ namespace Rockyfi
                             {
                                 // Excess nodes in b need to be added
                                 group.Append(new PatchOperateInsert(a, rightNode));
+
+                                //// execute once function
+                                //group.Append(new PatchOperateOnceFunc(rightNode, rightNode.template.onceExpressList, rightNode.onceExecuteFunc));
                             }
                         }
                         else
@@ -362,6 +416,16 @@ namespace Rockyfi
                 }
             }
 
+            //static DictionarySet<OnceDataBindExpress> DiffOnceExpresstion(DictionarySet<OnceDataBindExpress> original, DictionarySet<OnceDataBindExpress> newborn)
+            //{
+            //    var needToExcute = new DictionarySet<OnceDataBindExpress>();
+            //    foreach (var item in newborn)
+            //    {
+            //        if (original.Contains(item) == false)
+            //            needToExcute.Add(item);
+            //    }
+            //    return needToExcute.Count > 0 ? needToExcute : null;
+            //}
 
             /// <summary>
             /// return null when there no different on vnode.

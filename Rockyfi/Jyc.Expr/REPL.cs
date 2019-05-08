@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rockyfi.Expr
 {
-    class REPL
+    public class REPL
     {
         public static void RunConsoleREPL()
         {

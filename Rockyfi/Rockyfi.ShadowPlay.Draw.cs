@@ -179,6 +179,10 @@ namespace Rockyfi
         public abstract void OnRemoveAt(int index);
         public abstract void OnRemove(T child);
         public abstract void OnAfterCreated();
+        public virtual object OnGetThisValue()
+        {
+            return this;
+        }
 
         #region other properties
         internal Node node;

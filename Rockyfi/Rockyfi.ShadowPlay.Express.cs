@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace Rockyfi
 {
+    #region advance lex parser
     // simple lex
     // copy from lua 5.3 :
     // Numeral ::= [0-9]+ | [0-9]*.[0-9]+
@@ -216,8 +217,8 @@ namespace Rockyfi
             }
         }
     }
-
     // TODO : write test ......
+    #endregion
 
     public partial class ShadowPlay<T> where T: BridgeElement<T>
     {
@@ -273,6 +274,8 @@ namespace Rockyfi
         }
 
 
+
+
         /// <summary>
         /// 11  : int
         /// 11.11  : float
@@ -321,16 +324,42 @@ namespace Rockyfi
         }
 
 
+        ///// <summary>
+        ///// el-once="xxxxxx"
+        ///// </summary>
+        //internal class OnceDataBindExpress
+        //{
+        //    string express;
+        //    ObjectDataBindExpress objectExpress = null;
+
+        //    /// <summary>
+        //    /// fail return null
+        //    /// </summary>
+        //    /// <returns></returns>
+        //    public static OnceDataBindExpress Parse(string express)
+        //    {
+        //        var onceExpress = new OnceDataBindExpress();
+        //        onceExpress.express = express;
+        //        onceExpress.objectExpress = ObjectDataBindExpress.Parse(express);
+        //        return onceExpress.objectExpress != null ? onceExpress : null;
+        //    }
+
+        //    public void Evaluate(ContextStack contextStack)
+        //    {
+        //        objectExpress.TryEvaluate(contextStack, out var _);
+        //    }
+        //}
+
         /// <summary>
         /// xxxxx {{ item.desc }} xxxxxx yyyyyy
         /// </summary>
         internal class TextDataBindExpress
         {
-            private TextDataBindExpress(LinkedList<TextToken> list)
+            private TextDataBindExpress(List<TextToken> list)
             {
                 this.tokensList = list;
             }
-            readonly LinkedList<TextToken> tokensList;
+            readonly List<TextToken> tokensList;
             struct TextToken
             {
                 internal readonly bool IsText;
@@ -348,61 +377,110 @@ namespace Rockyfi
                     this.Express = express;
                     this.Text = null;
                 }
+
             }
 
-            struct BracesPos
+            struct RawTextToken
             {
-                public readonly int index;
-                public readonly int lenght;
-                public readonly string value;
-                public BracesPos(int p, int l, string v) { this.index = p; this.lenght = l;  value = v; }
-            }
+                public readonly char value;
+                public readonly int type; // 0 == char, -1 => {{,  1 => }}
+                public RawTextToken(int t, char c) { value = c; type = t;  }
 
-            // TODO: improve performance without regex
-            static Regex bindTextRegex = new Regex(@"(?<!\{)\{\{\s*(([_a-zA-Z][_\w]*)(\.([_a-zA-Z][_\w]*))*)\s*\}\}(?!\})");
-            static LinkedList<BracesPos> MatchIndex(string input)
-            {
-                var list = new LinkedList<BracesPos>();
-                var m = bindTextRegex.Match(input);
-                while (m.Success)
+                public override string ToString()
                 {
-                    list.AddLast(new BracesPos(m.Index, m.Length, m.Groups[2].Value));
-                    m = m.NextMatch();
+                    if (type == 0)
+                        return value.ToString();
+                    if (type == -1)
+                        return "{{";
+                    return "}}";
                 }
-                return list;
+
+
+                public static string ToString(List<RawTextToken> list, int start, int length)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    int endIndex = start + length;
+                    for (int i = start; i < list.Count && i < endIndex; i++)
+                        sb.Append(list[i]);
+                    return sb.ToString();
+                }
             }
 
             /// <summary>
             /// fail return null
             /// </summary>
             /// <returns></returns>
-            public static TextDataBindExpress Parse(string text)
+            public static TextDataBindExpress Parse(string input)
             {
-                LinkedList<TextToken> tokensList = new LinkedList<TextToken>();
-                var splitList = MatchIndex(text);
-                if (splitList.Count == 0)
-                {
+                if (input == null || "".Equals(input))
                     return null;
-                }
-                int index = 0;
-                foreach (var pos in splitList)
+
+                List<RawTextToken> rawList = new List<RawTextToken>();
+                for (int i = 0; i < input.Length; i++)
                 {
-                    tokensList.AddLast(new TextToken(text.Substring(index, pos.index - index)));
-                    var objExpress = ObjectDataBindExpress.Parse(pos.value);
-                    if (objExpress != null)
+                    var curr = input[i];
+                    if (curr == '{' && i + 1 < input.Length && input[i + 1] == '{')
                     {
-                        tokensList.AddLast(new TextToken(objExpress));
+                        rawList.Add(new RawTextToken(-1, ' '));
+                        i++;
+                    }
+                    else if (curr == '}' && i + 1 < input.Length && input[i + 1] == '}')
+                    {
+                        rawList.Add(new RawTextToken(1, ' '));
+                        i++;
                     }
                     else
                     {
-                        tokensList.AddLast(new TextToken($"{{{pos.value}}}"));
+                        rawList.Add(new RawTextToken(0, curr));
                     }
-                    index = pos.index + pos.lenght;
                 }
-                if (index < text.Length)
-                    tokensList.AddLast(new TextToken(text.Substring(index, text.Length - index)));
 
-                return new TextDataBindExpress(tokensList);
+                // RawTextToken to TextToken
+                List<TextToken> tokenList = new List<TextToken>();
+                for (int i = 0; i < rawList.Count;)
+                {
+                    if (rawList[i].type == -1)
+                    {
+                        int startIndex = i + 1;
+                        i++;
+                        while (i < rawList.Count && rawList[i].type != 1)
+                        {
+                            i++;
+                        }
+
+                        var str = RawTextToken.ToString(rawList, startIndex, i - startIndex);
+                        if (i == rawList.Count) // EOF
+                        {
+                            // normal text
+                            tokenList.Add(new TextToken(str));
+                            break;
+                        }
+
+                        var express = ObjectDataBindExpress.Parse(str);
+                        if (express != null)
+                        {
+                            tokenList.Add(new TextToken(express));
+                        }
+
+                        i++;
+                    }
+                    else
+                    {
+                        int startIndex = i;
+                        while (i < rawList.Count && rawList[i].type != -1)
+                        {
+                            i++;
+                        }
+                        int length = i - startIndex;
+                        if (length > 0)
+                        {
+                            var str = RawTextToken.ToString(rawList, startIndex, length);
+                            tokenList.Add(new TextToken(str));
+                        }
+                    }
+                }
+
+                return tokenList.Count > 0 ? new TextDataBindExpress(tokenList) : null;
             }
 
             public string Evaluate(ContextStack contextStack)
@@ -496,9 +574,9 @@ namespace Rockyfi
             /// faild parse return null, otherwise return IEnumerable<object>
             /// </summary>
             /// <returns></returns>
-            public IEnumerable<object> Evaluate(ContextStack contextStack)
+            public System.Collections.IEnumerable Evaluate(ContextStack contextStack)
             {
-                return objectExpress.TryEvaluate(contextStack, out var result) ? (result as IEnumerable<object>) : null;
+                return objectExpress.TryEvaluate(contextStack, out var result) ? (result as System.Collections.IEnumerable) : null;
             }
         }
 

@@ -5,7 +5,7 @@ namespace Rockyfi
 {
     public partial class ShadowPlay<T> where T: BridgeElement<T>
     {
-        internal class ContextStack : Expr.IVariableHolder
+        public class ContextStack : Expr.IVariableHolder
         {
             // TODO : we can do more optimization here !
             // Sparse linked list access.

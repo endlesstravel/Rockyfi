@@ -20,6 +20,7 @@ namespace Rockyfi
             internal ForDataBindExpress forExpress = null;
             internal TextDataBindExpress textDataBindExpress = null;
             internal readonly LinkedList<AttributeDataBindExpress> attributeDataBindExpressList = new LinkedList<AttributeDataBindExpress>();
+            //internal readonly LinkedList<OnceDataBindExpress> onceExpressList = new LinkedList<OnceDataBindExpress>();
             internal readonly Style nodeStyle = new Style();
             internal readonly Dictionary<string, string> attributes = new Dictionary<string, string>();
             internal readonly List<TemplateNode> Children = new List<TemplateNode>();
@@ -89,6 +90,7 @@ namespace Rockyfi
             public bool IsDirty = false;
             internal object forExpressItemCurrentValue = null;
             internal string textDataBindExpressCurrentValue = null;
+            //internal DictionarySet<OnceDataBindExpress> onceExecuteFunc = new DictionarySet<OnceDataBindExpress>(); // alread execute
             internal readonly Dictionary<AttributeDataBindExpress, object> attributes = new Dictionary<AttributeDataBindExpress, object>();
             internal Dictionary<string, object> StringAttr
             {
@@ -170,10 +172,34 @@ namespace Rockyfi
             return targetProperties.Contains(key);
         }
 
-        ContextStack GenerateContextStack()
+        public ContextStack GenerateContextStack()
         {
             return new ContextStack(runtimeContext);
         }
+
+        //public RuntimeContext GenerateRuntimeContext()
+        //{
+        //    return new RuntimeContext(runtimeContext);
+        //}
+
+        //public class RuntimeContext : Expr.IVariableHolder
+        //{
+        //    readonly Dictionary<string, object> dict = new Dictionary<string, object>();
+
+        //    public RuntimeContext(Dictionary<string, object> dict)
+        //    {
+        //        this.dict = dict;
+        //    }
+        //    public bool Exists(string name)
+        //    {
+        //        return dict.ContainsKey(name);
+        //    }
+
+        //    public object GetVariable(string name)
+        //    {
+        //        return dict.TryGetValue(name, out var value) ? value : null;
+        //    }
+        //}
 
         public bool IsDataDirty { get; set; }
 

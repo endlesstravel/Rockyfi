@@ -425,4 +425,30 @@ namespace Rockyfi
 
         public int Count { get { return dataDict.Count; } }
     }
+
+    internal class DictionarySet<T>: IEnumerable<T>
+    {
+        private Dictionary<T, bool> dict = new Dictionary<T, bool>();
+        public void Add(T value)
+        {
+            dict.Add(value, true);
+        }
+
+        public bool Contains(T key)
+        {
+            return dict.ContainsKey(key);
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return dict.Keys.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return dict.Keys.GetEnumerator();
+        }
+
+        public int Count => dict.Count;
+    }
 }

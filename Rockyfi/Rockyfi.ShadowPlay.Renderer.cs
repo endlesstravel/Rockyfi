@@ -14,6 +14,7 @@ namespace Rockyfi
         public ShadowPlay() { }
         const string ForELAttributeName = "el-for";
         const string IfELAttributeName = "el-if";
+        const string OnceELAttributeName = "el-once";
         const string BindELAttributePrefix = "el-bind";
 
         XmlDocument xmlDocument;
@@ -315,7 +316,7 @@ namespace Rockyfi
         {
             LinkedList<Node> nodeList = new LinkedList<Node>();
             bool useFor = tnode.forExpress != null;
-            IEnumerable<object> forList = useFor ? tnode.forExpress.Evaluate(contextStack) : new List<object> { 0 };
+            System.Collections.IEnumerable forList = useFor ? tnode.forExpress.Evaluate(contextStack) : new List<object> { 0 };
             if (forList != null)
             {
                 foreach (object forContext in forList)
@@ -504,6 +505,14 @@ namespace Rockyfi
                 {
                     renderTreeNode.ifExpress = IfDataBindExpress.Parse(attr.Value);
                 }
+                //else if (OnceELAttributeName.Equals(attr.Name)) // process el-once
+                //{
+                //    var onceExpress = OnceDataBindExpress.Parse(attr.Value);
+                //    if (onceExpress != null)
+                //    {
+                //        renderTreeNode.onceExpressList.AddLast(onceExpress);
+                //    }
+                //}
                 else if (BindELAttributePrefix.Equals(attr.Prefix)) // process el-bind:width="item.width"
                 {
                     var attrExpress = AttributeDataBindExpress.Parse(attr.Value, attr.LocalName);
@@ -590,16 +599,7 @@ namespace Rockyfi
         {
             if (IsDataDirty)
             {
-                Node newRoot;
-                try
-                {
-                    newRoot = RenderTemplateTreeRoot(templateRoot);
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
-
+                Node newRoot = RenderTemplateTreeRoot(templateRoot);
                 if (bridge != null)
                 {
                     var patch = VirtualDom.Patch.Diff(GetNodeRuntimeAttribute(root), GetNodeRuntimeAttribute(newRoot));
@@ -623,7 +623,7 @@ namespace Rockyfi
             root.CalculateLayout(MaxWidth, MaxHeight, Direction);
         }
 
-        public void Build(string xml, params string[] properties)
+        public void Build(string xml, IEnumerable<string> properties)
         {
             using (StringReader stringReader = new StringReader(xml))
             {

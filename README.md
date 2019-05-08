@@ -123,6 +123,7 @@ support props, most attributes are covered in this [Guide](https://css-tricks.co
 
 | name                  |  example             |
 ----------------------- |-----------------------
+| overflow              |  visible / hidden /  scroll |
 | position              |  relative / absolute            |
 | align-content         |  auto / flex-start / center / flex-end / stretch / baseline / space-between / space-around                     |
 | align-items           |  auto / flex-start / center / flex-end / stretch / baseline / space-between / space-around                   |
@@ -156,6 +157,7 @@ support props, most attributes are covered in this [Guide](https://css-tricks.co
 | border-right          |  15px                |
 | border-top            |  15px                |
 | border-bottom         |  15px                |
+<!-- | display               |  flex / none                 | -->
 
 
 This `shadow play` is not mean [Shadow Play](https://www.nvidia.com/en-us/geforce/geforce-experience/shadowplay/) but [Shadow Play](https://en.wikipedia.org/wiki/Shadow_play)
