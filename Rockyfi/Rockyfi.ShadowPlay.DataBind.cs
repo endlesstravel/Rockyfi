@@ -227,9 +227,6 @@ namespace Rockyfi
         /// <param name="data"></param>
         public void SetData(string key, object data)
         {
-            if (key == null)
-                return;
-
             if (runtimeContext.TryGetValue(key, out var oldData) && data != null && oldData != null)
             {
                 if (data != null && data.Equals(oldData) || oldData != null && oldData.Equals(data))

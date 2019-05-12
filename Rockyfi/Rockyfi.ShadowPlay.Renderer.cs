@@ -37,7 +37,7 @@ namespace Rockyfi
 
             var res = Value.UndefinedValue;
             string dig = text;
-            Unit uu = Unit.Undefined;
+            Unit uu = Unit.Point;
 
             if (text.EndsWith("%"))
             {
@@ -627,7 +627,7 @@ namespace Rockyfi
         {
             using (StringReader stringReader = new StringReader(xml))
             {
-                XmlReaderSettings settings = new XmlReaderSettings { NameTable = new NameTable() };
+                XmlReaderSettings settings = new XmlReaderSettings { NameTable = new NameTable() , IgnoreComments = true };
                 XmlNamespaceManager xmlns = new XmlNamespaceManager(settings.NameTable);
                 xmlns.AddNamespace(BindELAttributePrefix, "Rockyfi.ShadowPlay");
                 XmlParserContext context = new XmlParserContext(null, xmlns, "", XmlSpace.Default);
@@ -636,11 +636,14 @@ namespace Rockyfi
                 xmlDocument.Load(reader);
 
                 var rootElement = xmlDocument.FirstChild;
-                if (rootElement.Attributes.GetNamedItem(ForELAttributeName) != null)
-                    throw new Exception("root element should not contains 'el-for' attribute !");
+                if (rootElement.Attributes != null)
+                {
+                    if (rootElement.Attributes.GetNamedItem(ForELAttributeName) != null)
+                        throw new Exception("root element should not contains 'el-for' attribute !");
 
-                if (rootElement.Attributes.GetNamedItem(ForELAttributeName) != null)
-                    throw new Exception("root element should not contains 'el-if' attribute !");
+                    if (rootElement.Attributes.GetNamedItem(ForELAttributeName) != null)
+                        throw new Exception("root element should not contains 'el-if' attribute !");
+                }
 
                 // set the properties
                 SetProperties(properties);
