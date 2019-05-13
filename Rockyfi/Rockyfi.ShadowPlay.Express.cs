@@ -316,9 +316,16 @@ namespace Rockyfi
 
             public bool TryEvaluate(ContextStack contextStack, out object result)
             {
-                var evaluater = new Expr.Evaluator();
-                evaluater.VariableHolder = contextStack;
-                result = evaluater.Eval(ast);
+                try
+                {
+                    var evaluater = new Expr.Evaluator();
+                    evaluater.VariableHolder = contextStack;
+                    result = evaluater.Eval(ast);
+                }
+                catch(Exception e)
+                {
+                    throw new Exception($"eval express {express} error: {e.Message}");
+                }
                 return true;
             }
         }

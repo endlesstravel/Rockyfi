@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Rockyfi
 {
@@ -63,7 +62,7 @@ namespace Rockyfi
 
             public void Set(string name, object value)
             {
-                contextStack.Last.Value[name] = Tuple.Create(value);
+                contextStack.Last.Value[name] = value;
             }
 
             public void LeaveScope()
