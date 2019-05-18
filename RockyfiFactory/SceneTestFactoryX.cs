@@ -20,7 +20,7 @@ namespace RockyfiFactory
     </div>
 </div>
 ";
-                userInterface.Build(tmpXML, "list");
+                userInterface.Build(tmpXML);
                 userInterface.SetBridge(bridge);
                 userInterface.SetData("list", new List<string> { "a3" });
                 userInterface.Update();

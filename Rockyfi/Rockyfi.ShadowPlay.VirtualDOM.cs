@@ -53,11 +53,7 @@ namespace Rockyfi
                     {
                         var pchildren = vNode.node.Parent.Children;
                         int index = pchildren.IndexOf(vNode.node);
-                        // error dected
-                        if (index == -1)
-                        {
-                            UnityEngine.Debug.Log("");
-                        }
+
                         vPatch.node.Parent = vNode.node.Parent; // change parent
                         pchildren[index] = vPatch.node; // change node
                         vNode.node.Parent.MarkAsDirty();

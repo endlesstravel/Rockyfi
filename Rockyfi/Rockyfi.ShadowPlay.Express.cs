@@ -322,9 +322,9 @@ namespace Rockyfi
                     evaluater.VariableHolder = contextStack;
                     result = evaluater.Eval(ast);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    throw new Exception($"eval express {express} error: {e.Message}");
+                    throw new Exception($"eval express `{express}` error: {e.Message}", e);
                 }
                 return true;
             }

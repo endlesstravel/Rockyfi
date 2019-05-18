@@ -34,7 +34,7 @@ namespace RockyfiFactory
     </div>
 </div>
 ";
-            userInterface.Build(tmpXML3, "styleObj", "w", "mt", "pt", "list");
+            userInterface.Build(tmpXML3);
             userInterface.SetBridge(printer);
         }
 

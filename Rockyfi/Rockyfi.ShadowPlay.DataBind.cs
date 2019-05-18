@@ -158,19 +158,19 @@ namespace Rockyfi
         }
 
         readonly Dictionary<string, object> runtimeContext = new Dictionary<string, object>();
-        readonly LiteSet<string> targetProperties = new LiteSet<string>();
-        public void SetProperties(IEnumerable<string> properties)
-        {
-            foreach (var props in properties)
-            {
-                this.targetProperties.Add(props);
-            }
-        }
+        //readonly LiteSet<string> targetProperties = new LiteSet<string>();
+        //public void SetProperties(IEnumerable<string> properties)
+        //{
+        //    foreach (var props in properties)
+        //    {
+        //        this.targetProperties.Add(props);
+        //    }
+        //}
 
-        public bool ContainsProperties(string key)
-        {
-            return targetProperties.Contains(key);
-        }
+        //public bool ContainsProperties(string key)
+        //{
+        //    return targetProperties.Contains(key);
+        //}
 
         public ContextStack GenerateContextStack()
         {

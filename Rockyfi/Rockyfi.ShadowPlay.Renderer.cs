@@ -623,7 +623,7 @@ namespace Rockyfi
             root.CalculateLayout(MaxWidth, MaxHeight, Direction);
         }
 
-        public void Build(string xml, IEnumerable<string> properties)
+        public void Build(string xml)
         {
             using (StringReader stringReader = new StringReader(xml))
             {
@@ -645,9 +645,6 @@ namespace Rockyfi
                         throw new Exception("root element should not contains 'el-if' attribute !");
                 }
 
-                // set the properties
-                SetProperties(properties);
-
                 // convert to tree
                 templateRoot = ConvertXmlToTemplate(rootElement);
             }
@@ -658,11 +655,11 @@ namespace Rockyfi
             return NodePrinter.PrintToString(root);
         }
 
-        public static ShadowPlay<T> BuildStage(string xml, params string[] properties)
-        {
-            var factory = new ShadowPlay<T>();
-            factory.Build(xml, properties);
-            return factory;
-        }
+        //public static ShadowPlay<T> BuildStage(string xml, params string[] properties)
+        //{
+        //    var factory = new ShadowPlay<T>();
+        //    factory.Build(xml);
+        //    return factory;
+        //}
     }
 }

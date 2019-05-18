@@ -14,7 +14,7 @@ namespace RockyfiFactory
     <div el-for=""itemId in listData"" width=""150px"" height=""100px"" el-bind:id=""itemId""/>
 </div>
 ";
-            stage.Build(tmpXML, "listData", "w", "h");
+            stage.Build(tmpXML);
             stage.SetData("listData", new List<string>
             {
                 "child-0", "child-1", "child-2", "child-3", "child-4",

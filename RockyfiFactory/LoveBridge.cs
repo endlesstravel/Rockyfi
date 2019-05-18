@@ -220,7 +220,7 @@ namespace RockyfiFactory
             var initData = DefineInitialData();
             List<string> properties = new List<string>();
             properties.AddRange(initData.Keys);
-            shadowPlay.Build(schema, properties.ToArray());
+            shadowPlay.Build(schema);
             shadowPlay.SetData(initData);
             bridge = new LoveBridge();
             shadowPlay.SetBridge(bridge);

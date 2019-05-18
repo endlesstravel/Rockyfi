@@ -39,7 +39,7 @@ namespace RockyfiFactory
     </div>
 </div>
 ";
-            userInterface.Build(tmpXML, "styleObj", "w", "mt", "pt", "list");
+            userInterface.Build(tmpXML);
             userInterface.SetData(new Dictionary<string, object>()
             {
                 { "styleObj", this},

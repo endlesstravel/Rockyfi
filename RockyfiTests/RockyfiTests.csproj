@@ -54,7 +54,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="MyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rockyfi.test.cs" />
   </ItemGroup>

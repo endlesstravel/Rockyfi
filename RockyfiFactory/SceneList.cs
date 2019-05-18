@@ -18,7 +18,7 @@ namespace RockyfiFactory
 </div>
 </root>";
             stage = new ShadowPlaySimple();
-            stage.Build(tmpXML3List, "styleObj", "w", "mt", "pt", "list");
+            stage.Build(tmpXML3List);
             stage.SetData(new Dictionary<string, object>()
             {
                 { "styleObj", this},
