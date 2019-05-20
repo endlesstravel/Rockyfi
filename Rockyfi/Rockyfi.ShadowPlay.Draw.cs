@@ -139,11 +139,25 @@ namespace Rockyfi
             var ra = CreateRuntimeNodeAttribute(root, templateRoot);
 
             // copy style
-            ProcessStyleBind(root, GenerateContextStack());
+            var ctxs = GenerateContextStack();
+            ProcessStyleBind(root, ctxs);
+
+            // el-bind
+            var elBindDict = new Dictionary<string, object>();
+            if (templateRoot.attributeDataBindExpressList != null)
+            {
+                foreach (var attr in templateRoot.attributeDataBindExpressList)
+                {
+                    if (attr.TryEvaluate(ctxs, out var obj))
+                    {
+                        elBindDict[attr.TargetName] = obj;
+                    }
+                }
+            }
 
             var eleRoot = bridge.CreateElement(root,
                 templateRoot.TagName,
-                new Dictionary<string, object>());
+                elBindDict);
             ra.element = eleRoot;
             bridge.OnSetRoot(eleRoot);
         }

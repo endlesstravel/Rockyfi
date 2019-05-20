@@ -540,6 +540,11 @@ namespace Rockyfi
             {
                 return objectExpress.TryEvaluate(contextStack, out result);
             }
+
+            public override string ToString()
+            {
+                return base.ToString() + "   expres : " + express;
+            }
         }
 
         /// <summary>

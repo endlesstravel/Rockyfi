@@ -100,7 +100,7 @@ namespace Rockyfi.Expr
                 return new Result(fi.FieldType, fi.GetValue(target));
             }
 
-            throw new ArgumentException();
+            throw new ArgumentException($" can't find {memberName} of {type}");
 
         }
 

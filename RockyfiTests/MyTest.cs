@@ -15,14 +15,19 @@ namespace MyTest
             var root = Flex.CreateDefaultNode();
             root.StyleSetWidth(100);
             root.StyleSetHeight(100);
-            //root.StyleSetMarginPercent(Edge.Start, 10);
             root.StyleSetMargin(Edge.Left, 10);
             root.StyleSetMargin(Edge.Top, 20);
+            root.StyleSetPadding(Edge.Top, 20);
+
+            var child1 = Flex.CreateDefaultNode();
+            root.AddChild(child1);
+            child1.StyleSetMargin(Edge.Top, 5);
+
 
             Flex.CalculateLayout(root, 100, 100, Direction.LTR);
 
             Assert.AreEqual(10, root.LayoutGetLeft());
-            Assert.AreEqual(20, root.LayoutGetTop());
+            Assert.AreEqual(25, child1.LayoutGetTop());
 
         }
 

@@ -236,7 +236,7 @@ namespace Rockyfi
                     // parse [margin|padding|border]-[Edgexxxx]
                     if (ParseBreakWork(attrKey, out string head, out string tail))
                     {
-                        if (head == "margin" || head == "padding" || head == "border")
+                        if (head == "margin" || head == "padding" || head == "border" || head == "pos")
                         {
                             if (tail == "")
                             {
@@ -597,6 +597,7 @@ namespace Rockyfi
         /// </summary>
         public void Update()
         {
+
             if (IsDataDirty)
             {
                 Node newRoot = RenderTemplateTreeRoot(templateRoot);
@@ -652,6 +653,12 @@ namespace Rockyfi
 
         public override string ToString()
         {
+            //var sb = new System.Text.StringBuilder();
+            //foreach (var elb in templateRoot.attributeDataBindExpressList)
+            //{
+            //    sb.AppendLine(elb.ToString());
+            //}
+            //return sb.ToString();
             return NodePrinter.PrintToString(root);
         }
 

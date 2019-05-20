@@ -107,6 +107,14 @@ namespace Rockyfi
                     StyleSetBorder(edge, value.value);
                 else StyleSetBorder(edge, float.NaN);
             }
+            else if (tag == "pos")
+            {
+                if (value.unit == Unit.Percent)
+                    StyleSetPositionPercent(edge, value.value);
+                else if (value.unit == Unit.Point)
+                    StyleSetPosition(edge, value.value);
+                else StyleSetPosition(edge, float.NaN);
+            }
         }
     }
 
