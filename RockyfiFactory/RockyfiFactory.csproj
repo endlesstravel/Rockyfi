@@ -53,7 +53,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rockyfi\Rockyfi.csproj">
+    <ProjectReference Include="..\project_vs2017\Rockyfi.csproj">
       <Project>{f7fc3df2-02e0-4889-a806-e23f6b4921c6}</Project>
       <Name>Rockyfi</Name>
     </ProjectReference>
@@ -76,16 +76,16 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Love2dCS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\Rockyfi\packages\Love2dCS.11.0.26\lib\net40\Love2dCS.dll</HintPath>
+      <HintPath>..\project_vs2017\packages\Love2dCS.11.0.26\lib\net40\Love2dCS.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\Rockyfi\packages\Love2dCS.11.0.26\build\Love2dCS.targets" Condition="Exists('..\Rockyfi\packages\Love2dCS.11.0.26\build\Love2dCS.targets')" />
+  <Import Project="..\project_vs2017\packages\Love2dCS.11.0.26\build\Love2dCS.targets" Condition="Exists('..\project_vs2017\packages\Love2dCS.11.0.26\build\Love2dCS.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\Rockyfi\packages\Love2dCS.11.0.26\build\Love2dCS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\Rockyfi\packages\Love2dCS.11.0.26\build\Love2dCS.targets'))" />
+    <Error Condition="!Exists('..\project_vs2017\packages\Love2dCS.11.0.26\build\Love2dCS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\project_vs2017\packages\Love2dCS.11.0.26\build\Love2dCS.targets'))" />
   </Target>
 </Project>

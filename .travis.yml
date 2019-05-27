@@ -1,8 +1,6 @@
 language: csharp
-solution: Rockyfi/Rockyfi.sln
-install:
-  - nuget restore Rockyfi/Rockyfi.sln
-  - nuget install NUnit.Console -Version 3.9.0 -OutputDirectory testrunner
+mono: none
+dotnet: 2.1.502
 script:
-  - msbuild /p:Configuration=Release Rockyfi/Rockyfi.sln
-  - mono ./testrunner/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe ./RockyfiTests/bin/Release/RockyfiTests.dll
+ - cd project_dotnetcore/RockyfiTest
+ - dotnet test
