@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 2.2.105
+dotnet: 2.1.502
 script:
  - cd project_dotnetcore/RockyfiTest
  - dotnet test
