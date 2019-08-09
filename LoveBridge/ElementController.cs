@@ -18,6 +18,9 @@ namespace LoveBridge
             transform = new Transform2D<ElementController>(this);
         }
 
+        public List<ElementController> Children => transform.Children.Select(item => item.Master).ToList();
+        public ElementController Parent => transform.Parent != null ? transform.Parent.Master : null;
+
         /// <summary>
         /// 需要绘制区域
         /// </summary>
@@ -121,17 +124,17 @@ namespace LoveBridge
                 default:
                 case Overflow.Visible:
                     HasScrollOffset = false;
-                    ChildScissor = false;
+                    MaskScissor = false;
                     break;
 
                 case Overflow.Hidden:
                     HasScrollOffset = false;
-                    ChildScissor = true;
+                    MaskScissor = true;
                     break;
 
                 case Overflow.Scroll:
                     HasScrollOffset = true;
-                    ChildScissor = true;
+                    MaskScissor = true;
                     break;
             }
 
@@ -139,20 +142,24 @@ namespace LoveBridge
             if (localSize.Width < childBound.Width)
             {
                 m_scrollOffset.X = Mathf.Clamp(m_scrollOffset.X,  localSize.Width - childBound.Right, 0 );
+                IsHorizontalOverflow = true;
             }
             else
             {
                 m_scrollOffset.X = 0;
+                IsHorizontalOverflow = false;   
             }
 
             // limit vertical
             if (localSize.Height < childBound.Height)
             {
                 m_scrollOffset.Y = Mathf.Clamp(m_scrollOffset.Y, localSize.Height - childBound.Bottom, 0);
+                IsVerticalOverflow = true;
             }
             else
             {
                 m_scrollOffset.Y = 0;
+                IsVerticalOverflow = false;
             }
 
         }
@@ -164,37 +171,42 @@ namespace LoveBridge
         /// <param name="deltaVertical">垂直滚动</param>
         public void UpdateInputScroll(float deltaHorizontal, float deltaVertical)
         {
-            m_scrollOffset -= new Vector2(deltaHorizontal, deltaVertical);
+            m_scrollOffset += new Vector2(deltaHorizontal, deltaVertical) * 20;
         }
+
+        /// <summary>
+        /// 手动设置滚动偏移
+        /// </summary>
+        /// <param name="scrollOffset"></param>
+        public void SetScrollOffset(Vector2 scrollOffset)
+        {
+            m_scrollOffset = scrollOffset;
+        }
+
         #endregion
-
-        /// <summary>
-        /// 指针在本元素按下时调用
-        /// </summary>
-        public void UpdateInputPressed()
-        {
-        }
-
-        /// <summary>
-        /// 指针在本元素释放时调用
-        /// </summary>
-        public void UpdateInputReleased()
-        {
-        }
 
         /// <summary>
         /// 指针在本元素时调用
         /// </summary>
-        public void UpdateInputHoverVisible()
+        public virtual void UpdateInputHoverVisible()
         {
-
         }
 
         /// <summary>
-        /// 指针在本元素或其子元素时调用
+        /// 指针在本元素或其子元素时调用，返回值表示是否继续传递给父元素这个消息
         /// </summary>
-        public void UpdateInputHover()
+        public virtual bool UpdateInputHover()
         {
+            if (
+                (IsHorizontalOverflow && Mathf.Abs(Mouse.GetScrollX()) > 0)
+                || (IsVerticalOverflow && Mathf.Abs(Mouse.GetScrollY()) > 0)
+                )
+            {
+                UpdateInputScroll(Mouse.GetScrollX(), Mouse.GetScrollY());
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -203,9 +215,19 @@ namespace LoveBridge
         public bool HasScrollOffset { get; protected set; } = false;
 
         /// <summary>
+        /// 水平内容是否溢出？
+        /// </summary>
+        public bool IsHorizontalOverflow { get; private set; } = false;
+
+        /// <summary>
+        /// 垂直内容是否溢出？
+        /// </summary>
+        public bool IsVerticalOverflow { get; private set; } = false;
+
+        /// <summary>
         /// 孩子节点是否遮罩剔除
         /// </summary>
-        public bool ChildScissor { get; protected set; } = true;
+        public bool MaskScissor { get; protected set; } = false;
         public Vector2 m_scrollOffset;
         public Vector2 ScrollOffset => HasScrollOffset ? m_scrollOffset : Vector2.Zero;
 

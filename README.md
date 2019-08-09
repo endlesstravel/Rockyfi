@@ -121,42 +121,47 @@ namespace RockyfiFactory
 ```
 support props, most attributes are covered in this [Guide](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
 
-| name                  |  example             |
------------------------ |-----------------------
-| overflow              |  visible / hidden /  scroll |
-| position              |  relative / absolute            |
-| align-content         |  auto / flex-start / center / flex-end / stretch / baseline / space-between / space-around                     |
-| align-items           |  auto / flex-start / center / flex-end / stretch / baseline / space-between / space-around                   |
-| align-self            |  auto / flex-start / center / flex-end / stretch / baseline / space-between / space-around                   |
-| flex-direction        |  column / column-reverse / row / row-reverse |
-| flex-wrap             |  no-wrap / wrap / wrap-reverse                    |
-| flex-basis            |  15px / 30%          |
-| flex                  |  5 / -3.2            |
-| flex-shrink           |  5 / -3.2            |
-| flex-grow             |  5 / -3.2            |
-| justify-content       |  flex-start / center / flex-end / space-between / space-around                    |
-| direction             |  inherit / ltr / rtl                    |
-| width                 |  10 / 15px / 30% / auto         |
-| height                |  10 / 15px / 30% / auto         |
-| min-width             |  10 / 15px / 30% / auto         |
-| min-height            |  10 / 15px / 30% / auto         |
-| max-width             |  10 / 15px / 30% / auto         |
-| max-height            |  10 / 15px / 30% / auto         |
-| margin                |  10 / 1px / 1px 2px 3px 4px / 2px 3px  / auto   |
-| margin-left           |  10 / 15px / auto          |
-| margin-right          |  10 / 15px / auto          |
-| margin-top            |  10 / 15px / auto          |
-| margin-bottom         |  10 / 15px / auto          |
-| padding               |  10 / 1px / 1px 2px 3px 4px / 2px 3px / auto   |
-| padding-left          |  10 / 15px / auto          |
-| padding-right         |  10 / 15px / auto          |
-| padding-top           |  10 / 15px / auto          |
-| padding-bottom        |  10 / 15px / auto          |
-| border                |  10 / 1px / 1px 2px 3px 4px / 2px 3px / auto   |
-| border-left           |  10 / 15px / auto           |
-| border-right          |  10 / 15px / auto           |
-| border-top            |  10 / 15px / auto           |
-| border-bottom         |  10 / 15px / auto           |
+| name                  |default     |  example             |
+----------------------- |------------|-----------------------
+| overflow              | visible    |  visible / hidden / scroll |
+| position              | relative   |  relative / absolute            |
+| align-content         | auto       |  auto / flex-start / center / flex-end / stretch / baseline / space-between / space-around       |
+| align-items           | auto       |  auto / flex-start / center / flex-end / stretch / baseline / space-between / space-around       |
+| align-self            | auto       |  auto / flex-start / center / flex-end / stretch / baseline / space-between / space-around       |
+| flex-direction        | column     |  column / column-reverse / row / row-reverse |
+| flex-wrap             | no-wrap    |  no-wrap / wrap / wrap-reverse                    |
+| flex-basis            | auto       |  15px / 30%          |
+| flex                  | auto       |  5 / -3.2            |
+| flex-shrink           | auto       |  5 / -3.2            |
+| flex-grow             | auto       |  5 / -3.2            |
+| justify-content       | flex-start |  flex-start / center / flex-end / space-between / space-around                    |
+| direction             | inherit    |  inherit / ltr / rtl                    |
+| width                 | auto       |  10 / 15px / 30% / auto         |
+| height                | auto       |  10 / 15px / 30% / auto         |
+| min-width             | auto       |  10 / 15px / 30% / auto         |
+| min-height            | auto       |  10 / 15px / 30% / auto         |
+| max-width             | auto       |  10 / 15px / 30% / auto         |
+| max-height            | auto       |  10 / 15px / 30% / auto         |
+| pos                   | auto       |  10 / 1px / 1px 2px 3px 4px / 2px 3px  / auto  |
+| pos-left              | auto       |  10 / 15px / auto          |
+| pos-right             | auto       |  10 / 15px / auto          |
+| pos-top               | auto       |  10 / 15px / auto          |
+| pos-bottom            | auto       |  10 / 15px / auto          |
+| margin                | auto       |  10 / 1px / 1px 2px 3px 4px / 2px 3px  / auto   |
+| margin-left           | auto       |  10 / 15px / auto          |
+| margin-right          | auto       |  10 / 15px / auto          |
+| margin-top            | auto       |  10 / 15px / auto          |
+| margin-bottom         | auto       |  10 / 15px / auto          |
+| padding               | auto       |  10 / 1px / 1px 2px 3px 4px / 2px 3px / auto   |
+| padding-left          | auto       |  10 / 15px / auto          |
+| padding-right         | auto       |  10 / 15px / auto          |
+| padding-top           | auto       |  10 / 15px / auto          |
+| padding-bottom        | auto       |  10 / 15px / auto          |
+| border                | auto       |  10 / 1px / 1px 2px 3px 4px / 2px 3px / auto   |
+| border-left           | auto       |  10 / 15px / auto           |
+| border-right          | auto       |  10 / 15px / auto           |
+| border-top            | auto       |  10 / 15px / auto           |
+| border-bottom         | auto       |  10 / 15px / auto           |
 <!-- | display               |  flex / none                 | -->
 
 

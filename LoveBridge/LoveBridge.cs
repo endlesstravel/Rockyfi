@@ -59,37 +59,6 @@ namespace LoveBridge
             }
         }
 
-        public void Draw(float x, float y, DrawNodeDelegate drawNodeFunc)
-        {
-            if (drawNodeFunc == null)
-                throw new System.ArgumentNullException("drawNodeFunc");
-
-            Queue<Element> queue = new Queue<Element>();
-            queue.Enqueue(root);
-            while (queue.Count != 0)
-            {
-                var ele = queue.Dequeue();
-                if (ele != null)
-                {
-                    GetLeftTop(ele, out var l, out var t);
-                    drawNodeFunc(l + x, t + y,
-                        ele.LayoutGetWidth(), ele.LayoutGetHeight(),
-                        ele.GetText(),
-                        ele.Attributes // contextAttr.attributes ???
-                        );
-                    foreach (var child in ele.Children)
-                    {
-                        queue.Enqueue(child);
-                    }
-                }
-            }
-        }
-
-        public void Recursive(Element element)
-        {
-
-        }
-
         public void Update()
         {
             Queue<Element> queue = new Queue<Element>();
@@ -172,30 +141,30 @@ namespace LoveBridge
 
         public RectangleF GetChildrenBound()
         {
-            RectangleF bound = new RectangleF();
-            bound.X = LayoutGetLeft();
-            bound.Y = LayoutGetTop();
+            float xmin = LayoutGetLeft(), xmax = LayoutGetLeft();
+            float ymin = LayoutGetTop(), ymax = LayoutGetTop();
 
             if (Children.Count > 1) // 初始化...
             {
                 var c = Children[0];
-                bound.X = c.LayoutGetLeft();
-                bound.Y = c.LayoutGetTop();
-                bound.Width = c.LayoutGetWidth();
-                bound.Height = c.LayoutGetHeight();
+                xmin = c.LayoutGetLeft();
+                ymin = c.LayoutGetTop();
+                xmax = xmin + c.LayoutGetWidth();
+                ymax = ymin + c.LayoutGetHeight();
             }
             for (int i = 1; i < Children.Count; i++)
             {
                 var c = Children[i];
-                bound.Left = c.LayoutGetLeft() < bound.Left ? c.LayoutGetLeft() : bound.Left;
-                bound.Top = c.LayoutGetTop() < bound.Top ? c.LayoutGetTop() : bound.Top;
+                xmin = Mathf.Min(c.LayoutGetLeft(), xmin);
+                ymin = Mathf.Min(c.LayoutGetTop(), ymin);
 
                 var right = c.LayoutGetLeft() + c.LayoutGetWidth();
                 var bottom = c.LayoutGetTop() + c.LayoutGetHeight();
-                bound.Right = right > bound.Right ? right : bound.Right;
-                bound.Bottom = bottom > bound.Bottom ? bottom : bound.Bottom;
+                xmax = Mathf.Max(right, xmax);
+                ymax = Mathf.Max(bottom, ymax);
             }
-            return bound;
+
+            return new RectangleF(xmin, ymin, xmax - xmin, ymax - ymin);
         }
 
         public void UpdateScroll()

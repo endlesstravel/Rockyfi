@@ -1,4 +1,5 @@
-﻿using Rockyfi;
+﻿using Love;
+using Rockyfi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,31 +121,61 @@ namespace LoveBridge
             #endregion
         }
 
+        public class DeepMaskBean
+        {
+            public readonly int Deep;
+            public readonly ElementController Ele;
+            public readonly bool HasMask;
+            public readonly RectangleF Mask;
+
+            /// <summary>
+            /// 是否在遮罩外
+            /// </summary>
+            public bool IsOutOfMask => HasMask && Ele.Rect.IntersectsWith(Mask) == false;
+
+            public DeepMaskBean(int deep, ElementController ele, bool hasMask, RectangleF mask)
+            {
+                Deep = deep;
+                Ele = ele;
+                HasMask = hasMask;
+                Mask = mask;
+            }
+
+            public override string ToString()
+            {
+                return base.ToString() + $", Deep:{Deep}, Ele:{Ele}";
+            }
+        }
+
         /// <summary>
         /// 根据深度排序其子节点
         /// </summary>
         /// <returns></returns>
-        public List<ElementController> ListNodesByDeep()
+        public List<DeepMaskBean> ListNodesByDeep()
         {
             // 根据深度排序其子节点
-            Queue<Tuple<int, ElementController>> queue = new Queue<Tuple<int, ElementController>>();
-            queue.Enqueue(Tuple.Create(0, (ElementController)this));
+            Queue<DeepMaskBean> queue = new Queue<DeepMaskBean>();
 
-            //
-            SortedList<int, ElementController> list = new SortedList<int, ElementController>(new DuplicateKeyComparer<int>());
+            float maxSize = 999999;
+            queue.Enqueue(new DeepMaskBean(0, this, MaskScissor, new RectangleF(
+                -maxSize/2, -maxSize/2, maxSize, maxSize)));
+
+            SortedList<int, DeepMaskBean> list = new SortedList<int, DeepMaskBean>(new DuplicateKeyComparer<int>());
 
             while (queue.Count > 0)
             {
                 var te = queue.Dequeue();
-                if (te.Item2.Visible)
+                if (te.Ele.Visible)
                 {
-                    list.Add(te.Item1, te.Item2);
-                    foreach (var child in te.Item2.transform.Children)
+                    list.Add(te.Deep, te);
+
+                    foreach (var child in te.Ele.Children)
                     {
-                        if (child.Master.Visible)
+                        if (child.Visible)
                         {
-                            var tec = Tuple.Create(te.Item1 + 1, child.Master);
-                            list.Add(tec.Item1, tec.Item2);
+                            bool hasMask = child.MaskScissor || te.HasMask;
+                            var mask = child.MaskScissor ? RectangleF.Intersect(te.Mask, child.Rect) : te.Mask;
+                            var tec = new DeepMaskBean(te.Deep + 1, child, hasMask, mask);
                             queue.Enqueue(tec);
                         }
                     }
