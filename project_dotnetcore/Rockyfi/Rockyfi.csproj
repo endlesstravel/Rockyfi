@@ -60,6 +60,8 @@
     <Compile Include="..\..\Rockyfi\Rockyfi.ShadowPlay.VirtualDOM.cs" />
     <Compile Include="..\..\Rockyfi\Rockyfi.Struct.cs" />
     <Compile Include="..\..\Rockyfi\Rockyfi.Utils.cs" />
+    <Compile Include="..\..\Rockyfi\HtmlReader.cs" />
+
   </ItemGroup>
 
 </Project>

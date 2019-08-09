@@ -36,43 +36,134 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\Release\Rockyfi.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Rockyfi\Jyc.Expr\BinaryHelper.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\BinaryOp.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\BinaryOps.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\ConditionalOp.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Constant.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Context.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\ConvertHelper.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Error.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\ErrorFormator.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\EvalException.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Evaluator.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Executor.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\ExecutorContext.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Executors.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Expression.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Identifier.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\IExecutor.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\IndexerOp.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\MemberId.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\MemberOp.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Operand.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Operator.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\OperatorPriority.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Parameter.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\ParameterVariableHolder.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Parser.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\ParserException.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\REPL.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Scanner.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\ScannerException.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\SR.Designer.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\StringToken.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Token.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Tree.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\UnaryOp.cs" />
-    <Compile Include="..\Rockyfi\Jyc.Expr\Variable.cs" />
+    <Compile Include="..\Rockyfi\Jyc.Expr\BinaryHelper.cs">
+      <Link>Expr\BinaryHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\BinaryOp.cs">
+      <Link>Expr\BinaryOp.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\BinaryOps.cs">
+      <Link>Expr\BinaryOps.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\ConditionalOp.cs">
+      <Link>Expr\ConditionalOp.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Constant.cs">
+      <Link>Expr\Constant.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Context.cs">
+      <Link>Expr\Context.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\ConvertHelper.cs">
+      <Link>Expr\ConvertHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Error.cs">
+      <Link>Expr\Error.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\ErrorFormator.cs">
+      <Link>Expr\ErrorFormator.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\EvalException.cs">
+      <Link>Expr\EvalException.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Evaluator.cs">
+      <Link>Expr\Evaluator.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Executor.cs">
+      <Link>Expr\Executor.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\ExecutorContext.cs">
+      <Link>Expr\ExecutorContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Executors.cs">
+      <Link>Expr\Executors.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Expression.cs">
+      <Link>Expr\Expression.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Identifier.cs">
+      <Link>Expr\Identifier.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\IExecutor.cs">
+      <Link>Expr\IExecutor.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\IndexerOp.cs">
+      <Link>Expr\IndexerOp.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\MemberId.cs">
+      <Link>Expr\MemberId.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\MemberOp.cs">
+      <Link>Expr\MemberOp.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Operand.cs">
+      <Link>Expr\Operand.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Operator.cs">
+      <Link>Expr\Operator.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\OperatorPriority.cs">
+      <Link>Expr\OperatorPriority.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Parameter.cs">
+      <Link>Expr\Parameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\ParameterVariableHolder.cs">
+      <Link>Expr\ParameterVariableHolder.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Parser.cs">
+      <Link>Expr\Parser.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\ParserException.cs">
+      <Link>Expr\ParserException.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\REPL.cs">
+      <Link>Expr\REPL.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Scanner.cs">
+      <Link>Expr\Scanner.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\ScannerException.cs">
+      <Link>Expr\ScannerException.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\SR.Designer.cs">
+      <Link>Expr\SR.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\StringToken.cs">
+      <Link>Expr\StringToken.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Token.cs">
+      <Link>Expr\Token.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Tree.cs">
+      <Link>Expr\Tree.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\UnaryOp.cs">
+      <Link>Expr\UnaryOp.cs</Link>
+    </Compile>
+    <Compile Include="..\Rockyfi\Jyc.Expr\Variable.cs">
+      <Link>Expr\Variable.cs</Link>
+    </Compile>
     <Compile Include="..\Rockyfi\Rockyfi.CardData.cs" />
     <Compile Include="..\Rockyfi\Rockyfi.cs" />
     <Compile Include="..\Rockyfi\Rockyfi.ShadowPlay.cs" />
@@ -91,6 +182,7 @@
     <Compile Include="..\Rockyfi\Rockyfi.ShadowPlay.VirtualDOM.cs" />
     <Compile Include="..\Rockyfi\Rockyfi.Struct.cs" />
     <Compile Include="..\Rockyfi\Rockyfi.Utils.cs" />
+    <Compile Include="..\Rockyfi\HtmlReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

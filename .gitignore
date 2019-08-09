@@ -13,6 +13,11 @@ project_dotnetcore/RockyfiTest/obj
 project_dotnetcore/RockyfiTest/bin
 project_dotnetcore/RockyfiTest/packages
 
+project_LoveBridge/.vs
+project_LoveBridge/obj
+project_LoveBridge/bin
+project_LoveBridge/packages
+
 Rockyfi/.vs
 Rockyfi/obj
 Rockyfi/bin

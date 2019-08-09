@@ -28,12 +28,17 @@ namespace RockyfiFactory
     {
         static void Main(string[] args)
         {
-            Boot.Init(new BootConfig
-            {
-                WindowResizable = true,
-            });
-            Boot.Run(new SceneTestLayourController());
+            new TestHtmlReader().Test();
         }
+
+        //static void Main(string[] args)
+        //{
+        //    Boot.Init(new BootConfig
+        //    {
+        //        WindowResizable = true,
+        //    });
+        //    Boot.Run(new SceneTestLayourController());
+        //}
 
 
         //static void Main(string[] args)

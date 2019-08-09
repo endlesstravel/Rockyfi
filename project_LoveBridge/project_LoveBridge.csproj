@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BFE49608-DA35-44C7-8F30-03B99422594D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>RockyfiFactory</RootNamespace>
-    <AssemblyName>RockyfiFactory</AssemblyName>
+    <ProjectGuid>{ED5A86D1-0D3A-46FA-933E-3C81A30025BD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>project_LoveBridge</RootNamespace>
+    <AssemblyName>project_LoveBridge</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -26,7 +25,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -52,6 +51,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\project_vs2017\Rockyfi.csproj">
       <Project>{f7fc3df2-02e0-4889-a806-e23f6b4921c6}</Project>
@@ -59,42 +61,34 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoveBridge.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="SceneExponentXML.cs" />
-    <Compile Include="SceneHugeList.cs" />
-    <Compile Include="SceneList.cs" />
-    <Compile Include="SceneNormalXML.cs" />
-    <Compile Include="SceneTestFactoryX.cs" />
-    <Compile Include="SceneTestFactory.cs" />
-    <Compile Include="SceneTestLayourController.cs" />
-    <Compile Include="TestHtmlReader.cs" />
-    <Compile Include="TestProgram.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="Love2dCS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\project_vs2017\packages\Love2dCS.11.0.26\lib\net40\Love2dCS.dll</HintPath>
+      <HintPath>..\..\..\GameWorkSpace\PoarOfEngine\PoarOfEngine\packages\Love2dCS.11.0.36\lib\net40\Love2dCS.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="doc\Atom_Example.xml" />
-    <EmbeddedResource Include="doc\Attributes.html" />
-    <EmbeddedResource Include="doc\Basic.html" />
-    <EmbeddedResource Include="doc\RDF_Example.xml" />
-    <EmbeddedResource Include="doc\RSS_Example.xml" />
-    <EmbeddedResource Include="doc\Svg.html" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\LoveBridge\ElementController.cs">
+      <Link>ElementController.cs</Link>
+    </Compile>
+    <Compile Include="..\LoveBridge\LayoutController.cs">
+      <Link>LayoutController.cs</Link>
+    </Compile>
+    <Compile Include="..\LoveBridge\LoveBridge.cs">
+      <Link>LoveBridge.cs</Link>
+    </Compile>
+    <Compile Include="..\LoveBridge\Transform2D.cs">
+      <Link>Transform2D.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\project_vs2017\packages\Love2dCS.11.0.26\build\Love2dCS.targets" Condition="Exists('..\project_vs2017\packages\Love2dCS.11.0.26\build\Love2dCS.targets')" />
+  <Import Project="..\..\..\GameWorkSpace\PoarOfEngine\PoarOfEngine\packages\Love2dCS.11.0.36\build\net40\Love2dCS.targets" Condition="Exists('..\..\..\GameWorkSpace\PoarOfEngine\PoarOfEngine\packages\Love2dCS.11.0.36\build\net40\Love2dCS.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\project_vs2017\packages\Love2dCS.11.0.26\build\Love2dCS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\project_vs2017\packages\Love2dCS.11.0.26\build\Love2dCS.targets'))" />
+    <Error Condition="!Exists('..\..\..\GameWorkSpace\PoarOfEngine\PoarOfEngine\packages\Love2dCS.11.0.36\build\net40\Love2dCS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\GameWorkSpace\PoarOfEngine\PoarOfEngine\packages\Love2dCS.11.0.36\build\net40\Love2dCS.targets'))" />
   </Target>
 </Project>
