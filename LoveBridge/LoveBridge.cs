@@ -8,201 +8,16 @@ using Love.Misc;
 
 namespace LoveBridge
 {
-    public class Bridge : Bridge<Bridge.Element>
+    public class Bridge : Bridge<Element>
     {
-        public class Element : BridgeElement<Element>
-        {
-            public ElementController flashElement;
-
-            public override object OnGetThisValue()
-            {
-                return flashElement;
-            }
-
-            public Element Parent { private set; get; } = null;
-            public List<Element> Children { get; } = new List<Element>();
-            public Dictionary<string, object> Attributes { get; } = new Dictionary<string, object>();
-
-            public override void OnAfterCreated()
-            {
-                foreach (var attr in Attributes)
-                {
-                    flashElement.OnChangeAttributes(attr.Key, attr.Value);
-                }
-
-                UpdateScroll();
-                if (GetText() != null)
-                    OnChangeText(GetText());
-            }
-
-            public override void OnChangeAttributes(string key, object value)
-            {
-                if (key == null)
-                {
-                    return;
-                }
-                if (value == null)
-                {
-                    Attributes.Remove(key);
-                }
-                else
-                {
-                    Attributes[key] = value;
-                }
-                flashElement.OnChangeAttributes(key, value);
-            }
-
-            public void UpdateLayout()
-            {
-                UpdateScroll();
-                Vector2 offset = Vector2.Zero;
-                if (Parent != null && Parent.flashElement.HasScrollOffset)
-                {
-                    offset = Parent.flashElement.ScrollOffset;
-                }
-
-                flashElement.OnUpdateLayout(
-                    LayoutGetLeft() + offset.X, LayoutGetTop() + offset.Y,
-                    LayoutGetWidth(), LayoutGetHeight());
-            }
-
-            public RectangleF GetChildrenBound()
-            {
-                RectangleF bound = new RectangleF();
-                bound.X = LayoutGetLeft();
-                bound.Y = LayoutGetTop();
-
-                if (Children.Count > 1) // 初始化...
-                {
-                    var c = Children[0];
-                    bound.X = c.LayoutGetLeft();
-                    bound.Y = c.LayoutGetTop();
-                    bound.Width = c.LayoutGetWidth();
-                    bound.Height = c.LayoutGetHeight();
-                }
-                for (int i = 1; i < Children.Count; i++)
-                {
-                    var c = Children[i];
-                    bound.Left = c.LayoutGetLeft() < bound.Left ? c.LayoutGetLeft() : bound.Left;
-                    bound.Top = c.LayoutGetTop() < bound.Top ? c.LayoutGetTop() : bound.Top;
-
-                    var right = c.LayoutGetLeft() + c.LayoutGetWidth();
-                    var bottom = c.LayoutGetTop() + c.LayoutGetHeight();
-                    bound.Right = right > bound.Right ? right : bound.Right;
-                    bound.Bottom = bottom > bound.Bottom ? bottom : bound.Bottom;
-                }
-                return bound;
-            }
-
-            public void UpdateScroll()
-            {
-                flashElement.OnUpdateOverflow(StyleGetOverflow(), GetChildrenBound());
-            }
-
-            public override void OnInsertChild(int index, Element child)
-            {
-                Children.Insert(index, child);
-                child.Parent = this;
-                //--------------- split ------------------------
-                child.flashElement.OnSetParent(flashElement);
-                //child.rectTransform.SetParent(rectTransform);
-                //child.rectTransform.SetSiblingIndex(index); // no need to adjust child index
-            }
-
-            public override void OnRemove(Element child)
-            {
-                if (Children.Remove(child))
-                {
-                    child.Parent = null;
-
-                    //--------------- split ------------------------
-                    child.flashElement.OnRemoved();
-                }
-
-            }
-
-            public override void OnRemoveAt(int index)
-            {
-                if (0 <= index && index < Children.Count)
-                {
-                    OnRemove(Children[index] as Element);
-                    //child.Parent = null;
-                    //Children.RemoveAt(index);
-                    //child.flashElement.OnRemoved();
-                }
-            }
-
-            public override void OnChangeText(string text)
-            {
-                flashElement.OnChangeText(text);
-            }
-
-            public override void OnAddChild(Element child)
-            {
-                Children.Add(child);
-                child.Parent = this;
-                //--------------- split ------------------------
-                child.flashElement.OnSetParent(flashElement);
-                //child.rectTransform.SetParent(rectTransform);
-            }
-
-            public override void OnReplaceChild(Element oldChild, Element child)
-            {
-                var index = Children.IndexOf(oldChild);
-                if (0 <= index && index < Children.Count)
-                {
-                    Children[index] = child;
-                    child.Parent = this;
-
-                    oldChild.flashElement.OnRemoved();
-                    child.flashElement.OnSetParent(flashElement);
-                }
-                //--------------- split ------------------------
-                //var sindex = oldChild.rectTransform.GetSiblingIndex();
-                //Object.Destroy(oldChild.rectTransform.gameObject);
-                //child.rectTransform.SetSiblingIndex(sindex); // no need to adjust child index
-            }
-
-            public string ToString(int deep)
-            {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                string tab = "";
-                for (int i = 0; i < deep; i++) tab += "....";
-                sb.Append(tab);
-                sb.Append("<div");
-
-                sb.Append($" pos:\"{LayoutGetLeft()} {LayoutGetTop()} {LayoutGetWidth()} {LayoutGetHeight()}\" ");
-
-                foreach (var attr in Attributes)
-                {
-                    sb.Append(" " + attr.ToString());
-                }
-                sb.AppendLine(">");
-                System.Text.StringBuilder csb = new System.Text.StringBuilder();
-                foreach (var c in Children)
-                {
-                    csb.Append((c as Element).ToString(deep + 1));
-                }
-                sb.Append(string.Join("\n", csb));
-                sb.Append(tab);
-                sb.AppendLine("</div>");
-                return sb.ToString();
-            }
-
-            public override string ToString()
-            {
-                return ToString(0);
-            }
-        }
-
         public delegate ElementController CreateUIElementDelegate(string tagName, Dictionary<string, object> attr);
         CreateUIElementDelegate createUIFunc;
         public delegate void SetRootParentDelegate(ElementController root);
         SetRootParentDelegate setRootParentUIFunc;
 
-        ShadowPlay<Bridge.Element> shadowPlay;
+        ShadowPlay<Element> shadowPlay;
 
-        public Bridge(ShadowPlay<Bridge.Element> shadowPlay, CreateUIElementDelegate createUIFunc, SetRootParentDelegate setRootParentUIFunc)
+        public Bridge(ShadowPlay<Element> shadowPlay, CreateUIElementDelegate createUIFunc, SetRootParentDelegate setRootParentUIFunc)
         {
             this.createUIFunc = createUIFunc;
             this.setRootParentUIFunc = setRootParentUIFunc;
@@ -296,6 +111,191 @@ namespace LoveBridge
         public override string ToString()
         {
             return root.ToString();
+        }
+    }
+
+    public class Element : BridgeElement<Element>
+    {
+        public ElementController flashElement;
+
+        public override object OnGetThisValue()
+        {
+            return flashElement;
+        }
+
+        public Element Parent { private set; get; } = null;
+        public List<Element> Children { get; } = new List<Element>();
+        public Dictionary<string, object> Attributes { get; } = new Dictionary<string, object>();
+
+        public override void OnAfterCreated()
+        {
+            foreach (var attr in Attributes)
+            {
+                flashElement.OnChangeAttributes(attr.Key, attr.Value);
+            }
+
+            UpdateScroll();
+            if (GetText() != null)
+                OnChangeText(GetText());
+        }
+
+        public override void OnChangeAttributes(string key, object value)
+        {
+            if (key == null)
+            {
+                return;
+            }
+            if (value == null)
+            {
+                Attributes.Remove(key);
+            }
+            else
+            {
+                Attributes[key] = value;
+            }
+            flashElement.OnChangeAttributes(key, value);
+        }
+
+        public void UpdateLayout()
+        {
+            UpdateScroll();
+            Vector2 offset = Vector2.Zero;
+            if (Parent != null && Parent.flashElement.HasScrollOffset)
+            {
+                offset = Parent.flashElement.ScrollOffset;
+            }
+
+            flashElement.OnUpdateLayout(
+                LayoutGetLeft() + offset.X, LayoutGetTop() + offset.Y,
+                LayoutGetWidth(), LayoutGetHeight());
+        }
+
+        public RectangleF GetChildrenBound()
+        {
+            RectangleF bound = new RectangleF();
+            bound.X = LayoutGetLeft();
+            bound.Y = LayoutGetTop();
+
+            if (Children.Count > 1) // 初始化...
+            {
+                var c = Children[0];
+                bound.X = c.LayoutGetLeft();
+                bound.Y = c.LayoutGetTop();
+                bound.Width = c.LayoutGetWidth();
+                bound.Height = c.LayoutGetHeight();
+            }
+            for (int i = 1; i < Children.Count; i++)
+            {
+                var c = Children[i];
+                bound.Left = c.LayoutGetLeft() < bound.Left ? c.LayoutGetLeft() : bound.Left;
+                bound.Top = c.LayoutGetTop() < bound.Top ? c.LayoutGetTop() : bound.Top;
+
+                var right = c.LayoutGetLeft() + c.LayoutGetWidth();
+                var bottom = c.LayoutGetTop() + c.LayoutGetHeight();
+                bound.Right = right > bound.Right ? right : bound.Right;
+                bound.Bottom = bottom > bound.Bottom ? bottom : bound.Bottom;
+            }
+            return bound;
+        }
+
+        public void UpdateScroll()
+        {
+            flashElement.OnUpdateOverflow(StyleGetOverflow(), GetChildrenBound());
+        }
+
+        public override void OnInsertChild(int index, Element child)
+        {
+            Children.Insert(index, child);
+            child.Parent = this;
+            //--------------- split ------------------------
+            child.flashElement.OnSetParent(flashElement);
+            //child.rectTransform.SetParent(rectTransform);
+            //child.rectTransform.SetSiblingIndex(index); // no need to adjust child index
+        }
+
+        public override void OnRemove(Element child)
+        {
+            if (Children.Remove(child))
+            {
+                child.Parent = null;
+
+                //--------------- split ------------------------
+                child.flashElement.OnRemoved();
+            }
+
+        }
+
+        public override void OnRemoveAt(int index)
+        {
+            if (0 <= index && index < Children.Count)
+            {
+                OnRemove(Children[index] as Element);
+                //child.Parent = null;
+                //Children.RemoveAt(index);
+                //child.flashElement.OnRemoved();
+            }
+        }
+
+        public override void OnChangeText(string text)
+        {
+            flashElement.OnChangeText(text);
+        }
+
+        public override void OnAddChild(Element child)
+        {
+            Children.Add(child);
+            child.Parent = this;
+            //--------------- split ------------------------
+            child.flashElement.OnSetParent(flashElement);
+            //child.rectTransform.SetParent(rectTransform);
+        }
+
+        public override void OnReplaceChild(Element oldChild, Element child)
+        {
+            var index = Children.IndexOf(oldChild);
+            if (0 <= index && index < Children.Count)
+            {
+                Children[index] = child;
+                child.Parent = this;
+
+                oldChild.flashElement.OnRemoved();
+                child.flashElement.OnSetParent(flashElement);
+            }
+            //--------------- split ------------------------
+            //var sindex = oldChild.rectTransform.GetSiblingIndex();
+            //Object.Destroy(oldChild.rectTransform.gameObject);
+            //child.rectTransform.SetSiblingIndex(sindex); // no need to adjust child index
+        }
+
+        public string ToString(int deep)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            string tab = "";
+            for (int i = 0; i < deep; i++) tab += "....";
+            sb.Append(tab);
+            sb.Append("<div");
+
+            sb.Append($" pos:\"{LayoutGetLeft()} {LayoutGetTop()} {LayoutGetWidth()} {LayoutGetHeight()}\" ");
+
+            foreach (var attr in Attributes)
+            {
+                sb.Append(" " + attr.ToString());
+            }
+            sb.AppendLine(">");
+            System.Text.StringBuilder csb = new System.Text.StringBuilder();
+            foreach (var c in Children)
+            {
+                csb.Append((c as Element).ToString(deep + 1));
+            }
+            sb.Append(string.Join("\n", csb));
+            sb.Append(tab);
+            sb.AppendLine("</div>");
+            return sb.ToString();
+        }
+
+        public override string ToString()
+        {
+            return ToString(0);
         }
     }
 

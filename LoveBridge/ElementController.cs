@@ -11,13 +11,16 @@ namespace LoveBridge
     {
         public readonly Transform2D<ElementController> transform;
         public SizeF localSize { private set; get; } = new SizeF();
-        string text;
+        public string Text { get; private set; } 
 
         public ElementController()
         {
             transform = new Transform2D<ElementController>(this);
         }
 
+        /// <summary>
+        /// 需要绘制区域
+        /// </summary>
         public RectangleF Rect => new RectangleF(transform.AbsolutePosition, localSize);
 
         /// <summary>
@@ -107,7 +110,7 @@ namespace LoveBridge
 
         public virtual void OnChangeText(string text)
         {
-            this.text = text;
+            this.Text = text;
         }
 
         #region 滚动判定区域
@@ -206,7 +209,7 @@ namespace LoveBridge
         public Vector2 m_scrollOffset;
         public Vector2 ScrollOffset => HasScrollOffset ? m_scrollOffset : Vector2.Zero;
 
-        public Bridge.Element Element { get; internal set; }
+        public Element Element { get; internal set; }
 
         /// <summary>
         /// 绘制本元素

@@ -10,7 +10,7 @@ namespace LoveBridge
     {
         public LayoutController()
         {
-            shadowPlay = new ShadowPlay<Bridge.Element>();
+            shadowPlay = new ShadowPlay<Element>();
 
             var schema = DefineLayoutXml();
             if (schema == null)
@@ -38,7 +38,7 @@ namespace LoveBridge
         /// </summary>
         public abstract ElementController CreateElement(string tagName, Dictionary<string, object> attr);
 
-        ShadowPlay<Bridge.Element> shadowPlay;
+        ShadowPlay<Element> shadowPlay;
         Bridge bridge;
 
         public void ReloadXml()

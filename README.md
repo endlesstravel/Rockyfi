@@ -136,27 +136,27 @@ support props, most attributes are covered in this [Guide](https://css-tricks.co
 | flex-grow             |  5 / -3.2            |
 | justify-content       |  flex-start / center / flex-end / space-between / space-around                    |
 | direction             |  inherit / ltr / rtl                    |
-| width                 |  15px / 30%          |
-| height                |  15px / 30%          |
-| min-width             |  15px / 30%          |
-| min-height            |  15px / 30%          |
-| max-width             |  15px / 30%          |
-| max-height            |  15px / 30%          |
-| margin                |  1px / 1px 2px 3px 4px / 2px 3px    |
-| margin-left           |  15px / 30%          |
-| margin-right          |  15px / 30%          |
-| margin-top            |  15px / 30%          |
-| margin-bottom         |  15px / 30%          |
-| padding               |  1px / 1px 2px 3px 4px / 2px 3px    |
-| padding-left          |  15px / 30%          |
-| padding-right         |  15px / 30%          |
-| padding-top           |  15px / 30%          |
-| padding-bottom        |  15px / 30%          |
-| border                |  1px / 1px 2px 3px 4px / 2px 3px    |
-| border-left           |  15px                |
-| border-right          |  15px                |
-| border-top            |  15px                |
-| border-bottom         |  15px                |
+| width                 |  10 / 15px / 30% / auto         |
+| height                |  10 / 15px / 30% / auto         |
+| min-width             |  10 / 15px / 30% / auto         |
+| min-height            |  10 / 15px / 30% / auto         |
+| max-width             |  10 / 15px / 30% / auto         |
+| max-height            |  10 / 15px / 30% / auto         |
+| margin                |  10 / 1px / 1px 2px 3px 4px / 2px 3px  / auto   |
+| margin-left           |  10 / 15px / auto          |
+| margin-right          |  10 / 15px / auto          |
+| margin-top            |  10 / 15px / auto          |
+| margin-bottom         |  10 / 15px / auto          |
+| padding               |  10 / 1px / 1px 2px 3px 4px / 2px 3px / auto   |
+| padding-left          |  10 / 15px / auto          |
+| padding-right         |  10 / 15px / auto          |
+| padding-top           |  10 / 15px / auto          |
+| padding-bottom        |  10 / 15px / auto          |
+| border                |  10 / 1px / 1px 2px 3px 4px / 2px 3px / auto   |
+| border-left           |  10 / 15px / auto           |
+| border-right          |  10 / 15px / auto           |
+| border-top            |  10 / 15px / auto           |
+| border-bottom         |  10 / 15px / auto           |
 <!-- | display               |  flex / none                 | -->
 
 
