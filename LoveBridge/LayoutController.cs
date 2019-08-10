@@ -312,6 +312,7 @@ namespace LoveBridge
         #region Navigation
 
         ElementController m_autoNavigationELEC = null;
+        ElementController m_lastAutoNavigationELEC = null;
         public ElementController AutoNavigationElement => m_autoNavigationELEC;
 
         /// <summary>
@@ -319,21 +320,76 @@ namespace LoveBridge
         /// </summary>
         public virtual void InternalUpdateAutoNavigation()
         {
-            var indicatorDir = Vector2.Zero;
-            if (Keyboard.IsDown(KeyConstant.Left))
-                indicatorDir += Vector2.Left;
-            if (Keyboard.IsDown(KeyConstant.Right))
-                indicatorDir += Vector2.Right;
-            if (Keyboard.IsDown(KeyConstant.Up))
-                indicatorDir += Vector2.Up;
-            if (Keyboard.IsDown(KeyConstant.Down))
-                indicatorDir += Vector2.Down;
+            m_lastAutoNavigationELEC = m_autoNavigationELEC;
 
-            FindNearestPoint(indicatorDir);
+
+            if (Keyboard.IsPressed(KeyConstant.Left) 
+                || Keyboard.IsPressed(KeyConstant.Right)
+                || Keyboard.IsPressed(KeyConstant.Up)
+                || Keyboard.IsPressed(KeyConstant.Down)
+                )
+            {
+                var indicatorDir = Vector2.Zero;
+                if (Keyboard.IsDown(KeyConstant.Left))
+                    indicatorDir += Vector2.Left;
+                if (Keyboard.IsDown(KeyConstant.Right))
+                    indicatorDir += Vector2.Right;
+                if (Keyboard.IsDown(KeyConstant.Up))
+                    indicatorDir += Vector2.Up;
+                if (Keyboard.IsDown(KeyConstant.Down))
+                    indicatorDir += Vector2.Down;
+
+                FindNearestPoint(indicatorDir);
+            }
 
             if (m_autoNavigationELEC != null)
             {
                 m_autoNavigationELEC.UpdateInputAutoNavigation();
+            }
+
+            InternalAdjustOffsetToViewChild();
+        }
+
+        
+
+        /// <summary>
+        /// 更新父节点的滚动以适应其…………
+        /// </summary>
+        public virtual void InternalAdjustOffsetToViewChild()
+        {
+            if (m_autoNavigationELEC != null && m_lastAutoNavigationELEC != m_autoNavigationELEC) // 是否切换显示
+            {
+                var parent = m_autoNavigationELEC.Parent;
+
+                if (parent != null && parent.HasScrollOffset) // 是否其父节点需要滚动
+                {
+                    var pr = parent.Rect;
+                    var ar = m_autoNavigationELEC.Rect;
+
+                    if (pr.Width > ar.Width && pr.Height > ar.Height) // 仅当大于时切换
+                    {
+                        // 检测是否超越边界
+                        if ((pr.Left <= ar.Left && pr.Top <= ar.Top && pr.Right >= ar.Right && pr.Bottom >= ar.Bottom) == false)
+                        {
+                            var limitRect = pr.DefLeft(pr.Left + ar.Width / 2)
+                                                .DefRight(pr.Right - ar.Width / 2)
+                                                .DefTop(pr.Top + ar.Height / 2)
+                                                .DefBottom(pr.Bottom - ar.Height / 2);
+
+
+                            var r = ar;
+                            r.Left = Mathf.Max(r.Left, pr.Left);
+                            r.Top = Mathf.Max(r.Top, pr.Top);
+                            r.Right = Mathf.Min(r.Right, pr.Right);
+                            r.Bottom = Mathf.Min(r.Bottom, pr.Bottom);
+
+                            var offset = ar.Location - r.Location;
+
+                            // 设置父节点偏移
+                            parent.SetScrollOffset(parent.ScrollOffset - offset);
+                        }
+                    }
+                }
             }
         }
 
@@ -369,10 +425,10 @@ namespace LoveBridge
                 return 1;
             });
 
-            foreach (var item in li)
-            {
-                Console.WriteLine($"{item}");
-            }
+            //foreach (var item in li)
+            //{
+            //    Console.WriteLine($"FindNearestPoint -> {item}"); // debug for show
+            //}
 
             if (li.Count() > 0)
                 return li.First().Item1;
@@ -391,7 +447,19 @@ namespace LoveBridge
             if (cachedList.Count > 0)
             {
                 var initPos = m_autoNavigationELEC != null ? m_autoNavigationELEC.Rect.Center() : Vector2.Zero;
-                m_autoNavigationELEC = FindNearestPoint(cachedList.Where(item => item.AutoNavigation).ToList(), initPos, dir);
+                var list = cachedList.Where(item => item.AutoNavigation).ToList();
+
+                if (m_autoNavigationELEC == null)
+                {
+                    m_autoNavigationELEC = list.FirstOrDefault();
+                }
+                else // if (m_autoNavigationELEC != null)
+                {
+                    var t = FindNearestPoint(list, initPos, dir);
+                    if (t != null)
+                        m_autoNavigationELEC = t;   
+                }
+
             }
         }
 

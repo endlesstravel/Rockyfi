@@ -99,9 +99,18 @@ namespace LoveBridge
                 Visible = "flex".Equals(value);
             }
 
-            if (key == "eventHandler")
+            if (key == "execute")
             {
                 BindEventHandler(value);
+            }
+
+            if (key == "autoNavigation" && value is bool)
+            {
+                AutoNavigation = (bool)value;
+            }
+            if (key == "autoNavigation" && value is string)
+            {
+                AutoNavigation = (((string)value).ToLower() == "true");
             }
         }
 
