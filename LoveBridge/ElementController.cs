@@ -31,6 +31,11 @@ namespace LoveBridge
         /// </summary>
         public bool Visible = true;
 
+        /// <summary>
+        /// 是否需要自动导航
+        /// </summary>
+        public bool AutoNavigation = false;
+
         public virtual void OnSetParent(ElementController element)
         {
             transform.Parent = element.transform;
@@ -185,29 +190,112 @@ namespace LoveBridge
 
         #endregion
 
+        #region 给予调用可复写的方法
+
         /// <summary>
-        /// 指针在本元素时调用
+        /// 指针在本元素时调用（不包括在子节点的情况）
         /// </summary>
         public virtual void UpdateInputHoverVisible()
         {
         }
 
         /// <summary>
-        /// 指针在本元素或其子元素时调用，返回值表示是否继续传递给父元素这个消息
+        /// 指针在本元素或其子元素时调用
         /// </summary>
-        public virtual bool UpdateInputHover()
+        public virtual void UpdateInputHover()
         {
-            if (
-                (IsHorizontalOverflow && Mathf.Abs(Mouse.GetScrollX()) > 0)
-                || (IsVerticalOverflow && Mathf.Abs(Mouse.GetScrollY()) > 0)
-                )
+        }
+
+        /// <summary>
+        /// 指针没在本元素或其子元素时调用
+        /// </summary>
+        public virtual void UpdateInputNotHover()
+        {
+        }
+
+        /// <summary>
+        /// 指针进入本元素时（包括子元素效应）
+        /// </summary>
+        public virtual void UpdateInputHoverEnter()
+        {
+        }
+
+        /// <summary>
+        /// 指针退出本元素时（包括子元素效应）
+        /// </summary>
+        public virtual void UpdateInputHoverLeave()
+        {
+        }
+
+        /// <summary>
+        /// 指针自动导航时调用
+        /// </summary>
+        public virtual void UpdateInputAutoNavigation()
+        {
+        }
+
+        #endregion
+
+
+        /// <summary>
+        /// 内部的配合 LayoutController 的 InternalUpdateInput 方法，每个元素每一帧都调用一次
+        /// </summary>
+        public virtual void InternalUpdateInput()
+        {
+            if (currentFrameIsHover == true)
             {
-                UpdateInputScroll(Mouse.GetScrollX(), Mouse.GetScrollY());
-                return false;
+                UpdateInputHover();
             }
 
-            return true;
+            if (lastFrameIsHover == true && currentFrameIsHover == true)
+            {
+            }
+            else if (lastFrameIsHover == true && currentFrameIsHover == false)
+            {
+                UpdateInputHoverLeave();
+            }
+            else if (lastFrameIsHover == false && currentFrameIsHover == true)
+            {
+                UpdateInputHoverEnter();
+            }
+
+            if (currentFrameIsHover == false)
+            {
+                UpdateInputNotHover();
+            }
+
+            lastFrameIsHover = currentFrameIsHover;
+            currentFrameIsHover = false;
         }
+
+        bool lastFrameIsHover = false;
+        bool currentFrameIsHover = false;
+
+        /// <summary>
+        /// 内部的配合 LayoutController 的 InternalUpdateInput 方法，指针在本元素或其子元素时调用
+        /// </summary>
+        public virtual void InternalUpdateInputHover()
+        {
+            currentFrameIsHover = true;
+        }
+
+        /// <summary>
+        /// 内部的配合 LayoutController 的 InternalUpdateInput 方法，更新滚轮输入操作
+        /// </summary>
+        /// <param name="scrollUsed">代表此事件是否已经被响应</param>
+        /// <returns></returns>
+        public virtual void InternalUpdateInputScroll(ref bool scrollUsed, float scrollX, float scrollY)
+        {
+            if (scrollUsed == false &&
+                ((IsHorizontalOverflow && Mathf.Abs(scrollX) > 0)
+                || (IsVerticalOverflow && Mathf.Abs(scrollY) > 0)
+                ))
+            {
+                UpdateInputScroll(scrollX, scrollY);
+            }
+
+        }
+
 
         /// <summary>
         /// 是否进行内容滚动

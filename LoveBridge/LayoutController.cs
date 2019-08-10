@@ -84,7 +84,23 @@ namespace LoveBridge
                 shadowPlay.Update();
                 bridge.Update();
             }
+            cachedList = ListNodes();
+            cachedDeepMaskList = ListNodesByDeep();
+            InternalUpdateInput();
+            InternalUpdateAutoNavigation();
         }
+
+
+        /// <summary>
+        /// 排除自己
+        /// </summary>
+        protected List<DeepMaskBean> cachedDeepMaskList { get; private set; } = new List<DeepMaskBean>();
+
+
+        /// <summary>
+        /// 更新的列表，排除自己
+        /// </summary>
+        protected List<ElementController> cachedList { get; private set; } = new List<ElementController>();
 
         public string GetRealXmlString()
         {
@@ -147,6 +163,40 @@ namespace LoveBridge
             }
         }
 
+
+        /// <summary>
+        /// 获取所有节点
+        /// </summary>
+        /// <returns></returns>
+        public List<ElementController> ListNodes()
+        {
+            // 根据深度排序其子节点
+            Queue<ElementController> queue = new Queue<ElementController>();
+            queue.Enqueue(this);
+
+            List<ElementController> list = new List<ElementController>();
+
+
+            while (queue.Count > 0)
+            {
+                var te = queue.Dequeue();
+                if (te.Visible)
+                {
+                    if (te != this)
+                    {
+                        list.Add(te);
+                    }
+
+                    foreach (var child in te.Children)
+                    {
+                        queue.Enqueue(child);
+                    }
+                }
+            }
+
+            return list;
+        }
+
         /// <summary>
         /// 根据深度排序其子节点
         /// </summary>
@@ -167,7 +217,10 @@ namespace LoveBridge
                 var te = queue.Dequeue();
                 if (te.Ele.Visible)
                 {
-                    list.Add(te.Deep, te);
+                    if (te.Ele != this)
+                    {
+                        list.Add(te.Deep, te);
+                    }
 
                     foreach (var child in te.Ele.Children)
                     {
@@ -184,5 +237,167 @@ namespace LoveBridge
 
             return list.Values.ToList();
         }
+
+        public override void InternalUpdateInput()
+        {
+            var containMouse = CurrentMouseHover(Mouse.GetPosition());
+            if (containMouse != null)
+            {
+                var ele = containMouse.Ele;
+
+                // 更新 cover 操作
+                ele.UpdateInputHoverVisible();
+
+
+                { // 更新 cover 操作
+                    var node = ele;
+                    while (node != null)
+                    {
+                        node.InternalUpdateInputHover();
+                        node = node.Parent;
+                    }
+                }
+
+
+                { // 更新滚轮操作
+                    var node = ele;
+                    var sx = Mouse.GetScrollX();
+                    var sy = Mouse.GetScrollY();
+                    bool scrollUsed = false;
+                    while (node != null)
+                    {
+                        node.InternalUpdateInputScroll(ref scrollUsed, sx, sy);
+                        node = node.Parent;
+                    }
+                }
+            }
+
+
+            { // 每个元素每一帧都调用一次的方法
+                foreach (var ele in cachedList)
+                {
+                    ele.InternalUpdateInput();
+                }
+            }
+        }
+
+        #region input
+
+
+
+        /// <summary>
+        /// 返回和指定点相交的元素，没有相交的节点时返回null
+        /// </summary>
+        /// <returns></returns>
+        public DeepMaskBean CurrentMouseHover(Vector2 pos)
+        {
+            // 找到最顶部的和鼠标相遇的东西
+            if (cachedDeepMaskList.Count > 0)
+            {
+                var topDeep = cachedDeepMaskList.Where(item => item.IsOutOfMask == false).Reverse().ToList();
+                var containPosition = topDeep.FirstOrDefault(
+                    item => item.HasMask ? RectangleF.Intersect(item.Mask, item.Ele.Rect).Contains(pos) : item.Ele.Rect.Contains(pos));
+
+                return containPosition;
+            }
+            return null;
+        }
+
+        #endregion
+
+
+
+
+
+        #region Navigation
+
+        ElementController m_autoNavigationELEC = null;
+        public ElementController AutoNavigationElement => m_autoNavigationELEC;
+
+        /// <summary>
+        /// 更新自动导航
+        /// </summary>
+        public virtual void InternalUpdateAutoNavigation()
+        {
+            var indicatorDir = Vector2.Zero;
+            if (Keyboard.IsDown(KeyConstant.Left))
+                indicatorDir += Vector2.Left;
+            if (Keyboard.IsDown(KeyConstant.Right))
+                indicatorDir += Vector2.Right;
+            if (Keyboard.IsDown(KeyConstant.Up))
+                indicatorDir += Vector2.Up;
+            if (Keyboard.IsDown(KeyConstant.Down))
+                indicatorDir += Vector2.Down;
+
+            FindNearestPoint(indicatorDir);
+
+            if (m_autoNavigationELEC != null)
+            {
+                m_autoNavigationELEC.UpdateInputAutoNavigation();
+            }
+        }
+
+        int FloatCompare(float a, float b)
+        {
+            if (a > b)
+                return 1;
+            if (b > a)
+                return -1;
+
+            return 0;
+        }
+
+        public ElementController FindNearestPoint(IEnumerable<ElementController> deepMaskBeans, Vector2 p, Vector2 dir)
+        {
+            var li = deepMaskBeans
+                .Select(item => Tuple.Create(item,
+                            Vector2.Dot(item.Rect.Center() - p, dir) / ((item.Rect.Center() - p).Length() * dir.Length()), // 角度
+                            Vector2.Distance(item.Rect.Center(), p) // 距离
+                            ))
+                .Where(item => item.Item2 > 0 && item.Item2 > 0.9f).ToList();
+
+            li.Sort((a, b) =>
+            {
+                if (a.Item3 == b.Item3)
+                {
+                    return FloatCompare(a.Item2, b.Item2);
+                }
+
+                if (a.Item3 < b.Item3)
+                    return -1;
+
+                return 1;
+            });
+
+            foreach (var item in li)
+            {
+                Console.WriteLine($"{item}");
+            }
+
+            if (li.Count() > 0)
+                return li.First().Item1;
+
+            return null;
+        }
+
+
+        public void FindNearestPoint(Vector2 dir)
+        {
+            if (cachedList.Contains(m_autoNavigationELEC) == false)
+            {
+                m_autoNavigationELEC = null;
+            }
+
+            if (cachedList.Count > 0)
+            {
+                var initPos = m_autoNavigationELEC != null ? m_autoNavigationELEC.Rect.Center() : Vector2.Zero;
+                m_autoNavigationELEC = FindNearestPoint(cachedList.Where(item => item.AutoNavigation).ToList(), initPos, dir);
+            }
+        }
+
+        #endregion
+
+
+
     }
 }
