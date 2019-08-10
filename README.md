@@ -69,52 +69,129 @@ using System.Collections.Generic;
 
 namespace RockyfiFactory
 {
-    class SceneNormalXML: Scene
+    public class NormalElementController : ElementController
     {
-        ShadowPlaySimple stage = new ShadowPlaySimple();
-        public override void Load()
+        public NormalElementController(string tagName) : base(tagName)
         {
-            string tmpXML = @"
-<div el-bind:width=""w"" el-bind:height=""h"" flex-wrap=""wrap"" justify-content=""center"" flex-direction=""row"" >
-    <div el-for=""itemId in listData"" width=""150px"" height=""100px"" el-bind:id=""itemId""/>
-</div>
-";
-            stage.Build(tmpXML, "listData", "w", "h");
-            stage.SetData("listData", new List<string>
-            {
-                "child-0", "child-1", "child-2", "child-3", "child-4",
-            });
-            stage.SetData("w", "320px");
-            stage.SetData("h", "320px");
-            stage.Update();
-            System.Console.WriteLine(stage.ToString());
-        }
-
-        public override void Update(float dt)
-        {
-            stage.SetData("w", $"{Graphics.GetWidth() - 200}px");
-            stage.SetData("h", $"{Graphics.GetHeight() - 200}px");
-            stage.Update();
         }
 
         public override void Draw()
         {
-            Graphics.Translate(100, 100);
+            var rect = Rect;
+
+            Graphics.SetColor(fgColor);
+            Graphics.Print(TagName + Text, rect.X, rect.Y);
+            Graphics.Rectangle(DrawMode.Line, rect);
             Graphics.SetColor(Color.White);
-            stage.Draw(0, 0, (x, y, w, h, text, attr) =>
-            {
-                Graphics.Rectangle(DrawMode.Line, x, y, w, h);
-                Graphics.Print($"{(attr.TryGetValue("id", out object id) ? id : "")}", x, y);
-            });
         }
 
-        static void Main(string[] args)
+        public override string ToString()
         {
-            Boot.Init(new BootConfig
+            return base.ToString() + " <" + TagName+">" + Text;
+        }
+
+        Color fgColor = Color.White;
+
+        public override void UpdateInputHoverVisible()
+        {
+
+            if (Mouse.IsReleased(Mouse.LeftButton))
             {
-                WindowResizable = true,
+                Console.WriteLine("click me !" + this);
+            }
+        }
+
+        public override void UpdateInputHover()
+        {
+            fgColor = Color.Red;
+        }
+
+        public override void UpdateInputNotHover()
+        {
+            fgColor = Color.White;
+        }
+
+        public override void UpdateInputHoverEnter()
+        {
+        }
+
+        public override void UpdateInputHoverLeave()
+        {
+        }
+
+        public override void UpdateInputAutoNavigation()
+        {
+            fgColor = Color.Green;
+        }
+    }
+
+
+    class RockyTestLayoutController : LayoutController
+    {
+        public override ElementController CreateElement(string tagName, Dictionary<string, object> attr)
+        {
+            return new NormalElementController(tagName);
+        }
+
+        public override Dictionary<string, object> DefineInitialData()
+        {
+            return new Dictionary<string, object>
+            {
+                {"w", 0 },
+                {"h", 0 },
+                {"pd", 0.01f },
+                {"listData", new int[]{ } },
+            };
+        }
+
+        public override string DefineLayoutXml()
+        {
+            return @"
+<root
+    el-bind:width=""w * (1 - pd*2)"" el-bind:height=""h * (1 - pd*2)""
+    el-bind:margin-left=""w * pd""  el-bind:margin-right=""w * pd""
+    el-bind:margin-top=""h * pd""  el-bind:margin-bottom=""h * pd""
+    flex-wrap=""wrap"" flex-direction=""row""
+    overflow=""scroll""
+
+>
+    <div el-bind:autoNavigation=""true"" el-for=""itemId in listData"" width=""150px"" height=""100px"" el-bind:id=""itemId""  margin=""100"" > {{itemId}} </div>
+</root>
+";
+
+            return Encoding.UTF8.GetString(Resource.Read("ui_xml/test.xml"));
+        }
+
+        public override void Update()
+        {
+            SetData("w", Graphics.GetWidth());
+            SetData("h", Graphics.GetHeight());
+
+            SetData("listData", new List<string>
+            {
+                "child-0", "child-1", "child-2", "child-3", "child-4",
             });
-            Boot.Run(new SceneNormalXML());
+
+            base.Update();
+        }
+
+
+    }
+
+    public class RockyTest : GameScene
+    {
+        RockyTestLayoutController rtlc = new RockyTestLayoutController();
+
+        public override void Update(float dt)
+        {
+            base.Update(dt);
+            rtlc.Update();
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+            rtlc.Draw();
         }
     }
 }

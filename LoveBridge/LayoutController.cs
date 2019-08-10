@@ -9,7 +9,7 @@ namespace LoveBridge
 {
     public abstract class LayoutController : ElementController
     {
-        public LayoutController()
+        public LayoutController() : base(nameof(LayoutController) + ".root.object")
         {
             shadowPlay = new ShadowPlay<Element>();
 
@@ -405,12 +405,24 @@ namespace LoveBridge
 
         public ElementController FindNearestPoint(IEnumerable<ElementController> deepMaskBeans, Vector2 p, Vector2 dir)
         {
+            for (float limit = 0.9f; limit > 0; limit -= 0.09f)
+            {
+                var ele = FindNearestPoint(deepMaskBeans, p, dir, limit);
+                if (ele != null)
+                    return ele;
+            }
+
+            return null;
+        }
+
+        public ElementController FindNearestPoint(IEnumerable<ElementController> deepMaskBeans, Vector2 p, Vector2 dir, float degreeLimit)
+        {
             var li = deepMaskBeans
                 .Select(item => Tuple.Create(item,
                             Vector2.Dot(item.Rect.Center() - p, dir) / ((item.Rect.Center() - p).Length() * dir.Length()), // 角度
                             Vector2.Distance(item.Rect.Center(), p) // 距离
                             ))
-                .Where(item => item.Item2 > 0 && item.Item2 > 0.9f).ToList();
+                .Where(item => item.Item2 > degreeLimit).ToList();
 
             li.Sort((a, b) =>
             {
@@ -465,6 +477,44 @@ namespace LoveBridge
 
         #endregion
 
+        #region draw area
+
+        public override void Draw()
+        {
+            foreach (var dmb in cachedDeepMaskList)
+            {
+                //if (dmb.Ele != this) // cachedDeepMaskList 已经排除了自己
+                {
+                    if (dmb.HasMask)
+                    {
+                        var maskf = dmb.Mask;
+                        Rectangle cr = new Rectangle(
+                            Mathf.FloorToInt(maskf.X),
+                            Mathf.FloorToInt(maskf.Y),
+                            Mathf.CeilToInt(maskf.Width),
+                            Mathf.CeilToInt(maskf.Height)
+                            );
+                        Graphics.SetScissor(cr);
+                    }
+                    dmb.Ele.Draw();
+                    //Graphics.Print(dmb.Deep.ToString(), dmb.Ele.Rect.X, dmb.Ele.Rect.Y + Graphics.GetFont().GetHeight()); // debug for show
+
+                    if (dmb.HasMask)
+                    {
+                        Graphics.SetScissor();
+                    }
+                }
+            }
+
+
+            //var containMouse = CurrentMouseHover(Mouse.GetPosition());
+            //if (containMouse != null)
+            //{
+            //    Graphics.Print(containMouse.Ele.Text + containMouse.Ele.ToString(), 100, 100); // debug for show
+            //}
+        }
+
+        #endregion
 
 
     }

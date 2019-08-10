@@ -9,11 +9,21 @@ namespace LoveBridge
 {
     public class ElementController
     {
+
+        public override string ToString()
+        {
+            return base.ToString() + " <" + TagName + ">" + Text;
+        }
+
+
+        public readonly string TagName;
+        public readonly Dictionary<string, object> Attr = new Dictionary<string, object>();
+
         public readonly Transform2D<ElementController> transform;
         public SizeF localSize { private set; get; } = new SizeF();
         public string Text { get; private set; } 
 
-        public ElementController()
+        public ElementController(string tagName)
         {
             transform = new Transform2D<ElementController>(this);
         }
@@ -94,12 +104,14 @@ namespace LoveBridge
 
         public virtual void OnChangeAttributes(string key, object value)
         {
+            Attr[key] = value;  
+
             if (key == "display")
             {
                 Visible = "flex".Equals(value);
             }
 
-            if (key == "execute")
+            if (key == "listen")
             {
                 BindEventHandler(value);
             }

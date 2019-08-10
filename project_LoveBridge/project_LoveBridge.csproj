@@ -73,6 +73,9 @@
     <Compile Include="..\LoveBridge\ElementController.cs">
       <Link>ElementController.cs</Link>
     </Compile>
+    <Compile Include="..\LoveBridge\Example01.cs">
+      <Link>Example01.cs</Link>
+    </Compile>
     <Compile Include="..\LoveBridge\LayoutController.cs">
       <Link>LayoutController.cs</Link>
     </Compile>

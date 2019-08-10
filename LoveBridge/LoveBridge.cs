@@ -141,28 +141,38 @@ namespace LoveBridge
 
         public RectangleF GetChildrenBound()
         {
-            float xmin = LayoutGetLeft(), xmax = LayoutGetLeft();
-            float ymin = LayoutGetTop(), ymax = LayoutGetTop();
+            float xmin = float.MaxValue, xmax = float.MaxValue;
+            float ymin = float.MinValue, ymax = float.MinValue;
 
             if (Children.Count > 1) // 初始化...
             {
                 var c = Children[0];
-                xmin = c.LayoutGetLeft();
-                ymin = c.LayoutGetTop();
-                xmax = xmin + c.LayoutGetWidth();
-                ymax = ymin + c.LayoutGetHeight();
+                xmin = c.LayoutGetLeft() - c.LayoutGetMargin(Edge.Left);
+                ymin = c.LayoutGetTop() - c.LayoutGetMargin(Edge.Top);
+                xmax = xmin + c.LayoutGetWidth() + c.LayoutGetMargin(Edge.Right);
+                ymax = ymin + c.LayoutGetHeight()  + c.LayoutGetMargin(Edge.Bottom);
             }
+            else
+            {
+
+            }
+
             for (int i = 1; i < Children.Count; i++)
             {
                 var c = Children[i];
-                xmin = Mathf.Min(c.LayoutGetLeft(), xmin);
-                ymin = Mathf.Min(c.LayoutGetTop(), ymin);
+                xmin = Mathf.Min(c.LayoutGetLeft() - c.LayoutGetMargin(Edge.Left), xmin);
+                ymin = Mathf.Min(c.LayoutGetTop() - c.LayoutGetMargin(Edge.Top), ymin);
 
-                var right = c.LayoutGetLeft() + c.LayoutGetWidth();
-                var bottom = c.LayoutGetTop() + c.LayoutGetHeight();
+                var right = c.LayoutGetLeft() + c.LayoutGetWidth() + c.LayoutGetMargin(Edge.Right);
+                var bottom = c.LayoutGetTop() + c.LayoutGetHeight() + c.LayoutGetMargin(Edge.Bottom);
                 xmax = Mathf.Max(right, xmax);
                 ymax = Mathf.Max(bottom, ymax);
             }
+
+            xmin += this.LayoutGetMargin(Edge.Left);
+            ymin += this.LayoutGetMargin(Edge.Top);
+            xmax += this.LayoutGetMargin(Edge.Right);
+            ymax += this.LayoutGetMargin(Edge.Bottom);
 
             return new RectangleF(xmin, ymin, xmax - xmin, ymax - ymin);
         }
