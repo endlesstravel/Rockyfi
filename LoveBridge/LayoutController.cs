@@ -42,7 +42,10 @@ namespace LoveBridge
         ShadowPlay<Element> shadowPlay;
         Bridge bridge;
 
-        public void ReloadXml()
+        /// <summary>
+        /// reaload xml, recall the `DefineInitialData` method
+        /// </summary>
+        public void RessetLayout()
         {
             var schema = DefineLayoutXml();
             if (schema == null)
