@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml;
 using System.Text.RegularExpressions;
 using System.IO;
 
@@ -17,7 +16,6 @@ namespace Rockyfi
         const string OnceELAttributeName = "el-once";
         const string BindELAttributePrefix = "el-bind";
 
-        XmlDocument xmlDocument;
         Node root;
         TemplateNode templateRoot;
 
@@ -492,10 +490,10 @@ namespace Rockyfi
                     break;
             }
         }
-        TemplateNode ConvertXmlToTemplate(XmlNode element)
+        TemplateNode ConvertXmlToTemplate(HtmlNode element)
         {
-            TemplateNode renderTreeNode = new TemplateNode(element.Name);
-            foreach (XmlAttribute attr in element.Attributes)
+            TemplateNode renderTreeNode = new TemplateNode(element.TagName);
+            foreach (var attr in element.Attr)
             {
                 if (ForELAttributeName.Equals(attr.Name)) // process el-for
                 {
@@ -530,19 +528,15 @@ namespace Rockyfi
                 renderTreeNode.attributes[attr.Name] = attr.Value;
             }
 
+
+            renderTreeNode.textDataBindExpress = TextDataBindExpress.Parse(element.ContentText);
+
             // process children
             // render children
-            foreach (XmlNode ele in element.ChildNodes)
+            foreach (var ele in element.ChildNodes)
             {
-                if (XmlNodeType.Element == ele.NodeType)
-                {
-                    var trn = ConvertXmlToTemplate(ele);
-                    renderTreeNode.Children.Add(trn);
-                }
-                else if (XmlNodeType.Text == ele.NodeType)
-                {
-                    renderTreeNode.textDataBindExpress = TextDataBindExpress.Parse(ele.Value);
-                }
+                var trn = ConvertXmlToTemplate(ele);
+                renderTreeNode.Children.Add(trn);
             }
 
             return renderTreeNode;
@@ -626,29 +620,21 @@ namespace Rockyfi
 
         public void Build(string xml)
         {
-            using (StringReader stringReader = new StringReader(xml))
+            var rootList = HtmlReader.Parse(xml);
+            if (rootList.Count == 0)
             {
-                XmlReaderSettings settings = new XmlReaderSettings { NameTable = new NameTable() , IgnoreComments = true };
-                XmlNamespaceManager xmlns = new XmlNamespaceManager(settings.NameTable);
-                xmlns.AddNamespace(BindELAttributePrefix, "Rockyfi.ShadowPlay");
-                XmlParserContext context = new XmlParserContext(null, xmlns, "", XmlSpace.Default);
-                XmlReader reader = XmlReader.Create(stringReader, settings, context);
-                xmlDocument = new XmlDocument();
-                xmlDocument.Load(reader);
-
-                var rootElement = xmlDocument.FirstChild;
-                if (rootElement.Attributes != null)
-                {
-                    if (rootElement.Attributes.GetNamedItem(ForELAttributeName) != null)
-                        throw new Exception("root element should not contains 'el-for' attribute !");
-
-                    if (rootElement.Attributes.GetNamedItem(ForELAttributeName) != null)
-                        throw new Exception("root element should not contains 'el-if' attribute !");
-                }
-
-                // convert to tree
-                templateRoot = ConvertXmlToTemplate(rootElement);
+                throw new Exception("empty xml document ! : " + xml);
             }
+
+            var rootElement = rootList[0];
+            if (rootElement.AttrDict.ContainsKey(ForELAttributeName))
+                throw new Exception("root element should not contains 'el-for' attribute !");
+
+            if (rootElement.AttrDict.ContainsKey(ForELAttributeName))
+                throw new Exception("root element should not contains 'el-if' attribute !");
+
+            // convert to tree
+            templateRoot = ConvertXmlToTemplate(rootElement);
         }
 
         public override string ToString()

@@ -3,6 +3,50 @@ using System.IO;
 
 namespace Rockyfi
 {
+    public class HtmlAttribute
+    {
+        /// <summary>
+        /// el-bind:width='100px' => el-bind:width
+        /// </summary>
+        public readonly string Name;
+
+
+        /// <summary>
+        /// el-bind:width='100px' => 100px
+        /// </summary>
+        public readonly string Value;
+
+
+        /// <summary>
+        /// el-bind:width='100px' => el-bind
+        /// </summary>
+        public readonly string Prefix;
+
+        /// <summary>
+        /// el-bind:width='100px' => width
+        /// </summary>
+        public readonly string LocalName; 
+
+        public HtmlAttribute(string name, string value)
+        {
+            this.Name = (name ?? "").Trim();
+            this.Value = value ?? "";
+
+            var group = Name.Split(':');
+            if (group.Length >= 2)
+            {
+                Prefix = group[0];
+                LocalName = string.Join(":", group, 1, group.Length - 1);
+            }
+            else
+            {
+                Prefix = "";
+                LocalName = "";
+            }
+
+        }
+    }
+
     public class HtmlNode
     {
         readonly string Tag;
@@ -10,6 +54,25 @@ namespace Rockyfi
         readonly List<HtmlNode> children;
         readonly string contentText;
         public bool HasContentText => contentText != null && contentText != "";
+
+        public string TagName => Tag ?? "";
+        public string ContentText => contentText ?? "";
+
+        public Dictionary<string, string> AttrDict => attr ?? new Dictionary<string, string>();
+        public LinkedList<HtmlAttribute> Attr
+        {
+            get
+            {
+                var list = new LinkedList<HtmlAttribute>();
+                foreach (var kv in AttrDict)
+                {
+                    list.AddLast(new HtmlAttribute(kv.Key, kv.Value));
+                }
+                return list;
+            }
+        }
+
+        public List<HtmlNode> ChildNodes => new List<HtmlNode>(children);
 
         public HtmlNode(string tag, Dictionary<string, string> attr, List<HtmlNode> children, string contentText)
         {
@@ -106,7 +169,7 @@ namespace Rockyfi
                 var cc = sr.Peek();
                 bool isAlpha = ('A' <= cc && cc <= 'Z') || ('a' <= cc && cc <= 'z');
                 bool isNum = ('0' <= cc && cc <= '9');
-                bool isSpecial = ('_' == cc || cc == ':' || cc == '.');
+                bool isSpecial = ('_' == cc || '-' == cc || cc == ':' || cc == '.');
 
                 if (isFirstChar)
                 {
@@ -390,6 +453,20 @@ namespace Rockyfi
         {
             this.sr = sr;
         }
+
+        public static Stream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
+
+        public static List<HtmlNode> Parse(string text) => 
+            Parse(new StreamReader(GenerateStreamFromString(text ?? throw new System.ArgumentNullException(nameof(text)))));
 
         public static List<HtmlNode> Parse(StreamReader sr)
         {
