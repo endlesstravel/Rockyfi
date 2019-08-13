@@ -406,7 +406,7 @@ namespace Rockyfi
 
                     if (attr.ContainsKey(attrKey))
                     {
-                        throw new System.Exception($"Repeated attribute declarations '${attrKey}' !");
+                        throw new System.Exception($"Duplicated attribute declarations '${attrKey}' !");
                     }
 
                     attr[attrKey] = attrValue;
