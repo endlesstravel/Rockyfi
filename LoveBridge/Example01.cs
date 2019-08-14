@@ -81,7 +81,7 @@ namespace Test
             };
         }
 
-        public override string DefineLayoutXml()
+        public override string DefineLayoutDocument()
         {
             return @"
 <root

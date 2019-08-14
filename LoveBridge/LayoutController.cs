@@ -13,9 +13,9 @@ namespace LoveBridge
         {
             shadowPlay = new ShadowPlay<Element>();
 
-            var schema = DefineLayoutXml();
+            var schema = DefineLayoutDocument();
             if (schema == null)
-                throw new System.Exception("DefineLayoutXml should return xml document string !");
+                throw new System.Exception(nameof(DefineLayoutDocument) + " return an unexpected null!");
 
             var initData = DefineInitialData();
             shadowPlay.Build(schema);
@@ -26,18 +26,27 @@ namespace LoveBridge
             Update();
         }
 
-        public abstract string DefineLayoutXml();
-        public abstract Dictionary<string, object> DefineInitialData();
+        /// <summary>
+        /// define the layout document
+        /// </summary>
+        /// <returns></returns>
+        public abstract string DefineLayoutDocument();
 
-        public virtual void SetRootParent(ElementController root)
-        {
-            root.OnSetParent(this);
-        }
+        /// <summary>
+        /// define the initial data
+        /// </summary>
+        /// <returns></returns>
+        public abstract Dictionary<string, object> DefineInitialData();
 
         /// <summary>
         ///  default create element method
         /// </summary>
         public abstract ElementController CreateElement(string tagName, Dictionary<string, object> attr);
+
+        public virtual void SetRootParent(ElementController root)
+        {
+            root.OnSetParent(this);
+        }
 
         ShadowPlay<Element> shadowPlay;
         Bridge bridge;
@@ -47,7 +56,7 @@ namespace LoveBridge
         /// </summary>
         public void RessetLayout()
         {
-            var schema = DefineLayoutXml();
+            var schema = DefineLayoutDocument();
             if (schema == null)
                 throw new System.Exception("DefineLayoutXml should return xml document string !");
             var initData = DefineInitialData();
