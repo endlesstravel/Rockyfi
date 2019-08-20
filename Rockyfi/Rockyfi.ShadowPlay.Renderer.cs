@@ -591,7 +591,6 @@ namespace Rockyfi
         /// </summary>
         public void Update()
         {
-
             if (IsDataDirty)
             {
                 Node newRoot = RenderTemplateTreeRoot(templateRoot);
@@ -635,24 +634,12 @@ namespace Rockyfi
 
             // convert to tree
             templateRoot = ConvertXmlToTemplate(rootElement);
+            root = null;
         }
 
         public override string ToString()
         {
-            //var sb = new System.Text.StringBuilder();
-            //foreach (var elb in templateRoot.attributeDataBindExpressList)
-            //{
-            //    sb.AppendLine(elb.ToString());
-            //}
-            //return sb.ToString();
             return NodePrinter.PrintToString(root);
         }
-
-        //public static ShadowPlay<T> BuildStage(string xml, params string[] properties)
-        //{
-        //    var factory = new ShadowPlay<T>();
-        //    factory.Build(xml);
-        //    return factory;
-        //}
     }
 }

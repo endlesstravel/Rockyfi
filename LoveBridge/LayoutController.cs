@@ -52,15 +52,18 @@ namespace LoveBridge
         Bridge bridge;
 
         /// <summary>
+        /// FIXME:
         /// reaload xml, recall the `DefineInitialData` method
         /// </summary>
-        public void RessetLayout()
+        private void ResetLayout()
         {
             var schema = DefineLayoutDocument();
+            var initData = DefineInitialData();
             if (schema == null)
                 throw new System.Exception("DefineLayoutXml should return xml document string !");
-            var initData = DefineInitialData();
             shadowPlay.Build(schema);
+            shadowPlay.ResetBridgeRootElement();
+            shadowPlay.SetData(initData);
             shadowPlay.IsDataDirty = true;
         }
 

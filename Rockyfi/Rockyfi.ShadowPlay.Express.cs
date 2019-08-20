@@ -543,7 +543,7 @@ namespace Rockyfi
 
             public override string ToString()
             {
-                return base.ToString() + "   expres : " + express;
+                return base.ToString() + " tagName " + TargetName + "   expres : " + express;
             }
         }
 

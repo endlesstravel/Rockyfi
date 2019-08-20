@@ -122,18 +122,8 @@ namespace Rockyfi
             DrawRecursive(x, y, root, defaultDrawFunc, themeDictionary);
         }
 
-        /// <summary>
-        /// Set element factory, null to unset.
-        /// </summary>
-        /// <param name="factory"></param>
-        public void SetBridge(Bridge<T> factory)
+        public void ResetBridgeRootElement()
         {
-            if (bridge != null)
-            {
-                throw new Exception("can't change element factory");
-            }
-            bridge = factory;
-
             // reset root
             root = Flex.CreateDefaultNode();
             var ra = CreateRuntimeNodeAttribute(root, templateRoot);
@@ -160,6 +150,20 @@ namespace Rockyfi
                 elBindDict);
             ra.element = eleRoot;
             bridge.OnSetRoot(eleRoot);
+        }
+
+        /// <summary>
+        /// Set element factory, null to unset.
+        /// </summary>
+        /// <param name="factory"></param>
+        public void SetBridge(Bridge<T> factory)
+        {
+            if (bridge != null)
+            {
+                throw new Exception("can't change element factory");
+            }
+            bridge = factory;
+            ResetBridgeRootElement();
         }
 
         Bridge<T> bridge;
