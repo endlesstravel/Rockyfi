@@ -52,6 +52,7 @@ namespace LoveBridge
         }
         public virtual void OnRemoved()
         {
+            transform.Parent = null;
         }
 
 
