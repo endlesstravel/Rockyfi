@@ -510,15 +510,19 @@ namespace Rockyfi
         /// </summary>
         internal class AttributeDataBindExpress
         {
-            string express;
+            protected string express;
 
             /// <summary>
             /// el-bind:xxxx="yyy.width" ---> xxxx
             /// </summary>
-            public string TargetName { get; private set; }
+            public string TargetName { get; protected set; }
 
             ObjectDataBindExpress objectExpress = null;
 
+            /// <summary>
+            /// el-bind:xxxx="yyy.width" ---> yyy.width
+            /// </summary>
+            public string Express => express;
 
             /// <summary>
             /// fail return null
@@ -536,9 +540,42 @@ namespace Rockyfi
                 return attributeExpress.objectExpress != null ? attributeExpress : null;
             }
 
-            public bool TryEvaluate(ContextStack contextStack, out object result)
+            public virtual bool TryEvaluate(ContextStack contextStack, out object result)
             {
                 return objectExpress.TryEvaluate(contextStack, out result);
+            }
+
+            public override string ToString()
+            {
+                return base.ToString() + " tagName " + TargetName + "   expres : " + express;
+            }
+        }
+
+
+        /// <summary>
+        /// color="#ffff"
+        /// </summary>
+        internal class ConstStringAttributeDataBindExpress : AttributeDataBindExpress
+        {
+            /// <summary>
+            /// fail return null
+            /// </summary>
+            /// <returns></returns>
+            public static ConstStringAttributeDataBindExpress ParseConst(string express, string targetName)
+            {
+                if ("".Equals(targetName))
+                    return null;
+
+                var attributeExpress = new ConstStringAttributeDataBindExpress();
+                attributeExpress.TargetName = targetName;
+                attributeExpress.express = express;
+                return attributeExpress;
+            }
+
+            public override bool TryEvaluate(ContextStack contextStack, out object result)
+            {
+                result = Express;
+                return true;
             }
 
             public override string ToString()
@@ -577,7 +614,7 @@ namespace Rockyfi
                     return null;
                 var forExp = new ForDataBindExpress();
                 forExp.express = express;
-                forExp.IteratorName = express.Substring(0, index).Trim(); 
+                forExp.IteratorName = express.Substring(0, index).Trim();
                 forExp.objectExpress = ObjectDataBindExpress.Parse(express.Substring(index + 2).Trim());
                 return forExp.objectExpress != null ? forExp : null;
             }

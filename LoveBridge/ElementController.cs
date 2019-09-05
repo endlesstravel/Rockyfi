@@ -25,6 +25,7 @@ namespace LoveBridge
 
         public ElementController(string tagName)
         {
+            TagName = tagName;
             transform = new Transform2D<ElementController>(this);
         }
 

@@ -67,9 +67,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="..\LoveBridge\ElementController.cs">
       <Link>ElementController.cs</Link>
     </Compile>
@@ -85,6 +82,9 @@
     <Compile Include="..\LoveBridge\Transform2D.cs">
       <Link>Transform2D.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\GameWorkSpace\PoarOfEngine\PoarOfEngine\packages\Love2dCS.11.0.36\build\net40\Love2dCS.targets" Condition="Exists('..\..\..\GameWorkSpace\PoarOfEngine\PoarOfEngine\packages\Love2dCS.11.0.36\build\net40\Love2dCS.targets')" />

@@ -354,7 +354,7 @@ namespace Rockyfi
         #endregion
 
         #region render xml to virtual node
-        void ProcessTemplateStyle(Style style, string attrKey, string attrValue)
+        bool ProcessTemplateStyle(Style style, string attrKey, string attrValue)
         {
             switch (attrKey)
             {
@@ -467,6 +467,7 @@ namespace Rockyfi
                             case "margin": valuesToSet = style.Margin; break;
                             case "padding": valuesToSet = style.Padding; break;
                             case "border": valuesToSet = style.Border; break;
+                            default: return false;
                         }
                         if (valuesToSet == null)
                             break;
@@ -487,8 +488,14 @@ namespace Rockyfi
                             valuesToSet[(int)edge] = ParseValueFromString(attrValue);
                         }
                     }
+                    else
+                    {
+                        return false;
+                    }
                     break;
             }
+
+            return true;
         }
         TemplateNode ConvertXmlToTemplate(HtmlNode element)
         {
@@ -519,10 +526,18 @@ namespace Rockyfi
                         renderTreeNode.attributeDataBindExpressList.AddLast(attrExpress);
                     }
                 }
+                else if (ProcessTemplateStyle(renderTreeNode.nodeStyle, attr.Name, attr.Value)) // try process style
+                {
+                    // empty
+                }
                 else
                 {
-                    // try process style
-                    ProcessTemplateStyle(renderTreeNode.nodeStyle, attr.Name, attr.Value);
+                    // add to
+                    var attrExpress = ConstStringAttributeDataBindExpress.ParseConst(attr.Value, attr.Name);
+                    if (attrExpress != null)
+                    {
+                        renderTreeNode.attributeDataBindExpressList.AddLast(attrExpress);
+                    }
                 }
 
                 renderTreeNode.attributes[attr.Name] = attr.Value;
