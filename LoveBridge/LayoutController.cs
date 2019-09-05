@@ -127,31 +127,6 @@ namespace LoveBridge
             return bridge.ToString();
         }
 
-        /// <summary>
-        /// <para>copy from    https://stackoverflow.com/a/21886340  </para>
-        /// Comparer for comparing two keys, handling equality as beeing greater
-        /// Use this Comparer e.g. with SortedLists or SortedDictionaries, that don't allow duplicate keys
-        /// </summary>
-        /// <typeparam name="TKey"></typeparam>
-        public class DuplicateKeyComparer<TKey>
-                        :
-                     IComparer<TKey> where TKey : IComparable
-        {
-            #region IComparer<TKey> Members
-
-            public int Compare(TKey x, TKey y)
-            {
-                int result = x.CompareTo(y);
-
-                if (result == 0)
-                    return 1;   // Handle equality as beeing greater
-                else
-                    return result;
-            }
-
-            #endregion
-        }
-
         public class DeepMaskBean
         {
             public readonly int Deep;
@@ -224,7 +199,6 @@ namespace LoveBridge
             stack.Push(new DeepMaskBean(0, this, MaskScissor, new RectangleF(
                 -maxSize/2, -maxSize/2, maxSize, maxSize)));
 
-            //SortedList<int, DeepMaskBean> list = new SortedList<int, DeepMaskBean>(new DuplicateKeyComparer<int>());
             LinkedList<DeepMaskBean> lllist = new LinkedList<DeepMaskBean>();
 
             while (stack.Count > 0)
