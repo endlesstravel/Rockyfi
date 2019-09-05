@@ -232,12 +232,12 @@ namespace LoveBridge
                 var te = queue.Dequeue();
                 if (te.Ele.Visible)
                 {
-                    if (te.Ele != this)
+                    if (te.Ele != this) // 排除自己
                     {
                         list.Add(te.Deep, te);
                     }
 
-                    foreach (var child in te.Ele.Children)
+                    foreach (var child in te.Ele.Children.Reverse<ElementController>()) // Reverse for `Later drawings`
                     {
                         if (child.Visible)
                         {

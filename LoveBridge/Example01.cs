@@ -86,14 +86,15 @@ namespace Test
             return @"
 <root
 
-    el-bind:width=""w * (1 - pd*2)"" el-bind:height=""h * (1 - pd*2)""
-    el-bind:margin-left=""w * pd""  el-bind:margin-right=""w * pd""
-    el-bind:margin-top=""h * pd""  el-bind:margin-bottom=""h * pd""
-    flex-wrap=""wrap"" flex-direction=""row""
-    overflow=""scroll""
+    el-bind:width='w * (1 - pd*2)' el-bind:height='h * (1 - pd*2)'
+    el-bind:margin-left='w * pd'  el-bind:margin-right='w * pd'
+    el-bind:margin-top='h * pd'  el-bind:margin-bottom='h * pd'
+    flex-wrap='wrap' flex-direction='row'
+    overflow='scroll'
 
 >
-    <div el-bind:autoNavigation=""true"" el-for=""itemId in listData"" width=""150px"" height=""100px"" el-bind:id=""itemId""  margin=""100"" > {{itemId}} </div>
+    <div width='250px' height='150px' position='absolute' > absolute </div>
+    <div autoNavigation='true' el-for='itemId in listData' width='150px' height='100px' el-bind:id='itemId'  margin='100' > {{itemId}} </div>
 </root>
 ";
 
@@ -116,7 +117,7 @@ namespace Test
 
     }
 
-    public class RockyTest : Scene
+    public class RockyTest01 : Scene
     {
         Example01_LayoutController rtlc = new Example01_LayoutController();
 

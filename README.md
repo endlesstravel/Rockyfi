@@ -64,14 +64,22 @@ This is an example about [Love2dCS](https://github.com/endlesstravel/Love2dCS) s
 ![](example.gif)
 
 ```C#
-using Love;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace RockyfiFactory
+using Love;
+using Love.Misc;
+using Rockyfi;
+using LoveBridge;
+
+namespace Test
 {
-    public class NormalElementController : ElementController
+    public class Example01_ElementController : ElementController
     {
-        public NormalElementController(string tagName) : base(tagName)
+        public Example01_ElementController(string tagName) : base(tagName)
         {
         }
 
@@ -83,11 +91,6 @@ namespace RockyfiFactory
             Graphics.Print(TagName + Text, rect.X, rect.Y);
             Graphics.Rectangle(DrawMode.Line, rect);
             Graphics.SetColor(Color.White);
-        }
-
-        public override string ToString()
-        {
-            return base.ToString() + " <" + TagName+">" + Text;
         }
 
         Color fgColor = Color.White;
@@ -126,11 +129,11 @@ namespace RockyfiFactory
     }
 
 
-    class RockyTestLayoutController : LayoutController
+    public class Example01_LayoutController : LayoutController
     {
         public override ElementController CreateElement(string tagName, Dictionary<string, object> attr)
         {
-            return new NormalElementController(tagName);
+            return new Example01_ElementController(tagName);
         }
 
         public override Dictionary<string, object> DefineInitialData()
@@ -144,18 +147,20 @@ namespace RockyfiFactory
             };
         }
 
-        public override string DefineLayoutXml()
+        public override string DefineLayoutDocument()
         {
             return @"
 <root
-    el-bind:width=""w * (1 - pd*2)"" el-bind:height=""h * (1 - pd*2)""
-    el-bind:margin-left=""w * pd""  el-bind:margin-right=""w * pd""
-    el-bind:margin-top=""h * pd""  el-bind:margin-bottom=""h * pd""
-    flex-wrap=""wrap"" flex-direction=""row""
-    overflow=""scroll""
+
+    el-bind:width='w * (1 - pd*2)' el-bind:height='h * (1 - pd*2)'
+    el-bind:margin-left='w * pd'  el-bind:margin-right='w * pd'
+    el-bind:margin-top='h * pd'  el-bind:margin-bottom='h * pd'
+    flex-wrap='wrap' flex-direction='row'
+    overflow='scroll'
 
 >
-    <div el-bind:autoNavigation=""true"" el-for=""itemId in listData"" width=""150px"" height=""100px"" el-bind:id=""itemId""  margin=""100"" > {{itemId}} </div>
+    <div width='250px' height='150px' position='absolute' > absolute </div>
+    <div autoNavigation='true' el-for='itemId in listData' width='150px' height='100px' el-bind:id='itemId'  margin='100' > {{itemId}} </div>
 </root>
 ";
 
@@ -178,9 +183,9 @@ namespace RockyfiFactory
 
     }
 
-    public class RockyTest : GameScene
+    public class RockyTest01 : Scene
     {
-        RockyTestLayoutController rtlc = new RockyTestLayoutController();
+        Example01_LayoutController rtlc = new Example01_LayoutController();
 
         public override void Update(float dt)
         {
