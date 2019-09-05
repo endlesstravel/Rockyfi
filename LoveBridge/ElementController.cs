@@ -47,6 +47,11 @@ namespace LoveBridge
         /// </summary>
         public bool AutoNavigation = false;
 
+        /// <summary>
+        /// 是否可以交互
+        /// </summary>
+        public bool Hoverable = true;
+
         public virtual void OnSetParent(ElementController element)
         {
             transform.Parent = element.transform;
@@ -251,11 +256,25 @@ namespace LoveBridge
         }
 
         /// <summary>
+        /// 指针自动导航时调用-开始的一次
+        /// </summary>
+        public virtual void UpdateInputAutoNavigationBegin()
+        {
+        }
+
+        /// <summary>
         /// 指针自动导航时调用
         /// </summary>
         public virtual void UpdateInputAutoNavigation()
         {
         }
+        /// <summary>
+        /// 指针自动导航时调用-结束的一次
+        /// </summary>
+        public virtual void UpdateInputAutoNavigationEnd()
+        {
+        }
+
 
         #endregion
 

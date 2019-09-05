@@ -219,22 +219,24 @@ namespace LoveBridge
         public List<DeepMaskBean> ListNodesByDeep()
         {
             // 根据深度排序其子节点
-            Queue<DeepMaskBean> queue = new Queue<DeepMaskBean>();
-
+            Stack<DeepMaskBean> stack = new Stack<DeepMaskBean>();
             float maxSize = 999999;
-            queue.Enqueue(new DeepMaskBean(0, this, MaskScissor, new RectangleF(
+            stack.Push(new DeepMaskBean(0, this, MaskScissor, new RectangleF(
                 -maxSize/2, -maxSize/2, maxSize, maxSize)));
 
-            SortedList<int, DeepMaskBean> list = new SortedList<int, DeepMaskBean>(new DuplicateKeyComparer<int>());
+            //SortedList<int, DeepMaskBean> list = new SortedList<int, DeepMaskBean>(new DuplicateKeyComparer<int>());
+            LinkedList<DeepMaskBean> lllist = new LinkedList<DeepMaskBean>();
 
-            while (queue.Count > 0)
+            while (stack.Count > 0)
             {
-                var te = queue.Dequeue();
+                var te = stack.Pop();
+
                 if (te.Ele.Visible)
                 {
                     if (te.Ele != this) // 排除自己
                     {
-                        list.Add(te.Deep, te);
+                        //list.Add(te.Deep, te);
+                        lllist.AddLast(te);
                     }
 
                     foreach (var child in te.Ele.Children.Reverse<ElementController>()) // Reverse for `Later drawings`
@@ -244,13 +246,14 @@ namespace LoveBridge
                             bool hasMask = child.MaskScissor || te.HasMask;
                             var mask = child.MaskScissor ? RectangleF.Intersect(te.Mask, child.Rect) : te.Mask;
                             var tec = new DeepMaskBean(te.Deep + 1, child, hasMask, mask);
-                            queue.Enqueue(tec);
+
+                            stack.Push(tec);
                         }
                     }
                 }
             }
 
-            return list.Values.ToList();
+            return lllist.ToList();
         }
 
         public override void InternalUpdateInput()
@@ -299,7 +302,6 @@ namespace LoveBridge
         #region input
 
 
-
         /// <summary>
         /// 返回和指定点相交的元素，没有相交的节点时返回null
         /// </summary>
@@ -307,9 +309,10 @@ namespace LoveBridge
         public DeepMaskBean CurrentMouseHover(Vector2 pos)
         {
             // 找到最顶部的和鼠标相遇的东西
-            if (cachedDeepMaskList.Count > 0)
+            var hoverableList = cachedDeepMaskList.Where(item => item.Ele.Hoverable).ToList();
+            if (hoverableList.Count > 0)
             {
-                var topDeep = cachedDeepMaskList.Where(item => item.IsOutOfMask == false).Reverse().ToList();
+                var topDeep = hoverableList.Where(item => item.IsOutOfMask == false).Reverse().ToList();
                 var containPosition = topDeep.FirstOrDefault(
                     item => item.HasMask ? RectangleF.Intersect(item.Mask, item.Ele.Rect).Contains(pos) : item.Ele.Rect.Contains(pos));
 
@@ -357,7 +360,15 @@ namespace LoveBridge
                 FindNearestPoint(indicatorDir);
             }
 
-            if (m_autoNavigationELEC != null)
+            if (m_lastAutoNavigationELEC != m_autoNavigationELEC)
+            {
+                if (m_lastAutoNavigationELEC != null)
+                    m_lastAutoNavigationELEC.UpdateInputAutoNavigationEnd();
+                if (m_autoNavigationELEC != null)
+                    m_autoNavigationELEC.UpdateInputAutoNavigationBegin();
+            }
+
+            if (m_autoNavigationELEC != null) // stay ..
             {
                 m_autoNavigationELEC.UpdateInputAutoNavigation();
             }

@@ -94,7 +94,9 @@ namespace Test
 
 >
     <div width='250px' height='150px' position='absolute' > absolute </div>
-    <div autoNavigation='true' el-for='itemId in listData' width='150px' height='100px' el-bind:id='itemId'  margin='100' > {{itemId}} </div>
+    <div autoNavigation='true' el-for='itemId in listData' width='150px' height='100px' el-bind:id='itemId'  margin='100' > {{itemId}}
+        <div width='30%' height='30%'  />
+    </div>
 </root>
 ";
 
