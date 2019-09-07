@@ -23,7 +23,7 @@ namespace LoveBridge
             bridge = new Bridge(shadowPlay, CreateElementCheck, SetRootParent);
             shadowPlay.SetBridge(bridge);
 
-            Update();
+            //Update(); // not call virtual method in ..
         }
 
         /// <summary>
@@ -307,13 +307,60 @@ namespace LoveBridge
         ElementController m_lastAutoNavigationELEC = null;
         public ElementController AutoNavigationElement => m_autoNavigationELEC;
 
+        public virtual void SetAutoNavigation(ElementController elc)
+        {
+            m_lastAutoNavigationELEC = m_autoNavigationELEC;
+            m_autoNavigationELEC = elc;
+            InternalUpdateAutoNavigationInoveEvent();
+        }
+
+        public virtual void ClearAutoNavigation() => SetAutoNavigation(null);
+
+        public ElementController GetRootParent(ElementController element)
+        {
+            if (element == null || element.Parent == null)
+                return null;
+
+            var ele = element.Parent;
+            while (ele.Parent != null)
+            {
+                ele = ele.Parent;
+            }
+
+            return ele;
+        }
+
+        /// <summary>
+        /// UpdateInputAutoNavigationEnd / UpdateInputAutoNavigationBegin 事件
+        /// </summary>
+        public void InternalUpdateAutoNavigationInoveEvent()
+        {
+            if (m_lastAutoNavigationELEC != m_autoNavigationELEC)
+            {
+                if (m_lastAutoNavigationELEC != null)
+                    m_lastAutoNavigationELEC.UpdateInputAutoNavigationEnd();
+                if (m_autoNavigationELEC != null)
+                    m_autoNavigationELEC.UpdateInputAutoNavigationBegin();
+            }
+        }
+
+        public void CheckNodeVaild()
+        {
+
+            if (GetRootParent(m_autoNavigationELEC) != this)
+                m_autoNavigationELEC = null;
+            if (GetRootParent(m_lastAutoNavigationELEC) != this)
+                m_lastAutoNavigationELEC = null;
+        }
+
         /// <summary>
         /// 更新自动导航
         /// </summary>
         public virtual void InternalUpdateAutoNavigation()
         {
-            m_lastAutoNavigationELEC = m_autoNavigationELEC;
+            CheckNodeVaild();
 
+            m_lastAutoNavigationELEC = m_autoNavigationELEC;
 
             if (Keyboard.IsPressed(KeyConstant.Left) 
                 || Keyboard.IsPressed(KeyConstant.Right)
@@ -334,19 +381,13 @@ namespace LoveBridge
                 FindNearestPoint(indicatorDir);
             }
 
-            if (m_lastAutoNavigationELEC != m_autoNavigationELEC)
-            {
-                if (m_lastAutoNavigationELEC != null)
-                    m_lastAutoNavigationELEC.UpdateInputAutoNavigationEnd();
-                if (m_autoNavigationELEC != null)
-                    m_autoNavigationELEC.UpdateInputAutoNavigationBegin();
-            }
 
             if (m_autoNavigationELEC != null) // stay ..
             {
                 m_autoNavigationELEC.UpdateInputAutoNavigation();
             }
 
+            InternalUpdateAutoNavigationInoveEvent();
             InternalAdjustOffsetToViewChild();
         }
 

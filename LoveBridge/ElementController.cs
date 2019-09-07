@@ -109,6 +109,39 @@ namespace LoveBridge
             }
         }
 
+        /// <summary>
+        /// return true if get an not null object 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="tobj"></param>
+        /// <returns></returns>
+        public bool TryGetAttribute<T>(string name, out T tobj) where T : class
+        {
+            if (Attr.TryGetValue(name, out var obj))
+            {
+                tobj = obj as T;
+            }
+            else
+            {
+                tobj = null;
+            }
+
+            return tobj != null;
+        }
+
+        public bool TryGetBoolean(string name, out bool result)
+        {
+            result = false; 
+            if (Attr.TryGetValue(name, out var obj) && obj is bool)
+            {
+                result = (bool)obj;
+                return true;
+            }
+
+            return false;   
+        }
+
         public virtual void OnChangeAttributes(string key, object value)
         {
             Attr[key] = value;  

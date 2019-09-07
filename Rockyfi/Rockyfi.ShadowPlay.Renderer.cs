@@ -458,7 +458,7 @@ namespace Rockyfi
                     style.MaxDimensions[(int)Dimension.Height] = ParseValueFromString(attrValue);
                     break;
                 default:
-                    // parse [margin|padding|border]-[Edgexxxx]
+                    // parse [margin|padding|border|pos]-[Edgexxxx]
                     if (ParseBreakWork(attrKey, out string head, out string tail))
                     {
                         Value[] valuesToSet = null;
@@ -467,6 +467,7 @@ namespace Rockyfi
                             case "margin": valuesToSet = style.Margin; break;
                             case "padding": valuesToSet = style.Padding; break;
                             case "border": valuesToSet = style.Border; break;
+                            case "pos": valuesToSet = style.Position; break;
                             default: return false;
                         }
                         if (valuesToSet == null)
