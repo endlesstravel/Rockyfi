@@ -18,6 +18,17 @@ project_LoveBridge/obj
 project_LoveBridge/bin
 project_LoveBridge/packages
 
+
+project_WinForm/.vs
+project_WinForm/obj
+project_WinForm/bin
+project_WinForm/packages
+
+project_WinForm/project_WinForm/.vs
+project_WinForm/project_WinForm/obj
+project_WinForm/project_WinForm/bin
+project_WinForm/project_WinForm/packages
+
 Rockyfi/.vs
 Rockyfi/obj
 Rockyfi/bin
