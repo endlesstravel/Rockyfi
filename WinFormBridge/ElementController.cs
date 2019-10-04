@@ -43,7 +43,6 @@ namespace WinFormBridge
 
         public readonly Transform2D<ElementController> transform;
         public SizeF localSize { private set; get; } = new SizeF();
-        public string Text { get; private set; } 
 
         public ElementController(string tagName)
         {
@@ -52,17 +51,17 @@ namespace WinFormBridge
         }
 
         public List<ElementController> Children => transform.Children.Select(item => item.Master).ToList();
-        public ElementController Parent => transform.Parent != null ? transform.Parent.Master : null;
+        public ElementController ElementParent => transform.Parent != null ? transform.Parent.Master : null;
 
         /// <summary>
         /// 需要绘制区域
         /// </summary>
         public RectangleF Rect => new RectangleF(new PointF(transform.AbsolutePosition.X, transform.AbsolutePosition.Y), localSize);
 
-        /// <summary>
-        /// 本元素是否需要绘制
-        /// </summary>
-        public bool Visible = true;
+        ///// <summary>
+        ///// 本元素是否需要绘制
+        ///// </summary>
+        //public bool Visible = true;
 
         /// <summary>
         /// 是否需要自动导航
@@ -74,6 +73,7 @@ namespace WinFormBridge
         /// </summary>
         public bool Hoverable = true;
 
+        #region key to add or remove
         public virtual void OnSetParent(ElementController element)
         {
             transform.Parent = element.transform;
@@ -82,54 +82,7 @@ namespace WinFormBridge
         {
             transform.Parent = null;
         }
-
-
-        public void EmitEvent(string name, object data)
-        {
-            if (m_eventHandler != null)
-            {
-                m_eventHandler.Invoke(name, data);
-            }
-        }
-
-        public delegate void EventHandler(string name, object data);
-        public delegate void EventHandlerName(string name);
-        private EventHandler m_eventHandler;
-
-        public void BindEventHandler(object handler)
-        {
-            if (handler == null)
-            {
-                m_eventHandler = null;
-                return;
-            }
-
-            if (handler is EventHandler)
-            {
-                m_eventHandler = (handler as EventHandler);
-            }
-            else if (handler is EventHandlerName)
-            {
-                m_eventHandler = ((name, data) =>
-                {
-                    (handler as EventHandlerName).Invoke(name);
-                });
-            }
-            else if (handler is System.Action)
-            {
-                m_eventHandler = ((name, data) =>
-                {
-                    (handler as System.Action).Invoke();
-                });
-            }
-            else if (handler is System.Action<object>)
-            {
-                m_eventHandler = ((name, data) =>
-                {
-                    (handler as System.Action<object>).Invoke(data);
-                });
-            }
-        }
+        #endregion
 
         /// <summary>
         /// return true if get an not null object 
@@ -171,11 +124,6 @@ namespace WinFormBridge
             if (key == "display")
             {
                 Visible = "flex".Equals(value);
-            }
-
-            if (key == "listen")
-            {
-                BindEventHandler(value);
             }
 
             if (key == "autoNavigation" && value is bool)
