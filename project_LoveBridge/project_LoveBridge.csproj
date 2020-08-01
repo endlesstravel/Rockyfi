@@ -66,8 +66,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Love2dCS, Version=11.0.40.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\GameWorkSpace\PoarOfEngine\PoarOfEngine\packages\Love2dCS.11.0.40\lib\netstandard1.0\Love2dCS.dll</HintPath>
+    <Reference Include="LoveSharp, Version=11.0.50.0, Culture=neutral, PublicKeyToken=e8ca05bb0fee55bf, processorArchitecture=MSIL">
+      <HintPath>..\..\..\GameWorkSpace\PoarOfEngine\PoarOfEngine\packages\LoveSharp.11.0.51\lib\netstandard1.2\LoveSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

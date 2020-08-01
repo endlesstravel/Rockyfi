@@ -100,7 +100,7 @@ namespace Test
 </root>
 ";
 
-            return Encoding.UTF8.GetString(Resource.Read("ui_xml/test.xml"));
+            return Encoding.UTF8.GetString(FileSystem.Read("ui_xml/test.xml"));
         }
 
         public override void Update()
